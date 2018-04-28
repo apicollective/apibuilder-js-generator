@@ -1,0 +1,6 @@
+{
+    "exec": "node ./src/server/index.js",
+    "watch": [
+      "src"
+    ]
+  }
