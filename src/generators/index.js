@@ -1,4 +1,6 @@
 const nodeZeroTwelve = require('./0_12');
+const nodeFiveEs5 = require('./node_5_es5');
+const nodeFiveEs6 = require('./node_5_es6');
 
 const generators = {
   node_0_12: {
@@ -16,6 +18,7 @@ const generators = {
     language: 'JavaScript',
     description: 'Node 5 client - compiled version of node_5_es6',
     attributes: [],
+    generator: nodeFiveEs5,
   },
 
   node_5_es6: {
@@ -24,6 +27,7 @@ const generators = {
     language: 'JavaScript',
     description: 'Node 5 client written in ES6 (requires babel or other compiler)',
     attributes: [],
+    generator: nodeFiveEs6,
   },
 
   js_isomorphic: {

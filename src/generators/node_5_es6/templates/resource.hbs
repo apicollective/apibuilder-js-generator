@@ -1,0 +1,54 @@
+import { isObject,
+          doRequest,
+          getRequestOptions } from './utils';
+
+export default class {
+  constructor (host, auth, headers) {
+    this.host = host;
+    this.auth = auth;
+    this.headers = headers;
+  }
+
+  {{#operations}}
+    {{functionName}} ({{{functionParams}}}) {
+      const operationSettings = {{{settingsJson}}};
+
+      return getRequestOptions(operationSettings, options)
+        .then((opts) => {
+          const uri = `${this.host}{{{endpointUriStr}}}`;
+          const auth = opts.auth || this.auth;
+          const headers = this.headers || {};
+
+          // Layer in some options local to this class
+          const requestOpts = Object.assign({ headers }, opts, {
+            auth,
+            uri
+          });
+
+          return doRequest(requestOpts).then(function (serverResponse) {
+            switch (serverResponse.statusCode) {
+              {{#responses}}
+              case {{code}}:
+                {{#if isResolve}}
+                  {{#if isUnitType}}
+                return Promise.resolve();
+                  {{else}}
+                if (requestOpts.json) {
+                  return Promise.resolve(serverResponse.body);
+                } else {
+                  return Promise.resolve(JSON.parse(serverResponse.body));
+                }
+                  {{/if}}
+                {{else}}
+                return Promise.reject({ status: serverResponse.statusCode, data: serverResponse.body });
+                {{/if}}
+              {{/responses}}
+              default:
+                return Promise.reject(new Error('Unknown response code: ' + serverResponse.statusCode));
+            }
+          });
+        });
+    }
+
+  {{/operations}}
+}
