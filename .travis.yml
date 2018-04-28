@@ -7,7 +7,6 @@ cache:
 before_install:
 - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 script:
-- npm run lint
 - npm run test
 branches:
   only:
