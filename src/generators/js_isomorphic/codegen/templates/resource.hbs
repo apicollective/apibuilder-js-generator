@@ -1,0 +1,29 @@
+import Client from '{{clientImportPath}}/client';
+
+export default class {{objectName plural}} extends Client {
+  constructor(opts) {
+    let options = opts;
+
+    if (typeof opts === 'string') {
+      options = { host: opts }; // convert host string to options object
+    }
+
+    options.serviceName = '{{serviceName}}';
+
+    super(options);
+  }
+
+  {{#operations}}
+  {{operationName this ../path}}({{{parameterList this}}}) {
+    {{#nonGetMethod this}}
+    return this.makeRequest(`${this.host}{{operationPath this}}`, {
+      ...options,
+       method: '{{./method}}',
+    });
+    {{else}}
+    return this.makeRequest(`${this.host}{{operationPath this}}`, options);
+    {{/nonGetMethod}}
+  }
+
+  {{/operations}}
+}

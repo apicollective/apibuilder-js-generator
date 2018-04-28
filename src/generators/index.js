@@ -1,6 +1,7 @@
 const nodeZeroTwelve = require('./0_12');
 const nodeFiveEs5 = require('./node_5_es5');
 const nodeFiveEs6 = require('./node_5_es6');
+const jsIsomorphic = require('./js_isomorphic');
 
 const generators = {
   node_0_12: {
@@ -36,6 +37,7 @@ const generators = {
     language: 'JavaScript',
     description: 'Node 6 client written in ES6 (requires babel or other compiler). Leverages @flowio/lib-apidoc',
     attributes: [],
+    generator: jsIsomorphic,
   },
 };
 
