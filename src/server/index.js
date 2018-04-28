@@ -63,7 +63,7 @@ app.post('/invocations/:key', (req, res) => {
     ]);
   }
 
-  console.log(`Generating service[${service.namespace}.${service.name}]`);
+  console.log(`Generating with[${invocationKey}] for service[${service.namespace}.${service.name}]`);
 
   generator.generate(service).then((files) => {
     res.send({
