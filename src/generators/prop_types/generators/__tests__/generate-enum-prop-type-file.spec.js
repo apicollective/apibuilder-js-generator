@@ -30,7 +30,7 @@ describe('generateEnumPropTypeFile', () => {
 
     const generatedFile = generateEnumPropTypeFile(entity, service);
 
-    expect(generatedFile.path).toEqual('test-application/enum/enum-1.js');
+    expect(generatedFile.path).toEqual('enum/enum-1.js');
     expect(generatedFile.contents).toEqual(loadFixture(__dirname, './fixtures/enum-prop-type-file.js.fixture'));
   });
 });
