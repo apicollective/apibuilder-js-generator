@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev:start": "nodemon",
-    "test": "echo \"No tests currently\""
+    "lint": "eslint ./src --cache --format=codeframe --ext js",
+    "lint:fix": "eslint . --fix --cache --format=codeframe --ext js,jsx",
+    "pretest": "npm run lint",
+    "test": "jest --maxWorkers=4"
   },
   "repository": {
     "type": "git",
@@ -24,15 +27,19 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
+    "jest": "^22.4.3",
+    "nock": "^9.2.5",
     "nodemon": "^1.17.3"
   },
   "dependencies": {
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.2",
+    "debug": "^3.1.0",
     "express": "^4.16.3",
     "handlebars": "^4.0.11",
     "hbs": "^4.0.1",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "mkdirp": "^0.5.1"
   }
 }

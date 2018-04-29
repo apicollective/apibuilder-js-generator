@@ -1,0 +1,10 @@
+import PropTypes from 'prop-types';
+
+
+
+
+const generatedPropType = () => PropTypes.shape({
+  model_2_field_1: PropTypes.string,
+});
+
+export default generatedPropType;
