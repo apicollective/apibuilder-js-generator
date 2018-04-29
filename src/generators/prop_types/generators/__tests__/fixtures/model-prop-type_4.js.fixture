@@ -1,0 +1,3 @@
+PropTypes.shape({
+  model_8_field_1: PropTypes.objectOf(PropTypes.string),
+});

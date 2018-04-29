@@ -2,6 +2,7 @@ const nodeZeroTwelve = require('./0_12');
 const nodeFiveEs5 = require('./node_5_es5');
 const nodeFiveEs6 = require('./node_5_es6');
 const jsIsomorphic = require('./js_isomorphic');
+const propTypes = require('./prop_types');
 
 const generators = {
   node_0_12: {
@@ -35,10 +36,20 @@ const generators = {
     key: 'js_isomorphic',
     name: 'Javascript (Isomorphic)',
     language: 'JavaScript',
-    description: 'Node 6 client written in ES6 (requires babel or other compiler). Leverages @flowio/lib-apidoc',
+    description: 'Node 6 client written in ES6 (requires babel or other compiler).',
     attributes: [],
     generator: jsIsomorphic,
   },
+
+  prop_types: {
+    key: 'prop_types',
+    name: 'React PropTypes',
+    language: 'JavaScript',
+    description: 'React PropTypes using es2017. Utilizes the `prop-types` npm module',
+    attributes: [],
+    generator: propTypes,
+  },
+
 };
 
 module.exports = generators;

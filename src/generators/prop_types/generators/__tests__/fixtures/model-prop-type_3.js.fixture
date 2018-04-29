@@ -1,0 +1,3 @@
+PropTypes.shape({
+  model_7_field_1: PropTypes.arrayOf(enum1PropType()),
+});
