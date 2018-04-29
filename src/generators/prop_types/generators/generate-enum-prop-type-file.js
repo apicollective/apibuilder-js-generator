@@ -12,7 +12,6 @@ const generatePropType = require('./generate-prop-type');
  * @returns {GeneratedFile} - a file to eventually be written to the filesystem
  */
 function generateEnumPropTypeFile(entity, service) {
-  const serviceKey = service.getApplicationKey();
   const entityType = entity.type;
   const fileName = `${kebabCase(entity.name)}.js`;
 
@@ -20,7 +19,7 @@ function generateEnumPropTypeFile(entity, service) {
   contents += `\n\nconst generatedPropType = () => ${generatePropType(entity, service)}`;
   contents += '\n\nexport default generatedPropType;\n';
 
-  return new GeneratedFile(`${serviceKey}/${entityType}/${fileName}`, contents);
+  return new GeneratedFile(`${entityType}/${fileName}`, contents);
 }
 
 module.exports = generateEnumPropTypeFile;
