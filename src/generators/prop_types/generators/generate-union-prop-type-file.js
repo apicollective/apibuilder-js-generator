@@ -13,7 +13,6 @@ const getGeneratedSubEntities = require('../utilities/get-generated-sub-entities
  * @returns {GeneratedFile} - a file to eventually be written to the filesystem
  */
 function generateUnionPropTypeFile(entity, service) {
-  const serviceKey = service.getApplicationKey();
   const entityType = entity.type;
   const fileName = `${kebabCase(entity.name)}.js`;
 
@@ -23,7 +22,7 @@ function generateUnionPropTypeFile(entity, service) {
   contents += '\n\nexport default generatedPropType;\n';
 
 
-  return new GeneratedFile(`${serviceKey}/${entityType}/${fileName}`, contents);
+  return new GeneratedFile(`${entityType}/${fileName}`, contents);
 }
 
 module.exports = generateUnionPropTypeFile;

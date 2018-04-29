@@ -47,7 +47,7 @@ describe('generatePropTypeFile', () => {
 
     const generatedFile = generatePropTypeFile(service, entity);
 
-    expect(generatedFile.path).toEqual('test-application/enum/enum-1.js');
+    expect(generatedFile.path).toEqual('enum/enum-1.js');
     expect(generatedFile.contents.length).toBeGreaterThan(0);
   });
 
@@ -69,7 +69,7 @@ describe('generatePropTypeFile', () => {
 
     const generatedFile = generatePropTypeFile(service, entity);
 
-    expect(generatedFile.path).toEqual('test-application/model/model-1.js');
+    expect(generatedFile.path).toEqual('model/model-1.js');
     expect(generatedFile.contents.length).toBeGreaterThan(0);
   });
 
@@ -89,7 +89,7 @@ describe('generatePropTypeFile', () => {
 
     const generatedFile = generatePropTypeFile(service, entity);
 
-    expect(generatedFile.path).toEqual('test-application/union/union-1.js');
+    expect(generatedFile.path).toEqual('union/union-1.js');
     expect(generatedFile.contents.length).toBeGreaterThan(0);
   });
 
