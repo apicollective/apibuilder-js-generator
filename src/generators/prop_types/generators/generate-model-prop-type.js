@@ -26,8 +26,9 @@ function generateModelPropType(entity, service) {
   contents += 'PropTypes.shape({\n';
   contents += fields.map((field) => {
     let propTypeChunk = '';
+
     if (isIndexed(field)) {
-      propTypeChunk = `${camelCase(`${stripTypeNamespace(field.type)}_prop_type`)}()`;
+      propTypeChunk = `${camelCase(`${getRootType(stripTypeNamespace(field.type))}_prop_type`)}()`;
     } else {
       propTypeChunk = apibuilderType2PropType(getRootType(field.type));
     }
