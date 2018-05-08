@@ -1,9 +1,4 @@
-import PropTypes from 'prop-types';
-
-
-const generatedPropType = () => PropTypes.oneOf([
+module.exports = [
   'enum_1_value_1',
   'enum_1_value_2',
-]);
-
-export default generatedPropType;
+];

@@ -1,10 +1,9 @@
-import PropTypes from 'prop-types';
+// Forward declare module.exports to avoid issues with circular dependencies.
+// We could do better by conditionally doing this for models with circular cycles.
+module.exports = {};
 
+const PropTypes = require('prop-types');
 
-
-
-const generatedPropType = () => PropTypes.shape({
+Object.assign(module.exports, {
   model_2_field_1: PropTypes.string,
 });
-
-export default generatedPropType;

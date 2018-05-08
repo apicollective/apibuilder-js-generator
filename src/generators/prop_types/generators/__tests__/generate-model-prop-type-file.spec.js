@@ -50,7 +50,7 @@ describe('generateModelPropTypeFile', () => {
 
     const generatedFile = generateModelPropTypeFile(entity, service);
 
-    expect(generatedFile.path).toEqual('model/model-1.js');
+    expect(generatedFile.path).toEqual('model/model1PropTypes.js');
     expect(generatedFile.contents).toEqual(loadFixture(__dirname, './fixtures/model-prop-type-file-sub-entities.js.fixture'));
   });
 
@@ -72,7 +72,7 @@ describe('generateModelPropTypeFile', () => {
 
     const generatedFile = generateModelPropTypeFile(entity, service);
 
-    expect(generatedFile.path).toEqual('model/model-2.js');
+    expect(generatedFile.path).toEqual('model/model2PropTypes.js');
     expect(generatedFile.contents).toEqual(loadFixture(__dirname, './fixtures/model-prop-type-file-no-entities.js.fixture'));
   });
 });

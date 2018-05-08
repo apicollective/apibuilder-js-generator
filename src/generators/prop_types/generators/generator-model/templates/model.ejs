@@ -3,8 +3,12 @@
 module.exports = {};
 
 const PropTypes = require('prop-types');
-const enum1PropTypes = require('../enum/enum1PropTypes');
+<%_ imports.forEach(({ defaultExport, moduleName }) => { _%>
+const <%= defaultExport %> = require('<%= moduleName %>');
+<%_ }) _%>
 
 Object.assign(module.exports, {
-  model_7_field_1: PropTypes.arrayOf(PropTypes.oneOf(enum1PropTypes)),
+  <%_ propTypes.forEach(({ key, validator }) => { _%>
+  <%= key %>: <%= validator %>,
+  <%_ }) _%>
 });

@@ -1,12 +1,7 @@
-/**
- * Convert an apibuilder type into the appropriate react PropType.
- *
- * @param {String} apibuilderType - An apibuilder type, aka string, long, date-time-iso8601
- *
- * @returns The correct PropType string for the provided apibuilder type
- */
-const apibuilderType2PropType = (apibuilderType) => {
-  switch (apibuilderType) {
+const getRootType = require('../../../utilities/apibuilder/utilities/get-root-type');
+
+function toPrimitivePropTypesValidator(type) {
+  switch (getRootType(type)) {
     case 'string':
     case 'date-iso8601':
     case 'date-time-iso8601':
@@ -24,6 +19,6 @@ const apibuilderType2PropType = (apibuilderType) => {
     default:
       return 'PropTypes.any';
   }
-};
+}
 
-module.exports = apibuilderType2PropType;
+module.exports = toPrimitivePropTypesValidator;

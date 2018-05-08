@@ -1,5 +1,5 @@
 
-import generateEnumPropType from '../generate-enum-prop-type';
+import generateEnumPropType from '../generator-enumeration';
 import loadFixture from '../../../../../test/utilities/load-fixture';
 
 describe('generateEnumPropType', () => {

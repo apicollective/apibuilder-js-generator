@@ -1,4 +1,8 @@
-PropTypes.oneOfType([
-  model3PropType(),
-  model4PropType(),
-]);
+const PropTypes = require('prop-types');
+const model3PropTypes = require('../model/model3PropTypes');
+const model4PropTypes = require('../model/model4PropTypes');
+
+module.exports = [
+  PropTypes.shape(model3PropTypes),
+  PropTypes.shape(model4PropTypes),
+];

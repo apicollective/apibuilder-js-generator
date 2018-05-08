@@ -1,6 +1,6 @@
 import Service from '../../../../utilities/apibuilder/Service';
 
-import generateModelPropType from '../generate-model-prop-type';
+import generateModelPropType from '../generator-model';
 import loadFixture from '../../../../../test/utilities/load-fixture';
 
 describe('generateModelPropType', () => {

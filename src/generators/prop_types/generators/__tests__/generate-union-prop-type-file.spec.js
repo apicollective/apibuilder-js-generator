@@ -48,7 +48,7 @@ describe('generateUnionPropTypeFile', () => {
 
     const generatedFile = generateUnionPropTypeFile(entity, service);
 
-    expect(generatedFile.path).toEqual('union/union-1.js');
+    expect(generatedFile.path).toEqual('union/union1PropTypes.js');
     expect(generatedFile.contents).toEqual(loadFixture(__dirname, './fixtures/union-prop-type-file.js.fixture'));
   });
 });

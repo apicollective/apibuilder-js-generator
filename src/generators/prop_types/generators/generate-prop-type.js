@@ -1,9 +1,9 @@
 const DebugLogger = require('debug');
 const memoize = require('lodash/fp/memoize');
 
-const generateEnumPropType = require('./generate-enum-prop-type');
-const generateUnionPropType = require('./generate-union-prop-type');
-const generateModelPropType = require('./generate-model-prop-type');
+const generateEnumPropTypes = require('./generator-enumeration');
+const generateModelPropTypes = require('./generator-model');
+const generateUnionPropTypes = require('./generator-union');
 
 const debug = DebugLogger('apibuilder-prop-types:generators');
 
@@ -20,11 +20,11 @@ function generatePropType(entity, service) {
 
   switch (entity.type) {
     case 'enum':
-      return generateEnumPropType(entity);
+      return generateEnumPropTypes(entity);
     case 'union':
-      return generateUnionPropType(entity);
+      return generateUnionPropTypes(entity, service);
     case 'model':
-      return generateModelPropType(entity, service);
+      return generateModelPropTypes(entity, service);
     default:
       throw new Error(`Unhandled entity type[${entity.type}]`);
   }

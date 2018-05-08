@@ -1,0 +1,5 @@
+module.exports = [
+  <%_ entity.values.forEach((enumeration) => { _%>
+  '<%= enumeration.name %>',
+  <%_ }) _%>
+];
