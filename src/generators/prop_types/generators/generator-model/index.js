@@ -30,9 +30,9 @@ function generate(model, service) {
   const { name, entity } = model;
   const { fields } = entity;
   const entities = service.getIndexedEntity(name, service.getIndexed());
-  const imports = mapFieldsToImportStatements(fields, entities);
+  const importStatements = mapFieldsToImportStatements(fields, entities);
   const propTypes = mapFieldsToPropTypes(fields, entities);
-  return compiled({ imports, propTypes });
+  return compiled({ importStatements, propTypes });
 }
 
 module.exports = generate;

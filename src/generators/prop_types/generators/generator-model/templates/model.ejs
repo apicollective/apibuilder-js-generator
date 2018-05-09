@@ -1,9 +1,8 @@
 // Forward declare module.exports to avoid issues with circular dependencies.
-// We could do better by conditionally doing this for models with circular cycles.
 module.exports = {};
 
 const PropTypes = require('prop-types');
-<%_ imports.forEach(({ defaultExport, moduleName }) => { _%>
+<%_ importStatements.forEach(({ defaultExport, moduleName }) => { _%>
 const <%= defaultExport %> = require('<%= moduleName %>');
 <%_ }) _%>
 
