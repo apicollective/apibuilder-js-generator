@@ -27,6 +27,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
+    "faker": "^4.1.0",
     "jest": "^22.4.3",
     "nock": "^9.2.5",
     "nodemon": "^1.17.3"
