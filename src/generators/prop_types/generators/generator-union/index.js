@@ -1,6 +1,5 @@
 const ejs = require('ejs');
 const fs = require('fs');
-const map = require('lodash/map');
 const path = require('path');
 
 const toImportStatement = require('../../utilities/toImportStatement');
@@ -11,11 +10,16 @@ const template = fs.readFileSync(templatePath, 'utf8');
 const compiled = ejs.compile(template);
 
 function mapToPropTypes(union) {
-  return map(union.types, type => toPropTypes(type));
+  return union.types
+    .map(type => toPropTypes(type));
 }
 
 function mapToImportStatements(union) {
-  return map(union.types, type => toImportStatement(union, type));
+  return union.types
+    // Primitive types do not require import.
+    .filter(type => !type.isPrimitive)
+    // TODO: Check for possible default export name collision.
+    .map(type => toImportStatement(union, type));
 }
 
 function generate(union) {

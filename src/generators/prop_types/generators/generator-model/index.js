@@ -16,6 +16,7 @@ function mapToImportStatements(model) {
     .reduce((importStatements, field) => {
       const importStatement = toImportStatement(model, field);
       const isAlreadyImported = importStatements.some(matches(importStatement));
+      // TODO: Check for possible default export name collision.
       return isAlreadyImported ? importStatements : importStatements.concat(importStatement);
     }, []);
 }
