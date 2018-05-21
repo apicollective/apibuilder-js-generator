@@ -1,5 +1,6 @@
 const flatMap = require('lodash/flatMap');
 const map = require('lodash/map');
+const memoize = require('lodash/memoize');
 
 const Enumeration = require('./Enumeration');
 const Model = require('./Model');
@@ -75,24 +76,24 @@ class Service {
     });
 
     Object.defineProperty(this, 'internalEnums', {
-      get() {
+      get: memoize(() => {
         return map(this.schema.enums, enumeration =>
           Enumeration.fromSchema(enumeration, this));
-      },
+      }),
     });
 
     Object.defineProperty(this, 'internalModels', {
-      get() {
+      get: memoize(() => {
         return map(this.schema.models, model =>
           Model.fromSchema(model, this));
-      },
+      }),
     });
 
     Object.defineProperty(this, 'internalUnions', {
-      get() {
+      get: memoize(() => {
         return map(this.schema.unions, union =>
           Union.fromSchema(union, this));
-      },
+      }),
     });
 
     Object.defineProperty(this, 'internalEntities', {
@@ -106,27 +107,27 @@ class Service {
     });
 
     Object.defineProperty(this, 'externalEnums', {
-      get() {
+      get: memoize(() => {
         return flatMap(this.schema.imports, ({ enums, namespace }) =>
           map(enums, enumeration =>
             Enumeration.fromSchema({ name: enumeration }, this, namespace)));
-      },
+      }),
     });
 
     Object.defineProperty(this, 'externalModels', {
-      get() {
+      get: memoize(() => {
         return flatMap(this.schema.imports, ({ models, namespace }) =>
           map(models, model =>
             Model.fromSchema({ name: model }, this, namespace)));
-      },
+      }),
     });
 
     Object.defineProperty(this, 'externalUnions', {
-      get() {
+      get: memoize(() => {
         return flatMap(this.schema.imports, ({ unions, namespace }) =>
           map(unions, union =>
             Union.fromSchema({ name: union }, this, namespace)));
-      },
+      }),
     });
 
     Object.defineProperty(this, 'externalEntities', {
