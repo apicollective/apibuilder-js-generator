@@ -152,7 +152,7 @@ Entity.fromType = function fromType(type, service) {
   }
 
   if (FullyQualifiedType.isMap(type)) {
-    fullyQualifiedType = `map(${fullyQualifiedType})`;
+    fullyQualifiedType = `map[${fullyQualifiedType}]`;
   } else if (FullyQualifiedType.isArray(type)) {
     fullyQualifiedType = `[${fullyQualifiedType}]`;
   }

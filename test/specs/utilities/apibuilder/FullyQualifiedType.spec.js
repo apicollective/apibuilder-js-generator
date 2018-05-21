@@ -35,8 +35,8 @@ describe('FullyQualifiedType::fullyQualifiedName', () => {
       expect(instance).toHaveProperty('fullyQualifiedName', primitiveType);
     });
 
-    test(`should be "${primitiveType}" for instance of type "map(${primitiveType})"`, () => {
-      const instance = new FullyQualifiedType(`map(${primitiveType})`);
+    test(`should be "${primitiveType}" for instance of type "map[${primitiveType}]"`, () => {
+      const instance = new FullyQualifiedType(`map[${primitiveType}]`);
       expect(instance).toHaveProperty('fullyQualifiedName', primitiveType);
     });
   });
@@ -51,8 +51,8 @@ describe('FullyQualifiedType::fullyQualifiedName', () => {
     expect(instance).toHaveProperty('fullyQualifiedName', fullyQualifiedName);
   });
 
-  test(`should be "${fullyQualifiedName}" for instance of type "map(${fullyQualifiedName})"`, () => {
-    const instance = new FullyQualifiedType(`map(${fullyQualifiedName})`);
+  test(`should be "${fullyQualifiedName}" for instance of type "map[${fullyQualifiedName}]"`, () => {
+    const instance = new FullyQualifiedType(`map[${fullyQualifiedName}]`);
     expect(instance).toHaveProperty('fullyQualifiedName', fullyQualifiedName);
   });
 });
@@ -69,8 +69,8 @@ describe('FullyQualifiedType::shortName', () => {
       expect(instance).toHaveProperty('shortName', primitiveType);
     });
 
-    test(`should be "${primitiveType}" for instance of type "map(${primitiveType})"`, () => {
-      const instance = new FullyQualifiedType(`map(${primitiveType})`);
+    test(`should be "${primitiveType}" for instance of type "map[${primitiveType}]"`, () => {
+      const instance = new FullyQualifiedType(`map[${primitiveType}]`);
       expect(instance).toHaveProperty('shortName', primitiveType);
     });
   });
@@ -85,8 +85,8 @@ describe('FullyQualifiedType::shortName', () => {
     expect(instance).toHaveProperty('shortName', 'reference');
   });
 
-  test(`should be "${fullyQualifiedName}" for instance of type "map(${fullyQualifiedName})"`, () => {
-    const instance = new FullyQualifiedType(`map(${fullyQualifiedName})`);
+  test(`should be "${fullyQualifiedName}" for instance of type "map[${fullyQualifiedName}]"`, () => {
+    const instance = new FullyQualifiedType(`map[${fullyQualifiedName}]`);
     expect(instance).toHaveProperty('shortName', 'reference');
   });
 });
@@ -103,8 +103,8 @@ describe('FullyQualifiedType::packageName', () => {
       expect(instance).toHaveProperty('packageName', '');
     });
 
-    test(`should be empty string for instance of type "map(${primitiveType})"`, () => {
-      const instance = new FullyQualifiedType(`map(${primitiveType})`);
+    test(`should be empty string for instance of type "map[${primitiveType}]"`, () => {
+      const instance = new FullyQualifiedType(`map[${primitiveType}]`);
       expect(instance).toHaveProperty('packageName', '');
     });
   });
@@ -119,8 +119,8 @@ describe('FullyQualifiedType::packageName', () => {
     expect(instance).toHaveProperty('packageName', 'com.bryzek.apidoc.common.v0.models');
   });
 
-  test(`should be "com.bryzek.apidoc.common.v0.models" for instance of type "map(${fullyQualifiedName})"`, () => {
-    const instance = new FullyQualifiedType(`map(${fullyQualifiedName})`);
+  test(`should be "com.bryzek.apidoc.common.v0.models" for instance of type "map[${fullyQualifiedName}]"`, () => {
+    const instance = new FullyQualifiedType(`map[${fullyQualifiedName}]`);
     expect(instance).toHaveProperty('packageName', 'com.bryzek.apidoc.common.v0.models');
   });
 });
@@ -148,13 +148,13 @@ describe('FullyQualifiedType::isArray', () => {
 });
 
 describe('FullyQualifiedType::isMap', () => {
-  test('should be true for instance of type "map(string)"', () => {
-    const instance = new FullyQualifiedType('map(string)');
+  test('should be true for instance of type "map[string]"', () => {
+    const instance = new FullyQualifiedType('map[string]');
     expect(instance).toHaveProperty('isMap', true);
   });
 
-  test(`should be true for instance of type map(${fullyQualifiedName})`, () => {
-    const instance = new FullyQualifiedType(`map(${fullyQualifiedName})`);
+  test(`should be true for instance of type map[${fullyQualifiedName}]`, () => {
+    const instance = new FullyQualifiedType(`map[${fullyQualifiedName}]`);
     expect(instance).toHaveProperty('isMap', true);
   });
 
@@ -181,8 +181,8 @@ describe('FullyQualifiedType::isPrimitive', () => {
       expect(instance).toHaveProperty('isPrimitive', true);
     });
 
-    test(`should be true for an instance of type "map(${primitiveType})"`, () => {
-      const instance = new FullyQualifiedType(`map(${primitiveType})`);
+    test(`should be true for an instance of type "map[${primitiveType}]"`, () => {
+      const instance = new FullyQualifiedType(`map[${primitiveType}]`);
       expect(instance).toHaveProperty('isPrimitive', true);
     });
   });
@@ -197,8 +197,8 @@ describe('FullyQualifiedType::isPrimitive', () => {
     expect(instance).toHaveProperty('isPrimitive', false);
   });
 
-  test(`should be false for an instance of type "map(${fullyQualifiedName})"`, () => {
-    const instance = new FullyQualifiedType(`map(${fullyQualifiedName})`);
+  test(`should be false for an instance of type "map[${fullyQualifiedName}]"`, () => {
+    const instance = new FullyQualifiedType(`map[${fullyQualifiedName}]`);
     expect(instance).toHaveProperty('isPrimitive', false);
   });
 });
@@ -213,8 +213,8 @@ describe('FullyQualifiedType.toBaseType', () => {
       expect(FullyQualifiedType.toBaseType(`[${primitiveType}]`)).toBe(primitiveType);
     });
 
-    test(`should return "${primitiveType}" for type "map(${primitiveType})"`, () => {
-      expect(FullyQualifiedType.toBaseType(`map(${primitiveType})`)).toBe(primitiveType);
+    test(`should return "${primitiveType}" for type "map[${primitiveType}]"`, () => {
+      expect(FullyQualifiedType.toBaseType(`map[${primitiveType}]`)).toBe(primitiveType);
     });
   });
 
@@ -226,8 +226,8 @@ describe('FullyQualifiedType.toBaseType', () => {
     expect(FullyQualifiedType.toBaseType(`[${fullyQualifiedName}]`)).toBe(fullyQualifiedName);
   });
 
-  test(`should return "${fullyQualifiedName}" for type "map(${fullyQualifiedName}])"`, () => {
-    expect(FullyQualifiedType.toBaseType(`map(${fullyQualifiedName})`)).toBe(fullyQualifiedName);
+  test(`should return "${fullyQualifiedName}" for type "map[${fullyQualifiedName}]"`, () => {
+    expect(FullyQualifiedType.toBaseType(`map[${fullyQualifiedName}]`)).toBe(fullyQualifiedName);
   });
 });
 

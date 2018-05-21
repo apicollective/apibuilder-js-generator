@@ -24,8 +24,8 @@ describe('Entity::isPrimitive', () => {
       expect(entity).toHaveProperty('isPrimitive', true);
     });
 
-    test(`should be true for a entity of type "map(${primitive})"`, () => {
-      const entity = Entity.fromType(`map(${primitive})`, service);
+    test(`should be true for a entity of type "map[${primitive}]"`, () => {
+      const entity = Entity.fromType(`map[${primitive}]`, service);
       expect(entity).toHaveProperty('isPrimitive', true);
     });
   });
@@ -48,29 +48,29 @@ describe('Entity::isPrimitive', () => {
 
 describe('Entity::isMap', () => {
   primitives.forEach((primitive) => {
-    test(`should be true for a entity of type "map(${primitive})"`, () => {
-      const entity = Entity.fromType(`map(${primitive})`, service);
+    test(`should be true for a entity of type "map[${primitive}]"`, () => {
+      const entity = Entity.fromType(`map[${primitive}]`, service);
       expect(entity).toHaveProperty('isMap', true);
     });
   });
 
   test('should be true for a entity of type considered a map of some model', () => {
-    const entity = Entity.fromType('map(organization)', service);
+    const entity = Entity.fromType('map[organization]', service);
     expect(entity).toHaveProperty('isMap', true);
   });
 
   test('should be true for a entity of type considered a map of some enumeration', () => {
-    const entity = Entity.fromType('map(visibility)', service);
+    const entity = Entity.fromType('map[visibility]', service);
     expect(entity).toHaveProperty('isMap', true);
   });
 
   test('should be true for a entity of type considered a map of some union', () => {
-    const entity = Entity.fromType('map(diff)', service);
+    const entity = Entity.fromType('map[diff]', service);
     expect(entity).toHaveProperty('isMap', true);
   });
 
   test('should be true for a entity of fully qualified type considered a map of some model', () => {
-    const entity = Entity.fromType('map(com.bryzek.apidoc.common.v0.models.audit)', service);
+    const entity = Entity.fromType('map[com.bryzek.apidoc.common.v0.models.audit]', service);
     expect(entity).toHaveProperty('isMap', true);
   });
 });
@@ -160,7 +160,7 @@ describe('Entity.fromType', () => {
   });
 
   test('should create instance from map of internal model', () => {
-    const instance = Entity.fromType('map(application)', service);
+    const instance = Entity.fromType('map[application]', service);
     expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
   });
 

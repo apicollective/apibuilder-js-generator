@@ -19,7 +19,7 @@ const primitiveTypes = [
 
 const arrayOfRegex = /^\[([^\]]+)\]$/;
 
-const objectOfRegex = /^map\(([^)]+)\)$/;
+const objectOfRegex = /^map\[([^\]]+)\]$/;
 
 class FullyQualifiedType {
   /**
@@ -28,10 +28,10 @@ class FullyQualifiedType {
    * @example
    * new FullyQualifiedType("string");
    * new FullyQualifiedType("[string]");
-   * new FullyQualifiedType("map(string)");
+   * new FullyQualifiedType("map[string]");
    * new FullyQualifiedType("com.bryzek.apidoc.common.v0.models.reference");
    * new FullyQualifiedType("[com.bryzek.apidoc.common.v0.models.reference]");
-   * new FullyQualifiedType("map(com.bryzek.apidoc.common.v0.models.reference)");
+   * new FullyQualifiedType("map[com.bryzek.apidoc.common.v0.models.reference]");
    */
   constructor(fullyQualifiedType) {
     invariant(

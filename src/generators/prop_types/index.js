@@ -14,6 +14,8 @@ const debug = createLogger('prop_types');
 function generate(data) {
   const service = new Service({ service: data });
   const generatedFiles = reduce(service.internalEntities, (files, entity) => {
+    debug(`Generating source code for "${entity.fullyQualifiedName}".`);
+
     let contents;
 
     if (entity.isEnum) {
@@ -23,11 +25,9 @@ function generate(data) {
     } else if (entity.isUnion) {
       contents = generateUnion(entity);
     } else {
-      debug(`Skipping code generation for ${entity.fullyQualifiedName} because is not supported`);
+      debug('Skipping because type is not supported');
       return files;
     }
-
-    debug(`Code generated for ${entity.fullyQualifiedName}`);
 
     const filepath = toModuleName(entity);
     const basename = `${path.basename(filepath)}.js`;
