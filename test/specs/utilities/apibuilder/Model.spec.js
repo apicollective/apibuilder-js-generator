@@ -4,12 +4,11 @@ const Service = require('../../../../src/utilities/apibuilder/Service');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
 const service = new Service({ service: schema });
-const { namespace } = schema;
-const application = find(schema.models, { name: 'application' });
 
-describe.skip('Model', () => {
+describe('Model', () => {
   test('should have property with fully qualified name', () => {
-    const model = new Model(application, namespace, service);
-    expect(model).toHaveProperty('fullyQualifiedName', `${namespace}.models.application`);
+    const application = find(schema.models, { name: 'application' });
+    const model = Model.fromSchema(application, service);
+    expect(model).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
   });
 });
