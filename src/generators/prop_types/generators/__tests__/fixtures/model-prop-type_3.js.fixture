@@ -1,9 +1,0 @@
-// Forward declare module.exports to avoid issues with circular dependencies.
-module.exports = {};
-
-const PropTypes = require('prop-types');
-const enum1PropTypes = require('../enum/enum1PropTypes');
-
-Object.assign(module.exports, {
-  model_7_field_1: PropTypes.arrayOf(PropTypes.oneOf(enum1PropTypes)),
-});

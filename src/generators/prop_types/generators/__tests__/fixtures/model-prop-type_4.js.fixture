@@ -1,8 +1,0 @@
-// Forward declare module.exports to avoid issues with circular dependencies.
-module.exports = {};
-
-const PropTypes = require('prop-types');
-
-Object.assign(module.exports, {
-  model_8_field_1: PropTypes.objectOf(PropTypes.string),
-});

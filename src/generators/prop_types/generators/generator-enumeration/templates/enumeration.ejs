@@ -1,5 +1,5 @@
 module.exports = [
-  <%_ entity.values.forEach((enumeration) => { _%>
-  '<%= enumeration.name %>',
+  <%_ enumeration.constants.forEach((constant) => { _%>
+  '<%= constant %>',
   <%_ }) _%>
 ];

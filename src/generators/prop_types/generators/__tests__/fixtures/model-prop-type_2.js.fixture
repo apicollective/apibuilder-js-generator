@@ -1,9 +1,0 @@
-// Forward declare module.exports to avoid issues with circular dependencies.
-module.exports = {};
-
-const PropTypes = require('prop-types');
-const union1PropTypes = require('../union/union1PropTypes');
-
-Object.assign(module.exports, {
-  model_1_field_1: PropTypes.oneOfType(union1PropTypes),
-});
