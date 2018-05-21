@@ -10,23 +10,21 @@ const template = fs.readFileSync(templatePath, 'utf8');
 const compiled = ejs.compile(template);
 
 function mapToImportStatements(model) {
-  return model.fields.filter((field) => {
-    // Primitive types do not require import.
-    return !field.isPrimitive;
-  }).reduce((importStatements, field) => {
-    const importStatement = toImportStatement(model, field);
-    const isAlreadyImported = importStatements.some(matches(importStatement));
-    return isAlreadyImported ? importStatements : importStatements.concat(importStatement);
-  }, []);
+  // Primitive types do not require import.
+  return model.fields
+    .filter(field => !field.isPrimitive)
+    .reduce((importStatements, field) => {
+      const importStatement = toImportStatement(model, field);
+      const isAlreadyImported = importStatements.some(matches(importStatement));
+      return isAlreadyImported ? importStatements : importStatements.concat(importStatement);
+    }, []);
 }
 
 function mapToPropTypes(model) {
-  return model.fields.map((field) => {
-    return {
-      key: field.schema.name,
-      validator: toPropTypes(field, field.schema.required),
-    };
-  });
+  return model.fields.map(field => ({
+    key: field.schema.name,
+    validator: toPropTypes(field, field.schema.required),
+  }));
 }
 
 function generate(model) {

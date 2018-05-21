@@ -76,24 +76,18 @@ class Service {
     });
 
     Object.defineProperty(this, 'internalEnums', {
-      get: memoize(() => {
-        return map(this.schema.enums, enumeration =>
-          Enumeration.fromSchema(enumeration, this));
-      }),
+      get: memoize(() =>
+        map(this.schema.enums, enumeration => Enumeration.fromSchema(enumeration, this))),
     });
 
     Object.defineProperty(this, 'internalModels', {
-      get: memoize(() => {
-        return map(this.schema.models, model =>
-          Model.fromSchema(model, this));
-      }),
+      get: memoize(() =>
+        map(this.schema.models, model => Model.fromSchema(model, this))),
     });
 
     Object.defineProperty(this, 'internalUnions', {
-      get: memoize(() => {
-        return map(this.schema.unions, union =>
-          Union.fromSchema(union, this));
-      }),
+      get: memoize(() =>
+        map(this.schema.unions, union => Union.fromSchema(union, this))),
     });
 
     Object.defineProperty(this, 'internalEntities', {
@@ -107,27 +101,18 @@ class Service {
     });
 
     Object.defineProperty(this, 'externalEnums', {
-      get: memoize(() => {
-        return flatMap(this.schema.imports, ({ enums, namespace }) =>
-          map(enums, enumeration =>
-            Enumeration.fromSchema({ name: enumeration }, this, namespace)));
-      }),
+      get: memoize(() => flatMap(this.schema.imports, ({ enums, namespace }) =>
+        map(enums, enumeration => Enumeration.fromSchema({ name: enumeration }, this, namespace)))),
     });
 
     Object.defineProperty(this, 'externalModels', {
-      get: memoize(() => {
-        return flatMap(this.schema.imports, ({ models, namespace }) =>
-          map(models, model =>
-            Model.fromSchema({ name: model }, this, namespace)));
-      }),
+      get: memoize(() => flatMap(this.schema.imports, ({ models, namespace }) =>
+        map(models, model => Model.fromSchema({ name: model }, this, namespace)))),
     });
 
     Object.defineProperty(this, 'externalUnions', {
-      get: memoize(() => {
-        return flatMap(this.schema.imports, ({ unions, namespace }) =>
-          map(unions, union =>
-            Union.fromSchema({ name: union }, this, namespace)));
-      }),
+      get: memoize(() => flatMap(this.schema.imports, ({ unions, namespace }) =>
+        map(unions, union => Union.fromSchema({ name: union }, this, namespace)))),
     });
 
     Object.defineProperty(this, 'externalEntities', {

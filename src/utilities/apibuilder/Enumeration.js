@@ -21,9 +21,7 @@ class Enumeration extends Entity {
      */
     Object.defineProperty(this, 'constants', {
       get() {
-        return map(this.schema.values, ({ name, value }) => {
-          return defaultTo(value, name);
-        });
+        return map(this.schema.values, ({ name, value }) => defaultTo(value, name));
       },
     });
   }
