@@ -1,6 +1,4 @@
 const FullyQualifiedType = require('../../../../src/utilities/apibuilder/FullyQualifiedType');
-const Service = require('../../../../src/utilities/apibuilder/Service');
-const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
 const primitiveTypes = [
   'boolean',
@@ -17,10 +15,6 @@ const primitiveTypes = [
   'uuid',
 ];
 
-// IMPORTANT: Tests use types that are part of this schema definition.
-// By the way, this is the schema definition for apibuilder api:
-// https://app.apibuilder.io/bryzek/apidoc-api/latest
-const service = new Service({ service: schema });
 const fullyQualifiedName = 'com.bryzek.apidoc.common.v0.models.reference';
 
 describe('FullyQualifiedType::fullyQualifiedName', () => {
