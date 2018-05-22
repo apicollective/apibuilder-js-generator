@@ -12,7 +12,10 @@ const Union = require('./Union');
  */
 class Service {
   constructor({ service: schema }) {
-    this.schema = schema;
+    Object.defineProperty(this, 'schema', {
+      enumerable: true,
+      value: schema,
+    });
 
     Object.defineProperty(this, 'name', {
       enumerable: true,

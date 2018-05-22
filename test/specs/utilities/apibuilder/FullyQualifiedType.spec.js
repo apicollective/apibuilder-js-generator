@@ -197,6 +197,141 @@ describe('FullyQualifiedType::isPrimitive', () => {
   });
 });
 
+describe('FullyQualifiedType.parseType', () => {
+  test('string', () => {
+    expect(FullyQualifiedType.parseType('string')).toEqual({
+      name: 'string',
+    });
+  });
+
+  test('map[string]', () => {
+    expect(FullyQualifiedType.parseType('map[string]')).toEqual({
+      name: 'map',
+      type: {
+        name: 'string',
+      },
+    });
+  });
+
+  test('map[[string]]', () => {
+    expect(FullyQualifiedType.parseType('map[[string]]')).toEqual({
+      name: 'map',
+      type: {
+        name: 'array',
+        type: {
+          name: 'string',
+        },
+      },
+    });
+  });
+
+  test(`map[map[map[[${fullyQualifiedName}]]]`, () => {
+    expect(FullyQualifiedType.parseType(`map[map[map[[${fullyQualifiedName}]]]]`)).toEqual({
+      name: 'map',
+      type: {
+        name: 'map',
+        type: {
+          name: 'map',
+          type: {
+            name: 'array',
+            type: {
+              name: fullyQualifiedName,
+            },
+          },
+        },
+      },
+    });
+  });
+
+  test('[[[[string]]]]', () => {
+    expect(FullyQualifiedType.parseType('[[[[string]]]]')).toEqual({
+      name: 'array',
+      type: {
+        name: 'array',
+        type: {
+          name: 'array',
+          type: {
+            name: 'array',
+            type: {
+              name: 'string',
+            },
+          },
+        },
+      },
+    });
+  });
+});
+
+describe('FullyQualifiedType.formatType', () => {
+  test('string', () => {
+    const object = {
+      name: 'string',
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual('string');
+  });
+
+  test('map[string]', () => {
+    const object = {
+      name: 'map',
+      type: {
+        name: 'string',
+      },
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual('map[string]');
+  });
+
+  test('map[[string]]', () => {
+    const object = {
+      name: 'map',
+      type: {
+        name: 'array',
+        type: {
+          name: 'string',
+        },
+      },
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual('map[[string]]');
+  });
+
+  test(`map[map[map[[${fullyQualifiedName}]]]`, () => {
+    const object = {
+      name: 'map',
+      type: {
+        name: 'map',
+        type: {
+          name: 'map',
+          type: {
+            name: 'array',
+            type: {
+              name: fullyQualifiedName,
+            },
+          },
+        },
+      },
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual(`map[map[map[[${fullyQualifiedName}]]]]`);
+  });
+
+  test('[[[[string]]]]', () => {
+    const object = {
+      name: 'array',
+      type: {
+        name: 'array',
+        type: {
+          name: 'array',
+          type: {
+            name: 'array',
+            type: {
+              name: 'string',
+            },
+          },
+        },
+      },
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual('[[[[string]]]]');
+  });
+});
+
 describe('FullyQualifiedType.toBaseType', () => {
   primitiveTypes.forEach((primitiveType) => {
     test(`should return "${primitiveType}" for type "${primitiveType}"`, () => {
