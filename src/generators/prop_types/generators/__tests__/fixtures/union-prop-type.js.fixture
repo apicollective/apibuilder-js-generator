@@ -1,4 +1,0 @@
-PropTypes.oneOfType([
-  model3PropType(),
-  model4PropType(),
-]);

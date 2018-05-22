@@ -1,0 +1,10 @@
+const PropTypes = require('prop-types');
+<%_ importStatements.forEach(({ defaultExport, moduleName }) => { _%>
+const <%= defaultExport %> = require('<%= moduleName %>');
+<%_ }) _%>
+
+module.exports = [
+  <%_ validators.forEach((validator) => { _%>
+  <%= validator %>,
+  <%_ }) _%>
+];

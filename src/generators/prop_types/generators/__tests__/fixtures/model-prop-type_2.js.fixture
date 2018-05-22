@@ -1,3 +1,0 @@
-PropTypes.shape({
-  model_1_field_1: union1PropType(),
-});

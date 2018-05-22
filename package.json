@@ -1,6 +1,6 @@
 {
   "name": "apibuilder-javascript-generator",
-"version":"0.0.12",
+  "version": "0.0.12",
   "description": "apibuilder code generators for JavaScript",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
+    "faker": "^4.1.0",
     "jest": "^22.4.3",
     "nock": "^9.2.5",
     "nodemon": "^1.17.3"
@@ -36,19 +37,12 @@
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.2",
     "debug": "^3.1.0",
+    "ejs": "^2.6.1",
     "express": "^4.16.3",
     "handlebars": "^4.0.11",
     "hbs": "^4.0.1",
+    "invariant": "^2.2.4",
     "lodash": "^4.17.10",
     "mkdirp": "^0.5.1"
   }
 }
-
-
-
-
-
-
-
-
-

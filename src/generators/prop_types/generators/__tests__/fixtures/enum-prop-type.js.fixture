@@ -1,4 +1,0 @@
-PropTypes.oneOf([
-  'enum_1_value_1',
-  'enum_1_value_2',
-]);

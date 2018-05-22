@@ -1,0 +1,6 @@
+module.exports = [
+  'membership_requests.create',
+  'memberships.create',
+  'applications.create',
+  'versions.create',
+];

@@ -1,0 +1,13 @@
+// Forward declare module.exports to avoid issues with circular dependencies.
+module.exports = {};
+
+const PropTypes = require('prop-types');
+<%_ importStatements.forEach(({ defaultExport, moduleName }) => { _%>
+const <%= defaultExport %> = require('<%= moduleName %>');
+<%_ }) _%>
+
+Object.assign(module.exports, {
+  <%_ propTypes.forEach(({ key, validator }) => { _%>
+  <%= key %>: <%= validator %>,
+  <%_ }) _%>
+});

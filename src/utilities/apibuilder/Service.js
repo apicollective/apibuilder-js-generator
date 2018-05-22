@@ -1,92 +1,129 @@
-const concat = require('lodash/fp/concat');
-const flattenDeep = require('lodash/fp/flattenDeep');
-const map = require('lodash/fp/map');
-const method = require('lodash/fp/method');
-const uniqBy = require('lodash/fp/uniqBy');
+const flatMap = require('lodash/flatMap');
+const map = require('lodash/map');
+const memoize = require('lodash/memoize');
 
-const { getIndexedEntities, getIndexedEntity } = require('./entities');
+const Enumeration = require('./Enumeration');
+const Model = require('./Model');
+const Union = require('./Union');
 
 /**
+ * @class Service
  * Wraps an apibuilder service definition and provides utilities for interacting with it.
  */
 class Service {
-  constructor(api, imports) {
-    this.api = api;
-    this.imports = imports;
-    this.indexedEntityCache = {};
-  }
+  constructor({ service: schema }) {
+    this.schema = schema;
 
-  /**
-   * Get all of the entities for this service indexed by their id. If imports are loaded then it
-   * will merge all of the imports entities with this service.
-   *
-   * @returns Array - A list of all the entities used in the service.
-   */
-  getIndexed() {
-    if (this.entityIndex) {
-      return this.entityIndex;
-    }
+    Object.defineProperty(this, 'name', {
+      enumerable: true,
+      value: this.schema.name,
+    });
 
-    const childIndicies = map(method('getIndexed'), this.imports);
-    this.entityIndex = uniqBy(
-      entity => entity.id,
-      flattenDeep(concat(getIndexedEntities(this.api.service), childIndicies)),
-    );
+    Object.defineProperty(this, 'namespace', {
+      enumerable: true,
+      value: this.schema.namespace,
+    });
 
-    return this.entityIndex;
-  }
+    Object.defineProperty(this, 'version', {
+      enumerable: true,
+      value: this.schema.version,
+    });
 
-  /**
-   * Get all the dependent entities for the one provided. Takes the provided entity name and finds
-   * the full object that represents it. It then finds all related entities using the same approach.
-   *
-   * @param {String} name - The entity name or id.
-   *
-   * @returns Array - The entities related to the provided one.
-   */
-  getIndexedEntity(name) {
-    if (this.indexedEntityCache[name]) {
-      return this.indexedEntityCache[name];
-    }
+    Object.defineProperty(this, 'applicationKey', {
+      enumerable: true,
+      value: this.schema.application.key,
+    });
 
-    this.indexedEntityCache[name] = getIndexedEntity(name, this.getIndexed());
+    Object.defineProperty(this, 'organizationKey', {
+      enumerable: true,
+      value: this.schema.organization.key,
+    });
 
-    return this.indexedEntityCache[name];
-  }
+    Object.defineProperty(this, 'enums', {
+      get() {
+        return [
+          ...this.internalEnums,
+          ...this.externalEnums,
+        ];
+      },
+    });
 
-  /**
-   * Return the service name
-   */
-  getName() {
-    return this.api.service.name;
-  }
+    Object.defineProperty(this, 'models', {
+      get() {
+        return [
+          ...this.internalModels,
+          ...this.externalModels,
+        ];
+      },
+    });
 
-  /**
-   * Return the service application key
-   */
-  getApplicationKey() {
-    return this.api.service.application.key;
-  }
+    Object.defineProperty(this, 'unions', {
+      get() {
+        return [
+          ...this.internalUnions,
+          ...this.externalUnions,
+        ];
+      },
+    });
 
-  /**
-   * Return the service organization key
-   */
-  getOrganizationKey() {
-    return this.api.service.organization.key;
-  }
+    Object.defineProperty(this, 'entities', {
+      get() {
+        return [
+          ...this.internalEntities,
+          ...this.externalEntities,
+        ];
+      },
+    });
 
-  /**
-   * Return the service namespace
-   */
-  getNamespace() {
-    return this.api.service.namespace;
-  }
+    Object.defineProperty(this, 'internalEnums', {
+      get: memoize(() =>
+        map(this.schema.enums, enumeration => Enumeration.fromSchema(enumeration, this))),
+    });
 
-  /**
-   * Return the service version
-   */
-  getVersion() {
-    return this.api.service.version;
+    Object.defineProperty(this, 'internalModels', {
+      get: memoize(() =>
+        map(this.schema.models, model => Model.fromSchema(model, this))),
+    });
+
+    Object.defineProperty(this, 'internalUnions', {
+      get: memoize(() =>
+        map(this.schema.unions, union => Union.fromSchema(union, this))),
+    });
+
+    Object.defineProperty(this, 'internalEntities', {
+      get() {
+        return [
+          ...this.internalEnums,
+          ...this.internalModels,
+          ...this.internalUnions,
+        ];
+      },
+    });
+
+    Object.defineProperty(this, 'externalEnums', {
+      get: memoize(() => flatMap(this.schema.imports, ({ enums, namespace }) =>
+        map(enums, enumeration => Enumeration.fromSchema({ name: enumeration }, this, namespace)))),
+    });
+
+    Object.defineProperty(this, 'externalModels', {
+      get: memoize(() => flatMap(this.schema.imports, ({ models, namespace }) =>
+        map(models, model => Model.fromSchema({ name: model }, this, namespace)))),
+    });
+
+    Object.defineProperty(this, 'externalUnions', {
+      get: memoize(() => flatMap(this.schema.imports, ({ unions, namespace }) =>
+        map(unions, union => Union.fromSchema({ name: union }, this, namespace)))),
+    });
+
+    Object.defineProperty(this, 'externalEntities', {
+      get() {
+        return [
+          ...this.externalEnums,
+          ...this.externalModels,
+          ...this.externalUnions,
+        ];
+      },
+    });
   }
 }
 

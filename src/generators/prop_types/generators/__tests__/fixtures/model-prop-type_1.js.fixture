@@ -1,3 +1,0 @@
-PropTypes.shape({
-  model_2_field_1: PropTypes.string,
-});
