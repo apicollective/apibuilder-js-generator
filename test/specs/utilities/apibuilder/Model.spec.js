@@ -11,4 +11,10 @@ describe('Model', () => {
     const model = Model.fromSchema(application, service);
     expect(model).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
   });
+
+  test('should have property with package name', () => {
+    const application = find(schema.models, { name: 'application' });
+    const model = Model.fromSchema(application, service);
+    expect(model).toHaveProperty('packageName', 'com.bryzek.apidoc.api.v0.models');
+  });
 });

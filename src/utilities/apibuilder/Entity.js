@@ -17,37 +17,51 @@ class Entity {
    */
   constructor(fullyQualifiedType, service) {
     Object.defineProperty(this, 'fullyQualifiedType', {
-      value: fullyQualifiedType,
+      enumerable: true,
+      value: fullyQualifiedType.fullyQualifiedType,
     });
 
     Object.defineProperty(this, 'fullyQualifiedName', {
-      value: fullyQualifiedType.fullyQualifiedName,
       enumerable: true,
+      value: fullyQualifiedType.fullyQualifiedName,
     });
 
     Object.defineProperty(this, 'shortName', {
-      value: fullyQualifiedType.shortName,
       enumerable: true,
+      value: fullyQualifiedType.shortName,
     });
 
     Object.defineProperty(this, 'packageName', {
-      value: fullyQualifiedType.packageName,
       enumerable: true,
+      value: fullyQualifiedType.packageName,
+    });
+
+    Object.defineProperty(this, 'nestedEntity', {
+      get() {
+        return this.isEnclosingType
+          ? Entity.fromType(fullyQualifiedType.nestedType, service)
+          : null;
+      },
+    });
+
+    Object.defineProperty(this, 'isEnclosingType', {
+      enumerable: true,
+      value: fullyQualifiedType.isEnclosingType,
     });
 
     Object.defineProperty(this, 'isPrimitive', {
-      value: fullyQualifiedType.isPrimitive,
       enumerable: true,
+      value: fullyQualifiedType.isPrimitive,
     });
 
     Object.defineProperty(this, 'isMap', {
-      value: fullyQualifiedType.isMap,
       enumerable: true,
+      value: fullyQualifiedType.isMap,
     });
 
     Object.defineProperty(this, 'isArray', {
-      value: fullyQualifiedType.isArray,
       enumerable: true,
+      value: fullyQualifiedType.isArray,
     });
 
     Object.defineProperty(this, 'isUnion', {
@@ -126,6 +140,34 @@ function findUnionByType(type, service) {
 }
 
 /**
+ * Recursively expand a type to its fully qualified type tree representation.
+ * If necessary, use FullyQualifiedType.formatType to turn back returned value
+ * into a string representation of the type in question.
+ * @param {String|Object} type
+ * @param {Service} service
+ * @returns {Object}
+ */
+function toFullyQualifiedType(type, service) {
+  if (typeof type === 'string') {
+    return toFullyQualifiedType(FullyQualifiedType.parseType(type), service);
+  } else if (type.name === 'map') {
+    return { name: 'map', type: toFullyQualifiedType(type.type, service) };
+  } else if (type.name === 'array') {
+    return { name: 'array', type: toFullyQualifiedType(type.type, service) };
+  } else if (FullyQualifiedType.isPrimitiveType(type.name)) {
+    return { name: type.name };
+  } else if (isModel(type.name, service)) {
+    return { name: findModelByType(type.name, service).fullyQualifiedName };
+  } else if (isUnion(type.name, service)) {
+    return { name: findUnionByType(type.name, service).fullyQualifiedName };
+  } else if (isEnum(type.name, service)) {
+    return { name: findEnumByType(type.name, service).fullyQualifiedName };
+  }
+
+  return invariant(false, `"${type}" is not a type available in "${service.applicationKey}@${service.version}" service`);
+}
+
+/**
  * Returns the Entity corresponding to the specified type. When resolving
  * non-primitive types, internal types will take precedence over external types.
  * That being said, using a type short name to resolve to the correct entity is
@@ -135,30 +177,9 @@ function findUnionByType(type, service) {
  * @returns {Entity}
  */
 Entity.fromType = function fromType(type, service) {
-  const baseType = FullyQualifiedType.toBaseType(type);
-
-  let fullyQualifiedType;
-
-  if (FullyQualifiedType.isPrimitiveType(baseType)) {
-    fullyQualifiedType = baseType;
-  } else if (isModel(baseType, service)) {
-    fullyQualifiedType = findModelByType(baseType, service).fullyQualifiedName;
-  } else if (isUnion(baseType, service)) {
-    fullyQualifiedType = findUnionByType(baseType, service).fullyQualifiedName;
-  } else if (isEnum(baseType, service)) {
-    fullyQualifiedType = findEnumByType(baseType, service).fullyQualifiedName;
-  } else {
-    invariant(false, `"${type}" is not a type available in "${service.applicationKey}@${service.version}" service`);
-  }
-
-  if (FullyQualifiedType.isMap(type)) {
-    fullyQualifiedType = `map[${fullyQualifiedType}]`;
-  } else if (FullyQualifiedType.isArray(type)) {
-    fullyQualifiedType = `[${fullyQualifiedType}]`;
-  }
-
+  let fullyQualifiedType = toFullyQualifiedType(type, service);
+  fullyQualifiedType = FullyQualifiedType.formatType(fullyQualifiedType);
   fullyQualifiedType = new FullyQualifiedType(fullyQualifiedType);
-
   return new Entity(fullyQualifiedType, service);
 };
 

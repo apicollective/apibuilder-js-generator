@@ -7,31 +7,27 @@ const toPrimitivePropTypes = require('./toPrimitivePropTypes');
  * @param {Boolean} [required = false]
  */
 function toPropTypes(entity, required = false) {
-  let validator;
-
-  if (entity.isModel) {
-    validator = `PropTypes.shape(${toDefaultExport(entity)})`;
-  } else if (entity.isUnion) {
-    validator = `PropTypes.oneOfType(${toDefaultExport(entity)})`;
-  } else if (entity.isEnum) {
-    validator = `PropTypes.oneOf(${toDefaultExport(entity)})`;
-  } else {
-    validator = toPrimitivePropTypes(entity);
-  }
-
-  if (entity.isArray) {
-    validator = `PropTypes.arrayOf(${validator})`;
-  }
+  let propType;
 
   if (entity.isMap) {
-    validator = `PropTypes.objectOf(${validator})`;
+    propType = `PropTypes.objectOf(${toPropTypes(entity.nestedEntity, required)})`;
+  } else if (entity.isArray) {
+    propType = `PropTypes.arrayOf(${toPropTypes(entity.nestedEntity, required)})`;
+  } else if (entity.isPrimitive) {
+    propType = toPrimitivePropTypes(entity);
+  } else if (entity.isModel) {
+    propType = `PropTypes.shape(${toDefaultExport(entity)})`;
+  } else if (entity.isUnion) {
+    propType = `PropTypes.oneOfType(${toDefaultExport(entity)})`;
+  } else if (entity.isEnum) {
+    propType = `PropTypes.oneOf(${toDefaultExport(entity)})`;
   }
 
   if (required) {
-    validator = `${validator}.isRequired`;
+    propType = `${propType}.isRequired`;
   }
 
-  return validator;
+  return propType;
 }
 
 module.exports = toPropTypes;

@@ -1,6 +1,4 @@
 const FullyQualifiedType = require('../../../../src/utilities/apibuilder/FullyQualifiedType');
-const Service = require('../../../../src/utilities/apibuilder/Service');
-const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
 const primitiveTypes = [
   'boolean',
@@ -17,10 +15,6 @@ const primitiveTypes = [
   'uuid',
 ];
 
-// IMPORTANT: Tests use types that are part of this schema definition.
-// By the way, this is the schema definition for apibuilder api:
-// https://app.apibuilder.io/bryzek/apidoc-api/latest
-const service = new Service({ service: schema });
 const fullyQualifiedName = 'com.bryzek.apidoc.common.v0.models.reference';
 
 describe('FullyQualifiedType::fullyQualifiedName', () => {
@@ -54,6 +48,43 @@ describe('FullyQualifiedType::fullyQualifiedName', () => {
   test(`should be "${fullyQualifiedName}" for instance of type "map[${fullyQualifiedName}]"`, () => {
     const instance = new FullyQualifiedType(`map[${fullyQualifiedName}]`);
     expect(instance).toHaveProperty('fullyQualifiedName', fullyQualifiedName);
+  });
+});
+
+describe('FullyQualifiedType::nestedType', () => {
+  test('should be "string" for instance of type "map[string]"', () => {
+    const instance = new FullyQualifiedType('map[string]');
+    expect(instance).toHaveProperty('nestedType', 'string');
+  });
+
+  test('should be "string" for instance of type "[string]"', () => {
+    const instance = new FullyQualifiedType('[string]');
+    expect(instance).toHaveProperty('nestedType', 'string');
+  });
+
+  test('should be "[string]" for instance of type "map[[string]]"', () => {
+    const instance = new FullyQualifiedType('map[[string]]');
+    expect(instance).toHaveProperty('nestedType', '[string]');
+  });
+
+  test('should be "io.flow.v0.models.experience" for instance of type "[io.flow.v0.models.experience]"', () => {
+    const instance = new FullyQualifiedType('[io.flow.v0.models.experience]');
+    expect(instance).toHaveProperty('nestedType', 'io.flow.v0.models.experience');
+  });
+
+  test('should be "io.flow.v0.models.experience" for instance of type "map[io.flow.v0.models.experience]"', () => {
+    const instance = new FullyQualifiedType('map[io.flow.v0.models.experience]');
+    expect(instance).toHaveProperty('nestedType', 'io.flow.v0.models.experience');
+  });
+
+  test('should be "null" for instance of type "string"', () => {
+    const instance = new FullyQualifiedType('string');
+    expect(instance).toHaveProperty('nestedType', null);
+  });
+
+  test('should be "null" for instance of type "io.flow.v0.models.experience"', () => {
+    const instance = new FullyQualifiedType('io.flow.v0.models.experience');
+    expect(instance).toHaveProperty('nestedType', null);
   });
 });
 
@@ -169,6 +200,43 @@ describe('FullyQualifiedType::isMap', () => {
   });
 });
 
+describe('FullyQualifiedType::isEnclosingType', () => {
+  test('should be true for instance of type "map[string]"', () => {
+    const instance = new FullyQualifiedType('map[string]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be true for instance of type "[string]"', () => {
+    const instance = new FullyQualifiedType('[string]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be true for instance of type "map[[string]]"', () => {
+    const instance = new FullyQualifiedType('map[[string]]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be true for instance of type "[io.flow.v0.models.experience]"', () => {
+    const instance = new FullyQualifiedType('[io.flow.v0.models.experience]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be true for instance of type "map[io.flow.v0.models.experience]"', () => {
+    const instance = new FullyQualifiedType('map[io.flow.v0.models.experience]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be false for instance of type "string"', () => {
+    const instance = new FullyQualifiedType('string');
+    expect(instance).toHaveProperty('isEnclosingType', false);
+  });
+
+  test('should be false for instance of type "io.flow.v0.models.experience"', () => {
+    const instance = new FullyQualifiedType('io.flow.v0.models.experience');
+    expect(instance).toHaveProperty('isEnclosingType', false);
+  });
+});
+
 describe('FullyQualifiedType::isPrimitive', () => {
   primitiveTypes.forEach((primitiveType) => {
     test(`should be true for an instance of type "${primitiveType}"`, () => {
@@ -200,6 +268,141 @@ describe('FullyQualifiedType::isPrimitive', () => {
   test(`should be false for an instance of type "map[${fullyQualifiedName}]"`, () => {
     const instance = new FullyQualifiedType(`map[${fullyQualifiedName}]`);
     expect(instance).toHaveProperty('isPrimitive', false);
+  });
+});
+
+describe('FullyQualifiedType.parseType', () => {
+  test('string', () => {
+    expect(FullyQualifiedType.parseType('string')).toEqual({
+      name: 'string',
+    });
+  });
+
+  test('map[string]', () => {
+    expect(FullyQualifiedType.parseType('map[string]')).toEqual({
+      name: 'map',
+      type: {
+        name: 'string',
+      },
+    });
+  });
+
+  test('map[[string]]', () => {
+    expect(FullyQualifiedType.parseType('map[[string]]')).toEqual({
+      name: 'map',
+      type: {
+        name: 'array',
+        type: {
+          name: 'string',
+        },
+      },
+    });
+  });
+
+  test(`map[map[map[[${fullyQualifiedName}]]]`, () => {
+    expect(FullyQualifiedType.parseType(`map[map[map[[${fullyQualifiedName}]]]]`)).toEqual({
+      name: 'map',
+      type: {
+        name: 'map',
+        type: {
+          name: 'map',
+          type: {
+            name: 'array',
+            type: {
+              name: fullyQualifiedName,
+            },
+          },
+        },
+      },
+    });
+  });
+
+  test('[[[[string]]]]', () => {
+    expect(FullyQualifiedType.parseType('[[[[string]]]]')).toEqual({
+      name: 'array',
+      type: {
+        name: 'array',
+        type: {
+          name: 'array',
+          type: {
+            name: 'array',
+            type: {
+              name: 'string',
+            },
+          },
+        },
+      },
+    });
+  });
+});
+
+describe('FullyQualifiedType.formatType', () => {
+  test('string', () => {
+    const object = {
+      name: 'string',
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual('string');
+  });
+
+  test('map[string]', () => {
+    const object = {
+      name: 'map',
+      type: {
+        name: 'string',
+      },
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual('map[string]');
+  });
+
+  test('map[[string]]', () => {
+    const object = {
+      name: 'map',
+      type: {
+        name: 'array',
+        type: {
+          name: 'string',
+        },
+      },
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual('map[[string]]');
+  });
+
+  test(`map[map[map[[${fullyQualifiedName}]]]`, () => {
+    const object = {
+      name: 'map',
+      type: {
+        name: 'map',
+        type: {
+          name: 'map',
+          type: {
+            name: 'array',
+            type: {
+              name: fullyQualifiedName,
+            },
+          },
+        },
+      },
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual(`map[map[map[[${fullyQualifiedName}]]]]`);
+  });
+
+  test('[[[[string]]]]', () => {
+    const object = {
+      name: 'array',
+      type: {
+        name: 'array',
+        type: {
+          name: 'array',
+          type: {
+            name: 'array',
+            type: {
+              name: 'string',
+            },
+          },
+        },
+      },
+    };
+    expect(FullyQualifiedType.formatType(object)).toEqual('[[[[string]]]]');
   });
 });
 

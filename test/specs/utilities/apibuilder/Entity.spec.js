@@ -30,6 +30,16 @@ describe('Entity::isPrimitive', () => {
     });
   });
 
+  test('should be true for entity of type "map[[string]]"', () => {
+    const entity = Entity.fromType('map[[string]]');
+    expect(entity).toHaveProperty('isPrimitive', true);
+  });
+
+  test('should be true for entity for type "[[string]]"', () => {
+    const entity = Entity.fromType('[[string]]');
+    expect(entity).toHaveProperty('isPrimitive', true);
+  });
+
   test('should be false for a entity of type that is considered a model', () => {
     const entity = Entity.fromType('organization', service);
     expect(entity).toHaveProperty('isPrimitive', false);
@@ -52,6 +62,11 @@ describe('Entity::isMap', () => {
       const entity = Entity.fromType(`map[${primitive}]`, service);
       expect(entity).toHaveProperty('isMap', true);
     });
+  });
+
+  test('should be true for entity of type "map[[string]]"', () => {
+    const entity = Entity.fromType('map[[string]]');
+    expect(entity).toHaveProperty('isMap', true);
   });
 
   test('should be true for a entity of type considered a map of some model', () => {
@@ -81,6 +96,11 @@ describe('Entity::isArray', () => {
       const entity = Entity.fromType(`[${primitive}]`, service);
       expect(entity).toHaveProperty('isArray', true);
     });
+  });
+
+  test('should be true for entity of type "[map[string]]"', () => {
+    const entity = Entity.fromType('[map[string]]');
+    expect(entity).toHaveProperty('isArray', true);
   });
 
   test('should be true for a entity of type considered an array of some model', () => {
@@ -141,36 +161,67 @@ describe('Entity::fullyQualifiedName', () => {
 describe('Entity.fromType', () => {
   test('should create instance from primitive type', () => {
     const instance = Entity.fromType('string', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', 'string');
+    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+  });
+
+  test('should create instance from array of primitive type', () => {
+    const instance = Entity.fromType('[string]', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', '[string]');
+    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+  });
+
+  test('should create instance from map of primitive type', () => {
+    const instance = Entity.fromType('map[string]', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', 'map[string]');
+    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+  });
+
+  test('should create instance from map[[string]] type', () => {
+    const instance = Entity.fromType('map[[string]]', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', 'map[[string]]');
+    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+  });
+
+  test('should create instance from [[string]] type', () => {
+    const instance = Entity.fromType('[[string]]', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', '[[string]]');
     expect(instance).toHaveProperty('fullyQualifiedName', 'string');
   });
 
   test('should create instance from internal model type', () => {
     const instance = Entity.fromType('application', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', 'com.bryzek.apidoc.api.v0.models.application');
     expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
   });
 
   test('should create instance from internal enum type', () => {
     const instance = Entity.fromType('publication', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', 'com.bryzek.apidoc.api.v0.enums.publication');
     expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.enums.publication');
   });
 
   test('should create instance from internal union type', () => {
     const instance = Entity.fromType('item_detail', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', 'com.bryzek.apidoc.api.v0.unions.item_detail');
     expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.unions.item_detail');
   });
 
   test('should create instance from map of internal model', () => {
     const instance = Entity.fromType('map[application]', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', 'map[com.bryzek.apidoc.api.v0.models.application]');
     expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
   });
 
   test('should create instance from array of internal model', () => {
     const instance = Entity.fromType('[application]', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', '[com.bryzek.apidoc.api.v0.models.application]');
     expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
   });
 
   test('should create instance from external model type', () => {
     const instance = Entity.fromType('healthcheck', service);
+    expect(instance).toHaveProperty('fullyQualifiedType', 'com.bryzek.apidoc.common.v0.models.healthcheck');
     expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.common.v0.models.healthcheck');
   });
 });

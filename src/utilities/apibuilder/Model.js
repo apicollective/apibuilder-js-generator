@@ -12,7 +12,11 @@ class Model extends Entity {
    */
   constructor(schema, fullyQualifiedType, service) {
     super(fullyQualifiedType, service);
-    this.schema = schema;
+
+    Object.defineProperty(this, 'schema', {
+      enumerable: true,
+      value: schema,
+    });
 
     Object.defineProperty(this, 'fields', {
       get() {

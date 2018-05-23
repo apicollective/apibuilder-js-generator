@@ -17,9 +17,9 @@ const primitiveTypes = [
   'uuid',
 ];
 
-const arrayOfRegex = /^\[([^\]]+)\]$/;
+const arrayOfRegex = /^\[(.+)\]$/;
 
-const objectOfRegex = /^map\[([^\]]+)\]$/;
+const objectOfRegex = /^map\[(.+)\]$/;
 
 class FullyQualifiedType {
   /**
@@ -54,6 +54,30 @@ class FullyQualifiedType {
     Object.defineProperty(this, 'fullyQualifiedName', {
       get() {
         return FullyQualifiedType.toBaseType(this.fullyQualifiedType);
+      },
+    });
+
+    /**
+     * This property holds the nested type.
+     *
+     * A nested type is a type defined within the scope of another type, which
+     * is called the enclosing type. Only array or map types can enclose
+     * another type, which may be any of the supported API builder types,
+     * including another array or map.
+     *
+     * May be null if this type is not an array or map type.
+     *
+     * @property {String}
+     */
+    Object.defineProperty(this, 'nestedType', {
+      get() {
+        if (!this.isEnclosingType) {
+          return null;
+        }
+
+        const enclosingType = FullyQualifiedType.parseType(this.fullyQualifiedType);
+        const nestedType = FullyQualifiedType.formatType(enclosingType.type);
+        return nestedType;
       },
     });
 
@@ -104,6 +128,21 @@ class FullyQualifiedType {
     });
 
     /**
+     * This property holds whether this type is an enclosing type.
+     *
+     * An enclosing type is a type that encloses another type, which is called
+     * the nested type. Only array or map types can enclose another type, which
+     * may be one of the supported API builder types, including another array or map.
+     *
+     * @property {Boolean}
+     */
+    Object.defineProperty(this, 'isEnclosingType', {
+      get() {
+        return this.isArray || this.isMap;
+      },
+    });
+
+    /**
      * This property holds whether this is a primitive type.
      * @property {Boolean}
      */
@@ -113,26 +152,6 @@ class FullyQualifiedType {
       },
     });
   }
-}
-
-/**
- * API Builder types can be complex (e.g. array of strings, map of strings, etc.)
- * By design, all values in an array or map must be of the same type:
- * this is called the base type. A base type may or may not be a fully
- * qualified name unless it is a primitive type.
- */
-function toBaseType(type) {
-  let baseType = type;
-
-  if (objectOfRegex.test(baseType)) {
-    const [, $1] = baseType.match(objectOfRegex);
-    baseType = $1;
-  } else if (arrayOfRegex.test(baseType)) {
-    const [, $1] = baseType.match(arrayOfRegex);
-    baseType = $1;
-  }
-
-  return baseType;
 }
 
 /**
@@ -153,6 +172,51 @@ function isArray(type) {
   return arrayOfRegex.test(type);
 }
 
+function parseType(type) {
+  switch (true) {
+    case isMap(type):
+      return {
+        name: 'map',
+        type: parseType(type.match(objectOfRegex)[1]),
+      };
+    case isArray(type):
+      return {
+        name: 'array',
+        type: parseType(type.match(arrayOfRegex)[1]),
+      };
+    default:
+      return { name: type };
+  }
+}
+
+function formatType(object) {
+  switch (object.name) {
+    case 'map':
+      return `map[${formatType(object.type)}]`;
+    case 'array':
+      return `[${formatType(object.type)}]`;
+    default:
+      return object.name;
+  }
+}
+
+/**
+ * API Builder types can be complex (e.g. array of strings, map of strings,
+ * maps of array of strings etc.). By design, all values in an array or map
+ * must be of the same type: this is called the base type. A base type may or
+ * may not be a fully qualified name unless it is a primitive type.
+ */
+function toBaseType(type) {
+  if (typeof type === 'string') {
+    return toBaseType(parseType(type));
+  } else if (type.type != null) {
+    return toBaseType(type.type);
+  }
+
+  return type.name;
+}
+
+
 /**
  * Returns whether the specified type is a primitive type.
  * @param {String} type
@@ -162,9 +226,12 @@ function isPrimitiveType(type) {
   return primitiveTypes.includes(toBaseType(type));
 }
 
+
+FullyQualifiedType.formatType = formatType;
 FullyQualifiedType.isArray = isArray;
 FullyQualifiedType.isMap = isMap;
 FullyQualifiedType.isPrimitiveType = isPrimitiveType;
+FullyQualifiedType.parseType = parseType;
 FullyQualifiedType.toBaseType = toBaseType;
 
 module.exports = FullyQualifiedType;
