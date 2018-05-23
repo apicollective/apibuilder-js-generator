@@ -10,9 +10,9 @@ function toPropTypes(entity, required = false) {
   let propType;
 
   if (entity.isMap) {
-    propType = `PropTypes.objectOf(${toPropTypes(entity.nestedEntity, required)})`;
+    propType = `PropTypes.objectOf(${toPropTypes(entity.nestedEntity)})`;
   } else if (entity.isArray) {
-    propType = `PropTypes.arrayOf(${toPropTypes(entity.nestedEntity, required)})`;
+    propType = `PropTypes.arrayOf(${toPropTypes(entity.nestedEntity)})`;
   } else if (entity.isPrimitive) {
     propType = toPrimitivePropTypes(entity);
   } else if (entity.isModel) {
