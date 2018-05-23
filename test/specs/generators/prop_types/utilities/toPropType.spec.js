@@ -54,10 +54,10 @@ describe('toPropTypes', () => {
 
   test('should convert required apibuilder types to prop types', () => {
     expect(toPropTypes(Entity.fromType('string', service), true)).toEqual('PropTypes.string.isRequired');
-    expect(toPropTypes(Entity.fromType('[string]', service), true)).toEqual('PropTypes.arrayOf(PropTypes.string.isRequired).isRequired');
-    expect(toPropTypes(Entity.fromType('[[string]]', service), true)).toEqual('PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string.isRequired).isRequired).isRequired');
-    expect(toPropTypes(Entity.fromType('map[string]', service), true)).toEqual('PropTypes.objectOf(PropTypes.string.isRequired).isRequired');
-    expect(toPropTypes(Entity.fromType('map[[string]]', service), true)).toEqual('PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string.isRequired).isRequired).isRequired');
+    expect(toPropTypes(Entity.fromType('[string]', service), true)).toEqual('PropTypes.arrayOf(PropTypes.string).isRequired');
+    expect(toPropTypes(Entity.fromType('[[string]]', service), true)).toEqual('PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired');
+    expect(toPropTypes(Entity.fromType('map[string]', service), true)).toEqual('PropTypes.objectOf(PropTypes.string).isRequired');
+    expect(toPropTypes(Entity.fromType('map[[string]]', service), true)).toEqual('PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string)).isRequired');
   });
 
   test('should throw when type is not available in service', () => {
