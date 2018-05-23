@@ -9,5 +9,5 @@ const service = new Service({ service: schema });
 
 test('should generate prop types for model types', () => {
   const model = find(service.models, { shortName: 'application' });
-  expect(generateModel(model)).toEqual(loadFixture(__dirname, '../../../../fixtures/generated/application'));
+  expect(generateModel(model)).toEqual(loadFixture(__dirname, '../../../../fixtures/generated/prop_types/application'));
 });

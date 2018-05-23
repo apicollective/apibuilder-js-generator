@@ -9,5 +9,5 @@ const service = new Service({ service: schema });
 
 test('should generate prop types for union types', () => {
   const union = find(service.unions, { shortName: 'diff' });
-  expect(generateUnion(union)).toEqual(loadFixture(__dirname, '../../../../fixtures/generated/diff'));
+  expect(generateUnion(union)).toEqual(loadFixture(__dirname, '../../../../fixtures/generated/prop_types/diff'));
 });
