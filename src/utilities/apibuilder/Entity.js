@@ -17,37 +17,51 @@ class Entity {
    */
   constructor(fullyQualifiedType, service) {
     Object.defineProperty(this, 'fullyQualifiedType', {
+      enumerable: true,
       value: fullyQualifiedType.fullyQualifiedType,
     });
 
     Object.defineProperty(this, 'fullyQualifiedName', {
-      value: fullyQualifiedType.fullyQualifiedName,
       enumerable: true,
+      value: fullyQualifiedType.fullyQualifiedName,
     });
 
     Object.defineProperty(this, 'shortName', {
-      value: fullyQualifiedType.shortName,
       enumerable: true,
+      value: fullyQualifiedType.shortName,
     });
 
     Object.defineProperty(this, 'packageName', {
-      value: fullyQualifiedType.packageName,
       enumerable: true,
+      value: fullyQualifiedType.packageName,
+    });
+
+    Object.defineProperty(this, 'nestedEntity', {
+      get() {
+        return this.isEnclosingType
+          ? Entity.fromType(fullyQualifiedType.nestedType, service)
+          : null;
+      },
+    });
+
+    Object.defineProperty(this, 'isEnclosingType', {
+      enumerable: true,
+      value: fullyQualifiedType.isEnclosingType,
     });
 
     Object.defineProperty(this, 'isPrimitive', {
-      value: fullyQualifiedType.isPrimitive,
       enumerable: true,
+      value: fullyQualifiedType.isPrimitive,
     });
 
     Object.defineProperty(this, 'isMap', {
-      value: fullyQualifiedType.isMap,
       enumerable: true,
+      value: fullyQualifiedType.isMap,
     });
 
     Object.defineProperty(this, 'isArray', {
-      value: fullyQualifiedType.isArray,
       enumerable: true,
+      value: fullyQualifiedType.isArray,
     });
 
     Object.defineProperty(this, 'isUnion', {
