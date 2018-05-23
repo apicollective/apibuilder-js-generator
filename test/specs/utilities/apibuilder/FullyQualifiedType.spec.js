@@ -51,6 +51,43 @@ describe('FullyQualifiedType::fullyQualifiedName', () => {
   });
 });
 
+describe('FullyQualifiedType::nestedType', () => {
+  test('should be "string" for instance of type "map[string]"', () => {
+    const instance = new FullyQualifiedType('map[string]');
+    expect(instance).toHaveProperty('nestedType', 'string');
+  });
+
+  test('should be "string" for instance of type "[string]"', () => {
+    const instance = new FullyQualifiedType('[string]');
+    expect(instance).toHaveProperty('nestedType', 'string');
+  });
+
+  test('should be "[string]" for instance of type "map[[string]]"', () => {
+    const instance = new FullyQualifiedType('map[[string]]');
+    expect(instance).toHaveProperty('nestedType', '[string]');
+  });
+
+  test('should be "io.flow.v0.models.experience" for instance of type "[io.flow.v0.models.experience]"', () => {
+    const instance = new FullyQualifiedType('[io.flow.v0.models.experience]');
+    expect(instance).toHaveProperty('nestedType', 'io.flow.v0.models.experience');
+  });
+
+  test('should be "io.flow.v0.models.experience" for instance of type "map[io.flow.v0.models.experience]"', () => {
+    const instance = new FullyQualifiedType('map[io.flow.v0.models.experience]');
+    expect(instance).toHaveProperty('nestedType', 'io.flow.v0.models.experience');
+  });
+
+  test('should be "null" for instance of type "string"', () => {
+    const instance = new FullyQualifiedType('string');
+    expect(instance).toHaveProperty('nestedType', null);
+  });
+
+  test('should be "null" for instance of type "io.flow.v0.models.experience"', () => {
+    const instance = new FullyQualifiedType('io.flow.v0.models.experience');
+    expect(instance).toHaveProperty('nestedType', null);
+  });
+});
+
 describe('FullyQualifiedType::shortName', () => {
   primitiveTypes.forEach((primitiveType) => {
     test(`should be "${primitiveType}" for instance of type "${primitiveType}"`, () => {
@@ -160,6 +197,43 @@ describe('FullyQualifiedType::isMap', () => {
   test(`should be true for instance of type ${fullyQualifiedName}`, () => {
     const instance = new FullyQualifiedType(`${fullyQualifiedName}`);
     expect(instance).toHaveProperty('isMap', false);
+  });
+});
+
+describe('FullyQualifiedType::isEnclosingType', () => {
+  test('should be true for instance of type "map[string]"', () => {
+    const instance = new FullyQualifiedType('map[string]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be true for instance of type "[string]"', () => {
+    const instance = new FullyQualifiedType('[string]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be true for instance of type "map[[string]]"', () => {
+    const instance = new FullyQualifiedType('map[[string]]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be true for instance of type "[io.flow.v0.models.experience]"', () => {
+    const instance = new FullyQualifiedType('[io.flow.v0.models.experience]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be true for instance of type "map[io.flow.v0.models.experience]"', () => {
+    const instance = new FullyQualifiedType('map[io.flow.v0.models.experience]');
+    expect(instance).toHaveProperty('isEnclosingType', true);
+  });
+
+  test('should be false for instance of type "string"', () => {
+    const instance = new FullyQualifiedType('string');
+    expect(instance).toHaveProperty('isEnclosingType', false);
+  });
+
+  test('should be false for instance of type "io.flow.v0.models.experience"', () => {
+    const instance = new FullyQualifiedType('io.flow.v0.models.experience');
+    expect(instance).toHaveProperty('isEnclosingType', false);
   });
 });
 

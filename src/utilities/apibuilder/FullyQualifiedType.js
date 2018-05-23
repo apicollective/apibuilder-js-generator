@@ -58,6 +58,30 @@ class FullyQualifiedType {
     });
 
     /**
+     * This property holds the nested type.
+     *
+     * A nested type is a type defined within the scope of another type, which
+     * is called the enclosing type. Only array or map types can enclose
+     * another type, which may be any of the supported API builder types,
+     * including another array or map.
+     *
+     * May be null if this type is not an array or map type.
+     *
+     * @property {String}
+     */
+    Object.defineProperty(this, 'nestedType', {
+      get() {
+        if (!this.isEnclosingType) {
+          return null;
+        }
+
+        const enclosingType = FullyQualifiedType.parseType(this.fullyQualifiedType);
+        const nestedType = FullyQualifiedType.formatType(enclosingType.type);
+        return nestedType;
+      },
+    });
+
+    /**
      * This property holds the base short name.
      * @property {String}
      */
@@ -100,6 +124,21 @@ class FullyQualifiedType {
     Object.defineProperty(this, 'isMap', {
       get() {
         return FullyQualifiedType.isMap(this.fullyQualifiedType);
+      },
+    });
+
+    /**
+     * This property holds whether this type is an enclosing type.
+     *
+     * An enclosing type is a type that encloses another type, which is called
+     * the nested type. Only array or map types can enclose another type, which
+     * may be one of the supported API builder types, including another array or map.
+     *
+     * @property {Boolean}
+     */
+    Object.defineProperty(this, 'isEnclosingType', {
+      get() {
+        return this.isArray || this.isMap;
       },
     });
 
