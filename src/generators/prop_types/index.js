@@ -1,6 +1,5 @@
 const createLogger = require('debug');
 const reduce = require('lodash/reduce');
-const path = require('path');
 
 const File = require('../../utilities/apibuilder/File');
 const Service = require('../../utilities/apibuilder/Service');
@@ -29,9 +28,8 @@ function generate(data) {
       return files;
     }
 
-    const filepath = toModuleName(entity);
-    const basename = `${path.basename(filepath)}.js`;
-    const dirname = path.dirname(filepath);
+    const basename = `${toModuleName(entity)}.js`;
+    const dirname = 'prop-types';
     const file = new File(basename, dirname, contents);
 
     return files.concat(file);
