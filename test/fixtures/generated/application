@@ -2,9 +2,9 @@
 module.exports = {};
 
 const PropTypes = require('prop-types');
-const referencePropTypes = require('../../../../common/v0/models/referencePropTypes');
-const visibilityPropTypes = require('../../enums/visibilityPropTypes');
-const auditPropTypes = require('../../../../common/v0/models/auditPropTypes');
+const referencePropTypes = require('../../../common/v0/models/referencePropTypes');
+const visibilityPropTypes = require('../enums/visibilityPropTypes');
+const auditPropTypes = require('../../../common/v0/models/auditPropTypes');
 
 Object.assign(module.exports, {
   guid: PropTypes.string.isRequired,

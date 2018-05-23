@@ -1,6 +1,6 @@
 const PropTypes = require('prop-types');
-const diffBreakingPropTypes = require('../../models/diffBreakingPropTypes');
-const diffNonBreakingPropTypes = require('../../models/diffNonBreakingPropTypes');
+const diffBreakingPropTypes = require('../models/diffBreakingPropTypes');
+const diffNonBreakingPropTypes = require('../models/diffNonBreakingPropTypes');
 
 module.exports = [
   PropTypes.shape(diffBreakingPropTypes),
