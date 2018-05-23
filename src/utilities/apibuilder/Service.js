@@ -1,3 +1,4 @@
+// @flow
 const flatMap = require('lodash/flatMap');
 const map = require('lodash/map');
 const memoize = require('lodash/memoize');

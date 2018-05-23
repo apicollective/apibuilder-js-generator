@@ -13,7 +13,7 @@ const generators = require('../generators');
 const app = express();
 app.use(bodyParser.json({ limit: '5mb' }));
 
-const port = process.env.APPLICATIN_PORT || 7050;
+const port = process.env.APPLICATION_PORT || 7050;
 
 app.get('/_internal_/healthcheck', (req, res) => {
   res.send('healthy');
@@ -58,7 +58,7 @@ app.post('/invocations/:key', (req, res) => {
     return res.status(422).send([
       {
         code: 'SERVICE_PAYLOAD_NOT_FOUND',
-        message: `Serivce json not found for key[${invocationKey}]. Expected body of request to be a service spec json file produced by https://app.apibuilder.io.`,
+        message: `Service json not found for key[${invocationKey}]. Expected body of request to be a service spec json file produced by https://app.apibuilder.io.`,
       },
     ]);
   }

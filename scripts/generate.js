@@ -41,4 +41,4 @@ async function generate() {
 }
 
 
-generate();
+generate().catch(console.error);
