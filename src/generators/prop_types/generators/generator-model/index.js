@@ -12,9 +12,9 @@ const compiled = ejs.compile(template);
 function mapToImportStatements(model) {
   // Primitive types do not require import.
   return model.fields
-    .filter(field => !field.isPrimitive)
+    .filter(field => !field.type.isPrimitive)
     .reduce((importStatements, field) => {
-      const importStatement = toImportStatement(model, field);
+      const importStatement = toImportStatement(model, field.type);
       const isAlreadyImported = importStatements.some(matches(importStatement));
       // TODO: Check for possible default export name collision.
       return isAlreadyImported ? importStatements : importStatements.concat(importStatement);
@@ -23,8 +23,8 @@ function mapToImportStatements(model) {
 
 function mapToPropTypes(model) {
   return model.fields.map(field => ({
-    key: field.schema.name,
-    validator: toPropTypes(field, field.schema.required),
+    key: field.name,
+    validator: toPropTypes(field.type, field.isRequired),
   }));
 }
 

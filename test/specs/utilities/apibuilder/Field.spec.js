@@ -14,13 +14,19 @@ const visibility = { // ENUM
 };
 
 describe('Field', () => {
-  test('should have property with fully qualified name', () => {
-    const model = Field.fromSchema(visibility, service);
-    expect(model).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.enums.visibility');
+  test('should have property with field name', () => {
+    const field = Field.fromSchema(visibility, service);
+    expect(field).toHaveProperty('name', 'visibility');
   });
 
-  test('should have property with package name', () => {
-    const model = Field.fromSchema(visibility, service);
-    expect(model).toHaveProperty('packageName', 'com.bryzek.apidoc.api.v0.enums');
+  test('should have property indicating whether field is required', () => {
+    const field = Field.fromSchema(visibility, service);
+    expect(field).toHaveProperty('isRequired', true);
+  });
+
+  test('should have property with field type as entity', () => {
+    const field = Field.fromSchema(visibility, service);
+    expect(field).toHaveProperty('type.fullyQualifiedName', 'com.bryzek.apidoc.api.v0.enums.visibility');
+    expect(field).toHaveProperty('type.packageName', 'com.bryzek.apidoc.api.v0.enums');
   });
 });

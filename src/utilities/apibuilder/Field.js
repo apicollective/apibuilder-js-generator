@@ -1,13 +1,24 @@
 const Entity = require('./Entity');
-const FullyQualifiedType = require('./FullyQualifiedType');
 
-class Field extends Entity {
-  constructor(schema, fullyQualifiedType, service) {
-    super(fullyQualifiedType, service);
-
+class Field {
+  constructor(schema, service) {
     Object.defineProperty(this, 'schema', {
       enumerable: true,
       value: schema,
+    });
+
+    Object.defineProperty(this, 'name', {
+      value: schema.name,
+    });
+
+    Object.defineProperty(this, 'isRequired', {
+      value: schema.required,
+    });
+
+    Object.defineProperty(this, 'type', {
+      get() {
+        return Entity.fromType(schema.type, service);
+      },
     });
   }
 }
@@ -18,9 +29,7 @@ class Field extends Entity {
  * @param {Service} service
  */
 Field.fromSchema = function fromSchema(schema, service) {
-  const entity = Entity.fromType(schema.type, service);
-  const fullyQualifiedType = new FullyQualifiedType(entity.fullyQualifiedType);
-  return new Field(schema, fullyQualifiedType, service);
+  return new Field(schema, service);
 };
 
 module.exports = Field;
