@@ -2,22 +2,46 @@ const Entity = require('./Entity');
 
 class Field {
   constructor(schema, service) {
-    Object.defineProperty(this, 'schema', {
-      enumerable: true,
-      value: schema,
-    });
-
-    Object.defineProperty(this, 'name', {
-      value: schema.name,
-    });
-
-    Object.defineProperty(this, 'isRequired', {
-      value: schema.required,
-    });
-
-    Object.defineProperty(this, 'type', {
-      get() {
-        return Entity.fromType(schema.type, service);
+    Object.defineProperties(this, {
+      name: {
+        enumerable: true,
+        value: schema.name,
+      },
+      type: {
+        enumerable: true,
+        get: () => Entity.fromType(schema.type, service),
+      },
+      description: {
+        enumerable: true,
+        value: schema.description,
+      },
+      isRequired: {
+        enumerable: true,
+        value: schema.required,
+      },
+      default: {
+        enumerable: true,
+        value: schema.default,
+      },
+      example: {
+        enumerable: true,
+        value: schema.example,
+      },
+      minimum: {
+        enumerable: true,
+        value: schema.minimum,
+      },
+      maximum: {
+        enumerable: true,
+        value: schema.maximum,
+      },
+      attributes: {
+        enumerable: true,
+        value: schema.attributes,
+      },
+      deprecation: {
+        enumerable: true,
+        value: schema.deprecation,
       },
     });
   }
