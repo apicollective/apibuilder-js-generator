@@ -1,3 +1,4 @@
+const get = require('lodash/get');
 const Entity = require('./Entity');
 
 class Field {
@@ -39,9 +40,9 @@ class Field {
         enumerable: true,
         value: schema.attributes,
       },
-      deprecation: {
+      deprecationReason: {
         enumerable: true,
-        value: schema.deprecation,
+        value: get(schema, 'deprecation.description'),
       },
     });
   }
