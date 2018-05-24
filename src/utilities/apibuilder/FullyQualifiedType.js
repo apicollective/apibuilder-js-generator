@@ -1,21 +1,10 @@
+const includes = require('lodash/includes');
 const invariant = require('invariant');
+const values = require('lodash/values');
+
+const PrimitiveType = require('./PrimitiveType');
 
 const EMPTY_STRING = '';
-
-const primitiveTypes = [
-  'boolean',
-  'date-iso8601',
-  'date-time-iso8601',
-  'decimal',
-  'double',
-  'integer',
-  'json',
-  'long',
-  'object',
-  'string',
-  'unit',
-  'uuid',
-];
 
 const arrayOfRegex = /^\[(.+)\]$/;
 
@@ -223,7 +212,7 @@ function toBaseType(type) {
  * @returns {Boolean}
  */
 function isPrimitiveType(type) {
-  return primitiveTypes.includes(toBaseType(type));
+  return includes(values(PrimitiveType), toBaseType(type));
 }
 
 

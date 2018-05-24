@@ -1,20 +1,8 @@
+const values = require('lodash/values');
 const FullyQualifiedType = require('../../../../src/utilities/apibuilder/FullyQualifiedType');
+const PrimitiveType = require('../../../../src/utilities/apibuilder/PrimitiveType');
 
-const primitiveTypes = [
-  'boolean',
-  'date-iso8601',
-  'date-time-iso8601',
-  'decimal',
-  'double',
-  'integer',
-  'json',
-  'long',
-  'object',
-  'string',
-  'unit',
-  'uuid',
-];
-
+const primitiveTypes = values(PrimitiveType);
 const fullyQualifiedName = 'com.bryzek.apidoc.common.v0.models.reference';
 
 describe('FullyQualifiedType::fullyQualifiedName', () => {
