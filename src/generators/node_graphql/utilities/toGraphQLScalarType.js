@@ -1,3 +1,5 @@
+const PrimitiveType = require('../../../utilities/apibuilder/PrimitiveType');
+
 /**
  * Calculates the GraphQL scalar type for writing into generated code. May
  * return `undefined` when entity is not a type that can be represented with
@@ -7,23 +9,23 @@
  */
 function toGraphQLScalarType(entity) {
   switch (entity.fullyQualifiedName) {
-    case 'string':
-    case 'date-iso8601':
-    case 'date-time-iso8601':
-    case 'json':
+    case PrimitiveType.STRING:
+    case PrimitiveType.DATE_ISO8601:
+    case PrimitiveType.DATE_TIME_ISO8601:
+    case PrimitiveType.JSON:
       return 'GraphQLString';
-    case 'uuid':
+    case PrimitiveType.UUID:
       return 'GraphQLID';
-    case 'boolean':
+    case PrimitiveType.BOOLEAN:
       return 'GraphQLBoolean';
-    case 'integer':
+    case PrimitiveType.INTEGER:
       return 'GraphQLInt';
-    case 'decimal':
-    case 'double':
-    case 'long':
+    case PrimitiveType.DECIMAL:
+    case PrimitiveType.DOUBLE:
+    case PrimitiveType.LONG:
       return 'GraphQLFloat';
-    case 'object':
-    case 'unit':
+    case PrimitiveType.OBJECT:
+    case PrimitiveType.UNIT:
     default:
       return undefined;
   }
