@@ -215,6 +215,16 @@ function isPrimitiveType(type) {
   return includes(values(PrimitiveType), toBaseType(type));
 }
 
+function mapType(type, fun) {
+  const t = parseType(type);
+  let inner = t;
+  while (typeof inner.type !== 'undefined') {
+    inner = inner.type;
+  }
+  inner.name = fun(inner.name);
+  return formatType(t);
+}
+
 
 FullyQualifiedType.formatType = formatType;
 FullyQualifiedType.isArray = isArray;
@@ -222,5 +232,6 @@ FullyQualifiedType.isMap = isMap;
 FullyQualifiedType.isPrimitiveType = isPrimitiveType;
 FullyQualifiedType.parseType = parseType;
 FullyQualifiedType.toBaseType = toBaseType;
+FullyQualifiedType.mapType = mapType;
 
 module.exports = FullyQualifiedType;

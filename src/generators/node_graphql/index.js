@@ -6,12 +6,14 @@ const Service = require('../../utilities/apibuilder/Service');
 const generateEnumeration = require('./generators/enumeration');
 const generateModel = require('./generators/model');
 const toDefaultExport = require('./utilities/toDefaultExport');
+const generateSchema = require('./generators/schema')
 
 const debug = createLogger('apibuilder:graphql');
 
 function generate(data) {
   const service = new Service({ service: data });
-  const generatedFiles = reduce(service.internalEntities, (files, entity) => {
+
+  const generatedEntities = reduce(service.internalEntities, (files, entity) => {
     debug(`Generating source code for "${entity.fullyQualifiedName}".`);
 
     let contents;
@@ -32,7 +34,9 @@ function generate(data) {
     return files.concat(file);
   }, []);
 
-  return Promise.resolve(generatedFiles);
+  const generatedSchema = new File('schema.js', service.namespace.split('.').join('/'), generateSchema(service));
+
+  return Promise.resolve(generatedEntities.concat(generatedSchema));
 }
 
 module.exports = { generate };

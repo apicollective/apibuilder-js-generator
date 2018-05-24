@@ -6,6 +6,7 @@ const memoize = require('lodash/memoize');
 const Enumeration = require('./Enumeration');
 const Model = require('./Model');
 const Union = require('./Union');
+const Resource = require('./Resource');
 
 /**
  * @class Service
@@ -127,6 +128,11 @@ class Service {
           ...this.externalUnions,
         ];
       },
+    });
+
+    Object.defineProperty(this, 'resources', {
+      get: memoize(() =>
+        map(this.schema.resources, resource => new Resource(resource, this)))
     });
   }
 }
