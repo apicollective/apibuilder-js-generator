@@ -35,10 +35,21 @@ class Resource {
       const res = getResultType(op);
       if (op.method === 'GET' && res) { // getters
         if (res.fullyQualifiedType === this.type.fullyQualifiedType) {
-          log(`▶️   get single at ${this.path}${op.path}`)
+          log(`▶️   get one at ${this.path}${op.path}`);
         } else if (res.fullyQualifiedName === this.type.fullyQualifiedType) {
-          log(`▶️   query all at ${this.path}${op.path}`)
+          log(`▶️   query all at ${this.path}${op.path}`);
+        } else {
+          const parts = op.path.split('/').filter(x => x.length > 0 && x[0] != ':');
+          if (parts.length > 0) {
+            log(`▶️   get ${this.type.fullyQualifiedType} ${parts.join('-')} at ${this.path}${op.path}`);
+          } else {
+            log(`❌   unknown ${this.path}${op.path}`);
+          }
         }
+      }
+
+      if (!res) {
+        log(op);
       }
       // log(op);
       // log('\n');
