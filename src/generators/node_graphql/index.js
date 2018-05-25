@@ -4,7 +4,7 @@ const reduce = require('lodash/reduce');
 const File = require('../../utilities/apibuilder/File');
 const Service = require('../../utilities/apibuilder/Service');
 const generateEnumeration = require('./generators/enumeration');
-const pascalCase = require('./utilities/pascalCase');
+const toDefaultExport = require('./utilities/toDefaultExport');
 
 const debug = createLogger('apibuilder:graphql');
 
@@ -22,7 +22,7 @@ function generate(data) {
       return files;
     }
 
-    const basename = `${pascalCase(entity.shortName)}.js`;
+    const basename = `${toDefaultExport(entity.shortName)}.js`;
     const dirname = entity.packageName.split('.').join('/');
     const file = new File(basename, dirname, contents);
 

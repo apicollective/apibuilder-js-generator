@@ -4,7 +4,7 @@ const defaultTo = require('lodash/defaultTo');
 const ejs = require('ejs');
 
 const constantCase = require('../../utilities/constantCase');
-const pascalCase = require('../../utilities/pascalCase');
+const toDefaultExport = require('../../utilities/toDefaultExport');
 
 const templatePath = path.resolve(__dirname, './templates/enumeration.ejs');
 const template = fs.readFileSync(templatePath, 'utf8');
@@ -16,7 +16,7 @@ const compiled = ejs.compile(template);
  */
 function generate(enumeration) {
   return compiled({
-    exportName: pascalCase(enumeration.schema.name),
+    exportName: toDefaultExport(enumeration),
     values: enumeration.schema.values.map(value => ({
       name: constantCase(value.name),
       value: defaultTo(value.value, value.name),
