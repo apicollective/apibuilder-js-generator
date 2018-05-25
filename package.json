@@ -45,6 +45,7 @@
     "handlebars": "^4.0.11",
     "hbs": "^4.0.1",
     "invariant": "^2.2.4",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "prettier": "^1.12.1"
   }
 }
