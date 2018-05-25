@@ -1,29 +1,27 @@
 const fs = require('fs');
 const path = require('path');
-const defaultTo = require('lodash/defaultTo');
 const ejs = require('ejs');
+const prettier = require('prettier');
 
-const constantCase = require('../../utilities/constantCase');
 const toDefaultExport = require('../../utilities/toDefaultExport');
+const GraphQLEnumTypeConfig = require('../../utilities/GraphQLEnumTypeConfig');
 
 const templatePath = path.resolve(__dirname, './templates/enumeration.ejs');
 const template = fs.readFileSync(templatePath, 'utf8');
 const compiled = ejs.compile(template);
 
 /**
- * Generates source file content for API Builder enum types.
  * @param {Enumeration} enumeration
  */
-function generate(enumeration) {
-  return compiled({
+function generateCode(enumeration) {
+  const source = compiled({
     exportName: toDefaultExport(enumeration),
-    values: enumeration.values.map(value => ({
-      name: constantCase(value.name),
-      value: defaultTo(value.value, value.name),
-      description: value.description,
-      deprecation: value.deprecation,
-    })),
+    enumeration: GraphQLEnumTypeConfig.fromEnum(enumeration),
+  });
+  return prettier.format(source, {
+    singleQuote: true,
+    trailingComma: 'es5',
   });
 }
 
-module.exports = generate;
+module.exports = generateCode;

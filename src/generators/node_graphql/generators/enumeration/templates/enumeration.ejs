@@ -1,19 +1,19 @@
 const { GraphQLEnumType } = require('graphql');
 
 const <%= exportName %> = new GraphQLEnumType({
-  name: '<%= exportName %>',
+  name: '<%= enumeration.name %>',
   values: {
-  <%_ values.forEach(({ name, deprecation, description, value }) => { _%>
-    <%= name %>: {
-      value: '<%= value %>',
-      <%_ if (description != null) { _%>
-      description: '<%= description %>',
-      <%_ } _%>
-      <%_ if (deprecation != null) { _%>
-      deprecation: '<%= deprecation.description %>',
-      <%_ } _%>
-    },
-  <%_ }) _%>
+    <%_ Object.entries(enumeration.values).forEach(([name, value]) => { _%>
+      <%= name %>: {
+        value: '<%= value.value %>',
+        <%_ if (value.description != null) { _%>
+        description: '<%= value.description %>',
+        <%_ } _%>
+        <%_ if (value.deprecationReason != null) { _%>
+        deprecationReason: '<%= value.deprecationReason %>',
+        <%_ } _%>
+      },
+    <%_ }) _%>
   },
 });
 

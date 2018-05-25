@@ -5,19 +5,23 @@ const Publication = new GraphQLEnumType({
   values: {
     MEMBERSHIP_REQUESTS_CREATE: {
       value: 'membership_requests.create',
-      description: 'For organizations for which I am an administrator, email me whenever a user applies to join the org.',
+      description:
+        'For organizations for which I am an administrator, email me whenever a user applies to join the org.',
     },
     MEMBERSHIPS_CREATE: {
       value: 'memberships.create',
-      description: 'For organizations for which I am a member, email me whenever a user joins the org.',
+      description:
+        'For organizations for which I am a member, email me whenever a user joins the org.',
     },
     APPLICATIONS_CREATE: {
       value: 'applications.create',
-      description: 'For organizations for which I am a member, email me whenever an application is created.',
+      description:
+        'For organizations for which I am a member, email me whenever an application is created.',
     },
     VERSIONS_CREATE: {
       value: 'versions.create',
-      description: 'For applications that I watch, email me whenever a version is created.',
+      description:
+        'For applications that I watch, email me whenever a version is created.',
     },
   },
 });
