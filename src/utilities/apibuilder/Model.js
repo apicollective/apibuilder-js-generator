@@ -18,6 +18,17 @@ class Model extends Entity {
       value: schema,
     });
 
+    /**
+     * @property {?String}
+     */
+    Object.defineProperty(this, 'description', {
+      enumerable: true,
+      value: schema.description,
+    });
+
+    /**
+     * @property {!Field[]}
+     */
     Object.defineProperty(this, 'fields', {
       get() {
         return map(this.schema.fields, field => Field.fromSchema(field, service));
