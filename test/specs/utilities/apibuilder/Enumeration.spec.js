@@ -24,10 +24,4 @@ describe('Enumeration', () => {
     const instance = Enumeration.fromSchema(enumeration, service);
     expect(instance).toHaveProperty('packageName', 'com.bryzek.apidoc.api.v0.enums');
   });
-
-  test('should have property with a list of constants', () => {
-    const enumeration = find(schema.enums, { name: 'visibility' });
-    const instance = Enumeration.fromSchema(enumeration, service);
-    expect(instance).toHaveProperty('constants', ['user', 'organization', 'public']);
-  });
 });

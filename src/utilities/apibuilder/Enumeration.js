@@ -1,7 +1,7 @@
-const defaultTo = require('lodash/defaultTo');
 const map = require('lodash/map');
 
 const Entity = require('./Entity');
+const EnumValue = require('./EnumValue');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
 class Enumeration extends Entity {
@@ -14,18 +14,36 @@ class Enumeration extends Entity {
   constructor(schema, fullyQualifiedType, service) {
     super(fullyQualifiedType, service);
 
-    Object.defineProperty(this, 'schema', {
-      enumerable: true,
-      value: schema,
-    });
-
-    /**
-     * @property {String[]} constants - This property holds an array of strings
-     * representing each of the available enumeration values.
-     */
-    Object.defineProperty(this, 'constants', {
-      get() {
-        return map(this.schema.values, ({ name, value }) => defaultTo(value, name));
+    Object.defineProperties(this, {
+      /** @property {!String} */
+      name: {
+        enumerable: true,
+        value: schema.name,
+      },
+      /** @property {?String} */
+      plural: {
+        enumerable: true,
+        value: schema.plural,
+      },
+      /** @property {?String} */
+      description: {
+        enumerable: true,
+        value: schema.description,
+      },
+      /** @property {!EnumValue} */
+      values: {
+        enumerable: true,
+        value: map(schema.values, value => new EnumValue(value)),
+      },
+      /** @property {?Object[]} */
+      attributes: {
+        enumerable: true,
+        value: schema.attributes,
+      },
+      /** @property {Object} */
+      deprecation: {
+        enumerable: true,
+        value: schema.deprecation,
       },
     });
   }

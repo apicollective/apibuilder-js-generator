@@ -17,7 +17,7 @@ const compiled = ejs.compile(template);
 function generate(enumeration) {
   return compiled({
     exportName: toDefaultExport(enumeration),
-    values: enumeration.schema.values.map(value => ({
+    values: enumeration.values.map(value => ({
       name: constantCase(value.name),
       value: defaultTo(value.value, value.name),
       description: value.description,
