@@ -10,16 +10,15 @@ const template = fs.readFileSync(templatePath, 'utf8');
 const compiled = ejs.compile(template);
 
 function mapToPropTypes(union) {
-  return union.types
-    .map(type => toPropTypes(type));
+  return union.types.map(({ type }) => toPropTypes(type));
 }
 
 function mapToImportStatements(union) {
   return union.types
     // Primitive types do not require import.
-    .filter(type => !type.isPrimitive)
+    .filter(({ type }) => !type.isPrimitive)
     // TODO: Check for possible default export name collision.
-    .map(type => toImportStatement(union, type));
+    .map(({ type }) => toImportStatement(union, type));
 }
 
 function generate(union) {
