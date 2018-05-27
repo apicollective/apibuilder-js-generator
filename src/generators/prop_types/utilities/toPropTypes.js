@@ -11,7 +11,7 @@ function toPropTypes(entity, required = false) {
 
   if (entity.isMap) {
     propType = `PropTypes.objectOf(${toPropTypes(entity.nestedEntity)})`;
-  } else if (entity.isArray) {
+  } else if (entity.isArrayType) {
     propType = `PropTypes.arrayOf(${toPropTypes(entity.nestedEntity)})`;
   } else if (entity.isPrimitive) {
     propType = toPrimitivePropTypes(entity);

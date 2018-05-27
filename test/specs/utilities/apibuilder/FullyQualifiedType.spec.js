@@ -144,25 +144,25 @@ describe('FullyQualifiedType::packageName', () => {
   });
 });
 
-describe('FullyQualifiedType::isArray', () => {
+describe('FullyQualifiedType::isArrayType', () => {
   test('should be true for instance of type "[string]"', () => {
     const instance = new FullyQualifiedType('[string]');
-    expect(instance).toHaveProperty('isArray', true);
+    expect(instance).toHaveProperty('isArrayType', true);
   });
 
   test(`should be true for instance of type [${baseType}]`, () => {
     const instance = new FullyQualifiedType(`[${baseType}]`);
-    expect(instance).toHaveProperty('isArray', true);
+    expect(instance).toHaveProperty('isArrayType', true);
   });
 
   test('should be false for instance of type "string"', () => {
     const instance = new FullyQualifiedType('string');
-    expect(instance).toHaveProperty('isArray', false);
+    expect(instance).toHaveProperty('isArrayType', false);
   });
 
   test(`should be true for instance of type ${baseType}`, () => {
     const instance = new FullyQualifiedType(`${baseType}`);
-    expect(instance).toHaveProperty('isArray', false);
+    expect(instance).toHaveProperty('isArrayType', false);
   });
 });
 
