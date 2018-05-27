@@ -1,7 +1,7 @@
 const map = require('lodash/map');
 const Entity = require('./Entity');
 const FullyQualifiedType = require('./FullyQualifiedType');
-const UnionType = require('./UnionType');
+const ApiBuilderUnionType = require('./ApiBuilderUnionType');
 
 /** @see https://app.apibuilder.io/bryzek/apidoc-spec/0.11.94#model-union */
 class ApiBuilderUnion extends Entity {
@@ -34,10 +34,10 @@ class ApiBuilderUnion extends Entity {
         enumerable: true,
         value: config.deprecation,
       },
-      /** @property {!UnionType[]} */
+      /** @property {!ApiBuilderUnionType[]} */
       types: {
         enumerable: true,
-        value: map(config.types, type => new UnionType(type, service)),
+        value: map(config.types, type => new ApiBuilderUnionType(type, service)),
       },
       /** @property {!Object[]} */
       attributes: {

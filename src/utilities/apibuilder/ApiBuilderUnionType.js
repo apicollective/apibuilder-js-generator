@@ -1,7 +1,7 @@
 const Entity = require('./Entity');
 
 /** @see https://app.apibuilder.io/bryzek/apidoc-spec/0.11.94#model-union_type */
-class UnionType {
+class ApiBuilderUnionType {
   constructor(config, service) {
     Object.defineProperties(this, {
       /** @property {!Entity} */
@@ -33,4 +33,4 @@ class UnionType {
   }
 }
 
-module.exports = UnionType;
+module.exports = ApiBuilderUnionType;
