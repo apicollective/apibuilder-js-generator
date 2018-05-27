@@ -8,7 +8,7 @@ const PrimitiveType = require('../../../utilities/apibuilder/PrimitiveType');
  * @returns {String}
  */
 function toGraphQLScalarType(entity) {
-  switch (entity.fullyQualifiedName) {
+  switch (entity.baseType) {
     case PrimitiveType.STRING:
     case PrimitiveType.DATE_ISO8601:
     case PrimitiveType.DATE_TIME_ISO8601:

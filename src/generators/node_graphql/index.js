@@ -12,7 +12,7 @@ const debug = createLogger('apibuilder:graphql');
 function generate(data) {
   const service = new Service({ service: data });
   const generatedFiles = reduce(service.internalEntities, (files, entity) => {
-    debug(`Generating source code for "${entity.fullyQualifiedName}".`);
+    debug(`Generating source code for "${entity.baseType}".`);
 
     let contents;
 

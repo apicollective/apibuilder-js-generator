@@ -133,27 +133,27 @@ describe('Field:isModel', () => {
   test('should be true for a entity of type that is considered an imported model');
 });
 
-describe('Entity::fullyQualifiedName', () => {
+describe('Entity::baseType', () => {
   primitives.forEach((primitive) => {
     test(`should be "${primitive}" for a entity of type "${primitive}"`, () => {
       const entity = Entity.fromType(primitive, service);
-      expect(entity).toHaveProperty('fullyQualifiedName', primitive);
+      expect(entity).toHaveProperty('baseType', primitive);
     });
   });
 
   test('should be "com.bryzek.apidoc.api.v0.enums.visibility" for an enumerable of type "visibility"', () => {
     const entity = Entity.fromType('visibility', service);
-    expect(entity).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.enums.visibility');
+    expect(entity).toHaveProperty('baseType', 'com.bryzek.apidoc.api.v0.enums.visibility');
   });
 
   test('should be "com.bryzek.apidoc.api.v0.models.organization" for a model of type "organization"', () => {
     const entity = Entity.fromType('organization', service);
-    expect(entity).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.organization');
+    expect(entity).toHaveProperty('baseType', 'com.bryzek.apidoc.api.v0.models.organization');
   });
 
   test('should be "com.bryzek.apidoc.api.v0.unions.diff" for an union of type "diff"', () => {
     const entity = Entity.fromType('diff', service);
-    expect(entity).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.unions.diff');
+    expect(entity).toHaveProperty('baseType', 'com.bryzek.apidoc.api.v0.unions.diff');
   });
 });
 
@@ -162,66 +162,66 @@ describe('Entity.fromType', () => {
   test('should create instance from primitive type', () => {
     const instance = Entity.fromType('string', service);
     expect(instance).toHaveProperty('fullyQualifiedType', 'string');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+    expect(instance).toHaveProperty('baseType', 'string');
   });
 
   test('should create instance from array of primitive type', () => {
     const instance = Entity.fromType('[string]', service);
     expect(instance).toHaveProperty('fullyQualifiedType', '[string]');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+    expect(instance).toHaveProperty('baseType', 'string');
   });
 
   test('should create instance from map of primitive type', () => {
     const instance = Entity.fromType('map[string]', service);
     expect(instance).toHaveProperty('fullyQualifiedType', 'map[string]');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+    expect(instance).toHaveProperty('baseType', 'string');
   });
 
   test('should create instance from map[[string]] type', () => {
     const instance = Entity.fromType('map[[string]]', service);
     expect(instance).toHaveProperty('fullyQualifiedType', 'map[[string]]');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+    expect(instance).toHaveProperty('baseType', 'string');
   });
 
   test('should create instance from [[string]] type', () => {
     const instance = Entity.fromType('[[string]]', service);
     expect(instance).toHaveProperty('fullyQualifiedType', '[[string]]');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'string');
+    expect(instance).toHaveProperty('baseType', 'string');
   });
 
   test('should create instance from internal model type', () => {
     const instance = Entity.fromType('application', service);
     expect(instance).toHaveProperty('fullyQualifiedType', 'com.bryzek.apidoc.api.v0.models.application');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
+    expect(instance).toHaveProperty('baseType', 'com.bryzek.apidoc.api.v0.models.application');
   });
 
   test('should create instance from internal enum type', () => {
     const instance = Entity.fromType('publication', service);
     expect(instance).toHaveProperty('fullyQualifiedType', 'com.bryzek.apidoc.api.v0.enums.publication');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.enums.publication');
+    expect(instance).toHaveProperty('baseType', 'com.bryzek.apidoc.api.v0.enums.publication');
   });
 
   test('should create instance from internal union type', () => {
     const instance = Entity.fromType('item_detail', service);
     expect(instance).toHaveProperty('fullyQualifiedType', 'com.bryzek.apidoc.api.v0.unions.item_detail');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.unions.item_detail');
+    expect(instance).toHaveProperty('baseType', 'com.bryzek.apidoc.api.v0.unions.item_detail');
   });
 
   test('should create instance from map of internal model', () => {
     const instance = Entity.fromType('map[application]', service);
     expect(instance).toHaveProperty('fullyQualifiedType', 'map[com.bryzek.apidoc.api.v0.models.application]');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
+    expect(instance).toHaveProperty('baseType', 'com.bryzek.apidoc.api.v0.models.application');
   });
 
   test('should create instance from array of internal model', () => {
     const instance = Entity.fromType('[application]', service);
     expect(instance).toHaveProperty('fullyQualifiedType', '[com.bryzek.apidoc.api.v0.models.application]');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.api.v0.models.application');
+    expect(instance).toHaveProperty('baseType', 'com.bryzek.apidoc.api.v0.models.application');
   });
 
   test('should create instance from external model type', () => {
     const instance = Entity.fromType('healthcheck', service);
     expect(instance).toHaveProperty('fullyQualifiedType', 'com.bryzek.apidoc.common.v0.models.healthcheck');
-    expect(instance).toHaveProperty('fullyQualifiedName', 'com.bryzek.apidoc.common.v0.models.healthcheck');
+    expect(instance).toHaveProperty('baseType', 'com.bryzek.apidoc.common.v0.models.healthcheck');
   });
 });

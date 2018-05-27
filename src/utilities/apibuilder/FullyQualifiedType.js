@@ -43,7 +43,7 @@ class FullyQualifiedType {
      * This property holds the fully qualified base type name.
      * @property {String}
      */
-    Object.defineProperty(this, 'fullyQualifiedName', {
+    Object.defineProperty(this, 'baseType', {
       get() {
         return FullyQualifiedType.getBaseType(this.fullyQualifiedType);
       },
@@ -79,10 +79,10 @@ class FullyQualifiedType {
      */
     Object.defineProperty(this, 'shortName', {
       get() {
-        const lastIndex = this.fullyQualifiedName.lastIndexOf('.');
+        const lastIndex = this.baseType.lastIndexOf('.');
         return lastIndex === -1 ?
-          this.fullyQualifiedName :
-          this.fullyQualifiedName.substring(lastIndex + 1);
+          this.baseType :
+          this.baseType.substring(lastIndex + 1);
       },
     });
 
@@ -92,10 +92,10 @@ class FullyQualifiedType {
      */
     Object.defineProperty(this, 'packageName', {
       get() {
-        const lastIndex = this.fullyQualifiedName.lastIndexOf('.');
+        const lastIndex = this.baseType.lastIndexOf('.');
         return (this.isPrimitive || lastIndex === -1)
           ? EMPTY_STRING
-          : this.fullyQualifiedName.substring(0, lastIndex);
+          : this.baseType.substring(0, lastIndex);
       },
     });
 

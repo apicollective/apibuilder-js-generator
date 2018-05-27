@@ -21,7 +21,7 @@ describe('Field', () => {
   test('should have property with field type as entity', () => {
     const config = createMockField({ type: 'visibility' });
     const field = Field.fromSchema(config, service);
-    expect(field).toHaveProperty('type.fullyQualifiedName', 'com.bryzek.apidoc.api.v0.enums.visibility');
+    expect(field).toHaveProperty('type.baseType', 'com.bryzek.apidoc.api.v0.enums.visibility');
     expect(field).toHaveProperty('type.packageName', 'com.bryzek.apidoc.api.v0.enums');
   });
 

@@ -4,7 +4,7 @@
  * @param {Boolean} [required = false]
  */
 function toPrimitivePropTypes(entity) {
-  switch (entity.fullyQualifiedName) {
+  switch (entity.baseType) {
     case 'string':
     case 'date-iso8601':
     case 'date-time-iso8601':

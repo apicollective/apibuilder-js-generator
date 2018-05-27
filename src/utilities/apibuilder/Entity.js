@@ -21,9 +21,9 @@ class Entity {
       value: fullyQualifiedType.fullyQualifiedType,
     });
 
-    Object.defineProperty(this, 'fullyQualifiedName', {
+    Object.defineProperty(this, 'baseType', {
       enumerable: true,
-      value: fullyQualifiedType.fullyQualifiedName,
+      value: fullyQualifiedType.baseType,
     });
 
     Object.defineProperty(this, 'shortName', {
@@ -67,7 +67,7 @@ class Entity {
     Object.defineProperty(this, 'isUnion', {
       get() {
         return some(service.unions, {
-          fullyQualifiedName: this.fullyQualifiedName,
+          baseType: this.baseType,
         });
       },
     });
@@ -75,7 +75,7 @@ class Entity {
     Object.defineProperty(this, 'isEnum', {
       get() {
         return some(service.enums, {
-          fullyQualifiedName: this.fullyQualifiedName,
+          baseType: this.baseType,
         });
       },
     });
@@ -83,7 +83,7 @@ class Entity {
     Object.defineProperty(this, 'isModel', {
       get() {
         return some(service.models, {
-          fullyQualifiedName: this.fullyQualifiedName,
+          baseType: this.baseType,
         });
       },
     });
@@ -103,7 +103,7 @@ function isEntity(entity, type, service) {
   const baseType = FullyQualifiedType.getBaseType(type);
   return some(service[entity], overSome([
     matchesProperty('shortName', baseType),
-    matchesProperty('fullyQualifiedName', baseType),
+    matchesProperty('baseType', baseType),
   ]));
 }
 
@@ -111,7 +111,7 @@ function findEntityByType(entity, type, service) {
   const baseType = FullyQualifiedType.getBaseType(type);
   return find(service[entity], overSome([
     matchesProperty('shortName', baseType),
-    matchesProperty('fullyQualifiedName', baseType),
+    matchesProperty('baseType', baseType),
   ]));
 }
 
@@ -157,11 +157,11 @@ function toFullyQualifiedType(type, service) {
   } else if (FullyQualifiedType.isPrimitiveType(type.name)) {
     return { name: type.name };
   } else if (isModel(type.name, service)) {
-    return { name: findModelByType(type.name, service).fullyQualifiedName };
+    return { name: findModelByType(type.name, service).baseType };
   } else if (isUnion(type.name, service)) {
-    return { name: findUnionByType(type.name, service).fullyQualifiedName };
+    return { name: findUnionByType(type.name, service).baseType };
   } else if (isEnum(type.name, service)) {
-    return { name: findEnumByType(type.name, service).fullyQualifiedName };
+    return { name: findEnumByType(type.name, service).baseType };
   }
 
   return invariant(false, `"${type}" is not a type available in "${service.applicationKey}@${service.version}" service`);
