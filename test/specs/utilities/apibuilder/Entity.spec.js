@@ -124,7 +124,7 @@ describe('Entity::isArrayType', () => {
   });
 });
 
-describe('Field:isModel', () => {
+describe('Entity:isModel', () => {
   test('should be true for a entity of type that is considered a model', () => {
     const entity = Entity.fromType('organization', service);
     expect(entity).toHaveProperty('isModel', true);

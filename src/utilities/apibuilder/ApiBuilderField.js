@@ -1,7 +1,7 @@
 const get = require('lodash/get');
 const Entity = require('./Entity');
 
-class Field {
+class ApiBuilderField {
   constructor(schema, service) {
     Object.defineProperties(this, {
       name: {
@@ -49,12 +49,12 @@ class Field {
 }
 
 /**
- * Returns the Field corresponding to the specified API builder field definition.
+ * Returns the ApiBuilderField corresponding to the specified API builder field definition.
  * @param {Object} schema
  * @param {ApiBuilderService} service
  */
-Field.fromSchema = function fromSchema(schema, service) {
-  return new Field(schema, service);
+ApiBuilderField.fromSchema = function fromSchema(schema, service) {
+  return new ApiBuilderField(schema, service);
 };
 
-module.exports = Field;
+module.exports = ApiBuilderField;

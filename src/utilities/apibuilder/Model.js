@@ -1,6 +1,6 @@
 const map = require('lodash/map');
 const Entity = require('./Entity');
-const Field = require('./Field');
+const ApiBuilderField = require('./ApiBuilderField');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
 class Model extends Entity {
@@ -27,11 +27,11 @@ class Model extends Entity {
     });
 
     /**
-     * @property {!Field[]}
+     * @property {!ApiBuilderField[]}
      */
     Object.defineProperty(this, 'fields', {
       get() {
-        return map(this.schema.fields, field => Field.fromSchema(field, service));
+        return map(this.schema.fields, field => ApiBuilderField.fromSchema(field, service));
       },
     });
   }

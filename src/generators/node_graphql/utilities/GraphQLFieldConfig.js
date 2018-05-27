@@ -27,8 +27,8 @@ class GraphQLFieldConfig {
   }
 
   /**
-   * Creates a GraphQLFieldConfig from a Field.
-   * @param {Field} field
+   * Creates a GraphQLFieldConfig from an ApiBuilderField.
+   * @param {ApiBuilderField} field
    */
   static fromField(field) {
     return new GraphQLFieldConfig({
