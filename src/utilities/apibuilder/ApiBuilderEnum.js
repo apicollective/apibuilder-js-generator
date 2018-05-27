@@ -4,9 +4,9 @@ const Entity = require('./Entity');
 const EnumValue = require('./EnumValue');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
-class Enumeration extends Entity {
+class ApiBuilderEnum extends Entity {
   /**
-   * Create an enumeration.
+   * Create an ApiBuilderEnum.
    * @param {Object} schema - An object representing an API builder enum definition.
    * @param {FullyQualifiedType} fullyQualifiedType
    * @param {ApiBuilderService}
@@ -56,10 +56,10 @@ class Enumeration extends Entity {
  * @param {String} [namespace = service.namespace]
  * @returns {FullyQualifiedType}
  */
-Enumeration.fromSchema = function fromSchema(schema, service, namespace = service.namespace) {
+ApiBuilderEnum.fromSchema = function fromSchema(schema, service, namespace = service.namespace) {
   const fullyQualifiedType = new FullyQualifiedType(`${namespace}.enums.${schema.name}`);
-  return new Enumeration(schema, fullyQualifiedType, service);
+  return new ApiBuilderEnum(schema, fullyQualifiedType, service);
 };
 
 
-module.exports = Enumeration;
+module.exports = ApiBuilderEnum;

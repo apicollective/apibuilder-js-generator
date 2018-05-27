@@ -29,8 +29,8 @@ class GraphQLEnumTypeConfig {
   }
 
   /**
-   * Creates a GraphQLEnumTypeConfig from a API Builder Enumeration instance.
-   * @param {Enumeration} enumeration
+   * Creates a GraphQLEnumTypeConfig from an ApiBuilderEnum instance.
+   * @param {ApiBuilderEnum} enumeration
    */
   static fromEnum(enumeration) {
     return new GraphQLEnumTypeConfig({

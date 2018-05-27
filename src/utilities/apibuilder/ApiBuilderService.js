@@ -3,7 +3,7 @@ const flatMap = require('lodash/flatMap');
 const map = require('lodash/map');
 const memoize = require('lodash/memoize');
 
-const Enumeration = require('./Enumeration');
+const ApiBuilderEnum = require('./ApiBuilderEnum');
 const Model = require('./Model');
 const Union = require('./Union');
 
@@ -76,7 +76,7 @@ class ApiBuilderService {
 
     Object.defineProperty(this, 'internalEnums', {
       get: memoize(() =>
-        map(schema.enums, enumeration => Enumeration.fromSchema(enumeration, this))),
+        map(schema.enums, enumeration => ApiBuilderEnum.fromSchema(enumeration, this))),
     });
 
     Object.defineProperty(this, 'internalModels', {
@@ -101,7 +101,8 @@ class ApiBuilderService {
 
     Object.defineProperty(this, 'externalEnums', {
       get: memoize(() => flatMap(schema.imports, ({ enums, namespace }) =>
-        map(enums, enumeration => Enumeration.fromSchema({ name: enumeration }, this, namespace)))),
+        map(enums, enumeration =>
+          ApiBuilderEnum.fromSchema({ name: enumeration }, this, namespace)))),
     });
 
     Object.defineProperty(this, 'externalModels', {
