@@ -4,7 +4,7 @@ const FullyQualifiedType = require('./FullyQualifiedType');
 const UnionType = require('./UnionType');
 
 /** @see https://app.apibuilder.io/bryzek/apidoc-spec/0.11.94#model-union */
-class Union extends Entity {
+class ApiBuilderUnion extends Entity {
   constructor(config, fullyQualifiedType, service) {
     super(fullyQualifiedType, service);
 
@@ -49,15 +49,15 @@ class Union extends Entity {
 }
 
 /**
- * Returns the Union corresponding to the specified API Builder union definition.
+ * Returns the ApiBuilderUnion corresponding to the specified API Builder union definition.
  * @param {Object} schema An object representing an API Builder union definition.
  * @param {ApiBuilderService} service
  * @param {String} [namespace = service.namespace]
- * @returns {FullyQualifiedType}
+ * @returns {ApiBuilderUnion}
  */
-Union.fromSchema = function fromSchema(schema, service, namespace = service.namespace) {
+ApiBuilderUnion.fromSchema = function fromSchema(schema, service, namespace = service.namespace) {
   const fullyQualifiedType = new FullyQualifiedType(`${namespace}.unions.${schema.name}`);
-  return new Union(schema, fullyQualifiedType, service);
+  return new ApiBuilderUnion(schema, fullyQualifiedType, service);
 };
 
-module.exports = Union;
+module.exports = ApiBuilderUnion;
