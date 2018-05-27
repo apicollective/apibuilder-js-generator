@@ -1,7 +1,7 @@
 const createLogger = require('debug');
 const reduce = require('lodash/reduce');
 
-const File = require('../../utilities/apibuilder/File');
+const ApiBuilderFile = require('../../utilities/apibuilder/ApiBuilderFile');
 const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
 const generateEnumeration = require('./generators/enumeration');
 const generateModel = require('./generators/model');
@@ -27,7 +27,7 @@ function generate(data) {
 
     const basename = `${toDefaultExport(entity)}.js`;
     const dirname = entity.packageName.split('.').join('/');
-    const file = new File(basename, dirname, contents);
+    const file = new ApiBuilderFile(basename, dirname, contents);
 
     return files.concat(file);
   }, []);
