@@ -10,6 +10,9 @@ const arrayOfRegex = /^\[(.+)\]$/;
 
 const objectOfRegex = /^map\[(.+)\]$/;
 
+/**
+ * An utility class to manipulate types defined as strings.
+ */
 class FullyQualifiedType {
   /**
    * Create a fully qualified type.
