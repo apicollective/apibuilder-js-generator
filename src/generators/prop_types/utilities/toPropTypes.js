@@ -3,24 +3,24 @@ const toPrimitivePropTypes = require('./toPrimitivePropTypes');
 
 /**
  * Calculates the prop type validator for writing to generated code.
- * @param {Entity} entity - The entity in question.
+ * @param {ApiBuilderType} type - The type in question.
  * @param {Boolean} [required = false]
  */
-function toPropTypes(entity, required = false) {
+function toPropTypes(type, required = false) {
   let propType;
 
-  if (entity.isMapType) {
-    propType = `PropTypes.objectOf(${toPropTypes(entity.nestedEntity)})`;
-  } else if (entity.isArrayType) {
-    propType = `PropTypes.arrayOf(${toPropTypes(entity.nestedEntity)})`;
-  } else if (entity.isPrimitiveType) {
-    propType = toPrimitivePropTypes(entity);
-  } else if (entity.isModel) {
-    propType = `PropTypes.shape(${toDefaultExport(entity)})`;
-  } else if (entity.isUnion) {
-    propType = `PropTypes.oneOfType(${toDefaultExport(entity)})`;
-  } else if (entity.isEnum) {
-    propType = `PropTypes.oneOf(${toDefaultExport(entity)})`;
+  if (type.isMapType) {
+    propType = `PropTypes.objectOf(${toPropTypes(type.nestedType)})`;
+  } else if (type.isArrayType) {
+    propType = `PropTypes.arrayOf(${toPropTypes(type.nestedType)})`;
+  } else if (type.isPrimitiveType) {
+    propType = toPrimitivePropTypes(type);
+  } else if (type.isModel) {
+    propType = `PropTypes.shape(${toDefaultExport(type)})`;
+  } else if (type.isUnion) {
+    propType = `PropTypes.oneOfType(${toDefaultExport(type)})`;
+  } else if (type.isEnum) {
+    propType = `PropTypes.oneOf(${toDefaultExport(type)})`;
   }
 
   if (required) {

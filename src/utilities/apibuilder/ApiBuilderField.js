@@ -1,5 +1,5 @@
 const get = require('lodash/get');
-const Entity = require('./Entity');
+const ApiBuilderType = require('./ApiBuilderType');
 
 class ApiBuilderField {
   constructor(schema, service) {
@@ -10,7 +10,7 @@ class ApiBuilderField {
       },
       type: {
         enumerable: true,
-        get: () => Entity.fromType(schema.type, service),
+        get: () => ApiBuilderType.fromType(schema.type, service),
       },
       description: {
         enumerable: true,

@@ -2,10 +2,10 @@ const pascalCase = require('./pascalCase');
 
 /**
  * Calculates default export name for writing into generated code.
- * @param {Entity} entity - the entity in question
+ * @param {ApiBuilderType} type - the type in question
  */
-function toDefaultExport(entity) {
-  return pascalCase(entity.shortName);
+function toDefaultExport(type) {
+  return pascalCase(type.shortName);
 }
 
 module.exports = toDefaultExport;

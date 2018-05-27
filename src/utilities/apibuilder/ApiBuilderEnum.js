@@ -1,10 +1,10 @@
 const map = require('lodash/map');
 
-const Entity = require('./Entity');
+const ApiBuilderType = require('./ApiBuilderType');
 const ApiBuilderEnumValue = require('./ApiBuilderEnumValue');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
-class ApiBuilderEnum extends Entity {
+class ApiBuilderEnum extends ApiBuilderType {
   /**
    * Create an ApiBuilderEnum.
    * @param {Object} schema - An object representing an API builder enum definition.

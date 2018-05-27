@@ -5,12 +5,12 @@ const toDefaultExport = require('./toDefaultExport');
 
 /**
  * Calculates import statement for writing into generated code.
- * @param {Entity} source - The entity where other entity will be imported from.
- * @param {Entity} target - The entity to be imported.
+ * @param {ApiBuilderType} source - The type where other type will be imported from.
+ * @param {ApiBuilderType} target - The type to be imported.
  */
 function toImportStatement(source, target) {
-  invariant(source != null, 'A source entity must be provided');
-  invariant(target != null, 'A target entity must be provided');
+  invariant(source != null, 'A source type must be provided');
+  invariant(target != null, 'A target type must be provided');
   const sourcePath = toModuleName(source);
   const targetPath = toModuleName(target);
   // console.log(path.resolve(sourcePath, targetPath));

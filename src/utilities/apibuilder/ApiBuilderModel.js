@@ -1,9 +1,9 @@
 const map = require('lodash/map');
-const Entity = require('./Entity');
+const ApiBuilderType = require('./ApiBuilderType');
 const ApiBuilderField = require('./ApiBuilderField');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
-class ApiBuilderModel extends Entity {
+class ApiBuilderModel extends ApiBuilderType {
   /**
    * Create an ApiBuilderModel.
    * @param {Object} schema - An object representing an API builder model definition.

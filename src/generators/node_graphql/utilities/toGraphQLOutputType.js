@@ -5,21 +5,21 @@ const toGraphQLScalarType = require('./toGraphQLScalarType');
 
 /**
  * Calculates the GraphQL output type for writing into generated code.
- * @param {Entity} entity
+ * @param {ApiBuilderType} type
  * @param {Boolean} [required = false]
  * @returns {String}
  */
-function toGraphQLOutputType(entity, required = false) {
+function toGraphQLOutputType(type, required = false) {
   let outputType;
 
-  if (entity.isMapType) {
+  if (type.isMapType) {
     invariant(false, '???');
-  } else if (entity.isArrayType) {
-    outputType = `new GraphQLList(${toGraphQLOutputType(entity.nestedEntity)})`;
-  } else if (entity.isPrimitiveType) {
-    outputType = toGraphQLScalarType(entity);
+  } else if (type.isArrayType) {
+    outputType = `new GraphQLList(${toGraphQLOutputType(type.nestedType)})`;
+  } else if (type.isPrimitiveType) {
+    outputType = toGraphQLScalarType(type);
   } else {
-    outputType = toDefaultExport(entity);
+    outputType = toDefaultExport(type);
   }
 
   invariant(outputType != null, `${outputType} must be a valid GraphQLOutputType`);

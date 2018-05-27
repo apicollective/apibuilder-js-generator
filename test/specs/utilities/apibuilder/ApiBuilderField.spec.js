@@ -18,7 +18,7 @@ describe('ApiBuilderField', () => {
     expect(field).toHaveProperty('isRequired', true);
   });
 
-  test('should have property with field type as entity', () => {
+  test('should have property with field type', () => {
     const config = createMockField({ type: 'visibility' });
     const field = ApiBuilderField.fromSchema(config, service);
     expect(field).toHaveProperty('type.baseType', 'com.bryzek.apidoc.api.v0.enums.visibility');

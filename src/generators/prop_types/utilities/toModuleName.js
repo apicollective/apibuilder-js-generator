@@ -3,10 +3,10 @@ const toDefaultExport = require('./toDefaultExport');
 
 /**
  * Calculates the module name for writing into generated code.
- * @param {Entity} entity - The entity in question
+ * @param {ApiBuilderType} type - The type in question
  */
-function toModuleName(entity) {
-  return entity.packageName.split('.').concat(toDefaultExport(entity)).join('/');
+function toModuleName(type) {
+  return type.packageName.split('.').concat(toDefaultExport(type)).join('/');
 }
 
 module.exports = toModuleName;

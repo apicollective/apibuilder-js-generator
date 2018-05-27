@@ -65,11 +65,11 @@ class ApiBuilderService {
       },
     });
 
-    Object.defineProperty(this, 'entities', {
+    Object.defineProperty(this, 'types', {
       get() {
         return [
-          ...this.internalEntities,
-          ...this.externalEntities,
+          ...this.internalTypes,
+          ...this.externalTypes,
         ];
       },
     });
@@ -89,7 +89,7 @@ class ApiBuilderService {
         map(schema.unions, union => ApiBuilderUnion.fromSchema(union, this))),
     });
 
-    Object.defineProperty(this, 'internalEntities', {
+    Object.defineProperty(this, 'internalTypes', {
       get() {
         return [
           ...this.internalEnums,
@@ -115,7 +115,7 @@ class ApiBuilderService {
         map(unions, union => ApiBuilderUnion.fromSchema({ name: union }, this, namespace)))),
     });
 
-    Object.defineProperty(this, 'externalEntities', {
+    Object.defineProperty(this, 'externalTypes', {
       get() {
         return [
           ...this.externalEnums,

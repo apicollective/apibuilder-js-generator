@@ -1,4 +1,6 @@
-const Entity = require('../../../../../src/utilities/apibuilder/Entity');
+/* eslint-disable max-len */
+
+const ApiBuilderType = require('../../../../../src/utilities/apibuilder/ApiBuilderType');
 const PrimitiveType = require('../../../../../src/utilities/apibuilder/PrimitiveType');
 const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 
@@ -12,18 +14,18 @@ const service = new ApiBuilderService({ service: schema });
 
 describe('toGraphQLScalarType', () => {
   it('should convert from apibuilder types to prop types', () => {
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.BOOLEAN, service))).toEqual('GraphQLBoolean');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.DATE_ISO8601, service))).toEqual('GraphQLString');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.DATE_TIME_ISO8601, service))).toEqual('GraphQLString');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.DECIMAL, service))).toEqual('GraphQLFloat');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.DOUBLE, service))).toEqual('GraphQLFloat');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.INTEGER, service))).toEqual('GraphQLInt');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.JSON, service))).toEqual('GraphQLString');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.LONG, service))).toEqual('GraphQLFloat');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.OBJECT, service))).toEqual(undefined);
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.STRING, service))).toEqual('GraphQLString');
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.UNIT, service))).toEqual(undefined);
-    expect(toGraphQLScalarType(Entity.fromType(PrimitiveType.UUID, service))).toEqual('GraphQLID');
-    expect(toGraphQLScalarType(Entity.fromType('com.bryzek.apidoc.common.v0.models.reference', service))).toEqual(undefined);
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.BOOLEAN, service))).toEqual('GraphQLBoolean');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.DATE_ISO8601, service))).toEqual('GraphQLString');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.DATE_TIME_ISO8601, service))).toEqual('GraphQLString');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.DECIMAL, service))).toEqual('GraphQLFloat');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.DOUBLE, service))).toEqual('GraphQLFloat');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.INTEGER, service))).toEqual('GraphQLInt');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.JSON, service))).toEqual('GraphQLString');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.LONG, service))).toEqual('GraphQLFloat');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.OBJECT, service))).toEqual(undefined);
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.STRING, service))).toEqual('GraphQLString');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.UNIT, service))).toEqual(undefined);
+    expect(toGraphQLScalarType(ApiBuilderType.fromType(PrimitiveType.UUID, service))).toEqual('GraphQLID');
+    expect(toGraphQLScalarType(ApiBuilderType.fromType('com.bryzek.apidoc.common.v0.models.reference', service))).toEqual(undefined);
   });
 });

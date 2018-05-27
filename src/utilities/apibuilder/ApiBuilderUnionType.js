@@ -1,13 +1,13 @@
-const Entity = require('./Entity');
+const ApiBuilderType = require('./ApiBuilderType');
 
 /** @see https://app.apibuilder.io/bryzek/apidoc-spec/0.11.94#model-union_type */
 class ApiBuilderUnionType {
   constructor(config, service) {
     Object.defineProperties(this, {
-      /** @property {!Entity} */
+      /** @property {!ApiBuilderType} */
       type: {
         enumerable: true,
-        value: Entity.fromType(config.type, service),
+        value: ApiBuilderType.fromType(config.type, service),
       },
       /** @property {?String} */
       description: {

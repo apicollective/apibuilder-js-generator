@@ -9,9 +9,9 @@ const FullyQualifiedType = require('./FullyQualifiedType');
 /**
  * Base class for all API Builder type classes.
  */
-class Entity {
+class ApiBuilderType {
   /**
-   * Create an entity.
+   * Create an ApiBuilderType.
    * @param {FullyQualifiedType} fullyQualifiedType
    * @param {ApiBuilderService} service
    */
@@ -36,10 +36,10 @@ class Entity {
       value: fullyQualifiedType.packageName,
     });
 
-    Object.defineProperty(this, 'nestedEntity', {
+    Object.defineProperty(this, 'nestedType', {
       get() {
         return this.isEnclosingType
-          ? Entity.fromType(fullyQualifiedType.nestedType, service)
+          ? ApiBuilderType.fromType(fullyQualifiedType.nestedType, service)
           : null;
       },
     });
@@ -90,53 +90,53 @@ class Entity {
   }
 
   /**
-   * Returns whether the specified entity is in the same package as this entity.
-   * @param {Entity} entity
+   * Returns whether the specified type is in the same package as this type.
+   * @param {ApiBuilderType} type
    * @returns {Boolean}
    */
-  isInSamePackage(entity) {
-    return this.packageName === entity.packageName;
+  isInSamePackage(type) {
+    return this.packageName === type.packageName;
   }
 }
 
-function isEntity(entity, type, service) {
+function isTypeIn(name, type, service) {
   const baseType = FullyQualifiedType.getBaseType(type);
-  return some(service[entity], overSome([
+  return some(service[name], overSome([
     matchesProperty('shortName', baseType),
     matchesProperty('baseType', baseType),
   ]));
 }
 
-function findEntityByType(entity, type, service) {
+function findTypeIn(name, type, service) {
   const baseType = FullyQualifiedType.getBaseType(type);
-  return find(service[entity], overSome([
+  return find(service[name], overSome([
     matchesProperty('shortName', baseType),
     matchesProperty('baseType', baseType),
   ]));
 }
 
 function isModel(type, service) {
-  return isEntity('models', type, service);
+  return isTypeIn('models', type, service);
 }
 
 function isEnum(type, service) {
-  return isEntity('enums', type, service);
+  return isTypeIn('enums', type, service);
 }
 
 function isUnion(type, service) {
-  return isEntity('unions', type, service);
+  return isTypeIn('unions', type, service);
 }
 
 function findModelByType(type, service) {
-  return findEntityByType('models', type, service);
+  return findTypeIn('models', type, service);
 }
 
 function findEnumByType(type, service) {
-  return findEntityByType('enums', type, service);
+  return findTypeIn('enums', type, service);
 }
 
 function findUnionByType(type, service) {
-  return findEntityByType('unions', type, service);
+  return findTypeIn('unions', type, service);
 }
 
 /**
@@ -168,19 +168,19 @@ function toFullyQualifiedType(type, service) {
 }
 
 /**
- * Returns the Entity corresponding to the specified type. When resolving
- * non-primitive types, internal types will take precedence over external types.
- * That being said, using a type short name to resolve to the correct entity is
- * unreliable. For best results, use a fully qualified type.
+ * Returns the ApiBuilderType corresponding to the specified type.
+ * When resolving non-primitive types, internal types will take precedence over
+ * external types. That being said, using a short name to resolve to the
+ * correct type is unreliable. For best results, use a fully qualified type.
  * @param {String} type
  * @param {ApiBuilderService} service
- * @returns {Entity}
+ * @returns {ApiBuilderType}
  */
-Entity.fromType = function fromType(type, service) {
+ApiBuilderType.fromType = function fromType(type, service) {
   let fullyQualifiedType = toFullyQualifiedType(type, service);
   fullyQualifiedType = FullyQualifiedType.formatType(fullyQualifiedType);
   fullyQualifiedType = new FullyQualifiedType(fullyQualifiedType);
-  return new Entity(fullyQualifiedType, service);
+  return new ApiBuilderType(fullyQualifiedType, service);
 };
 
-module.exports = Entity;
+module.exports = ApiBuilderType;

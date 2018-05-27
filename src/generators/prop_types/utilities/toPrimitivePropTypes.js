@@ -1,10 +1,10 @@
 /**
  * Calculates the primitive prop type validator for writing into generated code.
- * @param {Entity} entity
+ * @param {ApiBuilderType} type
  * @param {Boolean} [required = false]
  */
-function toPrimitivePropTypes(entity) {
-  switch (entity.baseType) {
+function toPrimitivePropTypes(type) {
+  switch (type.baseType) {
     case 'string':
     case 'date-iso8601':
     case 'date-time-iso8601':

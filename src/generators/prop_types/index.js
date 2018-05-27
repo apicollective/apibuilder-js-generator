@@ -12,23 +12,23 @@ const debug = createLogger('prop_types');
 
 function generate(data) {
   const service = new ApiBuilderService({ service: data });
-  const generatedFiles = reduce(service.internalEntities, (files, entity) => {
-    debug(`Generating source code for "${entity.baseType}".`);
+  const generatedFiles = reduce(service.internalTypes, (files, type) => {
+    debug(`Generating source code for "${type.baseType}".`);
 
     let contents;
 
-    if (entity.isEnum) {
-      contents = generateEnumeration(entity);
-    } else if (entity.isModel) {
-      contents = generateModel(entity);
-    } else if (entity.isUnion) {
-      contents = generateUnion(entity);
+    if (type.isEnum) {
+      contents = generateEnumeration(type);
+    } else if (type.isModel) {
+      contents = generateModel(type);
+    } else if (type.isUnion) {
+      contents = generateUnion(type);
     } else {
       debug('Skipping because type is not supported');
       return files;
     }
 
-    const basename = `${toModuleName(entity)}.js`;
+    const basename = `${toModuleName(type)}.js`;
     const dirname = 'prop-types';
     const file = new ApiBuilderFile(basename, dirname, contents);
 

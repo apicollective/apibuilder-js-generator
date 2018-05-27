@@ -1,10 +1,10 @@
 const map = require('lodash/map');
-const Entity = require('./Entity');
+const ApiBuilderType = require('./ApiBuilderType');
 const FullyQualifiedType = require('./FullyQualifiedType');
 const ApiBuilderUnionType = require('./ApiBuilderUnionType');
 
 /** @see https://app.apibuilder.io/bryzek/apidoc-spec/0.11.94#model-union */
-class ApiBuilderUnion extends Entity {
+class ApiBuilderUnion extends ApiBuilderType {
   constructor(config, fullyQualifiedType, service) {
     super(fullyQualifiedType, service);
 

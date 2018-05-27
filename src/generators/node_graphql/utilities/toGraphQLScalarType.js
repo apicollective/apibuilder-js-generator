@@ -2,13 +2,13 @@ const PrimitiveType = require('../../../utilities/apibuilder/PrimitiveType');
 
 /**
  * Calculates the GraphQL scalar type for writing into generated code. May
- * return `undefined` when entity is not a type that can be represented with
+ * return `undefined` when type is not a type that can be represented with
  * native GraphQL scalar types.
- * @param {Entity} entity
+ * @param {ApiBuilderType} type
  * @returns {String}
  */
-function toGraphQLScalarType(entity) {
-  switch (entity.baseType) {
+function toGraphQLScalarType(type) {
+  switch (type.baseType) {
     case PrimitiveType.STRING:
     case PrimitiveType.DATE_ISO8601:
     case PrimitiveType.DATE_TIME_ISO8601:
