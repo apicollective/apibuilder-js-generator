@@ -1,7 +1,7 @@
 const map = require('lodash/map');
 
 const Entity = require('./Entity');
-const EnumValue = require('./EnumValue');
+const ApiBuilderEnumValue = require('./ApiBuilderEnumValue');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
 class ApiBuilderEnum extends Entity {
@@ -30,10 +30,10 @@ class ApiBuilderEnum extends Entity {
         enumerable: true,
         value: schema.description,
       },
-      /** @property {!EnumValue} */
+      /** @property {!ApiBuilderEnumValue} */
       values: {
         enumerable: true,
-        value: map(schema.values, value => new EnumValue(value)),
+        value: map(schema.values, value => new ApiBuilderEnumValue(value)),
       },
       /** @property {?Object[]} */
       attributes: {

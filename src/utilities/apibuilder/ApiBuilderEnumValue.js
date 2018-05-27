@@ -1,6 +1,6 @@
 const defaultTo = require('lodash/defaultTo');
 
-class EnumValue {
+class ApiBuilderEnumValue {
   constructor(config) {
     Object.defineProperties(this, {
       /**
@@ -46,4 +46,4 @@ class EnumValue {
   }
 }
 
-module.exports = EnumValue;
+module.exports = ApiBuilderEnumValue;
