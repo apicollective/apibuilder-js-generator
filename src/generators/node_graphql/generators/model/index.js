@@ -21,7 +21,7 @@ const compiled = ejs.compile(template);
 /**
  * Computes the name exports to import from the "graphql" package for writing
  * to generated code.
- * @param {Model} model
+ * @param {ApiBuilderModel} model
  * @returns {String[]}
  */
 function computeGraphQLNamedExports(model) {

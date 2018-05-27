@@ -4,7 +4,7 @@ const map = require('lodash/map');
 const memoize = require('lodash/memoize');
 
 const ApiBuilderEnum = require('./ApiBuilderEnum');
-const Model = require('./Model');
+const ApiBuilderModel = require('./ApiBuilderModel');
 const Union = require('./Union');
 
 /**
@@ -81,7 +81,7 @@ class ApiBuilderService {
 
     Object.defineProperty(this, 'internalModels', {
       get: memoize(() =>
-        map(schema.models, model => Model.fromSchema(model, this))),
+        map(schema.models, model => ApiBuilderModel.fromSchema(model, this))),
     });
 
     Object.defineProperty(this, 'internalUnions', {
@@ -107,7 +107,7 @@ class ApiBuilderService {
 
     Object.defineProperty(this, 'externalModels', {
       get: memoize(() => flatMap(schema.imports, ({ models, namespace }) =>
-        map(models, model => Model.fromSchema({ name: model }, this, namespace)))),
+        map(models, model => ApiBuilderModel.fromSchema({ name: model }, this, namespace)))),
     });
 
     Object.defineProperty(this, 'externalUnions', {

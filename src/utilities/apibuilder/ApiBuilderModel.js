@@ -3,9 +3,9 @@ const Entity = require('./Entity');
 const ApiBuilderField = require('./ApiBuilderField');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
-class Model extends Entity {
+class ApiBuilderModel extends Entity {
   /**
-   * Create a model.
+   * Create an ApiBuilderModel.
    * @param {Object} schema - An object representing an API builder model definition.
    * @param {FullyQualifiedType} fullyQualifiedType
    * @param {ApiBuilderService} service
@@ -37,15 +37,15 @@ class Model extends Entity {
   }
 }
 /**
- * Returns the Model corresponding to the specified API builder model definition.
+ * Returns the ApiBuilderModel corresponding to the specified API builder model definition.
  * @param {Object} model An object representing an API Builder model definition.
  * @param {ApiBuilderService} service
  * @param {String} [namespace = service.namespace]
- * @returns {FullyQualifiedType}
+ * @returns {ApiBuilderModel}
  */
-Model.fromSchema = function fromSchema(schema, service, namespace = service.namespace) {
+ApiBuilderModel.fromSchema = function fromSchema(schema, service, namespace = service.namespace) {
   const fullyQualifiedType = new FullyQualifiedType(`${namespace}.models.${schema.name}`);
-  return new Model(schema, fullyQualifiedType, service);
+  return new ApiBuilderModel(schema, fullyQualifiedType, service);
 };
 
-module.exports = Model;
+module.exports = ApiBuilderModel;
