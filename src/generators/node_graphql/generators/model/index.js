@@ -52,7 +52,7 @@ function mapToImportDeclarations(model) {
   ];
 
   return model.fields
-    .filter(field => !field.type.isPrimitive)
+    .filter(field => !field.type.isPrimitiveType)
     .reduce((declarations, field) => {
       // Compute relative path to target module, which is the type we want to
       // import into the generated model.

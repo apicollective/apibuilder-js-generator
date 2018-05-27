@@ -16,7 +16,7 @@ function toGraphQLOutputType(entity, required = false) {
     invariant(false, '???');
   } else if (entity.isArrayType) {
     outputType = `new GraphQLList(${toGraphQLOutputType(entity.nestedEntity)})`;
-  } else if (entity.isPrimitive) {
+  } else if (entity.isPrimitiveType) {
     outputType = toGraphQLScalarType(entity);
   } else {
     outputType = toDefaultExport(entity);

@@ -12,7 +12,7 @@ const compiled = ejs.compile(template);
 function mapToImportStatements(model) {
   // Primitive types do not require import.
   return model.fields
-    .filter(field => !field.type.isPrimitive)
+    .filter(field => !field.type.isPrimitiveType)
     .reduce((importStatements, field) => {
       const importStatement = toImportStatement(model, field.type);
       const isAlreadyImported = importStatements.some(matches(importStatement));

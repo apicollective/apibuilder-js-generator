@@ -13,7 +13,7 @@ function toPropTypes(entity, required = false) {
     propType = `PropTypes.objectOf(${toPropTypes(entity.nestedEntity)})`;
   } else if (entity.isArrayType) {
     propType = `PropTypes.arrayOf(${toPropTypes(entity.nestedEntity)})`;
-  } else if (entity.isPrimitive) {
+  } else if (entity.isPrimitiveType) {
     propType = toPrimitivePropTypes(entity);
   } else if (entity.isModel) {
     propType = `PropTypes.shape(${toDefaultExport(entity)})`;

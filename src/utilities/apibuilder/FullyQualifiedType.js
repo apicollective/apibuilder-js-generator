@@ -93,7 +93,7 @@ class FullyQualifiedType {
     Object.defineProperty(this, 'packageName', {
       get() {
         const lastIndex = this.baseType.lastIndexOf('.');
-        return (this.isPrimitive || lastIndex === -1)
+        return (this.isPrimitiveType || lastIndex === -1)
           ? EMPTY_STRING
           : this.baseType.substring(0, lastIndex);
       },
@@ -138,7 +138,7 @@ class FullyQualifiedType {
      * This property holds whether this is a primitive type.
      * @property {Boolean}
      */
-    Object.defineProperty(this, 'isPrimitive', {
+    Object.defineProperty(this, 'isPrimitiveType', {
       get() {
         return FullyQualifiedType.isPrimitiveType(this.fullyQualifiedType);
       },

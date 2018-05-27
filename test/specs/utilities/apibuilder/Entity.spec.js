@@ -12,47 +12,47 @@ const primitives = [
   'integer', 'json', 'long', 'object', 'string', 'unit', 'uuid',
 ];
 
-describe('Entity::isPrimitive', () => {
+describe('Entity::isPrimitiveType', () => {
   primitives.forEach((primitive) => {
     test(`should be true for a entity of type "${primitive}"`, () => {
       const entity = Entity.fromType(primitive, service);
-      expect(entity).toHaveProperty('isPrimitive', true);
+      expect(entity).toHaveProperty('isPrimitiveType', true);
     });
 
     test(`should be true for a entity of type "[${primitive}]"`, () => {
       const entity = Entity.fromType(`[${primitive}]`, service);
-      expect(entity).toHaveProperty('isPrimitive', true);
+      expect(entity).toHaveProperty('isPrimitiveType', true);
     });
 
     test(`should be true for a entity of type "map[${primitive}]"`, () => {
       const entity = Entity.fromType(`map[${primitive}]`, service);
-      expect(entity).toHaveProperty('isPrimitive', true);
+      expect(entity).toHaveProperty('isPrimitiveType', true);
     });
   });
 
   test('should be true for entity of type "map[[string]]"', () => {
     const entity = Entity.fromType('map[[string]]');
-    expect(entity).toHaveProperty('isPrimitive', true);
+    expect(entity).toHaveProperty('isPrimitiveType', true);
   });
 
   test('should be true for entity for type "[[string]]"', () => {
     const entity = Entity.fromType('[[string]]');
-    expect(entity).toHaveProperty('isPrimitive', true);
+    expect(entity).toHaveProperty('isPrimitiveType', true);
   });
 
   test('should be false for a entity of type that is considered a model', () => {
     const entity = Entity.fromType('organization', service);
-    expect(entity).toHaveProperty('isPrimitive', false);
+    expect(entity).toHaveProperty('isPrimitiveType', false);
   });
 
   test('should be false for a entity of type that is considered an enumeration', () => {
     const entity = Entity.fromType('visibility', service);
-    expect(entity).toHaveProperty('isPrimitive', false);
+    expect(entity).toHaveProperty('isPrimitiveType', false);
   });
 
   test('should be false for a entity of type that is considered an union', () => {
     const entity = Entity.fromType('diff', service);
-    expect(entity).toHaveProperty('isPrimitive', false);
+    expect(entity).toHaveProperty('isPrimitiveType', false);
   });
 });
 

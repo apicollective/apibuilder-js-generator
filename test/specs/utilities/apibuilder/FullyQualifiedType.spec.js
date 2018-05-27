@@ -225,37 +225,37 @@ describe('FullyQualifiedType::isEnclosingType', () => {
   });
 });
 
-describe('FullyQualifiedType::isPrimitive', () => {
+describe('FullyQualifiedType::isPrimitiveType', () => {
   primitiveTypes.forEach((primitiveType) => {
     test(`should be true for an instance of type "${primitiveType}"`, () => {
       const instance = new FullyQualifiedType(primitiveType);
-      expect(instance).toHaveProperty('isPrimitive', true);
+      expect(instance).toHaveProperty('isPrimitiveType', true);
     });
 
     test(`should be true for an instance of type "[${primitiveType}]"`, () => {
       const instance = new FullyQualifiedType(`[${primitiveType}]`);
-      expect(instance).toHaveProperty('isPrimitive', true);
+      expect(instance).toHaveProperty('isPrimitiveType', true);
     });
 
     test(`should be true for an instance of type "map[${primitiveType}]"`, () => {
       const instance = new FullyQualifiedType(`map[${primitiveType}]`);
-      expect(instance).toHaveProperty('isPrimitive', true);
+      expect(instance).toHaveProperty('isPrimitiveType', true);
     });
   });
 
   test(`should be false for an instance of type "${baseType}"`, () => {
     const instance = new FullyQualifiedType(baseType);
-    expect(instance).toHaveProperty('isPrimitive', false);
+    expect(instance).toHaveProperty('isPrimitiveType', false);
   });
 
   test(`should be false for an instance of type "[${baseType}]"`, () => {
     const instance = new FullyQualifiedType(`[${baseType}]`);
-    expect(instance).toHaveProperty('isPrimitive', false);
+    expect(instance).toHaveProperty('isPrimitiveType', false);
   });
 
   test(`should be false for an instance of type "map[${baseType}]"`, () => {
     const instance = new FullyQualifiedType(`map[${baseType}]`);
-    expect(instance).toHaveProperty('isPrimitive', false);
+    expect(instance).toHaveProperty('isPrimitiveType', false);
   });
 });
 

@@ -49,9 +49,9 @@ class Entity {
       value: fullyQualifiedType.isEnclosingType,
     });
 
-    Object.defineProperty(this, 'isPrimitive', {
+    Object.defineProperty(this, 'isPrimitiveType', {
       enumerable: true,
-      value: fullyQualifiedType.isPrimitive,
+      value: fullyQualifiedType.isPrimitiveType,
     });
 
     Object.defineProperty(this, 'isMapType', {

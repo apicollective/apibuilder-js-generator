@@ -16,7 +16,7 @@ function mapToPropTypes(union) {
 function mapToImportStatements(union) {
   return union.types
     // Primitive types do not require import.
-    .filter(({ type }) => !type.isPrimitive)
+    .filter(({ type }) => !type.isPrimitiveType)
     // TODO: Check for possible default export name collision.
     .map(({ type }) => toImportStatement(union, type));
 }
