@@ -113,9 +113,9 @@ class FullyQualifiedType {
      * This property holds whether this is a map.
      * @property {Boolean}
      */
-    Object.defineProperty(this, 'isMap', {
+    Object.defineProperty(this, 'isMapType', {
       get() {
-        return FullyQualifiedType.isMap(this.fullyQualifiedType);
+        return FullyQualifiedType.isMapType(this.fullyQualifiedType);
       },
     });
 
@@ -130,7 +130,7 @@ class FullyQualifiedType {
      */
     Object.defineProperty(this, 'isEnclosingType', {
       get() {
-        return this.isArrayType || this.isMap;
+        return this.isArrayType || this.isMapType;
       },
     });
 
@@ -151,7 +151,7 @@ class FullyQualifiedType {
  * @param {String} type
  * @returns {Boolean}
  */
-function isMap(type) {
+function isMapType(type) {
   return objectOfRegex.test(type);
 }
 
@@ -166,7 +166,7 @@ function isArrayType(type) {
 
 function parseType(type) {
   switch (true) {
-    case isMap(type):
+    case isMapType(type):
       return {
         name: 'map',
         type: parseType(type.match(objectOfRegex)[1]),
@@ -221,7 +221,7 @@ function isPrimitiveType(type) {
 
 FullyQualifiedType.formatType = formatType;
 FullyQualifiedType.isArrayType = isArrayType;
-FullyQualifiedType.isMap = isMap;
+FullyQualifiedType.isMapType = isMapType;
 FullyQualifiedType.isPrimitiveType = isPrimitiveType;
 FullyQualifiedType.parseType = parseType;
 FullyQualifiedType.getBaseType = getBaseType;

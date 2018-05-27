@@ -56,37 +56,37 @@ describe('Entity::isPrimitive', () => {
   });
 });
 
-describe('Entity::isMap', () => {
+describe('Entity::isMapType', () => {
   primitives.forEach((primitive) => {
     test(`should be true for a entity of type "map[${primitive}]"`, () => {
       const entity = Entity.fromType(`map[${primitive}]`, service);
-      expect(entity).toHaveProperty('isMap', true);
+      expect(entity).toHaveProperty('isMapType', true);
     });
   });
 
   test('should be true for entity of type "map[[string]]"', () => {
     const entity = Entity.fromType('map[[string]]');
-    expect(entity).toHaveProperty('isMap', true);
+    expect(entity).toHaveProperty('isMapType', true);
   });
 
   test('should be true for a entity of type considered a map of some model', () => {
     const entity = Entity.fromType('map[organization]', service);
-    expect(entity).toHaveProperty('isMap', true);
+    expect(entity).toHaveProperty('isMapType', true);
   });
 
   test('should be true for a entity of type considered a map of some enumeration', () => {
     const entity = Entity.fromType('map[visibility]', service);
-    expect(entity).toHaveProperty('isMap', true);
+    expect(entity).toHaveProperty('isMapType', true);
   });
 
   test('should be true for a entity of type considered a map of some union', () => {
     const entity = Entity.fromType('map[diff]', service);
-    expect(entity).toHaveProperty('isMap', true);
+    expect(entity).toHaveProperty('isMapType', true);
   });
 
   test('should be true for a entity of fully qualified type considered a map of some model', () => {
     const entity = Entity.fromType('map[com.bryzek.apidoc.common.v0.models.audit]', service);
-    expect(entity).toHaveProperty('isMap', true);
+    expect(entity).toHaveProperty('isMapType', true);
   });
 });
 

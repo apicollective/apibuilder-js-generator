@@ -12,7 +12,7 @@ const toGraphQLScalarType = require('./toGraphQLScalarType');
 function toGraphQLOutputType(entity, required = false) {
   let outputType;
 
-  if (entity.isMap) {
+  if (entity.isMapType) {
     invariant(false, '???');
   } else if (entity.isArrayType) {
     outputType = `new GraphQLList(${toGraphQLOutputType(entity.nestedEntity)})`;

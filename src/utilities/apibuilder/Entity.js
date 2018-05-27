@@ -54,9 +54,9 @@ class Entity {
       value: fullyQualifiedType.isPrimitive,
     });
 
-    Object.defineProperty(this, 'isMap', {
+    Object.defineProperty(this, 'isMapType', {
       enumerable: true,
-      value: fullyQualifiedType.isMap,
+      value: fullyQualifiedType.isMapType,
     });
 
     Object.defineProperty(this, 'isArrayType', {

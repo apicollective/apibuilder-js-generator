@@ -166,25 +166,25 @@ describe('FullyQualifiedType::isArrayType', () => {
   });
 });
 
-describe('FullyQualifiedType::isMap', () => {
+describe('FullyQualifiedType::isMapType', () => {
   test('should be true for instance of type "map[string]"', () => {
     const instance = new FullyQualifiedType('map[string]');
-    expect(instance).toHaveProperty('isMap', true);
+    expect(instance).toHaveProperty('isMapType', true);
   });
 
   test(`should be true for instance of type map[${baseType}]`, () => {
     const instance = new FullyQualifiedType(`map[${baseType}]`);
-    expect(instance).toHaveProperty('isMap', true);
+    expect(instance).toHaveProperty('isMapType', true);
   });
 
   test('should be false for instance of type "string"', () => {
     const instance = new FullyQualifiedType('string');
-    expect(instance).toHaveProperty('isMap', false);
+    expect(instance).toHaveProperty('isMapType', false);
   });
 
   test(`should be true for instance of type ${baseType}`, () => {
     const instance = new FullyQualifiedType(`${baseType}`);
-    expect(instance).toHaveProperty('isMap', false);
+    expect(instance).toHaveProperty('isMapType', false);
   });
 });
 

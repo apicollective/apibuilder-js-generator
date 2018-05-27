@@ -9,7 +9,7 @@ const toPrimitivePropTypes = require('./toPrimitivePropTypes');
 function toPropTypes(entity, required = false) {
   let propType;
 
-  if (entity.isMap) {
+  if (entity.isMapType) {
     propType = `PropTypes.objectOf(${toPropTypes(entity.nestedEntity)})`;
   } else if (entity.isArrayType) {
     propType = `PropTypes.arrayOf(${toPropTypes(entity.nestedEntity)})`;
