@@ -27,7 +27,7 @@ class FullyQualifiedType {
    */
   constructor(fullyQualifiedType) {
     invariant(
-      FullyQualifiedType.toBaseType(fullyQualifiedType).lastIndexOf('.') >= 0 ||
+      FullyQualifiedType.getBaseType(fullyQualifiedType).lastIndexOf('.') >= 0 ||
       FullyQualifiedType.isPrimitiveType(fullyQualifiedType),
       `"${fullyQualifiedType}" is not fully qualified type or primitive type. ` +
       'A fully qualified type consists of a package name followed by the ' +
@@ -45,7 +45,7 @@ class FullyQualifiedType {
      */
     Object.defineProperty(this, 'fullyQualifiedName', {
       get() {
-        return FullyQualifiedType.toBaseType(this.fullyQualifiedType);
+        return FullyQualifiedType.getBaseType(this.fullyQualifiedType);
       },
     });
 
@@ -198,11 +198,11 @@ function formatType(object) {
  * must be of the same type: this is called the base type. A base type may or
  * may not be a fully qualified name unless it is a primitive type.
  */
-function toBaseType(type) {
+function getBaseType(type) {
   if (typeof type === 'string') {
-    return toBaseType(parseType(type));
+    return getBaseType(parseType(type));
   } else if (type.type != null) {
-    return toBaseType(type.type);
+    return getBaseType(type.type);
   }
 
   return type.name;
@@ -215,7 +215,7 @@ function toBaseType(type) {
  * @returns {Boolean}
  */
 function isPrimitiveType(type) {
-  return includes(values(PrimitiveType), toBaseType(type));
+  return includes(values(PrimitiveType), getBaseType(type));
 }
 
 
@@ -224,6 +224,6 @@ FullyQualifiedType.isArray = isArray;
 FullyQualifiedType.isMap = isMap;
 FullyQualifiedType.isPrimitiveType = isPrimitiveType;
 FullyQualifiedType.parseType = parseType;
-FullyQualifiedType.toBaseType = toBaseType;
+FullyQualifiedType.getBaseType = getBaseType;
 
 module.exports = FullyQualifiedType;

@@ -100,7 +100,7 @@ class Entity {
 }
 
 function isEntity(entity, type, service) {
-  const baseType = FullyQualifiedType.toBaseType(type);
+  const baseType = FullyQualifiedType.getBaseType(type);
   return some(service[entity], overSome([
     matchesProperty('shortName', baseType),
     matchesProperty('fullyQualifiedName', baseType),
@@ -108,7 +108,7 @@ function isEntity(entity, type, service) {
 }
 
 function findEntityByType(entity, type, service) {
-  const baseType = FullyQualifiedType.toBaseType(type);
+  const baseType = FullyQualifiedType.getBaseType(type);
   return find(service[entity], overSome([
     matchesProperty('shortName', baseType),
     matchesProperty('fullyQualifiedName', baseType),

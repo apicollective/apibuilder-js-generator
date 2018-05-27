@@ -394,31 +394,31 @@ describe('FullyQualifiedType.formatType', () => {
   });
 });
 
-describe('FullyQualifiedType.toBaseType', () => {
+describe('FullyQualifiedType.getBaseType', () => {
   primitiveTypes.forEach((primitiveType) => {
     test(`should return "${primitiveType}" for type "${primitiveType}"`, () => {
-      expect(FullyQualifiedType.toBaseType(primitiveType)).toBe(primitiveType);
+      expect(FullyQualifiedType.getBaseType(primitiveType)).toBe(primitiveType);
     });
 
     test(`should return "${primitiveType}" for type "[${primitiveType}]"`, () => {
-      expect(FullyQualifiedType.toBaseType(`[${primitiveType}]`)).toBe(primitiveType);
+      expect(FullyQualifiedType.getBaseType(`[${primitiveType}]`)).toBe(primitiveType);
     });
 
     test(`should return "${primitiveType}" for type "map[${primitiveType}]"`, () => {
-      expect(FullyQualifiedType.toBaseType(`map[${primitiveType}]`)).toBe(primitiveType);
+      expect(FullyQualifiedType.getBaseType(`map[${primitiveType}]`)).toBe(primitiveType);
     });
   });
 
   test(`should return "${fullyQualifiedName}" for type "${fullyQualifiedName}"`, () => {
-    expect(FullyQualifiedType.toBaseType(fullyQualifiedName)).toBe(fullyQualifiedName);
+    expect(FullyQualifiedType.getBaseType(fullyQualifiedName)).toBe(fullyQualifiedName);
   });
 
   test(`should return "${fullyQualifiedName}" for type "[${fullyQualifiedName}]"`, () => {
-    expect(FullyQualifiedType.toBaseType(`[${fullyQualifiedName}]`)).toBe(fullyQualifiedName);
+    expect(FullyQualifiedType.getBaseType(`[${fullyQualifiedName}]`)).toBe(fullyQualifiedName);
   });
 
   test(`should return "${fullyQualifiedName}" for type "map[${fullyQualifiedName}]"`, () => {
-    expect(FullyQualifiedType.toBaseType(`map[${fullyQualifiedName}]`)).toBe(fullyQualifiedName);
+    expect(FullyQualifiedType.getBaseType(`map[${fullyQualifiedName}]`)).toBe(fullyQualifiedName);
   });
 });
 
