@@ -1,10 +1,10 @@
 const find = require('lodash/find');
 
 const Enumeration = require('../../../../src/utilities/apibuilder/Enumeration');
-const Service = require('../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 describe('Enumeration', () => {
   test('should have static property to create enumeration from schema', () => {

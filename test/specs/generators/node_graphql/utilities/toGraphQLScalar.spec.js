@@ -1,6 +1,6 @@
 const Entity = require('../../../../../src/utilities/apibuilder/Entity');
 const PrimitiveType = require('../../../../../src/utilities/apibuilder/PrimitiveType');
-const Service = require('../../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 const toGraphQLScalarType = require('../../../../../src/generators/node_graphql/utilities/toGraphQLScalarType');
@@ -8,7 +8,7 @@ const toGraphQLScalarType = require('../../../../../src/generators/node_graphql/
 // IMPORTANT: Tests use types that are part of this schema definition.
 // By the way, this is the schema definition for apibuilder api:
 // https://app.apibuilder.io/bryzek/apidoc-api/latest
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 describe('toGraphQLScalarType', () => {
   it('should convert from apibuilder types to prop types', () => {

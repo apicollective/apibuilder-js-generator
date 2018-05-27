@@ -1,10 +1,10 @@
 const Field = require('../../../../src/utilities/apibuilder/Field');
-const Service = require('../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 const createMockField = require('../../../helpers/createMockField');
 const createMockDeprecation = require('../../../helpers/createMockDeprecation');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 describe('Field', () => {
   test('should have property with field name', () => {
     const config = createMockField({ type: 'visibility' });

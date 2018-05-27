@@ -13,7 +13,7 @@ class Entity {
   /**
    * Create an entity.
    * @param {FullyQualifiedType} fullyQualifiedType
-   * @param {Service} service
+   * @param {ApiBuilderService} service
    */
   constructor(fullyQualifiedType, service) {
     Object.defineProperty(this, 'fullyQualifiedType', {
@@ -144,7 +144,7 @@ function findUnionByType(type, service) {
  * If necessary, use FullyQualifiedType.formatType to turn back returned value
  * into a string representation of the type in question.
  * @param {String|Object} type
- * @param {Service} service
+ * @param {ApiBuilderService} service
  * @returns {Object}
  */
 function toFullyQualifiedType(type, service) {
@@ -173,7 +173,7 @@ function toFullyQualifiedType(type, service) {
  * That being said, using a type short name to resolve to the correct entity is
  * unreliable. For best results, use a fully qualified type.
  * @param {String} type
- * @param {Service} service
+ * @param {ApiBuilderService} service
  * @returns {Entity}
  */
 Entity.fromType = function fromType(type, service) {

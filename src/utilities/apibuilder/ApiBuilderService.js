@@ -8,10 +8,10 @@ const Model = require('./Model');
 const Union = require('./Union');
 
 /**
- * @class Service
+ * @class ApiBuilderService
  * Wraps an apibuilder service definition and provides utilities for interacting with it.
  */
-class Service {
+class ApiBuilderService {
   constructor({ service: schema }) {
     Object.defineProperty(this, 'name', {
       enumerable: true,
@@ -126,4 +126,4 @@ class Service {
   }
 }
 
-module.exports = Service;
+module.exports = ApiBuilderService;

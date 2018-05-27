@@ -2,7 +2,7 @@ const createLogger = require('debug');
 const reduce = require('lodash/reduce');
 
 const File = require('../../utilities/apibuilder/File');
-const Service = require('../../utilities/apibuilder/Service');
+const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
 const generateEnumeration = require('./generators/enumeration');
 const generateModel = require('./generators/model');
 const toDefaultExport = require('./utilities/toDefaultExport');
@@ -10,7 +10,7 @@ const toDefaultExport = require('./utilities/toDefaultExport');
 const debug = createLogger('apibuilder:graphql');
 
 function generate(data) {
-  const service = new Service({ service: data });
+  const service = new ApiBuilderService({ service: data });
   const generatedFiles = reduce(service.internalEntities, (files, entity) => {
     debug(`Generating source code for "${entity.baseType}".`);
 

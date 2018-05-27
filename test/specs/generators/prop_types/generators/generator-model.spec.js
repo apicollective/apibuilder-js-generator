@@ -1,11 +1,11 @@
 const find = require('lodash/find');
 
 const loadFixture = require('../../../../helpers/loadFixture');
-const Service = require('../../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 const generateModel = require('../../../../../src/generators/prop_types/generators/generator-model');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 test('should generate prop types for model types', () => {
   const model = find(service.models, { shortName: 'application' });

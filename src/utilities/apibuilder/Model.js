@@ -8,7 +8,7 @@ class Model extends Entity {
    * Create a model.
    * @param {Object} schema - An object representing an API builder model definition.
    * @param {FullyQualifiedType} fullyQualifiedType
-   * @param {Service} service
+   * @param {ApiBuilderService} service
    */
   constructor(schema, fullyQualifiedType, service) {
     super(fullyQualifiedType, service);
@@ -39,7 +39,7 @@ class Model extends Entity {
 /**
  * Returns the Model corresponding to the specified API builder model definition.
  * @param {Object} model An object representing an API Builder model definition.
- * @param {Service} service
+ * @param {ApiBuilderService} service
  * @param {String} [namespace = service.namespace]
  * @returns {FullyQualifiedType}
  */

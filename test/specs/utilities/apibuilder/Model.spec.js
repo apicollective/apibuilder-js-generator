@@ -1,9 +1,9 @@
 const find = require('lodash/find');
 const Model = require('../../../../src/utilities/apibuilder/Model');
-const Service = require('../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 describe('Model', () => {
   test('should have property with base type', () => {

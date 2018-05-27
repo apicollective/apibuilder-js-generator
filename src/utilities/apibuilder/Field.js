@@ -51,7 +51,7 @@ class Field {
 /**
  * Returns the Field corresponding to the specified API builder field definition.
  * @param {Object} schema
- * @param {Service} service
+ * @param {ApiBuilderService} service
  */
 Field.fromSchema = function fromSchema(schema, service) {
   return new Field(schema, service);

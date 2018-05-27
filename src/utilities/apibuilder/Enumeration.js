@@ -9,7 +9,7 @@ class Enumeration extends Entity {
    * Create an enumeration.
    * @param {Object} schema - An object representing an API builder enum definition.
    * @param {FullyQualifiedType} fullyQualifiedType
-   * @param {Service}
+   * @param {ApiBuilderService}
    */
   constructor(schema, fullyQualifiedType, service) {
     super(fullyQualifiedType, service);
@@ -52,7 +52,7 @@ class Enumeration extends Entity {
 /**
  * Returns the FullyQualifiedType corresponding to the specified enumeration definition.
  * @param {Object} schema An object representing an API Builder enumeration definition.
- * @param {Service} service
+ * @param {ApiBuilderService} service
  * @param {String} [namespace = service.namespace]
  * @returns {FullyQualifiedType}
  */

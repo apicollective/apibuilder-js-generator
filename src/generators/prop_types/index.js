@@ -2,7 +2,7 @@ const createLogger = require('debug');
 const reduce = require('lodash/reduce');
 
 const File = require('../../utilities/apibuilder/File');
-const Service = require('../../utilities/apibuilder/Service');
+const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
 const generateEnumeration = require('./generators/generator-enumeration');
 const generateModel = require('./generators/generator-model');
 const generateUnion = require('./generators/generator-union');
@@ -11,7 +11,7 @@ const toModuleName = require('./utilities/toModuleName');
 const debug = createLogger('prop_types');
 
 function generate(data) {
-  const service = new Service({ service: data });
+  const service = new ApiBuilderService({ service: data });
   const generatedFiles = reduce(service.internalEntities, (files, entity) => {
     debug(`Generating source code for "${entity.baseType}".`);
 

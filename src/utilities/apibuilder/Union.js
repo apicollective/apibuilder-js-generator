@@ -51,7 +51,7 @@ class Union extends Entity {
 /**
  * Returns the Union corresponding to the specified API Builder union definition.
  * @param {Object} schema An object representing an API Builder union definition.
- * @param {Service} service
+ * @param {ApiBuilderService} service
  * @param {String} [namespace = service.namespace]
  * @returns {FullyQualifiedType}
  */

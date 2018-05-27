@@ -1,12 +1,12 @@
 const Entity = require('../../../../../src/utilities/apibuilder/Entity');
-const Service = require('../../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 const toPrimitivePropTypes = require('../../../../../src/generators/prop_types/utilities/toPrimitivePropTypes');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 
 // IMPORTANT: Tests use types that are part of this schema definition.
 // By the way, this is the schema definition for apibuilder api:
 // https://app.apibuilder.io/bryzek/apidoc-api/latest
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 describe('toPrimitivePropTypes', () => {
   it('should convert from apibuilder types to prop types', () => {

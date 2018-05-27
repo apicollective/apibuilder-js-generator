@@ -1,9 +1,9 @@
 const find = require('lodash/find');
-const Service = require('../../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 const toDefaultExport = require('../../../../../src/generators/prop_types/utilities/toDefaultExport');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 describe('toDefaultExport', () => {
   test('should return default export name for enum', () => {

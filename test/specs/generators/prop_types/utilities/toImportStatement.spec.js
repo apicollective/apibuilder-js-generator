@@ -1,9 +1,9 @@
 const find = require('lodash/find');
-const Service = require('../../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 const toImportStatement = require('../../../../../src/generators/prop_types/utilities/toImportStatement');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 describe('toImportStatement', () => {
   test('should return import statement relative modules in the same "package"', () => {
