@@ -13,34 +13,29 @@ const Union = require('./Union');
  */
 class Service {
   constructor({ service: schema }) {
-    Object.defineProperty(this, 'schema', {
-      enumerable: true,
-      value: schema,
-    });
-
     Object.defineProperty(this, 'name', {
       enumerable: true,
-      value: this.schema.name,
+      value: schema.name,
     });
 
     Object.defineProperty(this, 'namespace', {
       enumerable: true,
-      value: this.schema.namespace,
+      value: schema.namespace,
     });
 
     Object.defineProperty(this, 'version', {
       enumerable: true,
-      value: this.schema.version,
+      value: schema.version,
     });
 
     Object.defineProperty(this, 'applicationKey', {
       enumerable: true,
-      value: this.schema.application.key,
+      value: schema.application.key,
     });
 
     Object.defineProperty(this, 'organizationKey', {
       enumerable: true,
-      value: this.schema.organization.key,
+      value: schema.organization.key,
     });
 
     Object.defineProperty(this, 'enums', {
@@ -81,17 +76,17 @@ class Service {
 
     Object.defineProperty(this, 'internalEnums', {
       get: memoize(() =>
-        map(this.schema.enums, enumeration => Enumeration.fromSchema(enumeration, this))),
+        map(schema.enums, enumeration => Enumeration.fromSchema(enumeration, this))),
     });
 
     Object.defineProperty(this, 'internalModels', {
       get: memoize(() =>
-        map(this.schema.models, model => Model.fromSchema(model, this))),
+        map(schema.models, model => Model.fromSchema(model, this))),
     });
 
     Object.defineProperty(this, 'internalUnions', {
       get: memoize(() =>
-        map(this.schema.unions, union => Union.fromSchema(union, this))),
+        map(schema.unions, union => Union.fromSchema(union, this))),
     });
 
     Object.defineProperty(this, 'internalEntities', {
@@ -105,17 +100,17 @@ class Service {
     });
 
     Object.defineProperty(this, 'externalEnums', {
-      get: memoize(() => flatMap(this.schema.imports, ({ enums, namespace }) =>
+      get: memoize(() => flatMap(schema.imports, ({ enums, namespace }) =>
         map(enums, enumeration => Enumeration.fromSchema({ name: enumeration }, this, namespace)))),
     });
 
     Object.defineProperty(this, 'externalModels', {
-      get: memoize(() => flatMap(this.schema.imports, ({ models, namespace }) =>
+      get: memoize(() => flatMap(schema.imports, ({ models, namespace }) =>
         map(models, model => Model.fromSchema({ name: model }, this, namespace)))),
     });
 
     Object.defineProperty(this, 'externalUnions', {
-      get: memoize(() => flatMap(this.schema.imports, ({ unions, namespace }) =>
+      get: memoize(() => flatMap(schema.imports, ({ unions, namespace }) =>
         map(unions, union => Union.fromSchema({ name: union }, this, namespace)))),
     });
 
