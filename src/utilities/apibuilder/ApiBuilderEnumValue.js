@@ -1,6 +1,17 @@
-const defaultTo = require('lodash/defaultTo');
+/**
+ * @typedef {Object} ApiBuilderEnumValueConfig
+ * @see https://app.apibuilder.io/bryzek/apidoc-spec/latest#model-enum_value
+ * @property {!String} name
+ * @property {?String} description
+ * @property {?String} deprecation
+ * @property {!Object[]} attributes
+ */
 
 class ApiBuilderEnumValue {
+  /**
+   * Create an ApiBuilderEnumValue
+   * @param {ApiBuilderEnumValueConfig} config
+   */
   constructor(config) {
     Object.defineProperties(this, {
       /**
@@ -11,32 +22,21 @@ class ApiBuilderEnumValue {
         value: config.name,
       },
       /**
-       * @property {!String} the actual string representation of this enum
-       * value when serializing.
-       */
-      value: {
-        enumerable: true,
-        value: defaultTo(config.value, config.name),
-      },
-      /**
-       * @property {?String} optional description for what this enum
-       * value provides.
+       * @property {?String} optional description for what this enum value provides.
        */
       description: {
         enumerable: true,
         value: config.description,
       },
       /**
-       * @property {?Object[]} JSON array defining additional meta data about
-       * this enum value for use by generators.
+       * @property {?Object[]} additional meta data about enum value.
        */
       attributes: {
         enumerable: true,
         value: config.attributes,
       },
       /**
-       * @property {?Object} JSON Object that indicates that this enum is
-       * deprecated.
+       * @property {?Object} An Object that indicates that this enum value is deprecated.
        */
       deprecation: {
         enumerable: true,

@@ -1,5 +1,5 @@
 module.exports = [
-  <%_ enumeration.values.forEach(({ value }) => { _%>
-  '<%= value %>',
+  <%_ enumeration.values.forEach(({ name }) => { _%>
+  '<%= name %>',
   <%_ }) _%>
 ];

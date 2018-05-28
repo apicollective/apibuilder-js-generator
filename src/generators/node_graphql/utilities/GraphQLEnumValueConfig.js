@@ -25,7 +25,7 @@ class GraphQLEnumValueConfig {
    */
   static fromEnumValue(value) {
     return new GraphQLEnumValueConfig({
-      value: value.value,
+      value: value.name,
       deprecationReason: value.deprecation && value.deprecation.description,
       description: value.description,
     });
