@@ -4,10 +4,21 @@ const ApiBuilderType = require('./ApiBuilderType');
 const ApiBuilderEnumValue = require('./ApiBuilderEnumValue');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
+/**
+ * @typedef {ApiBuilderEnumSchema} An object representing an API builder enum definition.
+ * @property {!String} name
+ * @property {!String} plural
+ * @property {?String} description
+ * @property {?Object} deprecation
+ * @property {!EnumValue} values
+ * @property {Object[]} attributes
+ * @see https://app.apibuilder.io/bryzek/apidoc-spec/latest#model-enum
+ */
+
 class ApiBuilderEnum extends ApiBuilderType {
   /**
    * Create an ApiBuilderEnum.
-   * @param {Object} schema - An object representing an API builder enum definition.
+   * @param {ApiBuilderEnumSchema} schema
    * @param {FullyQualifiedType} fullyQualifiedType
    * @param {ApiBuilderService}
    */
@@ -50,11 +61,11 @@ class ApiBuilderEnum extends ApiBuilderType {
 }
 
 /**
- * Returns the FullyQualifiedType corresponding to the specified enumeration definition.
- * @param {Object} schema An object representing an API Builder enumeration definition.
+ * Returns the ApiBuilderEnum corresponding to the specified enum definition.
+ * @param {ApiBuilderEnumSchema} schema
  * @param {ApiBuilderService} service
  * @param {String} [namespace = service.namespace]
- * @returns {FullyQualifiedType}
+ * @returns {ApiBuilderEnum}
  */
 ApiBuilderEnum.fromSchema = function fromSchema(schema, service, namespace = service.namespace) {
   const fullyQualifiedType = new FullyQualifiedType(`${namespace}.enums.${schema.name}`);
