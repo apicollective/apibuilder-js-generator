@@ -2,6 +2,8 @@ const ejs = require('ejs');
 const fs = require('fs');
 const path = require('path');
 
+const getBaseType = require('../../../../utilities/apibuilder/getBaseType');
+const isPrimitiveType = require('../../../../utilities/apibuilder/isPrimitiveType');
 const toImportStatement = require('../../utilities/toImportStatement');
 const toPropTypes = require('../../utilities/toPropTypes');
 
@@ -15,10 +17,11 @@ function mapToPropTypes(union) {
 
 function mapToImportStatements(union) {
   return union.types
+    .map(field => getBaseType(field.type))
     // Primitive types do not require import.
-    .filter(({ type }) => !type.isPrimitiveType)
+    .filter(baseType => !isPrimitiveType(baseType))
     // TODO: Check for possible default export name collision.
-    .map(({ type }) => toImportStatement(union, type));
+    .map(baseType => toImportStatement(union, baseType));
 }
 
 function generate(union) {

@@ -1,3 +1,4 @@
+const getBaseType = require('../../../utilities/apibuilder/getBaseType');
 const toDefaultExport = require('./toDefaultExport');
 
 
@@ -6,7 +7,11 @@ const toDefaultExport = require('./toDefaultExport');
  * @param {ApiBuilderType} type - The type in question
  */
 function toModuleName(type) {
-  return type.packageName.split('.').concat(toDefaultExport(type)).join('/');
+  const baseType = getBaseType(type);
+  return baseType.packageName
+    .split('.')
+    .concat(toDefaultExport(baseType))
+    .join('/');
 }
 
 module.exports = toModuleName;

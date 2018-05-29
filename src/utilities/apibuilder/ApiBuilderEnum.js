@@ -1,6 +1,6 @@
+const invariant = require('invariant');
 const map = require('lodash/map');
 
-const ApiBuilderType = require('./ApiBuilderType');
 const ApiBuilderEnumValue = require('./ApiBuilderEnumValue');
 const FullyQualifiedType = require('./FullyQualifiedType');
 
@@ -15,7 +15,7 @@ const FullyQualifiedType = require('./FullyQualifiedType');
  * @see https://app.apibuilder.io/bryzek/apidoc-spec/latest#model-enum
  */
 
-class ApiBuilderEnum extends ApiBuilderType {
+class ApiBuilderEnum {
   /**
    * Create an ApiBuilderEnum.
    * @param {ApiBuilderEnumSchema} schema
@@ -23,54 +23,84 @@ class ApiBuilderEnum extends ApiBuilderType {
    * @param {ApiBuilderService}
    */
   constructor(schema, fullyQualifiedType, service) {
-    super(fullyQualifiedType, service);
+    invariant(
+      !fullyQualifiedType.isEnclosingType,
+      `${String(fullyQualifiedType)} is a collection type. ` +
+      'You cannot create an enumeration from a collection type.',
+    );
 
-    Object.defineProperties(this, {
-      /** @property {!String} */
-      name: {
-        enumerable: true,
-        value: schema.name,
-      },
-      /** @property {?String} */
-      plural: {
-        enumerable: true,
-        value: schema.plural,
-      },
-      /** @property {?String} */
-      description: {
-        enumerable: true,
-        value: schema.description,
-      },
-      /** @property {!ApiBuilderEnumValue} */
-      values: {
-        enumerable: true,
-        value: map(schema.values, value => new ApiBuilderEnumValue(value)),
-      },
-      /** @property {?Object[]} */
-      attributes: {
-        enumerable: true,
-        value: schema.attributes,
-      },
-      /** @property {Object} */
-      deprecation: {
-        enumerable: true,
-        value: schema.deprecation,
-      },
-    });
+    invariant(
+      !fullyQualifiedType.isPrimitiveType,
+      `${String(fullyQualifiedType)} is a primitive type. ` +
+      'You cannot create an enumeration from a primitive type.',
+    );
+
+    this.schema = schema;
+    this.fullyQualifiedType = fullyQualifiedType;
+    this.service = service;
+  }
+
+  /** @property {!String} */
+  get baseType() {
+    return this.fullyQualifiedType.baseType;
+  }
+
+  /** @property {!String} */
+  get shortName() {
+    return this.fullyQualifiedType.shortName;
+  }
+
+  /** @property {!String} */
+  get packageName() {
+    return this.fullyQualifiedType.packageName;
+  }
+
+  /** @property {!String} */
+  get name() {
+    return this.schema.name;
+  }
+
+  /** @property {?String} */
+  get plural() {
+    return this.schema.plural;
+  }
+
+  /** @property {?String} */
+  get description() {
+    return this.schema.description;
+  }
+
+  /** @property {!ApiBuilderEnumValue[]} */
+  get values() {
+    return map(this.schema.values, value =>
+      ApiBuilderEnumValue.fromSchema(value));
+  }
+
+  /** @property {?Object[]} */
+  get attributes() {
+    return this.schema.attributes;
+  }
+
+  /** @property {Object} */
+  get deprecation() {
+    return this.schema.deprecation;
+  }
+
+  toString() {
+    return this.baseType;
+  }
+
+  /**
+   * Returns the ApiBuilderEnum corresponding to the specified enum definition.
+   * @param {ApiBuilderEnumSchema} schemaw
+   * @param {ApiBuilderService} service
+   * @param {String} [namespace = service.namespace]
+   * @returns {ApiBuilderEnum}
+   */
+  static fromSchema(schema, service, namespace = service.namespace) {
+    const fullyQualifiedType = new FullyQualifiedType(`${namespace}.enums.${schema.name}`);
+    return new ApiBuilderEnum(schema, fullyQualifiedType, service);
   }
 }
-
-/**
- * Returns the ApiBuilderEnum corresponding to the specified enum definition.
- * @param {ApiBuilderEnumSchema} schema
- * @param {ApiBuilderService} service
- * @param {String} [namespace = service.namespace]
- * @returns {ApiBuilderEnum}
- */
-ApiBuilderEnum.fromSchema = function fromSchema(schema, service, namespace = service.namespace) {
-  const fullyQualifiedType = new FullyQualifiedType(`${namespace}.enums.${schema.name}`);
-  return new ApiBuilderEnum(schema, fullyQualifiedType, service);
-};
-
 
 module.exports = ApiBuilderEnum;

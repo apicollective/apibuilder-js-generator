@@ -1,4 +1,5 @@
-const PrimitiveType = {
+const TypeKind = {
+  ARRAY: 'array',
   BOOLEAN: 'boolean',
   DATE_ISO8601: 'date-iso8601',
   DATE_TIME_ISO8601: 'date-time-iso8601',
@@ -7,10 +8,11 @@ const PrimitiveType = {
   INTEGER: 'integer',
   JSON: 'json',
   LONG: 'long',
+  MAP: 'map',
   OBJECT: 'object',
   STRING: 'string',
   UNIT: 'unit',
   UUID: 'uuid',
 };
 
-module.exports = PrimitiveType;
+module.exports = TypeKind;

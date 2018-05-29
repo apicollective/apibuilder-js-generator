@@ -1,25 +1,34 @@
 const toDefaultExport = require('./toDefaultExport');
 const toPrimitivePropTypes = require('./toPrimitivePropTypes');
 
+const isArrayType = require('../../../utilities/apibuilder/isArrayType');
+const isEnumType = require('../../../utilities/apibuilder/isEnumType');
+const isPrimitiveType = require('../../../utilities/apibuilder/isPrimitiveType');
+const isMapType = require('../../../utilities/apibuilder/isMapType');
+const isModelType = require('../../../utilities/apibuilder/isModelType');
+const isUnionType = require('../../../utilities/apibuilder/isUnionType');
+
 /**
  * Calculates the prop type validator for writing to generated code.
  * @param {ApiBuilderType} type - The type in question.
  * @param {Boolean} [required = false]
  */
 function toPropTypes(type, required = false) {
+  // TODO: Use invariant to check type is valid.
+
   let propType;
 
-  if (type.isMapType) {
-    propType = `PropTypes.objectOf(${toPropTypes(type.nestedType)})`;
-  } else if (type.isArrayType) {
-    propType = `PropTypes.arrayOf(${toPropTypes(type.nestedType)})`;
-  } else if (type.isPrimitiveType) {
+  if (isMapType(type)) {
+    propType = `PropTypes.objectOf(${toPropTypes(type.ofType)})`;
+  } else if (isArrayType(type)) {
+    propType = `PropTypes.arrayOf(${toPropTypes(type.ofType)})`;
+  } else if (isPrimitiveType(type)) {
     propType = toPrimitivePropTypes(type);
-  } else if (type.isModel) {
+  } else if (isModelType(type)) {
     propType = `PropTypes.shape(${toDefaultExport(type)})`;
-  } else if (type.isUnion) {
+  } else if (isUnionType(type)) {
     propType = `PropTypes.oneOfType(${toDefaultExport(type)})`;
-  } else if (type.isEnum) {
+  } else if (isEnumType(type)) {
     propType = `PropTypes.oneOf(${toDefaultExport(type)})`;
   }
 

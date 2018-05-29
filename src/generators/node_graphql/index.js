@@ -5,6 +5,8 @@ const ApiBuilderFile = require('../../utilities/apibuilder/ApiBuilderFile');
 const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
 const generateEnumeration = require('./generators/enumeration');
 const generateModel = require('./generators/model');
+const isEnumType = require('../../utilities/apibuilder/isEnumType');
+const isModelType = require('../../utilities/apibuilder/isModelType');
 const toDefaultExport = require('./utilities/toDefaultExport');
 
 const debug = createLogger('apibuilder:graphql');
@@ -16,9 +18,9 @@ function generate(data) {
 
     let contents;
 
-    if (type.isEnum) {
+    if (isEnumType(type)) {
       contents = generateEnumeration(type);
-    } else if (type.isModel) {
+    } else if (isModelType(type)) {
       contents = generateModel(type);
     } else {
       debug('Skipping because type is not supported');

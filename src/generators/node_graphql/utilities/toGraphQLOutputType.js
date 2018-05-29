@@ -1,5 +1,8 @@
 const invariant = require('invariant');
 
+const isMapType = require('../../../utilities/apibuilder/isMapType');
+const isArrayType = require('../../../utilities/apibuilder/isArrayType');
+const isPrimitiveType = require('../../../utilities/apibuilder/isPrimitiveType');
 const toDefaultExport = require('./toDefaultExport');
 const toGraphQLScalarType = require('./toGraphQLScalarType');
 
@@ -12,11 +15,12 @@ const toGraphQLScalarType = require('./toGraphQLScalarType');
 function toGraphQLOutputType(type, required = false) {
   let outputType;
 
-  if (type.isMapType) {
-    invariant(false, '???');
-  } else if (type.isArrayType) {
-    outputType = `new GraphQLList(${toGraphQLOutputType(type.nestedType)})`;
-  } else if (type.isPrimitiveType) {
+  if (isMapType(type)) {
+    // TODO: Add support for GraphQLOutputType from ApiBuilderMap
+    invariant(false, `Cannot convert ${String(type)} to GraphQLOutputType because it is not supported.`);
+  } else if (isArrayType(type)) {
+    outputType = `new GraphQLList(${toGraphQLOutputType(type.ofType)})`;
+  } else if (isPrimitiveType(type)) {
     outputType = toGraphQLScalarType(type);
   } else {
     outputType = toDefaultExport(type);

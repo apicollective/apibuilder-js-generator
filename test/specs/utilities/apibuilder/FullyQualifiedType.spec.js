@@ -1,8 +1,11 @@
+const omit = require('lodash/omit');
 const values = require('lodash/values');
-const FullyQualifiedType = require('../../../../src/utilities/apibuilder/FullyQualifiedType');
-const PrimitiveType = require('../../../../src/utilities/apibuilder/PrimitiveType');
 
-const primitiveTypes = values(PrimitiveType);
+const FullyQualifiedType = require('../../../../src/utilities/apibuilder/FullyQualifiedType');
+const TypeKind = require('../../../../src/utilities/apibuilder/TypeKind');
+
+const primitiveTypes = values(omit(TypeKind, ['UNION', 'ENUM', 'MODEL', 'MAP', 'ARRAY']));
+
 const baseType = 'com.bryzek.apidoc.common.v0.models.reference';
 
 describe('FullyQualifiedType::baseType', () => {
@@ -65,14 +68,14 @@ describe('FullyQualifiedType::nestedType', () => {
     expect(instance).toHaveProperty('nestedType', 'io.flow.v0.models.experience');
   });
 
-  test('should be "null" for instance of type "string"', () => {
+  test('should be "string" for instance of type "string"', () => {
     const instance = new FullyQualifiedType('string');
-    expect(instance).toHaveProperty('nestedType', null);
+    expect(instance).toHaveProperty('nestedType', 'string');
   });
 
-  test('should be "null" for instance of type "io.flow.v0.models.experience"', () => {
+  test('should be "io.flow.v0.models.experience" for instance of type "io.flow.v0.models.experience"', () => {
     const instance = new FullyQualifiedType('io.flow.v0.models.experience');
-    expect(instance).toHaveProperty('nestedType', null);
+    expect(instance).toHaveProperty('nestedType', 'io.flow.v0.models.experience');
   });
 });
 
@@ -259,15 +262,15 @@ describe('FullyQualifiedType::isPrimitiveType', () => {
   });
 });
 
-describe('FullyQualifiedType.parseType', () => {
+describe('FullyQualifiedType.astFromType', () => {
   test('string', () => {
-    expect(FullyQualifiedType.parseType('string')).toEqual({
+    expect(FullyQualifiedType.astFromType('string')).toEqual({
       name: 'string',
     });
   });
 
   test('map[string]', () => {
-    expect(FullyQualifiedType.parseType('map[string]')).toEqual({
+    expect(FullyQualifiedType.astFromType('map[string]')).toEqual({
       name: 'map',
       type: {
         name: 'string',
@@ -276,7 +279,7 @@ describe('FullyQualifiedType.parseType', () => {
   });
 
   test('map[[string]]', () => {
-    expect(FullyQualifiedType.parseType('map[[string]]')).toEqual({
+    expect(FullyQualifiedType.astFromType('map[[string]]')).toEqual({
       name: 'map',
       type: {
         name: 'array',
@@ -288,7 +291,7 @@ describe('FullyQualifiedType.parseType', () => {
   });
 
   test(`map[map[map[[${baseType}]]]`, () => {
-    expect(FullyQualifiedType.parseType(`map[map[map[[${baseType}]]]]`)).toEqual({
+    expect(FullyQualifiedType.astFromType(`map[map[map[[${baseType}]]]]`)).toEqual({
       name: 'map',
       type: {
         name: 'map',
@@ -306,7 +309,7 @@ describe('FullyQualifiedType.parseType', () => {
   });
 
   test('[[[[string]]]]', () => {
-    expect(FullyQualifiedType.parseType('[[[[string]]]]')).toEqual({
+    expect(FullyQualifiedType.astFromType('[[[[string]]]]')).toEqual({
       name: 'array',
       type: {
         name: 'array',
@@ -324,73 +327,30 @@ describe('FullyQualifiedType.parseType', () => {
   });
 });
 
-describe('FullyQualifiedType.formatType', () => {
+describe('FullyQualifiedType.typeFromAst', () => {
   test('string', () => {
-    const object = {
-      name: 'string',
-    };
-    expect(FullyQualifiedType.formatType(object)).toEqual('string');
+    const ast = FullyQualifiedType.astFromType('string');
+    expect(FullyQualifiedType.typeFromAst(ast)).toEqual('string');
   });
 
   test('map[string]', () => {
-    const object = {
-      name: 'map',
-      type: {
-        name: 'string',
-      },
-    };
-    expect(FullyQualifiedType.formatType(object)).toEqual('map[string]');
+    const ast = FullyQualifiedType.astFromType('map[string]');
+    expect(FullyQualifiedType.typeFromAst(ast)).toEqual('map[string]');
   });
 
   test('map[[string]]', () => {
-    const object = {
-      name: 'map',
-      type: {
-        name: 'array',
-        type: {
-          name: 'string',
-        },
-      },
-    };
-    expect(FullyQualifiedType.formatType(object)).toEqual('map[[string]]');
+    const ast = FullyQualifiedType.astFromType('map[[string]]');
+    expect(FullyQualifiedType.typeFromAst(ast)).toEqual('map[[string]]');
   });
 
   test(`map[map[map[[${baseType}]]]`, () => {
-    const object = {
-      name: 'map',
-      type: {
-        name: 'map',
-        type: {
-          name: 'map',
-          type: {
-            name: 'array',
-            type: {
-              name: baseType,
-            },
-          },
-        },
-      },
-    };
-    expect(FullyQualifiedType.formatType(object)).toEqual(`map[map[map[[${baseType}]]]]`);
+    const ast = FullyQualifiedType.astFromType(`map[map[map[[${baseType}]]]]`);
+    expect(FullyQualifiedType.typeFromAst(ast)).toEqual(`map[map[map[[${baseType}]]]]`);
   });
 
   test('[[[[string]]]]', () => {
-    const object = {
-      name: 'array',
-      type: {
-        name: 'array',
-        type: {
-          name: 'array',
-          type: {
-            name: 'array',
-            type: {
-              name: 'string',
-            },
-          },
-        },
-      },
-    };
-    expect(FullyQualifiedType.formatType(object)).toEqual('[[[[string]]]]');
+    const ast = FullyQualifiedType.astFromType('[[[[string]]]]');
+    expect(FullyQualifiedType.typeFromAst(ast)).toEqual('[[[[string]]]]');
   });
 });
 

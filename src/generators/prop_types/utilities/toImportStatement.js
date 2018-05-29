@@ -11,9 +11,10 @@ const toDefaultExport = require('./toDefaultExport');
 function toImportStatement(source, target) {
   invariant(source != null, 'A source type must be provided');
   invariant(target != null, 'A target type must be provided');
+
   const sourcePath = toModuleName(source);
   const targetPath = toModuleName(target);
-  // console.log(path.resolve(sourcePath, targetPath));
+
   let moduleName;
 
   if (path.dirname(sourcePath) === path.dirname(targetPath)) {

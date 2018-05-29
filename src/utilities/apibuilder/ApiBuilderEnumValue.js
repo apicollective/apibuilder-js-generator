@@ -1,5 +1,5 @@
 /**
- * @typedef {Object} ApiBuilderEnumValueConfig
+ * @typedef {Object} ApiBuilderEnumValueSchema
  * @see https://app.apibuilder.io/bryzek/apidoc-spec/latest#model-enum_value
  * @property {!String} name
  * @property {?String} description
@@ -10,39 +10,56 @@
 class ApiBuilderEnumValue {
   /**
    * Create an ApiBuilderEnumValue
-   * @param {ApiBuilderEnumValueConfig} config
+   * @param {ApiBuilderEnumValueSchema} schema
    */
-  constructor(config) {
-    Object.defineProperties(this, {
-      /**
-       * @property {!String} the name of the value.
-       */
-      name: {
-        enumerable: true,
-        value: config.name,
-      },
-      /**
-       * @property {?String} optional description for what this enum value provides.
-       */
-      description: {
-        enumerable: true,
-        value: config.description,
-      },
-      /**
-       * @property {?Object[]} additional meta data about enum value.
-       */
-      attributes: {
-        enumerable: true,
-        value: config.attributes,
-      },
-      /**
-       * @property {?Object} An Object that indicates that this enum value is deprecated.
-       */
-      deprecation: {
-        enumerable: true,
-        value: config.deprecation,
-      },
-    });
+  constructor(schema) {
+    this.schema = schema;
+  }
+
+  /**
+   * @property {!String}
+   * the name of the value.
+   */
+  get name() {
+    return this.schema.name;
+  }
+
+  /**
+   * @property {?String}
+   * optional description for what this enum value provides.
+   */
+  get description() {
+    return this.schema.description;
+  }
+
+  /**
+   * @property {?Object[]}
+   * additional meta data about enum value.
+   */
+  get attributes() {
+    return this.schema.attributes;
+  }
+
+  /**
+   * @property {?Object}
+   * An Object that indicates that this enum value is deprecated.
+   */
+  get deprecation() {
+    return this.schema.deprecation;
+  }
+
+  toString() {
+    return this.name;
+  }
+
+  /**
+   * Returns the ApiBuilderEnumValue corresponding to the specified API builder
+   * enum value definition.
+   * @param {ApiBuilderEnumValueSchema} schema
+   * @returns {ApiBuilderEnumValue}
+   */
+  static fromSchema(schema) {
+    return new ApiBuilderEnumValue(schema);
   }
 }
 

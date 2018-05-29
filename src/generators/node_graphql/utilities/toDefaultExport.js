@@ -1,3 +1,4 @@
+const getBaseType = require('../../../utilities/apibuilder/getBaseType');
 const pascalCase = require('./pascalCase');
 
 /**
@@ -5,7 +6,8 @@ const pascalCase = require('./pascalCase');
  * @param {ApiBuilderType} type - the type in question
  */
 function toDefaultExport(type) {
-  return pascalCase(type.shortName);
+  const baseType = getBaseType(type);
+  return pascalCase(baseType.shortName);
 }
 
 module.exports = toDefaultExport;

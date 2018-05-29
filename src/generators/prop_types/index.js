@@ -6,9 +6,12 @@ const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService'
 const generateEnumeration = require('./generators/generator-enumeration');
 const generateModel = require('./generators/generator-model');
 const generateUnion = require('./generators/generator-union');
+const isEnumType = require('../../utilities/apibuilder/isEnumType');
+const isModelType = require('../../utilities/apibuilder/isModelType');
+const isUnionType = require('../../utilities/apibuilder/isUnionType');
 const toModuleName = require('./utilities/toModuleName');
 
-const debug = createLogger('prop_types');
+const debug = createLogger('apibuilder:generator');
 
 function generate(data) {
   const service = new ApiBuilderService({ service: data });
@@ -17,11 +20,11 @@ function generate(data) {
 
     let contents;
 
-    if (type.isEnum) {
+    if (isEnumType(type)) {
       contents = generateEnumeration(type);
-    } else if (type.isModel) {
+    } else if (isModelType(type)) {
       contents = generateModel(type);
-    } else if (type.isUnion) {
+    } else if (isUnionType(type)) {
       contents = generateUnion(type);
     } else {
       debug('Skipping because type is not supported');

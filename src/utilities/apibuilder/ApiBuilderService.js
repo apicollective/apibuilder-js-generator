@@ -1,11 +1,23 @@
-// @flow
+const find = require('lodash/find');
 const flatMap = require('lodash/flatMap');
 const map = require('lodash/map');
+const matchesProperty = require('lodash/matchesProperty');
 const memoize = require('lodash/memoize');
+const overSome = require('lodash/overSome');
+const some = require('lodash/some');
 
 const ApiBuilderEnum = require('./ApiBuilderEnum');
 const ApiBuilderModel = require('./ApiBuilderModel');
 const ApiBuilderUnion = require('./ApiBuilderUnion');
+
+const mapToEnumType = memoize((schema, service, namespace) =>
+  ApiBuilderEnum.fromSchema(schema, service, namespace));
+
+const mapToModelType = memoize((schema, service, namespace) =>
+  ApiBuilderModel.fromSchema(schema, service, namespace));
+
+const mapToUnionType = memoize((schema, service, namespace) =>
+  ApiBuilderUnion.fromSchema(schema, service, namespace));
 
 /**
  * @class ApiBuilderService
@@ -13,117 +25,150 @@ const ApiBuilderUnion = require('./ApiBuilderUnion');
  */
 class ApiBuilderService {
   constructor({ service: schema }) {
-    Object.defineProperty(this, 'name', {
-      enumerable: true,
-      value: schema.name,
-    });
+    this.schema = schema;
+  }
 
-    Object.defineProperty(this, 'namespace', {
-      enumerable: true,
-      value: schema.namespace,
-    });
+  get name() {
+    return this.schema.name;
+  }
 
-    Object.defineProperty(this, 'version', {
-      enumerable: true,
-      value: schema.version,
-    });
+  get namespace() {
+    return this.schema.namespace;
+  }
 
-    Object.defineProperty(this, 'applicationKey', {
-      enumerable: true,
-      value: schema.application.key,
-    });
+  get version() {
+    return this.schema.version;
+  }
 
-    Object.defineProperty(this, 'organizationKey', {
-      enumerable: true,
-      value: schema.organization.key,
-    });
+  get applicationKey() {
+    return this.schema.application.key;
+  }
 
-    Object.defineProperty(this, 'enums', {
-      get() {
-        return [
-          ...this.internalEnums,
-          ...this.externalEnums,
-        ];
-      },
-    });
+  get organizationKey() {
+    return this.schema.organization.key;
+  }
 
-    Object.defineProperty(this, 'models', {
-      get() {
-        return [
-          ...this.internalModels,
-          ...this.externalModels,
-        ];
-      },
-    });
+  get enums() {
+    return [
+      ...this.internalEnums,
+      ...this.externalEnums,
+    ];
+  }
 
-    Object.defineProperty(this, 'unions', {
-      get() {
-        return [
-          ...this.internalUnions,
-          ...this.externalUnions,
-        ];
-      },
-    });
+  get models() {
+    return [
+      ...this.internalModels,
+      ...this.externalModels,
+    ];
+  }
 
-    Object.defineProperty(this, 'types', {
-      get() {
-        return [
-          ...this.internalTypes,
-          ...this.externalTypes,
-        ];
-      },
-    });
+  get unions() {
+    return [
+      ...this.internalUnions,
+      ...this.externalUnions,
+    ];
+  }
 
-    Object.defineProperty(this, 'internalEnums', {
-      get: memoize(() =>
-        map(schema.enums, enumeration => ApiBuilderEnum.fromSchema(enumeration, this))),
-    });
+  get types() {
+    return [
+      ...this.internalTypes,
+      ...this.externalTypes,
+    ];
+  }
 
-    Object.defineProperty(this, 'internalModels', {
-      get: memoize(() =>
-        map(schema.models, model => ApiBuilderModel.fromSchema(model, this))),
-    });
+  get internalEnums() {
+    return map(this.schema.enums, enumeration =>
+      mapToEnumType(enumeration, this));
+  }
 
-    Object.defineProperty(this, 'internalUnions', {
-      get: memoize(() =>
-        map(schema.unions, union => ApiBuilderUnion.fromSchema(union, this))),
-    });
+  get internalModels() {
+    return map(this.schema.models, model =>
+      mapToModelType(model, this));
+  }
 
-    Object.defineProperty(this, 'internalTypes', {
-      get() {
-        return [
-          ...this.internalEnums,
-          ...this.internalModels,
-          ...this.internalUnions,
-        ];
-      },
-    });
+  get internalUnions() {
+    return map(this.schema.unions, union =>
+      mapToUnionType(union, this));
+  }
 
-    Object.defineProperty(this, 'externalEnums', {
-      get: memoize(() => flatMap(schema.imports, ({ enums, namespace }) =>
-        map(enums, enumeration =>
-          ApiBuilderEnum.fromSchema({ name: enumeration }, this, namespace)))),
-    });
+  get internalTypes() {
+    return [
+      ...this.internalEnums,
+      ...this.internalModels,
+      ...this.internalUnions,
+    ];
+  }
 
-    Object.defineProperty(this, 'externalModels', {
-      get: memoize(() => flatMap(schema.imports, ({ models, namespace }) =>
-        map(models, model => ApiBuilderModel.fromSchema({ name: model }, this, namespace)))),
-    });
+  get externalEnums() {
+    return flatMap(this.schema.imports, ({ enums, namespace }) =>
+      map(enums, enumeration =>
+        mapToEnumType({ name: enumeration }, this, namespace)));
+  }
 
-    Object.defineProperty(this, 'externalUnions', {
-      get: memoize(() => flatMap(schema.imports, ({ unions, namespace }) =>
-        map(unions, union => ApiBuilderUnion.fromSchema({ name: union }, this, namespace)))),
-    });
+  get externalModels() {
+    return flatMap(this.schema.imports, ({ models, namespace }) =>
+      map(models, model =>
+        mapToModelType({ name: model }, this, namespace)));
+  }
 
-    Object.defineProperty(this, 'externalTypes', {
-      get() {
-        return [
-          ...this.externalEnums,
-          ...this.externalModels,
-          ...this.externalUnions,
-        ];
-      },
-    });
+  get externalUnions() {
+    return flatMap(this.schema.imports, ({ unions, namespace }) =>
+      map(unions, union =>
+        mapToUnionType({ name: union }, this, namespace)));
+  }
+
+  get externalTypes() {
+    return [
+      ...this.externalEnums,
+      ...this.externalModels,
+      ...this.externalUnions,
+    ];
+  }
+
+  findModelByName(typeName) {
+    return find(this.models, overSome([
+      matchesProperty('shortName', typeName),
+      matchesProperty('baseType', typeName),
+    ]));
+  }
+
+  findEnumByName(typeName) {
+    return find(this.enums, overSome([
+      matchesProperty('shortName', typeName),
+      matchesProperty('baseType', typeName),
+    ]));
+  }
+
+  findUnionByName(typeName) {
+    return find(this.unions, overSome([
+      matchesProperty('shortName', typeName),
+      matchesProperty('baseType', typeName),
+    ]));
+  }
+
+  isNameOfModelType(typeName) {
+    return some(this.models, overSome([
+      matchesProperty('shortName', typeName),
+      matchesProperty('baseType', typeName),
+    ]));
+  }
+
+  isNameOfEnumType(typeName) {
+    return some(this.enums, overSome([
+      matchesProperty('shortName', typeName),
+      matchesProperty('baseType', typeName),
+    ]));
+  }
+
+  isNameOfUnionType(typeName) {
+    return some(this.unions, overSome([
+      matchesProperty('shortName', typeName),
+      matchesProperty('baseType', typeName),
+    ]));
+  }
+
+  toString() {
+    return `${this.applicationKey}@${this.version}`;
   }
 }
 
