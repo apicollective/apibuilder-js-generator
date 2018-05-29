@@ -41,7 +41,7 @@ class Resource {
         } else {
           const parts = op.path.split('/').filter(x => x.length > 0 && x[0] != ':');
           if (parts.length > 0) {
-            log(`▶️   get ${this.type.fullyQualifiedType} ${parts.join('-')} at ${this.path}${op.path}`);
+            log(`▶️   get ${this.type.fullyQualifiedType}'s ${parts.join('-')} at ${this.path}${op.path}`);
           } else {
             log(`❌   unknown ${this.path}${op.path}`);
           }
