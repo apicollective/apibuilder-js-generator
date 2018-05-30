@@ -35,7 +35,7 @@ function generate(data) {
     return files.concat(file);
   }, []);
 
-  const generatedSchema = new File('schema.js', service.namespace.split('.').join('/'), generateSchema(service));
+  const generatedSchema = new ApiBuilderFile('schema.js', service.namespace.split('.').join('/'), generateSchema(service));
 
   return Promise.resolve(generatedEntities.concat(generatedSchema));
 }
