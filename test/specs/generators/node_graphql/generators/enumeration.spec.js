@@ -1,11 +1,11 @@
 const find = require('lodash/find');
 
 const loadFixture = require('../../../../helpers/loadFixture');
-const Service = require('../../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 const generateEnumeration = require('../../../../../src/generators/node_graphql/generators/enumeration');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 test('should generate graphql enumeration from apibuilder enumeration', () => {
   const enumeration = find(service.enums, { shortName: 'publication' });

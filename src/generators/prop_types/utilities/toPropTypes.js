@@ -1,26 +1,35 @@
 const toDefaultExport = require('./toDefaultExport');
 const toPrimitivePropTypes = require('./toPrimitivePropTypes');
 
+const isArrayType = require('../../../utilities/apibuilder/isArrayType');
+const isEnumType = require('../../../utilities/apibuilder/isEnumType');
+const isPrimitiveType = require('../../../utilities/apibuilder/isPrimitiveType');
+const isMapType = require('../../../utilities/apibuilder/isMapType');
+const isModelType = require('../../../utilities/apibuilder/isModelType');
+const isUnionType = require('../../../utilities/apibuilder/isUnionType');
+
 /**
  * Calculates the prop type validator for writing to generated code.
- * @param {Entity} entity - The entity in question.
+ * @param {ApiBuilderType} type - The type in question.
  * @param {Boolean} [required = false]
  */
-function toPropTypes(entity, required = false) {
+function toPropTypes(type, required = false) {
+  // TODO: Use invariant to check type is valid.
+
   let propType;
 
-  if (entity.isMap) {
-    propType = `PropTypes.objectOf(${toPropTypes(entity.nestedEntity)})`;
-  } else if (entity.isArray) {
-    propType = `PropTypes.arrayOf(${toPropTypes(entity.nestedEntity)})`;
-  } else if (entity.isPrimitive) {
-    propType = toPrimitivePropTypes(entity);
-  } else if (entity.isModel) {
-    propType = `PropTypes.shape(${toDefaultExport(entity)})`;
-  } else if (entity.isUnion) {
-    propType = `PropTypes.oneOfType(${toDefaultExport(entity)})`;
-  } else if (entity.isEnum) {
-    propType = `PropTypes.oneOf(${toDefaultExport(entity)})`;
+  if (isMapType(type)) {
+    propType = `PropTypes.objectOf(${toPropTypes(type.ofType)})`;
+  } else if (isArrayType(type)) {
+    propType = `PropTypes.arrayOf(${toPropTypes(type.ofType)})`;
+  } else if (isPrimitiveType(type)) {
+    propType = toPrimitivePropTypes(type);
+  } else if (isModelType(type)) {
+    propType = `PropTypes.shape(${toDefaultExport(type)})`;
+  } else if (isUnionType(type)) {
+    propType = `PropTypes.oneOfType(${toDefaultExport(type)})`;
+  } else if (isEnumType(type)) {
+    propType = `PropTypes.oneOf(${toDefaultExport(type)})`;
   }
 
   if (required) {

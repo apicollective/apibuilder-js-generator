@@ -11,7 +11,7 @@ const template = fs.readFileSync(templatePath, 'utf8');
 const compiled = ejs.compile(template);
 
 /**
- * @param {Enumeration} enumeration
+ * @param {ApiBuilderEnum} enumeration
  */
 function generateCode(enumeration) {
   const source = compiled({

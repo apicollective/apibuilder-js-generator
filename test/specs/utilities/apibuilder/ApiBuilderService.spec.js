@@ -1,9 +1,9 @@
-const Service = require('../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
-describe('Service', () => {
+describe('ApiBuilderService', () => {
   test('should have property with name', () => {
     expect(service).toHaveProperty('name', schema.name);
   });

@@ -1,35 +1,36 @@
 const createLogger = require('debug');
 const reduce = require('lodash/reduce');
 
-const File = require('../../utilities/apibuilder/File');
-const Service = require('../../utilities/apibuilder/Service');
+const ApiBuilderFile = require('../../utilities/apibuilder/ApiBuilderFile');
+const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
 const generateEnumeration = require('./generators/enumeration');
 const generateModel = require('./generators/model');
+const isEnumType = require('../../utilities/apibuilder/isEnumType');
+const isModelType = require('../../utilities/apibuilder/isModelType');
 const toDefaultExport = require('./utilities/toDefaultExport');
 const generateSchema = require('./generators/schema')
 
 const debug = createLogger('apibuilder:graphql');
 
 function generate(data) {
-  const service = new Service({ service: data });
-
-  const generatedEntities = reduce(service.internalEntities, (files, entity) => {
-    debug(`Generating source code for "${entity.fullyQualifiedName}".`);
+  const service = new ApiBuilderService({ service: data });
+  const generatedEntities = reduce(service.internalTypes, (files, type) => {
+    debug(`Generating source code for "${type.baseType}".`);
 
     let contents;
 
-    if (entity.isEnum) {
-      contents = generateEnumeration(entity);
-    } else if (entity.isModel) {
-      contents = generateModel(entity);
+    if (isEnumType(type)) {
+      contents = generateEnumeration(type);
+    } else if (isModelType(type)) {
+      contents = generateModel(type);
     } else {
       debug('Skipping because type is not supported');
       return files;
     }
 
-    const basename = `${toDefaultExport(entity)}.js`;
-    const dirname = entity.packageName.split('.').join('/');
-    const file = new File(basename, dirname, contents);
+    const basename = `${toDefaultExport(type)}.js`;
+    const dirname = type.packageName.split('.').join('/');
+    const file = new ApiBuilderFile(basename, dirname, contents);
 
     return files.concat(file);
   }, []);

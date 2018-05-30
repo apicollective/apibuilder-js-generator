@@ -1,9 +1,9 @@
 const find = require('lodash/find');
-const Service = require('../../../../../src/utilities/apibuilder/Service');
+const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 const toImportStatement = require('../../../../../src/generators/prop_types/utilities/toImportStatement');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 describe('toImportStatement', () => {
   test('should return import statement relative modules in the same "package"', () => {
@@ -30,9 +30,9 @@ describe('toImportStatement', () => {
 
   test('should return import statement relative to modules in a different API builder namespace', () => {
     // com/bryzek/apidoc/api/v0/models/subscriptionPropTypes
-    const source = find(service.models, { fullyQualifiedName: 'com.bryzek.apidoc.api.v0.models.subscription' });
+    const source = find(service.models, { baseType: 'com.bryzek.apidoc.api.v0.models.subscription' });
     // com/bryzek/apidoc/common/v0/models/auditPropTypes
-    const target = find(service.models, { fullyQualifiedName: 'com.bryzek.apidoc.common.v0.models.audit' });
+    const target = find(service.models, { baseType: 'com.bryzek.apidoc.common.v0.models.audit' });
     expect(toImportStatement(source, target)).toEqual({
       defaultExport: 'auditPropTypes',
       moduleName: '../../../common/v0/models/auditPropTypes',

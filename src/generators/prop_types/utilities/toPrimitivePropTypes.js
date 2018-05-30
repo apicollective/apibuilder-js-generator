@@ -1,23 +1,26 @@
+const TypeKind = require('../../../utilities/apibuilder/TypeKind');
+
 /**
  * Calculates the primitive prop type validator for writing into generated code.
- * @param {Entity} entity
+ * @param {ApiBuilderPrimitiveType} type
  * @param {Boolean} [required = false]
  */
-function toPrimitivePropTypes(entity) {
-  switch (entity.fullyQualifiedName) {
-    case 'string':
-    case 'date-iso8601':
-    case 'date-time-iso8601':
-    case 'uuid':
+function toPrimitivePropTypes(type) {
+  // TODO: Use invariant to check type is valid primitive type.
+  switch (type.baseType) {
+    case TypeKind.STRING:
+    case TypeKind.DATE_ISO8601:
+    case TypeKind.DATE_TIME_ISO8601:
+    case TypeKind.UUID:
       return 'PropTypes.string';
-    case 'boolean':
+    case TypeKind.BOOLEAN:
       return 'PropTypes.bool';
-    case 'decimal':
-    case 'double':
-    case 'integer':
-    case 'long':
+    case TypeKind.DECIMAL:
+    case TypeKind.DOUBLE:
+    case TypeKind.INTEGER:
+    case TypeKind.LONG:
       return 'PropTypes.number';
-    case 'object':
+    case TypeKind.OBJECT:
       return 'PropTypes.object';
     default:
       return 'PropTypes.any';

@@ -20,12 +20,12 @@ class GraphQLEnumValueConfig {
   }
 
   /**
-   * Creates a GraphQLEnumValueConfig from a API Builder EnumValue instance.
-   * @param {EnumValue} value
+   * Creates a GraphQLEnumValueConfig from an ApiBuilderEnumValue instance.
+   * @param {ApiBuilderEnumValue} value
    */
   static fromEnumValue(value) {
     return new GraphQLEnumValueConfig({
-      value: value.value,
+      value: value.name,
       deprecationReason: value.deprecation && value.deprecation.description,
       description: value.description,
     });

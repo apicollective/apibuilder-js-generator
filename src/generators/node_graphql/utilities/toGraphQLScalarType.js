@@ -1,33 +1,31 @@
-const PrimitiveType = require('../../../utilities/apibuilder/PrimitiveType');
+const TypeKind = require('../../../utilities/apibuilder/TypeKind');
 
 /**
  * Calculates the GraphQL scalar type for writing into generated code. May
- * return `undefined` when entity is not a type that can be represented with
+ * return `undefined` when type is not a type that can be represented with
  * native GraphQL scalar types.
- * @param {Entity} entity
+ * @param {ApiBuilderType} type
  * @returns {String}
  */
-function toGraphQLScalarType(entity) {
-  switch (entity.fullyQualifiedName) {
-    case PrimitiveType.STRING:
-    case PrimitiveType.DATE_ISO8601:
-    case PrimitiveType.DATE_TIME_ISO8601:
-    case PrimitiveType.JSON:
+function toGraphQLScalarType(type) {
+  switch (type.baseType) {
+    case TypeKind.STRING:
+    case TypeKind.DATE_ISO8601:
+    case TypeKind.DATE_TIME_ISO8601:
+    case TypeKind.JSON:
       return 'GraphQLString';
-    case PrimitiveType.UUID:
+    case TypeKind.UUID:
       return 'GraphQLID';
-    case PrimitiveType.BOOLEAN:
+    case TypeKind.BOOLEAN:
       return 'GraphQLBoolean';
-    case PrimitiveType.INTEGER:
+    case TypeKind.INTEGER:
       return 'GraphQLInt';
-    case PrimitiveType.DECIMAL:
-    case PrimitiveType.DOUBLE:
-    case PrimitiveType.LONG:
+    case TypeKind.DECIMAL:
+    case TypeKind.DOUBLE:
+    case TypeKind.LONG:
       return 'GraphQLFloat';
-    case PrimitiveType.OBJECT:
-      return 'SomeObject';
-    case PrimitiveType.UNIT:
-      return 'SomeUnit';
+    case TypeKind.OBJECT:
+    case TypeKind.UNIT:
     default:
       return undefined;
   }

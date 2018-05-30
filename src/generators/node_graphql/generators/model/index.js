@@ -6,6 +6,9 @@ const reduce = require('lodash/reduce');
 const some = require('lodash/some');
 
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
+const getBaseType = require('../../../../utilities/apibuilder/getBaseType');
+const isArrayType = require('../../../../utilities/apibuilder/isArrayType');
+const isPrimitiveType = require('../../../../utilities/apibuilder/isPrimitiveType');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const GraphQLObjectTypeConfig = require('../../utilities/GraphQLObjectTypeConfig');
@@ -21,7 +24,7 @@ const compiled = ejs.compile(template);
 /**
  * Computes the name exports to import from the "graphql" package for writing
  * to generated code.
- * @param {Model} model
+ * @param {ApiBuilderModel} model
  * @returns {String[]}
  */
 function computeGraphQLNamedExports(model) {
@@ -29,6 +32,10 @@ function computeGraphQLNamedExports(model) {
 
   if (some(model.fields, { isRequired: true })) {
     initialNamedExports.push('GraphQLNonNull');
+  }
+
+  if (some(model.fields, field => isArrayType(field.type))) {
+    initialNamedExports.push('GraphQLList');
   }
 
   return reduce(model.fields, (namedExports, field) => {
@@ -52,11 +59,12 @@ function mapToImportDeclarations(model) {
   ];
 
   return model.fields
-    .filter(field => !field.type.isPrimitive)
-    .reduce((declarations, field) => {
+    .map(field => getBaseType(field.type))
+    .filter(baseType => !isPrimitiveType(baseType))
+    .reduce((declarations, baseType) => {
       // Compute relative path to target module, which is the type we want to
       // import into the generated model.
-      const declaration = toImportDeclaration(model, field.type);
+      const declaration = toImportDeclaration(model, baseType);
       const isAlreadyImported = some(declarations, { moduleName: declaration.moduleName });
       // TODO: Check for possible default export name collision.
       return isAlreadyImported ? declarations : declarations.concat(declaration);

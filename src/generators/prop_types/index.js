@@ -1,36 +1,39 @@
 const createLogger = require('debug');
 const reduce = require('lodash/reduce');
 
-const File = require('../../utilities/apibuilder/File');
-const Service = require('../../utilities/apibuilder/Service');
+const ApiBuilderFile = require('../../utilities/apibuilder/ApiBuilderFile');
+const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
 const generateEnumeration = require('./generators/generator-enumeration');
 const generateModel = require('./generators/generator-model');
 const generateUnion = require('./generators/generator-union');
+const isEnumType = require('../../utilities/apibuilder/isEnumType');
+const isModelType = require('../../utilities/apibuilder/isModelType');
+const isUnionType = require('../../utilities/apibuilder/isUnionType');
 const toModuleName = require('./utilities/toModuleName');
 
-const debug = createLogger('prop_types');
+const debug = createLogger('apibuilder:generator');
 
 function generate(data) {
-  const service = new Service({ service: data });
-  const generatedFiles = reduce(service.internalEntities, (files, entity) => {
-    debug(`Generating source code for "${entity.fullyQualifiedName}".`);
+  const service = new ApiBuilderService({ service: data });
+  const generatedFiles = reduce(service.internalTypes, (files, type) => {
+    debug(`Generating source code for "${type.baseType}".`);
 
     let contents;
 
-    if (entity.isEnum) {
-      contents = generateEnumeration(entity);
-    } else if (entity.isModel) {
-      contents = generateModel(entity);
-    } else if (entity.isUnion) {
-      contents = generateUnion(entity);
+    if (isEnumType(type)) {
+      contents = generateEnumeration(type);
+    } else if (isModelType(type)) {
+      contents = generateModel(type);
+    } else if (isUnionType(type)) {
+      contents = generateUnion(type);
     } else {
       debug('Skipping because type is not supported');
       return files;
     }
 
-    const basename = `${toModuleName(entity)}.js`;
+    const basename = `${toModuleName(type)}.js`;
     const dirname = 'prop-types';
-    const file = new File(basename, dirname, contents);
+    const file = new ApiBuilderFile(basename, dirname, contents);
 
     return files.concat(file);
   }, []);

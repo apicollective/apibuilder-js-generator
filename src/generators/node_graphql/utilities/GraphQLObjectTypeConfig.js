@@ -27,7 +27,7 @@ class GraphQLObjectTypeConfig {
 
   /**
    *
-   * @param {Model} model
+   * @param {ApiBuilderModel} model
    */
   static fromModel(model) {
     return new GraphQLObjectTypeConfig({
