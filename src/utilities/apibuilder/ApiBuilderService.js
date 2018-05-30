@@ -19,6 +19,13 @@ const mapToModelType = memoize((schema, service, namespace) =>
 const mapToUnionType = memoize((schema, service, namespace) =>
   ApiBuilderUnion.fromSchema(schema, service, namespace));
 
+function findTypeByName(types, name) {
+  return find(types, overSome([
+    matchesProperty('shortName', name),
+    matchesProperty('baseType', name),
+  ]));
+}
+
 /**
  * @class ApiBuilderService
  * Wraps an apibuilder service definition and provides utilities for interacting with it.
@@ -125,25 +132,16 @@ class ApiBuilderService {
     ];
   }
 
-  findModelByName(typeName) {
-    return find(this.models, overSome([
-      matchesProperty('shortName', typeName),
-      matchesProperty('baseType', typeName),
-    ]));
+  findModelByName(name) {
+    return findTypeByName(this.models, name);
   }
 
-  findEnumByName(typeName) {
-    return find(this.enums, overSome([
-      matchesProperty('shortName', typeName),
-      matchesProperty('baseType', typeName),
-    ]));
+  findEnumByName(name) {
+    return findTypeByName(this.enums, name);
   }
 
-  findUnionByName(typeName) {
-    return find(this.unions, overSome([
-      matchesProperty('shortName', typeName),
-      matchesProperty('baseType', typeName),
-    ]));
+  findUnionByName(name) {
+    return findTypeByName(this.unions, name);
   }
 
   isNameOfModelType(typeName) {
