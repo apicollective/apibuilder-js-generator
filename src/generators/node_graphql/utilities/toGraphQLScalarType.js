@@ -25,7 +25,9 @@ function toGraphQLScalarType(entity) {
     case PrimitiveType.LONG:
       return 'GraphQLFloat';
     case PrimitiveType.OBJECT:
+      return 'SomeObject';
     case PrimitiveType.UNIT:
+      return 'SomeUnit';
     default:
       return undefined;
   }

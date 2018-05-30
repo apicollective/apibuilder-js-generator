@@ -13,7 +13,8 @@ function toGraphQLOutputType(entity, required = false) {
   let outputType;
 
   if (entity.isMap) {
-    invariant(false, '???');
+    // invariant(false, '???');
+    outputType = `new GraphQlObject(${entity.fullyQualifiedType})`
   } else if (entity.isArray) {
     outputType = `new GraphQLList(${toGraphQLOutputType(entity.nestedEntity)})`;
   } else if (entity.isPrimitive) {
