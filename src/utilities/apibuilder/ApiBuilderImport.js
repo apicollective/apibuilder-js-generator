@@ -75,6 +75,10 @@ class ApiBuilderImport {
   toString() {
     return `${this.applicationKey}@${this.version}`;
   }
+
+  static fromSchema(schema, service) {
+    return new ApiBuilderImport(schema, service);
+  }
 }
 
 module.exports = ApiBuilderImport;

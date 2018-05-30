@@ -11,7 +11,7 @@ const isModelType = require('../../utilities/apibuilder/isModelType');
 const isUnionType = require('../../utilities/apibuilder/isUnionType');
 const toModuleName = require('./utilities/toModuleName');
 
-const debug = createLogger('apibuilder:generator');
+const debug = createLogger('apibuilder:prop-types');
 
 function generate(data) {
   const service = new ApiBuilderService({ service: data });

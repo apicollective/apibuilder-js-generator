@@ -4,10 +4,12 @@ const map = require('lodash/map');
 const matchesProperty = require('lodash/matchesProperty');
 const memoize = require('lodash/memoize');
 const overSome = require('lodash/overSome');
+const property = require('lodash/property');
 
 const ApiBuilderEnum = require('./ApiBuilderEnum');
 const ApiBuilderModel = require('./ApiBuilderModel');
 const ApiBuilderUnion = require('./ApiBuilderUnion');
+const ApiBuilderImport = require('./ApiBuilderImport');
 
 const mapToEnumType = memoize((schema, service, namespace) =>
   ApiBuilderEnum.fromSchema(schema, service, namespace));
@@ -52,6 +54,11 @@ class ApiBuilderService {
 
   get organizationKey() {
     return this.schema.organization.key;
+  }
+
+  get imports() {
+    return map(this.schema.imports, schema =>
+      ApiBuilderImport.fromSchema(schema, this));
   }
 
   get enums() {
@@ -106,21 +113,15 @@ class ApiBuilderService {
   }
 
   get externalEnums() {
-    return flatMap(this.schema.imports, ({ enums, namespace }) =>
-      map(enums, enumeration =>
-        mapToEnumType({ name: enumeration }, this, namespace)));
+    return flatMap(this.imports, property('enums'));
   }
 
   get externalModels() {
-    return flatMap(this.schema.imports, ({ models, namespace }) =>
-      map(models, model =>
-        mapToModelType({ name: model }, this, namespace)));
+    return flatMap(this.imports, property('models'));
   }
 
   get externalUnions() {
-    return flatMap(this.schema.imports, ({ unions, namespace }) =>
-      map(unions, union =>
-        mapToUnionType({ name: union }, this, namespace)));
+    return flatMap(this.imports, property('unions'));
   }
 
   get externalTypes() {
