@@ -22,16 +22,14 @@ function typeFromAst(ast, service) {
     return new ApiBuilderArray(typeFromAst(ast.type, service));
   } else if (FullyQualifiedType.isPrimitiveType(ast.name)) {
     return new ApiBuilderPrimitiveType(new FullyQualifiedType(ast.name), service);
-  } else if (service.isNameOfModelType(ast.name)) {
-    return service.findModelByName(ast.name);
-  } else if (service.isNameOfUnionType(ast.name)) {
-    return service.findUnionByName(ast.name);
-  } else if (service.isNameOfEnumType(ast.name)) {
-    return service.findEnumByName(ast.name);
   }
 
-  invariant(false, `${ast.name} is not a type defined in ${String(service)} service.`);
-  return null;
+  return (
+    service.findModelByName(ast.name) ||
+    service.findUnionByName(ast.name) ||
+    service.findEnumByName(ast.name) ||
+    invariant(false, `${ast.name} is not a type defined in ${String(service)} service.`)
+  );
 }
 
 

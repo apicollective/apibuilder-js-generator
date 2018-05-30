@@ -4,7 +4,6 @@ const map = require('lodash/map');
 const matchesProperty = require('lodash/matchesProperty');
 const memoize = require('lodash/memoize');
 const overSome = require('lodash/overSome');
-const some = require('lodash/some');
 
 const ApiBuilderEnum = require('./ApiBuilderEnum');
 const ApiBuilderModel = require('./ApiBuilderModel');
@@ -142,27 +141,6 @@ class ApiBuilderService {
 
   findUnionByName(name) {
     return findTypeByName(this.unions, name);
-  }
-
-  isNameOfModelType(typeName) {
-    return some(this.models, overSome([
-      matchesProperty('shortName', typeName),
-      matchesProperty('baseType', typeName),
-    ]));
-  }
-
-  isNameOfEnumType(typeName) {
-    return some(this.enums, overSome([
-      matchesProperty('shortName', typeName),
-      matchesProperty('baseType', typeName),
-    ]));
-  }
-
-  isNameOfUnionType(typeName) {
-    return some(this.unions, overSome([
-      matchesProperty('shortName', typeName),
-      matchesProperty('baseType', typeName),
-    ]));
   }
 
   toString() {
