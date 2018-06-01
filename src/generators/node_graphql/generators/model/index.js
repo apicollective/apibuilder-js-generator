@@ -1,19 +1,13 @@
-const ejs = require('ejs');
-const fs = require('fs');
 const path = require('path');
-const prettier = require('prettier');
 const reduce = require('lodash/reduce');
 const some = require('lodash/some');
 
+const { renderTemplate } = require('../../../../utilities/template');
 const { getBaseType, isArrayType, isPrimitiveType } = require('../../../../utilities/apibuilder');
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const GraphQLObjectTypeConfig = require('../../utilities/GraphQLObjectTypeConfig');
-
-const templatePath = path.resolve(__dirname, './templates/model.ejs');
-const template = fs.readFileSync(templatePath, 'utf8');
-const compiled = ejs.compile(template);
 
 // TODO: An API Builder model may be either a GraphQL object or a GraphQL input,
 // in this iteration we will assume that they are all GraphQL objects, but we
@@ -70,13 +64,10 @@ function mapToImportDeclarations(model) {
 }
 
 function generateCode(model) {
+  const templatePath = path.resolve(__dirname, './templates/model.ejs');
   const importDeclarations = mapToImportDeclarations(model);
   const object = GraphQLObjectTypeConfig.fromModel(model);
-  const source = compiled({ importDeclarations, object });
-  return prettier.format(source, {
-    singleQuote: true,
-    trailingComma: 'es5',
-  });
+  return renderTemplate(templatePath, { importDeclarations, object });
 }
 
 module.exports = generateCode;

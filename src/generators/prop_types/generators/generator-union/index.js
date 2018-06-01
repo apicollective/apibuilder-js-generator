@@ -1,14 +1,9 @@
-const ejs = require('ejs');
-const fs = require('fs');
 const path = require('path');
 
+const { renderTemplate } = require('../../../../utilities/template');
 const { getBaseType, isPrimitiveType } = require('../../../../utilities/apibuilder');
 const toImportStatement = require('../../utilities/toImportStatement');
 const toPropTypes = require('../../utilities/toPropTypes');
-
-const templatePath = path.resolve(__dirname, './templates/union.ejs');
-const template = fs.readFileSync(templatePath, 'utf8');
-const compiled = ejs.compile(template);
 
 function mapToPropTypes(union) {
   return union.types.map(({ type }) => toPropTypes(type));
@@ -24,10 +19,11 @@ function mapToImportStatements(union) {
 }
 
 function generate(union) {
+  const templatePath = path.resolve(__dirname, './templates/union.ejs');
   const importStatements = mapToImportStatements(union);
   const validators = mapToPropTypes(union);
   // TODO: Need to include discriminator.
-  return compiled({ importStatements, validators });
+  return renderTemplate(templatePath, { importStatements, validators });
 }
 
 module.exports = generate;
