@@ -5,20 +5,7 @@ const matchesProperty = require('lodash/matchesProperty');
 const memoize = require('lodash/memoize');
 const overSome = require('lodash/overSome');
 const property = require('lodash/property');
-
-const ApiBuilderEnum = require('./ApiBuilderEnum');
-const ApiBuilderModel = require('./ApiBuilderModel');
-const ApiBuilderUnion = require('./ApiBuilderUnion');
-const ApiBuilderImport = require('./ApiBuilderImport');
-
-const mapToEnumType = memoize((schema, service, namespace) =>
-  ApiBuilderEnum.fromSchema(schema, service, namespace));
-
-const mapToModelType = memoize((schema, service, namespace) =>
-  ApiBuilderModel.fromSchema(schema, service, namespace));
-
-const mapToUnionType = memoize((schema, service, namespace) =>
-  ApiBuilderUnion.fromSchema(schema, service, namespace));
+const definition = require('./definition');
 
 function findTypeByName(types, name) {
   return find(types, overSome([
@@ -27,9 +14,96 @@ function findTypeByName(types, name) {
   ]));
 }
 
+const mapToEnumType = memoize((schema, service, namespace) => {
+  const { ApiBuilderEnum } = definition;
+  return ApiBuilderEnum.fromSchema(schema, service, namespace);
+});
+
+const mapToModelType = memoize((schema, service, namespace) => {
+  const { ApiBuilderModel } = definition;
+  return ApiBuilderModel.fromSchema(schema, service, namespace);
+});
+
+const mapToUnionType = memoize((schema, service, namespace) => {
+  const { ApiBuilderUnion } = definition;
+  return ApiBuilderUnion.fromSchema(schema, service, namespace);
+});
+
+class ApiBuilderImport {
+  constructor(schema, service) {
+    this.schema = schema;
+    this.service = service;
+  }
+
+  get namespace() {
+    return this.schema.namespace;
+  }
+
+  get organizationKey() {
+    return this.schema.organization.key;
+  }
+
+  get applicationKey() {
+    return this.schema.application.key;
+  }
+
+  get version() {
+    return this.schema.version;
+  }
+
+  get enums() {
+    const { ApiBuilderEnum } = definition;
+    return map(this.schema.enums, (enumeration) => {
+      const { namespace, service } = this;
+      const schema = { name: enumeration };
+      return ApiBuilderEnum.fromSchema(schema, service, namespace);
+    });
+  }
+
+  get models() {
+    const { ApiBuilderModel } = definition;
+    return map(this.schema.models, (model) => {
+      const { namespace, service } = this;
+      const schema = { name: model };
+      return ApiBuilderModel.fromSchema(schema, service, namespace);
+    });
+  }
+
+  get unions() {
+    const { ApiBuilderUnion } = definition;
+    return map(this.schema.unions, (union) => {
+      const { namespace, service } = this;
+      const schema = { name: union };
+      return ApiBuilderUnion.fromSchema(schema, service, namespace);
+    });
+  }
+
+  findEnumByName(name) {
+    return findTypeByName(this.enums, name);
+  }
+
+  findModelByName(name) {
+    return findTypeByName(this.models, name);
+  }
+
+  findUnionByName(name) {
+    return findTypeByName(this.unions, name);
+  }
+
+  toString() {
+    return `${this.applicationKey}@${this.version}`;
+  }
+
+  static fromSchema(schema, service) {
+    return new ApiBuilderImport(schema, service);
+  }
+}
+
+exports.ApiBuilderImport = ApiBuilderImport;
+
 /**
- * @class ApiBuilderService
- * Wraps an apibuilder service definition and provides utilities for interacting with it.
+ * Wraps an apibuilder service definition and provides utilities for
+ * interacting with it.
  */
 class ApiBuilderService {
   constructor({ service: schema }) {
@@ -149,4 +223,4 @@ class ApiBuilderService {
   }
 }
 
-module.exports = ApiBuilderService;
+exports.ApiBuilderService = ApiBuilderService;

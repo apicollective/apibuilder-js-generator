@@ -5,10 +5,8 @@ const prettier = require('prettier');
 const reduce = require('lodash/reduce');
 const some = require('lodash/some');
 
+const { getBaseType, isArrayType, isPrimitiveType } = require('../../../../utilities/apibuilder');
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
-const getBaseType = require('../../../../utilities/apibuilder/getBaseType');
-const isArrayType = require('../../../../utilities/apibuilder/isArrayType');
-const isPrimitiveType = require('../../../../utilities/apibuilder/isPrimitiveType');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const GraphQLObjectTypeConfig = require('../../utilities/GraphQLObjectTypeConfig');

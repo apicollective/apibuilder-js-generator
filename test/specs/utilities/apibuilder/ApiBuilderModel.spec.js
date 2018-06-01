@@ -1,6 +1,6 @@
 const find = require('lodash/find');
-const ApiBuilderModel = require('../../../../src/utilities/apibuilder/ApiBuilderModel');
-const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
+
+const { ApiBuilderModel, ApiBuilderService } = require('../../../../src/utilities/apibuilder');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
 const service = new ApiBuilderService({ service: schema });

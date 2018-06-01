@@ -1,5 +1,6 @@
 const find = require('lodash/find');
-const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
+
+const { ApiBuilderService } = require('../../../../../src/utilities/apibuilder');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 const toModuleName = require('../../../../../src/generators/prop_types/utilities/toModuleName');
 

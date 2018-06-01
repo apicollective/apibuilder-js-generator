@@ -1,5 +1,5 @@
+const { ApiBuilderService } = require('../../../../../src/utilities/apibuilder');
 const loadFixture = require('../../../../helpers/loadFixture');
-const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 const generateModel = require('../../../../../src/generators/node_graphql/generators/model');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 

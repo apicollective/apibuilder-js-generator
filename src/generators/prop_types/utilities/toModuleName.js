@@ -1,4 +1,4 @@
-const getBaseType = require('../../../utilities/apibuilder/getBaseType');
+const { getBaseType } = require('../../../utilities/apibuilder');
 const toDefaultExport = require('./toDefaultExport');
 
 

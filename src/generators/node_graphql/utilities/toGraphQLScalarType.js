@@ -1,4 +1,4 @@
-const TypeKind = require('../../../utilities/apibuilder/TypeKind');
+const { Kind } = require('../../../utilities/apibuilder');
 
 /**
  * Calculates the GraphQL scalar type for writing into generated code. May
@@ -9,23 +9,23 @@ const TypeKind = require('../../../utilities/apibuilder/TypeKind');
  */
 function toGraphQLScalarType(type) {
   switch (type.baseType) {
-    case TypeKind.STRING:
-    case TypeKind.DATE_ISO8601:
-    case TypeKind.DATE_TIME_ISO8601:
-    case TypeKind.JSON:
+    case Kind.STRING:
+    case Kind.DATE_ISO8601:
+    case Kind.DATE_TIME_ISO8601:
+    case Kind.JSON:
       return 'GraphQLString';
-    case TypeKind.UUID:
+    case Kind.UUID:
       return 'GraphQLID';
-    case TypeKind.BOOLEAN:
+    case Kind.BOOLEAN:
       return 'GraphQLBoolean';
-    case TypeKind.INTEGER:
+    case Kind.INTEGER:
       return 'GraphQLInt';
-    case TypeKind.DECIMAL:
-    case TypeKind.DOUBLE:
-    case TypeKind.LONG:
+    case Kind.DECIMAL:
+    case Kind.DOUBLE:
+    case Kind.LONG:
       return 'GraphQLFloat';
-    case TypeKind.OBJECT:
-    case TypeKind.UNIT:
+    case Kind.OBJECT:
+    case Kind.UNIT:
     default:
       return undefined;
   }

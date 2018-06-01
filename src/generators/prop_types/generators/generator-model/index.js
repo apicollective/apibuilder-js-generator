@@ -3,8 +3,7 @@ const fs = require('fs');
 const matches = require('lodash/matches');
 const path = require('path');
 
-const getBaseType = require('../../../../utilities/apibuilder/getBaseType');
-const isPrimitiveType = require('../../../../utilities/apibuilder/isPrimitiveType');
+const { getBaseType, isPrimitiveType } = require('../../../../utilities/apibuilder');
 const toImportStatement = require('../../utilities/toImportStatement');
 const toPropTypes = require('../../utilities/toPropTypes');
 

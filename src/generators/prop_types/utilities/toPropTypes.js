@@ -1,12 +1,14 @@
 const toDefaultExport = require('./toDefaultExport');
 const toPrimitivePropTypes = require('./toPrimitivePropTypes');
 
-const isArrayType = require('../../../utilities/apibuilder/isArrayType');
-const isEnumType = require('../../../utilities/apibuilder/isEnumType');
-const isPrimitiveType = require('../../../utilities/apibuilder/isPrimitiveType');
-const isMapType = require('../../../utilities/apibuilder/isMapType');
-const isModelType = require('../../../utilities/apibuilder/isModelType');
-const isUnionType = require('../../../utilities/apibuilder/isUnionType');
+const {
+  isArrayType,
+  isEnumType,
+  isPrimitiveType,
+  isMapType,
+  isModelType,
+  isUnionType,
+} = require('../../../utilities/apibuilder');
 
 /**
  * Calculates the prop type validator for writing to generated code.

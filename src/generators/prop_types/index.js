@@ -1,14 +1,17 @@
 const createLogger = require('debug');
 const reduce = require('lodash/reduce');
 
-const ApiBuilderFile = require('../../utilities/apibuilder/ApiBuilderFile');
-const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
+const {
+  ApiBuilderFile,
+  ApiBuilderService,
+  isEnumType,
+  isModelType,
+  isUnionType,
+} = require('../../utilities/apibuilder');
+
 const generateEnumeration = require('./generators/generator-enumeration');
 const generateModel = require('./generators/generator-model');
 const generateUnion = require('./generators/generator-union');
-const isEnumType = require('../../utilities/apibuilder/isEnumType');
-const isModelType = require('../../utilities/apibuilder/isModelType');
-const isUnionType = require('../../utilities/apibuilder/isUnionType');
 const toModuleName = require('./utilities/toModuleName');
 
 const debug = createLogger('apibuilder:prop-types');

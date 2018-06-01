@@ -1,12 +1,12 @@
 const faker = require('faker');
 const get = require('lodash/get');
 
-const TypeKind = require('../../src/utilities/apibuilder/TypeKind');
+const { Kind } = require('../../src/utilities/apibuilder');
 
 function createMockField(config) {
   return {
     name: get(config, 'name', faker.lorem.word()),
-    type: get(config, 'type', TypeKind.STRING),
+    type: get(config, 'type', Kind.STRING),
     description: get(config, 'description'),
     required: get(config, 'required', true),
     default: get(config, 'default'),

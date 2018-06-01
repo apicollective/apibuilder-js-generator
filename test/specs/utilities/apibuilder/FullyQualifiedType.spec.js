@@ -1,10 +1,9 @@
-const omit = require('lodash/omit');
+const pickBy = require('lodash/pickBy');
 const values = require('lodash/values');
 
-const FullyQualifiedType = require('../../../../src/utilities/apibuilder/FullyQualifiedType');
-const TypeKind = require('../../../../src/utilities/apibuilder/TypeKind');
+const { FullyQualifiedType, Kind, isPrimitiveTypeName } = require('../../../../src/utilities/apibuilder');
 
-const primitiveTypes = values(omit(TypeKind, ['UNION', 'ENUM', 'MODEL', 'MAP', 'ARRAY']));
+const primitiveTypes = values(pickBy(Kind, isPrimitiveTypeName));
 
 const baseType = 'com.bryzek.apidoc.common.v0.models.reference';
 
@@ -259,137 +258,5 @@ describe('FullyQualifiedType::isPrimitiveType', () => {
   test(`should be false for an instance of type "map[${baseType}]"`, () => {
     const instance = new FullyQualifiedType(`map[${baseType}]`);
     expect(instance).toHaveProperty('isPrimitiveType', false);
-  });
-});
-
-describe('FullyQualifiedType.astFromType', () => {
-  test('string', () => {
-    expect(FullyQualifiedType.astFromType('string')).toEqual({
-      name: 'string',
-    });
-  });
-
-  test('map[string]', () => {
-    expect(FullyQualifiedType.astFromType('map[string]')).toEqual({
-      name: 'map',
-      type: {
-        name: 'string',
-      },
-    });
-  });
-
-  test('map[[string]]', () => {
-    expect(FullyQualifiedType.astFromType('map[[string]]')).toEqual({
-      name: 'map',
-      type: {
-        name: 'array',
-        type: {
-          name: 'string',
-        },
-      },
-    });
-  });
-
-  test(`map[map[map[[${baseType}]]]`, () => {
-    expect(FullyQualifiedType.astFromType(`map[map[map[[${baseType}]]]]`)).toEqual({
-      name: 'map',
-      type: {
-        name: 'map',
-        type: {
-          name: 'map',
-          type: {
-            name: 'array',
-            type: {
-              name: baseType,
-            },
-          },
-        },
-      },
-    });
-  });
-
-  test('[[[[string]]]]', () => {
-    expect(FullyQualifiedType.astFromType('[[[[string]]]]')).toEqual({
-      name: 'array',
-      type: {
-        name: 'array',
-        type: {
-          name: 'array',
-          type: {
-            name: 'array',
-            type: {
-              name: 'string',
-            },
-          },
-        },
-      },
-    });
-  });
-});
-
-describe('FullyQualifiedType.typeFromAst', () => {
-  test('string', () => {
-    const ast = FullyQualifiedType.astFromType('string');
-    expect(FullyQualifiedType.typeFromAst(ast)).toEqual('string');
-  });
-
-  test('map[string]', () => {
-    const ast = FullyQualifiedType.astFromType('map[string]');
-    expect(FullyQualifiedType.typeFromAst(ast)).toEqual('map[string]');
-  });
-
-  test('map[[string]]', () => {
-    const ast = FullyQualifiedType.astFromType('map[[string]]');
-    expect(FullyQualifiedType.typeFromAst(ast)).toEqual('map[[string]]');
-  });
-
-  test(`map[map[map[[${baseType}]]]`, () => {
-    const ast = FullyQualifiedType.astFromType(`map[map[map[[${baseType}]]]]`);
-    expect(FullyQualifiedType.typeFromAst(ast)).toEqual(`map[map[map[[${baseType}]]]]`);
-  });
-
-  test('[[[[string]]]]', () => {
-    const ast = FullyQualifiedType.astFromType('[[[[string]]]]');
-    expect(FullyQualifiedType.typeFromAst(ast)).toEqual('[[[[string]]]]');
-  });
-});
-
-describe('FullyQualifiedType.getBaseType', () => {
-  primitiveTypes.forEach((primitiveType) => {
-    test(`should return "${primitiveType}" for type "${primitiveType}"`, () => {
-      expect(FullyQualifiedType.getBaseType(primitiveType)).toBe(primitiveType);
-    });
-
-    test(`should return "${primitiveType}" for type "[${primitiveType}]"`, () => {
-      expect(FullyQualifiedType.getBaseType(`[${primitiveType}]`)).toBe(primitiveType);
-    });
-
-    test(`should return "${primitiveType}" for type "map[${primitiveType}]"`, () => {
-      expect(FullyQualifiedType.getBaseType(`map[${primitiveType}]`)).toBe(primitiveType);
-    });
-  });
-
-  test(`should return "${baseType}" for type "${baseType}"`, () => {
-    expect(FullyQualifiedType.getBaseType(baseType)).toBe(baseType);
-  });
-
-  test(`should return "${baseType}" for type "[${baseType}]"`, () => {
-    expect(FullyQualifiedType.getBaseType(`[${baseType}]`)).toBe(baseType);
-  });
-
-  test(`should return "${baseType}" for type "map[${baseType}]"`, () => {
-    expect(FullyQualifiedType.getBaseType(`map[${baseType}]`)).toBe(baseType);
-  });
-});
-
-describe('FullyQualifiedType.isPrimitiveType', () => {
-  primitiveTypes.forEach((primitiveType) => {
-    test(`should return true for type "${primitiveType}"`, () => {
-      expect(FullyQualifiedType.isPrimitiveType(primitiveType)).toBe(true);
-    });
-  });
-
-  test(`should return false for type "${baseType}"`, () => {
-    expect(FullyQualifiedType.isPrimitiveType(baseType)).toBe(false);
   });
 });

@@ -1,8 +1,6 @@
 const invariant = require('invariant');
 
-const isMapType = require('../../../utilities/apibuilder/isMapType');
-const isArrayType = require('../../../utilities/apibuilder/isArrayType');
-const isPrimitiveType = require('../../../utilities/apibuilder/isPrimitiveType');
+const { isArrayType, isMapType, isPrimitiveType } = require('../../../utilities/apibuilder');
 const toDefaultExport = require('./toDefaultExport');
 const toGraphQLScalarType = require('./toGraphQLScalarType');
 

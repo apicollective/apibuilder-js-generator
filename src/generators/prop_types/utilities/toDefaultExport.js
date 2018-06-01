@@ -1,5 +1,5 @@
 const camelCase = require('lodash/camelCase');
-const getBaseType = require('../../../utilities/apibuilder/getBaseType');
+const { getBaseType } = require('../../../utilities/apibuilder');
 
 /**
  * Calculates default export name for writing into generated code.

@@ -1,10 +1,13 @@
 const find = require('lodash/find');
 
-const ApiBuilderImport = require('../../../../src/utilities/apibuilder/ApiBuilderImport');
-const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
-const isEnumType = require('../../../../src/utilities/apibuilder/isEnumType');
-const isModelType = require('../../../../src/utilities/apibuilder/isModelType');
-const isUnionType = require('../../../../src/utilities/apibuilder/isUnionType');
+const {
+  ApiBuilderImport,
+  ApiBuilderService,
+  isEnumType,
+  isModelType,
+  isUnionType,
+} = require('../../../../src/utilities/apibuilder');
+
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
 const service = new ApiBuilderService({ service: schema });

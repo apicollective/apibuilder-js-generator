@@ -1,7 +1,7 @@
 const find = require('lodash/find');
 
+const { ApiBuilderService } = require('../../../../../src/utilities/apibuilder');
 const loadFixture = require('../../../../helpers/loadFixture');
-const ApiBuilderService = require('../../../../../src/utilities/apibuilder/ApiBuilderService');
 const generateUnion = require('../../../../../src/generators/prop_types/generators/generator-union');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 

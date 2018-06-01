@@ -1,12 +1,15 @@
 const createLogger = require('debug');
 const reduce = require('lodash/reduce');
 
-const ApiBuilderFile = require('../../utilities/apibuilder/ApiBuilderFile');
-const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
+const {
+  ApiBuilderFile,
+  ApiBuilderService,
+  isEnumType,
+  isModelType,
+} = require('../../utilities/apibuilder');
+
 const generateEnumeration = require('./generators/enumeration');
 const generateModel = require('./generators/model');
-const isEnumType = require('../../utilities/apibuilder/isEnumType');
-const isModelType = require('../../utilities/apibuilder/isModelType');
 const toDefaultExport = require('./utilities/toDefaultExport');
 
 const debug = createLogger('apibuilder:graphql');
