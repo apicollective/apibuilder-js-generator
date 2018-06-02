@@ -6,10 +6,12 @@ const {
   ApiBuilderService,
   isEnumType,
   isModelType,
+  isUnionType,
 } = require('../../utilities/apibuilder');
 
 const generateEnumeration = require('./generators/enumeration');
 const generateModel = require('./generators/model');
+const generateUnion = require('./generators/union');
 const toDefaultExport = require('./utilities/toDefaultExport');
 
 const debug = createLogger('apibuilder:graphql');
@@ -25,6 +27,8 @@ function generate(data) {
       contents = generateEnumeration(type);
     } else if (isModelType(type)) {
       contents = generateModel(type);
+    } else if (isUnionType(type)) {
+      contents = generateUnion(type);
     } else {
       debug('Skipping because type is not supported');
       return files;

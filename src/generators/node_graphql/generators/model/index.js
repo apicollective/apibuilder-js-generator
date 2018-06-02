@@ -66,7 +66,7 @@ function mapToImportDeclarations(model) {
 function generateCode(model) {
   const templatePath = path.resolve(__dirname, './templates/model.ejs');
   const importDeclarations = mapToImportDeclarations(model);
-  const object = GraphQLObjectTypeConfig.fromModel(model);
+  const object = GraphQLObjectTypeConfig.fromApiBuilderModel(model);
   return renderTemplate(templatePath, { importDeclarations, object });
 }
 
