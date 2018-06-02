@@ -7,7 +7,7 @@ const { getBaseType, isArrayType, isPrimitiveType } = require('../../../../utili
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
-const GraphQLObjectTypeConfig = require('../../utilities/GraphQLObjectTypeConfig');
+const GraphQLObjectType = require('../../utilities/GraphQLObjectType');
 
 // TODO: An API Builder model may be either a GraphQL object or a GraphQL input,
 // in this iteration we will assume that they are all GraphQL objects, but we
@@ -64,10 +64,11 @@ function mapToImportDeclarations(model) {
 }
 
 function generateCode(model) {
-  const templatePath = path.resolve(__dirname, './templates/model.ejs');
-  const importDeclarations = mapToImportDeclarations(model);
-  const object = GraphQLObjectTypeConfig.fromApiBuilderModel(model);
-  return renderTemplate(templatePath, { importDeclarations, object });
+  const templatePath = path.resolve(__dirname, './templates/GraphQLObjectType.ejs');
+  return renderTemplate(templatePath, {
+    importDeclarations: mapToImportDeclarations(model),
+    object: GraphQLObjectType.fromApiBuilderModel(model),
+  });
 }
 
 module.exports = generateCode;

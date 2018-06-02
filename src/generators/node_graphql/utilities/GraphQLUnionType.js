@@ -2,7 +2,7 @@ const invariant = require('invariant');
 const map = require('lodash/map');
 
 const { isModelType, isUnionType } = require('../../../utilities/apibuilder');
-const GraphQLObjectTypeConfig = require('./GraphQLObjectTypeConfig');
+const GraphQLObjectType = require('./GraphQLObjectType');
 const pascalCase = require('../utilities/pascalCase');
 
 class GraphQLUnionType {
@@ -44,7 +44,7 @@ class GraphQLUnionType {
         // model at the moment.
         invariant(isModelType(type), `"${String(type)}" cannot be transformed into a GraphQLObjectType.`);
 
-        return GraphQLObjectTypeConfig.fromApiBuilderModel(type);
+        return GraphQLObjectType.fromApiBuilderModel(type);
       }),
     });
   }
