@@ -4,6 +4,8 @@ const ejs = require('ejs');
 const get = require('lodash/get');
 const { upperFirst, camelCase, capitalize, flatMap } = require('lodash');
 const pluralize = require('pluralize');
+const prettier = require('prettier');
+const GraphQLSchemaConfig = require('../../utilities/GraphQLSchemaConfig');
 
 const templatePath = path.resolve(__dirname, './templates/schema.ejs');
 const template = fs.readFileSync(templatePath, 'utf8');
@@ -61,15 +63,11 @@ function getFunctionName(resource, operation) {
  * @param {Service} service
  */
 function generate(service) {
-  return compiled({
-    queries: flatMap(service.resources, resource =>
-      resource.operations.filter(op => op.method === 'GET').map(op => ({
-        name: getFunctionName(resource, op),
-        type: getResultType(op).fullyQualifiedType,
-        description: op.description,
-        deprecation: op.deprecation,
-      }))
-    ),
+  const config = GraphQLSchemaConfig.fromService(service);
+  const source = compiled(config);
+  return prettier.format(source, {
+    singleQuote: true,
+    trailingComma: 'es5',
   });
 }
 

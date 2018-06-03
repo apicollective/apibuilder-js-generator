@@ -9,6 +9,7 @@ const some = require('lodash/some');
 const ApiBuilderEnum = require('./ApiBuilderEnum');
 const ApiBuilderModel = require('./ApiBuilderModel');
 const ApiBuilderUnion = require('./ApiBuilderUnion');
+const ApiBuilderResource = require('./ApiBuilderResource');
 
 const mapToEnumType = memoize((schema, service, namespace) =>
   ApiBuilderEnum.fromSchema(schema, service, namespace));
@@ -123,6 +124,10 @@ class ApiBuilderService {
       ...this.externalModels,
       ...this.externalUnions,
     ];
+  }
+
+  get resources() {
+    return map(this.schema.resources, resource => new ApiBuilderResource(resource, this));
   }
 
   findModelByName(typeName) {

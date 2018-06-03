@@ -8,10 +8,17 @@ const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-    <%_ queries.forEach(({ name, type }) => { _%>
+    <%_ queries.forEach(({ name, type, args, deprecationReason, description }) => { _%>
       <%= name %>: {
-        type: new GraphQLNonNull(<%= type %>)
-      }
+        type: <%= type %>,
+        args: <%= args %>,
+      <%_ if (deprecationReason != null) { _%>
+        deprecationReason: '<%= deprecationReason %>',
+      <%_ } _%>
+      <%_ if (description != null) { _%>
+        description: '<%= description %>',
+      <%_ } _%>
+      },
     <%_ }) _%>
     }
   }),

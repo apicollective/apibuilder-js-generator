@@ -1,6 +1,9 @@
 const FullyQualifiedType = require('./FullyQualifiedType');
 
-const { get } = require('lodash');
+const {
+  get,
+  camelCase
+} = require('lodash');
 
 const log = require('debug')('apibuilder:graphql');
 
@@ -12,7 +15,7 @@ function getResultType(operation) {
   );
 }
 
-class Resource {
+class ApiBuilderResource {
   constructor(schema, service) {
     Object.assign(this, schema);
     this.service = service;
@@ -33,7 +36,7 @@ class Resource {
       try {
         op.resultType = new FullyQualifiedType(getResultType(op));
       } catch (e) {
-        op.resultType = new FullyQualifiedType(`${service.namespace}.${getResultType(op)}`);
+        op.resultType = new FullyQualifiedType(FullyQualifiedType.map(getResultType(op), t => `${service.namespace}.${t}`));
       }
 
       // parse response types
@@ -41,7 +44,7 @@ class Resource {
         try {
           res.type = new FullyQualifiedType(res.type);
         } catch (e) {
-          res.type = new FullyQualifiedType(FullyQualifiedType.mapType(res.type, t => `${service.namespace}.${t}`));
+          res.type = new FullyQualifiedType(FullyQualifiedType.map(res.type, t => `${service.namespace}.${t}`));
         }
       }
     }
@@ -65,27 +68,27 @@ class Resource {
     //   log(`🔥  no getOne`);
     // }
 
+    const strOrVersion = (str) => new RegExp(`^${str}(?:_v\\d+)?$`)
+
     let one = 0;
     let all = 0;
     for (const op of this.operations) {
-      const res = getResultType(op);
-      if (op.method === 'GET' && res) { // getters
-        if (res.fullyQualifiedType === this.type.fullyQualifiedType) {
-          log(`▶️   get one (${++one}) at ${this.path}${op.path}`);
-        } else if (res.fullyQualifiedName === this.type.fullyQualifiedType) {
-          log(`▶️   query all (${++all}) at ${this.path}${op.path}`);
+      const res = op.resultType;
+      if (op.method === 'GET') { // getters
+        // console.log(`"${res.fullyQualifiedType}" matches ${strOrVersion(this.type.fullyQualifiedType)} ?`);
+        // console.log(`"${res.baseType}" matches ${strOrVersion(this.type.fullyQualifiedType)} ?`);
+        if (res.fullyQualifiedType.match(strOrVersion(this.type.fullyQualifiedType))) {
+          log(`▶️   get one (${res.fullyQualifiedType}) at ${this.path}${op.path}`);
+        } else if (res.baseType.match(strOrVersion(this.type.fullyQualifiedType))) {
+          log(`▶️   get all (${res.fullyQualifiedType}) at ${this.path}${op.path}`);
         } else {
           const parts = op.path.split('/').filter(x => x.length > 0 && x[0] != ':');
           if (parts.length > 0) {
-            log(`▶️   get ${this.type.fullyQualifiedType}'s ${parts.join('-')} at ${this.path}${op.path}`);
+            log(`▶️   get ${this.type.fullyQualifiedType}'s ${parts.join('-')} at ${this.path}${op.path} => ${res.fullyQualifiedType}`);
           } else {
-            log(`❌   unknown ${this.path}${op.path}`);
+            log(`❌   unknown ${this.path}${op.path} => ${res.fullyQualifiedType}`);
           }
         }
-      }
-
-      if (!res) {
-        log(op);
       }
       // log(op);
       // log('\n');
@@ -94,4 +97,4 @@ class Resource {
   }
 }
 
-module.exports = Resource;
+module.exports = ApiBuilderResource;

@@ -13,6 +13,7 @@ function toGraphQLScalarType(type) {
     case TypeKind.DATE_ISO8601:
     case TypeKind.DATE_TIME_ISO8601:
     case TypeKind.JSON:
+    case TypeKind.OBJECT:
       return 'GraphQLString';
     case TypeKind.UUID:
       return 'GraphQLID';
@@ -24,8 +25,8 @@ function toGraphQLScalarType(type) {
     case TypeKind.DOUBLE:
     case TypeKind.LONG:
       return 'GraphQLFloat';
-    case TypeKind.OBJECT:
     case TypeKind.UNIT:
+      return 'GraphQLUnit'
     default:
       return undefined;
   }

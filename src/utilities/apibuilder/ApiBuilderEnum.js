@@ -12,7 +12,7 @@ const FullyQualifiedType = require('./FullyQualifiedType');
  * @property {?Object} deprecation
  * @property {!EnumValue} values
  * @property {Object[]} attributes
- * @see https://app.apibuilder.io/bryzek/apidoc-spec/latest#model-enum
+ * @see https://app.apibuilder.io/apicollective/apibuilder-spec/latest#model-enum
  */
 
 class ApiBuilderEnum {
@@ -92,7 +92,7 @@ class ApiBuilderEnum {
 
   /**
    * Returns the ApiBuilderEnum corresponding to the specified enum definition.
-   * @param {ApiBuilderEnumSchema} schemaw
+   * @param {ApiBuilderEnumSchema} schema
    * @param {ApiBuilderService} service
    * @param {String} [namespace = service.namespace]
    * @returns {ApiBuilderEnum}
