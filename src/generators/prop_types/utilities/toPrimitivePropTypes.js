@@ -1,4 +1,4 @@
-const TypeKind = require('../../../utilities/apibuilder/TypeKind');
+const { Kind } = require('../../../utilities/apibuilder');
 
 /**
  * Calculates the primitive prop type validator for writing into generated code.
@@ -8,19 +8,19 @@ const TypeKind = require('../../../utilities/apibuilder/TypeKind');
 function toPrimitivePropTypes(type) {
   // TODO: Use invariant to check type is valid primitive type.
   switch (type.baseType) {
-    case TypeKind.STRING:
-    case TypeKind.DATE_ISO8601:
-    case TypeKind.DATE_TIME_ISO8601:
-    case TypeKind.UUID:
+    case Kind.STRING:
+    case Kind.DATE_ISO8601:
+    case Kind.DATE_TIME_ISO8601:
+    case Kind.UUID:
       return 'PropTypes.string';
-    case TypeKind.BOOLEAN:
+    case Kind.BOOLEAN:
       return 'PropTypes.bool';
-    case TypeKind.DECIMAL:
-    case TypeKind.DOUBLE:
-    case TypeKind.INTEGER:
-    case TypeKind.LONG:
+    case Kind.DECIMAL:
+    case Kind.DOUBLE:
+    case Kind.INTEGER:
+    case Kind.LONG:
       return 'PropTypes.number';
-    case TypeKind.OBJECT:
+    case Kind.OBJECT:
       return 'PropTypes.object';
     default:
       return 'PropTypes.any';

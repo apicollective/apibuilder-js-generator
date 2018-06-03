@@ -1,16 +1,10 @@
-const ejs = require('ejs');
-const fs = require('fs');
 const matches = require('lodash/matches');
 const path = require('path');
 
-const getBaseType = require('../../../../utilities/apibuilder/getBaseType');
-const isPrimitiveType = require('../../../../utilities/apibuilder/isPrimitiveType');
+const { renderTemplate } = require('../../../../utilities/template');
+const { getBaseType, isPrimitiveType } = require('../../../../utilities/apibuilder');
 const toImportStatement = require('../../utilities/toImportStatement');
 const toPropTypes = require('../../utilities/toPropTypes');
-
-const templatePath = path.resolve(__dirname, './templates/model.ejs');
-const template = fs.readFileSync(templatePath, 'utf8');
-const compiled = ejs.compile(template);
 
 function mapToImportStatements(model) {
   return model.fields
@@ -33,9 +27,10 @@ function mapToPropTypes(model) {
 }
 
 function generate(model) {
+  const templatePath = path.resolve(__dirname, './templates/model.ejs');
   const importStatements = mapToImportStatements(model);
   const propTypes = mapToPropTypes(model);
-  return compiled({ importStatements, propTypes });
+  return renderTemplate(templatePath, { importStatements, propTypes });
 }
 
 module.exports = generate;

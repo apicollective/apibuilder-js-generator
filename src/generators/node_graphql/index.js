@@ -1,12 +1,17 @@
 const createLogger = require('debug');
 const reduce = require('lodash/reduce');
 
-const ApiBuilderFile = require('../../utilities/apibuilder/ApiBuilderFile');
-const ApiBuilderService = require('../../utilities/apibuilder/ApiBuilderService');
+const {
+  ApiBuilderFile,
+  ApiBuilderService,
+  isEnumType,
+  isModelType,
+  isUnionType,
+} = require('../../utilities/apibuilder');
+
 const generateEnumeration = require('./generators/enumeration');
 const generateModel = require('./generators/model');
-const isEnumType = require('../../utilities/apibuilder/isEnumType');
-const isModelType = require('../../utilities/apibuilder/isModelType');
+const generateUnion = require('./generators/union');
 const toDefaultExport = require('./utilities/toDefaultExport');
 const generateSchema = require('./generators/schema')
 
@@ -23,6 +28,8 @@ function generate(data) {
       contents = generateEnumeration(type);
     } else if (isModelType(type)) {
       contents = generateModel(type);
+    } else if (isUnionType(type)) {
+      contents = generateUnion(type);
     } else {
       debug('Skipping because type is not supported');
       return files;

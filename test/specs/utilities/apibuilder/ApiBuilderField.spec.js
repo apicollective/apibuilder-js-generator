@@ -1,5 +1,4 @@
-const ApiBuilderField = require('../../../../src/utilities/apibuilder/ApiBuilderField');
-const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
+const { ApiBuilderField, ApiBuilderService } = require('../../../../src/utilities/apibuilder');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 const createMockField = require('../../../helpers/createMockField');
 const createMockDeprecation = require('../../../helpers/createMockDeprecation');

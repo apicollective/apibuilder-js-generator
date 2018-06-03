@@ -1,8 +1,6 @@
 const find = require('lodash/find');
 
-const ApiBuilderEnum = require('../../../../src/utilities/apibuilder/ApiBuilderEnum');
-const ApiBuilderEnumValue = require('../../../../src/utilities/apibuilder/ApiBuilderEnumValue');
-const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
+const { ApiBuilderEnum, ApiBuilderEnumValue, ApiBuilderService } = require('../../../../src/utilities/apibuilder');
 const createMockDeprecation = require('../../../helpers/createMockDeprecation');
 const createMockEnum = require('../../../helpers/createMockEnum');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');

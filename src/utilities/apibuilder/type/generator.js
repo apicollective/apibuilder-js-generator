@@ -16,4 +16,4 @@ class ApiBuilderFile {
   }
 }
 
-module.exports = ApiBuilderFile;
+exports.ApiBuilderFile = ApiBuilderFile;

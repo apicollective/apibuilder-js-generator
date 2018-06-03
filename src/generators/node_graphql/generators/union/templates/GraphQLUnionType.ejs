@@ -1,0 +1,24 @@
+<%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
+  <%_ if (defaultExport != null) { _%>
+    const <%= defaultExport %> = require('<%= moduleName %>');
+  <%_ } else if (namedExports != null) { _%>
+    const {
+      <%_ namedExports.forEach((namedExport) => { _%>
+      <%= namedExport %>,
+      <%_ }) _%>
+    } = require('<%= moduleName %>');
+  <%_ } else { _%>
+    require('<%= moduleName %>');
+  <%_ } _%>
+<%_ }) _%>
+
+const <%= union.name %> = new GraphQLUnionType({
+  name: '<%= union.name %>',
+  types: [
+    <%_ union.types.forEach((type) => { _%>
+      <%= type.name %>,
+    <%_ }) _%>
+  ],
+});
+
+module.exports = <%= union.name %>;

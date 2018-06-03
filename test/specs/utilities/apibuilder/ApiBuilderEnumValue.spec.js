@@ -1,6 +1,6 @@
 const faker = require('faker');
 
-const ApiBuilderEnumValue = require('../../../../src/utilities/apibuilder/ApiBuilderEnumValue');
+const { ApiBuilderEnumValue } = require('../../../../src/utilities/apibuilder');
 const createMockDeprecation = require('../../../helpers/createMockDeprecation');
 const createMockEnumValue = require('../../../helpers/createMockEnumValue');
 

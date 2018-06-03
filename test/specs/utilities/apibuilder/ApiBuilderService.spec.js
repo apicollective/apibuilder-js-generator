@@ -1,4 +1,4 @@
-const ApiBuilderService = require('../../../../src/utilities/apibuilder/ApiBuilderService');
+const { ApiBuilderService } = require('../../../../src/utilities/apibuilder');
 const schema = require('../../../fixtures/schemas/apidoc-api.json');
 
 const service = new ApiBuilderService({ service: schema });
