@@ -2,11 +2,15 @@ const ejs = require('ejs');
 const fs = require('fs');
 const prettier = require('prettier');
 
-function renderTemplate(filepath, data) {
+const defaultOptions = {
+  prettier: true,
+};
+
+function renderTemplate(filepath, data, options = defaultOptions) {
   const template = fs.readFileSync(filepath, 'utf8');
   const compiled = ejs.compile(template, { filename: filepath });
   const code = compiled(data);
-  return prettier.format(code, {
+  return !options.prettier ? code : prettier.format(code, {
     singleQuote: true,
     trailingComma: 'es5',
   });

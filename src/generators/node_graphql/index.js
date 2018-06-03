@@ -1,17 +1,16 @@
 const { ApiBuilderService } = require('../../utilities/apibuilder');
-const { generateFile: generateEnumFile } = require('./generators/enumeration');
-const { generateFile: generateModelFile } = require('./generators/model');
-const { generateFile: generateUnionFile } = require('./generators/union');
+const { generateFiles: generateSchemaFiles } = require('./generators/schema');
+const { generateFiles: generateServerFiles } = require('./generators/server');
 
 function generate(data) {
   const service = new ApiBuilderService({ service: data });
 
   let files = [];
 
-  // Generate GraphQL Schema Types
-  files = files.concat(service.internalEnums.map(generateEnumFile));
-  files = files.concat(service.internalModels.map(generateModelFile));
-  files = files.concat(service.internalUnions.map(generateUnionFile));
+  // Generate GraphQL Schema
+  files = files.concat(generateSchemaFiles(service));
+  // Generate GraphQL Server
+  files = files.concat(generateServerFiles(service));
 
   return Promise.resolve(files);
 }
