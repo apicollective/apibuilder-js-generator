@@ -3,8 +3,16 @@ const reduce = require('lodash/reduce');
 const some = require('lodash/some');
 
 const { renderTemplate } = require('../../../../utilities/template');
-const { getBaseType, isArrayType, isPrimitiveType } = require('../../../../utilities/apibuilder');
+
+const {
+  ApiBuilderFile,
+  getBaseType,
+  isArrayType,
+  isPrimitiveType,
+} = require('../../../../utilities/apibuilder');
+
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
+const destinationPathFromType = require('../../utilities/destinationPathFromType');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const GraphQLObjectType = require('../../utilities/GraphQLObjectType');
@@ -71,4 +79,20 @@ function generateCode(model) {
   });
 }
 
-module.exports = generateCode;
+exports.generateCode = generateCode;
+
+/**
+ * Create API Builder file containing generated GraphQL object type schema from
+ * provided API Builder model.
+ * @param {ApiBuilderModel} model
+ * @returns {ApiBuilderFile}
+ */
+function generateFile(model) {
+  const destinationPath = destinationPathFromType(model);
+  const basename = path.basename(destinationPath);
+  const dirname = path.dirname(destinationPath);
+  const contents = generateCode(model);
+  return new ApiBuilderFile(basename, dirname, contents);
+}
+
+exports.generateFile = generateFile;

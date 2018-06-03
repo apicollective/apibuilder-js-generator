@@ -1,47 +1,19 @@
-const createLogger = require('debug');
-const reduce = require('lodash/reduce');
-
-const {
-  ApiBuilderFile,
-  ApiBuilderService,
-  isEnumType,
-  isModelType,
-  isUnionType,
-} = require('../../utilities/apibuilder');
-
-const generateEnumeration = require('./generators/enumeration');
-const generateModel = require('./generators/model');
-const generateUnion = require('./generators/union');
-const toDefaultExport = require('./utilities/toDefaultExport');
-
-const debug = createLogger('apibuilder:graphql');
+const { ApiBuilderService } = require('../../utilities/apibuilder');
+const { generateFile: generateEnumFile } = require('./generators/enumeration');
+const { generateFile: generateModelFile } = require('./generators/model');
+const { generateFile: generateUnionFile } = require('./generators/union');
 
 function generate(data) {
   const service = new ApiBuilderService({ service: data });
-  const generatedFiles = reduce(service.internalTypes, (files, type) => {
-    debug(`Generating source code for "${type.baseType}".`);
 
-    let contents;
+  let files = [];
 
-    if (isEnumType(type)) {
-      contents = generateEnumeration(type);
-    } else if (isModelType(type)) {
-      contents = generateModel(type);
-    } else if (isUnionType(type)) {
-      contents = generateUnion(type);
-    } else {
-      debug('Skipping because type is not supported');
-      return files;
-    }
+  // Generate GraphQL Schema Types
+  files = files.concat(service.internalEnums.map(generateEnumFile));
+  files = files.concat(service.internalModels.map(generateModelFile));
+  files = files.concat(service.internalUnions.map(generateUnionFile));
 
-    const basename = `${toDefaultExport(type)}.js`;
-    const dirname = type.packageName.split('.').join('/');
-    const file = new ApiBuilderFile(basename, dirname, contents);
-
-    return files.concat(file);
-  }, []);
-
-  return Promise.resolve(generatedFiles);
+  return Promise.resolve(files);
 }
 
 module.exports = { generate };

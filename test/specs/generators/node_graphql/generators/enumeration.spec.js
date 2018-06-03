@@ -2,12 +2,15 @@ const find = require('lodash/find');
 
 const { ApiBuilderService } = require('../../../../../src/utilities/apibuilder');
 const { loadFixture } = require('../../../../helpers/loadFixture');
-const generateEnumeration = require('../../../../../src/generators/node_graphql/generators/enumeration');
+const { generateFile } = require('../../../../../src/generators/node_graphql/generators/enumeration');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 
 const service = new ApiBuilderService({ service: schema });
 
 test('should generate graphql enumeration from apibuilder enumeration', () => {
   const enumeration = find(service.enums, { shortName: 'publication' });
-  expect(generateEnumeration(enumeration)).toEqual(loadFixture('./generated/node_graphql/publication'));
+  const file = generateFile(enumeration);
+  expect(file.name).toEqual('Publication.js');
+  expect(file.dir).toEqual('lib/schema/types/com/bryzek/apidoc/api/v0/enums');
+  expect(file.contents).toEqual(loadFixture('./generated/node_graphql/publication'));
 });
