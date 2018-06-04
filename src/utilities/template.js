@@ -9,6 +9,7 @@ function renderTemplate(filepath, data) {
   return prettier.format(code, {
     singleQuote: true,
     trailingComma: 'es5',
+    parser: 'babylon'
   });
 }
 
