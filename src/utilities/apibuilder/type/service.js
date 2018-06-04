@@ -6,6 +6,7 @@ const memoize = require('lodash/memoize');
 const overSome = require('lodash/overSome');
 const property = require('lodash/property');
 const definition = require('./definition');
+const resource = require('./resource');
 
 function findTypeByName(types, name) {
   return find(types, overSome([
@@ -204,6 +205,11 @@ class ApiBuilderService {
       ...this.externalModels,
       ...this.externalUnions,
     ];
+  }
+
+  get resources() {
+    const { ApiBuilderResource } = resource;
+    return map(this.schema.resources, resource => new ApiBuilderResource(resource, this));
   }
 
   findModelByName(name) {

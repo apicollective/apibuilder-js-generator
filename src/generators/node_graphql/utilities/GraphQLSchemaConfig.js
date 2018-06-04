@@ -1,5 +1,10 @@
 const toGraphQLOutputType = require('../utilities/toGraphQLOutputType');
 const { get, flatMap, camelCase } = require('lodash');
+const pluralize = require('pluralize');
+
+const createLogger = require('debug');
+
+const log = createLogger('apibuilder:graphql-schema');
 
 class GraphQLSchemaConfig {
   constructor(config) {
@@ -18,6 +23,16 @@ class GraphQLSchemaConfig {
         let name = 'TODO';
         if (operation.resultType.fullyQualifiedType.match(strOrVersion(resource.type.fullyQualifiedType)))
           name = camelCase(resource.type.shortName);
+        else if (operation.resultType.baseType.match(strOrVersion(resource.type.fullyQualifiedType)))
+          name = camelCase(resource.plural);
+        else {
+          const parts = operation.path.split('/').filter(x => x.length > 0 && x[0] != ':');
+          if (parts.length > 0) {
+            name = camelCase(`for_${resource.type.shortName}_get_${parts.join('_')}`);
+          } else {
+            log(`❌   unknown ${this.path}${op.path} => ${res.fullyQualifiedType}`);
+          }
+        }
         return {
           name,
           args: 'TODO',

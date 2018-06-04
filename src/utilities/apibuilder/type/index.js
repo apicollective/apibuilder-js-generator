@@ -31,6 +31,10 @@ const {
   ApiBuilderService,
 } = require('./service');
 
+const {
+  ApiBuilderResource
+} = require('./resource')
+
 exports.ApiBuilderArray = ApiBuilderArray;
 exports.ApiBuilderEnum = ApiBuilderEnum;
 exports.ApiBuilderEnumValue = ApiBuilderEnumValue;
@@ -41,6 +45,7 @@ exports.ApiBuilderMap = ApiBuilderMap;
 exports.ApiBuilderModel = ApiBuilderModel;
 exports.ApiBuilderPrimitiveType = ApiBuilderPrimitiveType;
 exports.ApiBuilderService = ApiBuilderService;
+exports.ApiBuilderResource = ApiBuilderResource;
 exports.ApiBuilderUnion = ApiBuilderUnion;
 exports.ApiBuilderUnionType = ApiBuilderUnionType;
 exports.getBaseType = getBaseType;

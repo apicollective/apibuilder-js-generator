@@ -9,6 +9,7 @@ const {
   ApiBuilderModel,
   ApiBuilderPrimitiveType,
   ApiBuilderService,
+  ApiBuilderResource,
   ApiBuilderUnion,
   ApiBuilderUnionType,
   getBaseType,
