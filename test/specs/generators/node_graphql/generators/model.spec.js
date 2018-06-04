@@ -9,6 +9,6 @@ test('should generate GraphQL object type from API builder model', () => {
   const model = service.findModelByName('application');
   const file = generateFile(model);
   expect(file.name).toEqual('Application.js');
-  expect(file.dir).toEqual('lib/schema/types/com/bryzek/apidoc/api/v0/models');
+  expect(file.dir).toEqual('types/com/bryzek/apidoc/api/v0/models');
   expect(file.contents).toEqual(loadFixture('./generated/node_graphql/application'));
 });

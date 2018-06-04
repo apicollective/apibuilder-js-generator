@@ -13,7 +13,7 @@ function generateReadme(service) {
 }
 
 function generateReadmeFile(service) {
-  const destinationPath = 'lib/schema/README.md';
+  const destinationPath = 'README.md';
   const basename = path.basename(destinationPath);
   const dirname = path.dirname(destinationPath);
   const content = generateReadme(service);

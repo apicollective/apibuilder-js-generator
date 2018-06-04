@@ -8,7 +8,7 @@ const toDefaultExport = require('./toDefaultExport');
 function destinationPathFromType(type) {
   const $1 = type.packageName.split('.').join('/');
   const $2 = toDefaultExport(type);
-  return `lib/schema/types/${$1}/${$2}.js`;
+  return `types/${$1}/${$2}.js`;
 }
 
 module.exports = destinationPathFromType;
