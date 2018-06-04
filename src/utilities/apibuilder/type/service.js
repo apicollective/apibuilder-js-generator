@@ -1,13 +1,20 @@
-const find = require('lodash/find');
-const flatMap = require('lodash/flatMap');
-const map = require('lodash/map');
-const matchesProperty = require('lodash/matchesProperty');
-const memoize = require('lodash/memoize');
-const overSome = require('lodash/overSome');
-const property = require('lodash/property');
+const {
+  find,
+  flatMap,
+  map,
+  matchesProperty,
+  memoize,
+  overSome,
+  property
+} = require('lodash');
+
 const definition = require('./definition');
 const resource = require('./resource');
 
+/**
+ * @param {ApiBuilderType[]} types
+ * @param {string} name
+ */
 function findTypeByName(types, name) {
   return find(types, overSome([
     matchesProperty('shortName', name),
@@ -30,6 +37,9 @@ const mapToUnionType = memoize((schema, service, namespace) => {
   return ApiBuilderUnion.fromSchema(schema, service, namespace);
 });
 
+/**
+ * An import in APIBuilder
+ */
 class ApiBuilderImport {
   constructor(schema, service) {
     this.schema = schema;

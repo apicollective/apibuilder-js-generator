@@ -8,18 +8,34 @@ const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-    <%_ queries.forEach(({ name, type, args, deprecationReason, description }) => { _%>
+    <% queries.forEach(({ name, type, args, deprecationReason, description }) => { %>
       <%= name %>: {
         type: <%= type %>,
-        args: <%= args %>,
-      <%_ if (deprecationReason != null) { _%>
-        deprecationReason: '<%= deprecationReason %>',
-      <%_ } _%>
-      <%_ if (description != null) { _%>
-        description: '<%= description %>',
-      <%_ } _%>
+        <%_ if (args.length > 0) { _%>
+        args: {
+        <%_ args.forEach(({ name, type, default: defaultValue, description }) => { _%>
+          <%= name %>: {
+            type: <%= type %>, <%# TODO get real type %>
+            <%_ if (defaultValue != null) { _%>
+            defaultValue: <%= defaultValue %>,
+            <%_ } _%>
+            <%_ if (description != null) { _%>
+            description: '<%= description %>',
+            <%_ } _%>
+          },
+        <%_ }) _%>
+        },
+        <%_ } _%>
+        <%_ if (deprecationReason != null) { _%>
+          deprecationReason: '<%= deprecationReason %>',
+        <%_ } _%>
+        <%_ if (description != null) { _%>
+          description: '<%= description %>',
+        <%_ } _%>
       },
-    <%_ }) _%>
+    <% }) %>
     }
   }),
 });
+
+module.exports = schema;

@@ -32,6 +32,8 @@ const {
 } = require('./service');
 
 const {
+  ApiBuilderOperation,
+  ApiBuilderOperationArgument,
   ApiBuilderResource
 } = require('./resource')
 
@@ -43,6 +45,8 @@ exports.ApiBuilderFile = ApiBuilderFile;
 exports.ApiBuilderImport = ApiBuilderImport;
 exports.ApiBuilderMap = ApiBuilderMap;
 exports.ApiBuilderModel = ApiBuilderModel;
+exports.ApiBuilderOperation = ApiBuilderOperation;
+exports.ApiBuilderOperationArgument = ApiBuilderOperationArgument;
 exports.ApiBuilderPrimitiveType = ApiBuilderPrimitiveType;
 exports.ApiBuilderService = ApiBuilderService;
 exports.ApiBuilderResource = ApiBuilderResource;

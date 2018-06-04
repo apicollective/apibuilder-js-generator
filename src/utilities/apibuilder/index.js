@@ -7,6 +7,8 @@ const {
   ApiBuilderImport,
   ApiBuilderMap,
   ApiBuilderModel,
+  ApiBuilderOperation,
+  ApiBuilderOperationArgument,
   ApiBuilderPrimitiveType,
   ApiBuilderService,
   ApiBuilderResource,
@@ -32,6 +34,7 @@ const {
   isArrayTypeName,
   isMapTypeName,
   isPrimitiveTypeName,
+  mapType,
   typeFromAst,
   typeNameFromAst,
 } = require('./utilities');
@@ -44,7 +47,10 @@ exports.ApiBuilderFile = ApiBuilderFile;
 exports.ApiBuilderImport = ApiBuilderImport;
 exports.ApiBuilderMap = ApiBuilderMap;
 exports.ApiBuilderModel = ApiBuilderModel;
+exports.ApiBuilderOperation = ApiBuilderOperation;
+exports.ApiBuilderOperationArgument = ApiBuilderOperationArgument;
 exports.ApiBuilderPrimitiveType = ApiBuilderPrimitiveType;
+exports.ApiBuilderResource = ApiBuilderResource;
 exports.ApiBuilderService = ApiBuilderService;
 exports.ApiBuilderUnion = ApiBuilderUnion;
 exports.ApiBuilderUnionType = ApiBuilderUnionType;
@@ -60,6 +66,7 @@ exports.getNestedTypeName = getNestedTypeName;
 exports.astFromTypeName = astFromTypeName;
 exports.typeFromAst = typeFromAst;
 exports.typeNameFromAst = typeNameFromAst;
+exports.mapType = mapType;
 
 exports.isArrayType = isArrayType;
 exports.isArrayTypeName = isArrayTypeName;
