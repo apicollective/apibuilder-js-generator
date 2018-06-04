@@ -69,7 +69,7 @@ exports.typeNameFromAst = typeNameFromAst;
  * When resolving types, internal types will take precedence over external types.
  * That being said, using a short name to resolve a type is unreliable. For
  * best results, use a fully qualified type.
- * @param {String} string
+ * @param {String} ast
  * @param {ApiBuilderService} service
  * @returns {ApiBuilderType}
  */
@@ -82,7 +82,7 @@ function typeFromAst(ast, service) {
   } else if (ast.name === Kind.ARRAY) {
     return new ApiBuilderArray(typeFromAst(ast.type, service));
   } else if (isPrimitiveTypeName(ast.name)) {
-    return new ApiBuilderPrimitiveType(new FullyQualifiedType(ast.name), service);
+    return new ApiBuilderPrimitiveType(new FullyQualifiedType(ast.name));
   }
 
   return (
@@ -94,3 +94,15 @@ function typeFromAst(ast, service) {
 }
 
 exports.typeFromAst = typeFromAst;
+
+function mapType(type, fun) {
+  const t = astFromTypeName(type);
+  let inner = t;
+  while (typeof inner.type !== 'undefined') {
+    inner = inner.type;
+  }
+  inner.name = fun(inner.name);
+  return typeNameFromAst(t);
+}
+
+exports.mapType = mapType;

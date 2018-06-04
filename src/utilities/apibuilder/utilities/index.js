@@ -2,6 +2,7 @@ const {
   astFromTypeName,
   typeFromAst,
   typeNameFromAst,
+  mapType
 } = require('./ast');
 
 const {
@@ -22,5 +23,6 @@ exports.getNestedTypeName = getNestedTypeName;
 exports.isArrayTypeName = isArrayTypeName;
 exports.isMapTypeName = isMapTypeName;
 exports.isPrimitiveTypeName = isPrimitiveTypeName;
+exports.mapType = mapType;
 exports.typeFromAst = typeFromAst;
 exports.typeNameFromAst = typeNameFromAst;
