@@ -38,6 +38,14 @@ class ApiBuilderOperationArgument {
     return this.config.description;
   }
 
+  get location() {
+    return this.config.location;
+  }
+
+  get required() {
+    return this.config.required;
+  }
+
   static fromSchema(config, service) {
     return new ApiBuilderOperationArgument(config, service);
   }
@@ -126,6 +134,14 @@ class ApiBuilderResource {
   get operations() {
     return map(this.config.operations, op =>
       ApiBuilderOperation.fromSchema(op, this, this.service));
+  }
+
+  get namespace() {
+    return this.service.namespace;
+  }
+
+  get path() {
+    return this.config.path;
   }
 };
 

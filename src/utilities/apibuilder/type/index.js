@@ -34,7 +34,7 @@ const {
 const {
   ApiBuilderOperation,
   ApiBuilderOperationArgument,
-  ApiBuilderResource
+  ApiBuilderResource,
 } = require('./resource')
 
 exports.ApiBuilderArray = ApiBuilderArray;

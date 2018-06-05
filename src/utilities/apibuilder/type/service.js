@@ -222,6 +222,10 @@ class ApiBuilderService {
     return map(this.schema.resources, resource => new ApiBuilderResource(resource, this));
   }
 
+  get base_url() {
+    return this.schema.base_url;
+  }
+
   findModelByName(name) {
     return findTypeByName(this.models, name);
   }

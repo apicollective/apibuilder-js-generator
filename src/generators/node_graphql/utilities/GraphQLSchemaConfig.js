@@ -1,6 +1,7 @@
 const toGraphQLOutputType = require('../utilities/toGraphQLOutputType');
-const { FullyQualifiedType, mapType, isEnclosingType, getBaseType } = require('../../../utilities/apibuilder')
-const { get, map, flatMap, camelCase } = require('lodash');
+const toGraphQLScalarType = require('../utilities/toGraphQLScalarType');
+const { FullyQualifiedType, mapType, isEnclosingType, getBaseType, isArrayType } = require('../../../utilities/apibuilder')
+const { get, map, flatMap, camelCase, some, reduce } = require('lodash');
 
 const createLogger = require('debug');
 
@@ -53,13 +54,17 @@ class GraphQLSchemaConfig {
    */
   static fromService(service) {
     const queries = flatMap(service.resources, (resource) => {
-      return map(resource.operations.filter(o => o.method === 'GET'), (operation) => ({
-        name: getQueryName(operation, resource),
-        args: map(operation.arguments, (arg) => new GraphQLQueryArgConfig(arg, service.namespace)),
-        type: toGraphQLOutputType(operation.resultType, true),
-        deprecationReason: get(operation, 'deprecation.description'),
-        description: operation.description,
-      }));
+      return map(resource.operations.filter(o => o.method === 'GET'), (operation) => {
+        return {
+          name: getQueryName(operation, resource),
+          args: map(operation.arguments, (arg) => new GraphQLQueryArgConfig(arg, service.namespace)),
+          type: toGraphQLOutputType(operation.resultType, true),
+          deprecationReason: get(operation, 'deprecation.description'),
+          description: operation.description,
+          pathParts: [service.base_url].concat((resource.path + operation.path).split('/').filter(x => x.length > 0)),
+          queryParts: operation.arguments.filter(a => a.location === 'Query').map(p => p.name)
+        };
+      });
     });
     return new GraphQLSchemaConfig({ queries });
   }

@@ -1,14 +1,24 @@
-const {
-  GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLNonNull
-} = require('graphql');
+<%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
+  <%_ if (defaultExport != null) { _%>
+    const <%= defaultExport %> = require('<%= moduleName %>');
+  <%_ } else if (namedExports != null) { _%>
+    const {
+      <%_ namedExports.forEach((namedExport) => { _%>
+      <%= namedExport %>,
+      <%_ }) _%>
+    } = require('<%= moduleName %>');
+  <%_ } else { _%>
+    require('<%= moduleName %>');
+  <%_ } _%>
+<%_ }) _%>
+
+const got = require('got');
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-    <% queries.forEach(({ name, type, args, deprecationReason, description }) => { %>
+    <% config.queries.forEach(({ name, type, args, deprecationReason, description, pathParts, queryParts }) => { %>
       <%= name %>: {
         type: <%= type %>,
         <%_ if (args.length > 0) { _%>
@@ -32,6 +42,25 @@ const schema = new GraphQLSchema({
         <%_ if (description != null) { _%>
           description: '<%= description %>',
         <%_ } _%>
+        resolve: (source, args) => {
+          const path = [
+            <%_ pathParts.forEach(part => { _%>
+              <%_ if (part[0] === ':') { _%>
+                args.<%= part.substring(1) %>,
+              <%_ } else { _%>
+                '<%= part %>',
+              <%_ } _%>
+            <%_ }) _%>
+          ].join('/');
+
+          const queryParams = [
+            <%_ queryParts.forEach(part => { _%>
+              `<%= part %>=${args.<%= part %>}`,
+            <%_ }) _%>
+          ].join('&');
+
+          return got(`${path}?${queryParams}`, { json: true }).then(response => response.body)
+        }
       },
     <% }) %>
     }

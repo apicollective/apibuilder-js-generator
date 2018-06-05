@@ -8,7 +8,7 @@ const { Kind } = require('../../../utilities/apibuilder');
  * @returns {String}
  */
 function toGraphQLScalarType(type) {
-  switch (type.baseType) {
+  switch (type.baseType) { // TODO: shouldn't this be getBaseType()?
     case Kind.STRING:
     case Kind.DATE_ISO8601:
     case Kind.DATE_TIME_ISO8601:
@@ -25,9 +25,9 @@ function toGraphQLScalarType(type) {
     case Kind.LONG:
       return 'GraphQLFloat';
     case Kind.OBJECT:
-      return 'GraphQLString';
+      return 'GraphQLString'; // TODO
     case Kind.UNIT:
-      return 'GraphQLUnit';
+      return 'GraphQLUnit'; // TODO
     default:
       return undefined;
   }

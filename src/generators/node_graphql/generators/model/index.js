@@ -46,8 +46,7 @@ function mapToImportDeclarations(model) {
   const initialImportDeclarations = [
     new ImportDeclaration({
       namedExports: computeGraphQLNamedExports(model),
-      moduleName: 'graphql',
-      defaultExport: undefined // TODO
+      moduleName: 'graphql'
     }),
   ];
 
