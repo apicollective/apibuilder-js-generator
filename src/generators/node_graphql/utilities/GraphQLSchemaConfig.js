@@ -61,7 +61,7 @@ class GraphQLSchemaConfig {
           type: toGraphQLOutputType(operation.resultType, true),
           deprecationReason: get(operation, 'deprecation.description'),
           description: operation.description,
-          pathParts: [service.base_url].concat((resource.path + operation.path).split('/').filter(x => x.length > 0)),
+          pathParts: [service.baseUrl].concat((resource.path + operation.path).split('/').filter(x => x.length > 0)),
           queryParts: operation.arguments.filter(a => a.location === 'Query').map(p => p.name)
         };
       });

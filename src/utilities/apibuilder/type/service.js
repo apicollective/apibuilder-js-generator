@@ -222,7 +222,7 @@ class ApiBuilderService {
     return map(this.schema.resources, resource => new ApiBuilderResource(resource, this));
   }
 
-  get base_url() {
+  get baseUrl() {
     return this.schema.base_url;
   }
 

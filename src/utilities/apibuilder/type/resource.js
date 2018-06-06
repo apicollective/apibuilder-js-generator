@@ -11,8 +11,6 @@ const {
   map
 } = require('lodash');
 
-const log = require('debug')('apibuilder:graphql');
-
 /**
  * The arguments of an APIBuilder operation
  */

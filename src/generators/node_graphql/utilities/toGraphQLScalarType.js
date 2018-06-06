@@ -25,9 +25,7 @@ function toGraphQLScalarType(type) {
     case Kind.LONG:
       return 'GraphQLFloat';
     case Kind.OBJECT:
-      return 'GraphQLString'; // TODO
     case Kind.UNIT:
-      return 'GraphQLUnit'; // TODO
     default:
       return undefined;
   }
