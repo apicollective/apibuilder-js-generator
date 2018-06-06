@@ -1,7 +1,8 @@
 const toGraphQLOutputType = require('../utilities/toGraphQLOutputType');
 const toGraphQLScalarType = require('../utilities/toGraphQLScalarType');
 const { FullyQualifiedType, mapType, isEnclosingType, getBaseType, isArrayType } = require('../../../utilities/apibuilder')
-const { get, map, flatMap, camelCase, some, reduce } = require('lodash');
+const { flatMap, camelCase, concat } = require('lodash');
+const { get, matches } = require('lodash/fp');
 
 const createLogger = require('debug');
 
@@ -21,25 +22,65 @@ class GraphQLQueryArgConfig {
   }
 }
 
-/**
- * @param {ApiBuilderOperation} operation
- * @param {ApiBuilderResource} resource
- */
-function getQueryName(operation, resource) {
-  const strOrVersion = (str) => new RegExp(`^${str}(?:_v\\d+)?$`);
+class GraphQLQuery {
+  constructor(operation, resource, service) {
+    this.config = {
+      operation,
+      resource,
+      service
+    };
+  }
 
-  if (isEnclosingType(operation.resultType) && getBaseType(operation.resultType).fullyQualifiedType.fullyQualifiedType.match(strOrVersion(resource.type))) {
-    return camelCase(resource.plural);
-  } else if (!isEnclosingType(operation.resultType) && operation.resultType.fullyQualifiedType.fullyQualifiedType.match(strOrVersion(resource.type))) {
-    return camelCase(resource.type.shortName);
-  } else {
-    const parts = operation.path.split('/').filter(x => x.length > 0 && x[0] != ':');
-    if (parts.length > 0) {
-      return camelCase(`for_${resource.type.shortName}_get_${parts.join('_')}`);
+  get name() {
+    const strOrVersion = (str) => new RegExp(`^${str}(?:_v\\d+)?$`);
+
+    if (isEnclosingType(this.config.operation.resultType)
+     && getBaseType(this.config.operation.resultType).fullyQualifiedType.fullyQualifiedType.match(strOrVersion(this.config.resource.type))) {
+      return camelCase(this.config.resource.plural);
+    } else if (!isEnclosingType(this.config.operation.resultType)
+            && this.config.operation.resultType.fullyQualifiedType.fullyQualifiedType.match(strOrVersion(this.config.resource.type))) {
+      return camelCase(this.config.resource.type.shortName);
     } else {
-      log(`❌   unknown ${this.path}${op.path} => ${operation.resultType.fullyQualifiedType}`);
-      return 'TODO';
+      const parts = this.config.operation.path.split('/').filter(x => x.length > 0 && x[0] != ':');
+      if (parts.length > 0) {
+        return camelCase(`for_${this.config.resource.type.shortName}_get_${parts.join('_')}`);
+      } else {
+        log(`❌   unknown ${this.path}${op.path} => ${this.config.operation.resultType.fullyQualifiedType}`);
+        return 'TODO';
+      }
     }
+  }
+
+  get args() {
+    return this.config.operation.arguments
+      .map(arg => new GraphQLQueryArgConfig(arg, this.config.service.namespace));
+  }
+
+  get type() {
+    return toGraphQLOutputType(this.config.operation.resultType, true);
+  }
+
+  get deprecationReason() {
+    return get('deprecation.description', this.config.operation);
+  }
+
+  get description() {
+    return this.config.operation.description;
+  }
+
+  get pathParts() {
+    return concat(
+      this.config.service.baseUrl,
+      (this.config.resource.path + this.config.operation.path)
+        .split('/')
+        .filter(x => x.length > 0)
+    );
+  }
+
+  get queryParts() {
+    return this.config.operation.arguments
+      .filter(matches({ location: 'Query' }))
+      .map(get('name'));
   }
 }
 
@@ -53,19 +94,11 @@ class GraphQLSchemaConfig {
    * @param {ApiBuilderService} service
    */
   static fromService(service) {
-    const queries = flatMap(service.resources, (resource) => {
-      return map(resource.operations.filter(o => o.method === 'GET'), (operation) => {
-        return {
-          name: getQueryName(operation, resource),
-          args: map(operation.arguments, (arg) => new GraphQLQueryArgConfig(arg, service.namespace)),
-          type: toGraphQLOutputType(operation.resultType, true),
-          deprecationReason: get(operation, 'deprecation.description'),
-          description: operation.description,
-          pathParts: [service.baseUrl].concat((resource.path + operation.path).split('/').filter(x => x.length > 0)),
-          queryParts: operation.arguments.filter(a => a.location === 'Query').map(p => p.name)
-        };
-      });
-    });
+    const queries = flatMap(service.resources, resource =>
+      resource.operations
+        .filter(matches({ method: 'GET' }))
+        .map(op => new GraphQLQuery(op, resource, service))
+    );
     return new GraphQLSchemaConfig({ queries });
   }
 }
