@@ -53,13 +53,20 @@ const schema = new GraphQLSchema({
             <%_ }) _%>
           ].join('/');
 
-          const queryParams = [
-            <%_ queryParts.forEach(part => { _%>
-              `<%= part %>=${args.<%= part %>}`,
-            <%_ }) _%>
-          ].join('&');
+          const query = {};
 
-          return got(`${path}?${queryParams}`, { json: true }).then(response => response.body)
+          <%_ if (queryParts.length > 0) { _%>
+            [
+              <%_ queryParts.forEach(part => { _%>
+                '<%= part %>',
+              <%_ }) _%>
+            ].forEach(key => {
+              if (args.hasOwnProperty(key))
+                query[key] = args[key];
+            });
+          <%_ } _%>
+
+          return got(path, { json: true, query }).then(response => response.body)
         }
       },
     <% }) %>
