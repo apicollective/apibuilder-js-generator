@@ -3,11 +3,19 @@ const reduce = require('lodash/reduce');
 const some = require('lodash/some');
 
 const { renderTemplate } = require('../../../../utilities/template');
-const { getBaseType, isArrayType, isPrimitiveType } = require('../../../../utilities/apibuilder');
+
+const {
+  ApiBuilderFile,
+  getBaseType,
+  isArrayType,
+  isPrimitiveType,
+} = require('../../../../utilities/apibuilder');
+
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
+const destinationPathFromType = require('../../utilities/destinationPathFromType');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
-const GraphQLObjectTypeConfig = require('../../utilities/GraphQLObjectTypeConfig');
+const GraphQLObjectType = require('../../utilities/GraphQLObjectType');
 
 // TODO: An API Builder model may be either a GraphQL object or a GraphQL input,
 // in this iteration we will assume that they are all GraphQL objects, but we
@@ -64,10 +72,27 @@ function mapToImportDeclarations(model) {
 }
 
 function generateCode(model) {
-  const templatePath = path.resolve(__dirname, './templates/model.ejs');
-  const importDeclarations = mapToImportDeclarations(model);
-  const object = GraphQLObjectTypeConfig.fromApiBuilderModel(model);
-  return renderTemplate(templatePath, { importDeclarations, object });
+  const templatePath = path.resolve(__dirname, './templates/GraphQLObjectType.ejs');
+  return renderTemplate(templatePath, {
+    importDeclarations: mapToImportDeclarations(model),
+    object: GraphQLObjectType.fromApiBuilderModel(model),
+  });
 }
 
-module.exports = generateCode;
+exports.generateCode = generateCode;
+
+/**
+ * Create API Builder file containing generated GraphQL object type schema from
+ * provided API Builder model.
+ * @param {ApiBuilderModel} model
+ * @returns {ApiBuilderFile}
+ */
+function generateFile(model) {
+  const destinationPath = destinationPathFromType(model);
+  const basename = path.basename(destinationPath);
+  const dirname = path.dirname(destinationPath);
+  const contents = generateCode(model);
+  return new ApiBuilderFile(basename, dirname, contents);
+}
+
+exports.generateFile = generateFile;

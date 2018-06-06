@@ -1,14 +1,16 @@
 const invariant = require('invariant');
+const fromPairs = require('lodash/fromPairs');
 
 const { isModelType } = require('../../../utilities/apibuilder');
-const GraphQLFieldConfig = require('./GraphQLFieldConfig');
+const GraphQLField = require('./GraphQLField');
 const toDefaultExport = require('./toDefaultExport');
 
 /**
  * @see http://graphql.org/graphql-js/type/#graphqlobjecttype
  */
-class GraphQLObjectTypeConfig {
+class GraphQLObjectType {
   constructor(config) {
+    invariant(config.name != null, 'Must provide a name.');
     this.config = config;
   }
 
@@ -17,7 +19,7 @@ class GraphQLObjectTypeConfig {
     return this.config.name;
   }
 
-  /** @property {!Object.<String, GraphQLFieldConfig>} */
+  /** @property {!Object.<String, GraphQLField>} */
   get fields() {
     return this.config.fields;
   }
@@ -28,19 +30,20 @@ class GraphQLObjectTypeConfig {
   }
 
   /**
-   * Create a GraphQLObjectTypeConfig from a ApiBuilderModel.
+   * Create a GraphQLObjectType from a ApiBuilderModel.
    * @param {ApiBuilderModel} model
    */
   static fromApiBuilderModel(model) {
     invariant(isModelType(model), `"${String(model)} is not an API builder model.`);
-    return new GraphQLObjectTypeConfig({
+    return new GraphQLObjectType({
       name: toDefaultExport(model),
       description: model.description,
-      fields: model.fields.reduce((fields, field) => Object.assign({}, fields, {
-        [field.name]: GraphQLFieldConfig.fromField(field),
-      }), {}),
+      fields: fromPairs(model.fields.map(field => [
+        field.name,
+        GraphQLField.fromApiBuilderField(field),
+      ])),
     });
   }
 }
 
-module.exports = GraphQLObjectTypeConfig;
+module.exports = GraphQLObjectType;

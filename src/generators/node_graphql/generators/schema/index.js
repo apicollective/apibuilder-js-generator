@@ -1,8 +1,10 @@
 const path = require('path');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const GraphQLSchemaConfig = require('../../utilities/GraphQLSchemaConfig');
+const destinationPathFromType = require('../../utilities/destinationPathFromType');
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const { renderTemplate } = require('../../../../utilities/template');
+const { ApiBuilderFile } = require('../../../../utilities/apibuilder');
 
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const { getBaseType, isArrayType, isPrimitiveType } = require('../../../../utilities/apibuilder');
@@ -67,11 +69,26 @@ function mapToImportDeclarations(service) {
  * Generates source file content for API Builder enum types.
  * @param {Service} service
  */
-function generate(service) {
+function generateCode(service) {
   const templatePath = path.resolve(__dirname, './templates/schema.ejs');
   const importDeclarations = mapToImportDeclarations(service);
   const config = GraphQLSchemaConfig.fromService(service);
   return renderTemplate(templatePath, { config, importDeclarations });
 }
 
-module.exports = generate;
+/**
+ * Create API Builder file containing generated GraphQL query schema from
+ * provided API Builder service
+ * @param {ApiBuilderService} service
+ * @returns {ApiBuilderFile}
+ */
+function generateFile(service) {
+  const destinationPath = destinationPathFromType(service);
+  const basename = path.basename(destinationPath);
+  const dirname = path.dirname(destinationPath);
+  const contents = generateCode(service);
+  return new ApiBuilderFile(basename, dirname, contents);
+}
+
+
+exports.generateFile = generateFile;
