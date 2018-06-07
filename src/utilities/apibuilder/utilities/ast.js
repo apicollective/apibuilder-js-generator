@@ -94,20 +94,3 @@ function typeFromAst(ast, service) {
 }
 
 exports.typeFromAst = typeFromAst;
-
-/**
- * Call fun on the inner-most type
- * @param {string} type
- * @param {(t: string) => string} fun
- */
-function mapType(type, fun) {
-  const t = astFromTypeName(type);
-  let inner = t;
-  while (typeof inner.type !== 'undefined') {
-    inner = inner.type;
-  }
-  inner.name = fun(inner.name);
-  return typeNameFromAst(t);
-}
-
-exports.mapType = mapType;

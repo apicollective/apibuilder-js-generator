@@ -34,7 +34,6 @@ const {
   isArrayTypeName,
   isMapTypeName,
   isPrimitiveTypeName,
-  mapType,
   typeFromAst,
   typeNameFromAst,
 } = require('./utilities');
@@ -66,7 +65,6 @@ exports.getNestedTypeName = getNestedTypeName;
 exports.astFromTypeName = astFromTypeName;
 exports.typeFromAst = typeFromAst;
 exports.typeNameFromAst = typeNameFromAst;
-exports.mapType = mapType;
 
 exports.isArrayType = isArrayType;
 exports.isArrayTypeName = isArrayTypeName;
