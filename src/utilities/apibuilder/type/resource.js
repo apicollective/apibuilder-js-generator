@@ -97,7 +97,7 @@ class ApiBuilderOperation {
   }
 
   get arguments() {
-    return map(this.config.parameters, arg =>
+    return this.config.parameters.map(arg =>
       ApiBuilderOperationArgument.fromSchema(arg, this.service));
   }
 
@@ -127,7 +127,7 @@ class ApiBuilderResource {
   }
 
   get operations() {
-    return map(this.config.operations, op =>
+    return this.config.operations.map(op =>
       ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 

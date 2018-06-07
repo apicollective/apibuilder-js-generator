@@ -44,7 +44,7 @@ class GraphQLQuery {
       if (parts.length > 0) {
         return camelCase(`for_${this.config.resource.type.shortName}_get_${parts.join('_')}`);
       } else {
-        log(`❌   unknown ${this.path}${op.path} => ${this.config.operation.resultType.fullyQualifiedType}`);
+        log(`❌   unknown ${this.config.resource.path}${this.config.operation.path} => ${this.config.operation.resultType.fullyQualifiedType}`);
         return 'TODO';
       }
     }
