@@ -1,6 +1,5 @@
 const toGraphQLOutputType = require('../utilities/toGraphQLOutputType');
-const toGraphQLScalarType = require('../utilities/toGraphQLScalarType');
-const { FullyQualifiedType, mapType, isEnclosingType, getBaseType, isArrayType } = require('../../../utilities/apibuilder')
+const { isEnclosingType, getBaseType } = require('../../../utilities/apibuilder')
 const { flatMap, camelCase, concat } = require('lodash');
 const { get, matches } = require('lodash/fp');
 
@@ -9,7 +8,7 @@ const createLogger = require('debug');
 const log = createLogger('apibuilder:graphql-schema');
 
 class GraphQLQueryArgConfig {
-  constructor(arg, namespace) {
+  constructor(arg) {
     this.name = arg.name;
     this.fullyQualifiedType = arg.type;
     this.required = arg.required;
@@ -53,7 +52,7 @@ class GraphQLQuery {
 
   get args() {
     return this.config.operation.arguments
-      .map(arg => new GraphQLQueryArgConfig(arg, this.config.service.namespace));
+      .map(arg => new GraphQLQueryArgConfig(arg));
   }
 
   get type() {
