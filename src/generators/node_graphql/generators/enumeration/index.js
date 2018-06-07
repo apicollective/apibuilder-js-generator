@@ -2,7 +2,7 @@ const path = require('path');
 
 const { ApiBuilderFile } = require('../../../../utilities/apibuilder');
 const { renderTemplate } = require('../../../../utilities/template');
-const destinationPathFromType = require('../../utilities/destinationPathFromType');
+const { destinationPathFromType } = require('../../utilities/destinationPath');
 const toDefaultExport = require('../../utilities/toDefaultExport');
 const GraphQLEnumType = require('../../utilities/GraphQLEnumType');
 

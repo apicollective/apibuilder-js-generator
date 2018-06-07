@@ -12,7 +12,7 @@ const {
 } = require('../../../../utilities/apibuilder');
 
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
-const destinationPathFromType = require('../../utilities/destinationPathFromType');
+const { destinationPathFromType } = require('../../utilities/destinationPath');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const GraphQLObjectType = require('../../utilities/GraphQLObjectType');

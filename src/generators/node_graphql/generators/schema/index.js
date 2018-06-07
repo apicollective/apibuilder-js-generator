@@ -1,7 +1,7 @@
 const path = require('path');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const GraphQLSchemaConfig = require('../../utilities/GraphQLSchemaConfig');
-const destinationPathFromType = require('../../utilities/destinationPathFromType');
+const { destinationPathFromService } = require('../../utilities/destinationPath');
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const { renderTemplate } = require('../../../../utilities/template');
 const { ApiBuilderFile } = require('../../../../utilities/apibuilder');
@@ -83,7 +83,7 @@ function generateCode(service) {
  * @returns {ApiBuilderFile}
  */
 function generateFile(service) {
-  const destinationPath = destinationPathFromType(service);
+  const destinationPath = destinationPathFromService(service);
   const basename = path.basename(destinationPath);
   const dirname = path.dirname(destinationPath);
   const contents = generateCode(service);

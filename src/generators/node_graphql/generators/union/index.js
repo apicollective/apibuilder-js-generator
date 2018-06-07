@@ -5,7 +5,7 @@ const { renderTemplate } = require('../../../../utilities/template');
 const { ApiBuilderFile, isPrimitiveType } = require('../../../../utilities/apibuilder');
 const GraphQLUnionType = require('../../utilities/GraphQLUnionType');
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
-const destinationPathFromType = require('../../utilities/destinationPathFromType');
+const { destinationPathFromType } = require('../../utilities/destinationPath');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 
 function getImportDeclarations(union) {
