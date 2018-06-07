@@ -1,5 +1,4 @@
 const {
-  FullyQualifiedType,
   typeFromAst,
   astFromTypeName
 } = require('../utilities');
