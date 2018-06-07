@@ -57,11 +57,7 @@ class ApiBuilderOperation {
   constructor(config, resourcePath, service) {
     this.config = config;
     this.service = service;
-
-    if (this.config.path.startsWith(resourcePath))
-      this.trimmedPath = this.config.path.substring(resourcePath.length);
-    else
-      this.trimmedPath = this.config.path;
+    this.resourcePath = resourcePath;
   }
 
   get name() {
@@ -85,7 +81,10 @@ class ApiBuilderOperation {
   }
 
   get path() {
-    return this.trimmedPath;
+    if (this.config.path.startsWith(this.resourcePath))
+      return this.config.path.substring(this.resourcePath.length);
+    else
+      return this.config.path;
   }
 
   get resultType() {
