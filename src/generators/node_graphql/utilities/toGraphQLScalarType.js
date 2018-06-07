@@ -8,7 +8,7 @@ const { Kind } = require('../../../utilities/apibuilder');
  * @returns {String}
  */
 function toGraphQLScalarType(type) {
-  switch (type.baseType) { // TODO: shouldn't this be getBaseType()?
+  switch (type.baseType) {
     case Kind.STRING:
     case Kind.DATE_ISO8601:
     case Kind.DATE_TIME_ISO8601:
