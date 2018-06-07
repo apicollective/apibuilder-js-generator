@@ -1,13 +1,6 @@
-const {
-  typeFromAst,
-  astFromTypeName
-} = require('../utilities');
-
-const {
-  camelCase,
-  get,
-  map
-} = require('lodash');
+const { typeFromAst, astFromTypeName } = require('../utilities');
+const { get, map } = require('lodash');
+const { conforms, inRange } = require('lodash/fp');
 
 /**
  * The arguments of an APIBuilder operation
@@ -89,10 +82,11 @@ class ApiBuilderOperation {
 
   get resultType() {
     const type = get(
-      this.config.responses.filter(r => r.code.integer.value >= 200 && r.code.integer.value < 300), // find 2xx code
-      '[0].type',
+      this.config.responses.find(conforms({ code: inRange(200, 300) })),
+      'type',
       'unit'
     );
+
     return typeFromAst(astFromTypeName(type), this.service);
   }
 
