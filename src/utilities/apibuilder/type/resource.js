@@ -82,7 +82,13 @@ class ApiBuilderOperation {
 
   get resultType() {
     const type = get(
-      this.config.responses.find(conforms({ code: inRange(200, 300) })),
+      this.config.responses.find(conforms({
+        code: conforms({
+          integer: conforms({
+            value: inRange(200, 300)
+          })
+        })
+      })),
       'type',
       'unit'
     );
