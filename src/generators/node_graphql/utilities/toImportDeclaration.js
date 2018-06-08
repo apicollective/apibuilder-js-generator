@@ -25,7 +25,7 @@ function toImportStatement(source, target) {
   if (path.dirname(sourcePath) === path.dirname(targetPath)) {
     moduleName = `./${path.basename(targetPath)}`;
   } else {
-    moduleName = path.relative(path.dirname(sourcePath), targetPath);
+    moduleName = `./${path.relative(path.dirname(sourcePath), targetPath)}`;
   }
 
   return new ImportDeclaration({

@@ -7,8 +7,11 @@ const {
   ApiBuilderImport,
   ApiBuilderMap,
   ApiBuilderModel,
+  ApiBuilderOperation,
+  ApiBuilderOperationArgument,
   ApiBuilderPrimitiveType,
   ApiBuilderService,
+  ApiBuilderResource,
   ApiBuilderUnion,
   ApiBuilderUnionType,
   getBaseType,
@@ -43,7 +46,10 @@ exports.ApiBuilderFile = ApiBuilderFile;
 exports.ApiBuilderImport = ApiBuilderImport;
 exports.ApiBuilderMap = ApiBuilderMap;
 exports.ApiBuilderModel = ApiBuilderModel;
+exports.ApiBuilderOperation = ApiBuilderOperation;
+exports.ApiBuilderOperationArgument = ApiBuilderOperationArgument;
 exports.ApiBuilderPrimitiveType = ApiBuilderPrimitiveType;
+exports.ApiBuilderResource = ApiBuilderResource;
 exports.ApiBuilderService = ApiBuilderService;
 exports.ApiBuilderUnion = ApiBuilderUnion;
 exports.ApiBuilderUnionType = ApiBuilderUnionType;

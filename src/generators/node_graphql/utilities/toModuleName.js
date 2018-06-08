@@ -1,16 +1,21 @@
 const { getBaseType } = require('../../../utilities/apibuilder');
 const toDefaultExport = require('./toDefaultExport');
+const { ApiBuilderService } = require('../../../utilities/apibuilder');
 
 /**
  * Calculates the module name for writing into generated code.
- * @param {ApiBuilderType} type - The type in question
+ * @param {ApiBuilderType|ApiBuilderService} type - The type in question
  */
 function toModuleName(type) {
-  const baseType = getBaseType(type);
-  return ['types']
-    .concat(baseType.packageName.split('.'))
-    .concat(toDefaultExport(baseType))
-    .join('/');
+  if (type instanceof ApiBuilderService) {
+    return type.namespace.split('.').concat(['schema']).join('/');
+  } else {
+    const baseType = getBaseType(type);
+    return baseType.packageName
+      .split('.')
+      .concat(toDefaultExport(baseType))
+      .join('/');
+  }
 }
 
 module.exports = toModuleName;

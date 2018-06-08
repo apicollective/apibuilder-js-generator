@@ -8,7 +8,18 @@ const toDefaultExport = require('./toDefaultExport');
 function destinationPathFromType(type) {
   const $1 = type.packageName.split('.').join('/');
   const $2 = toDefaultExport(type);
-  return `types/${$1}/${$2}.js`;
+  return `${$1}/${$2}.js`;
 }
 
-module.exports = destinationPathFromType;
+/**
+ * Returns the destination path for the GraphQL schema
+ * @param {ApiBuilderService} service
+ */
+function destinationPathFromService(service) {
+  return `${service.namespace.split('.').join('/')}/schema.js`;
+}
+
+module.exports = {
+  destinationPathFromType,
+  destinationPathFromService
+};

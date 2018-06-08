@@ -1,31 +1,94 @@
 const path = require('path');
-
-const { ApiBuilderFile } = require('../../../../utilities/apibuilder');
+const toImportDeclaration = require('../../utilities/toImportDeclaration');
+const GraphQLSchemaConfig = require('../../utilities/GraphQLSchemaConfig');
+const { destinationPathFromService } = require('../../utilities/destinationPath');
+const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const { renderTemplate } = require('../../../../utilities/template');
-const { generateFile: generateEnumFile } = require('../enumeration');
-const { generateFile: generateModelFile } = require('../model');
-const { generateFile: generateUnionFile } = require('../union');
+const { ApiBuilderFile } = require('../../../../utilities/apibuilder');
+
+const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
+const { getBaseType, isArrayType, isPrimitiveType } = require('../../../../utilities/apibuilder');
+const { flatMap, some, map, reduce, uniq } = require('lodash');
 
 /**
- * @param {ApiBuilderService} service
- * @returns {ApiBuilderFile[]}
+ * Computes the name exports to import from the "graphql" package for writing
+ * to generated code.
+ * @param {ApiBuilderOperation} operation
+ * @returns {String[]}
  */
-function generateFiles(service) {
-  const files = [];
+function computeGraphQLNamedExports(operation) {
+  const initialNamedExports = ['GraphQLSchema', 'GraphQLObjectType'];
 
-  service.internalEnums.forEach((enumeration) => {
-    files.push(generateEnumFile(enumeration));
-  });
+  if (some(operation.arguments, { required: true })) {
+    initialNamedExports.push('GraphQLNonNull');
+  }
 
-  service.internalModels.forEach((model) => {
-    files.push(generateModelFile(model));
-  });
+  if (isArrayType(operation.resultType) || some(operation.args, arg => isArrayType(arg.type))) {
+    initialNamedExports.push('GraphQLList');
+  }
 
-  service.internalUnions.forEach((union) => {
-    files.push(generateUnionFile(union));
-  });
+  return operation.arguments
+    .map(arg => arg.type)
+    .concat([operation.resultType])
+    .reduce((namedExports, type) => {
+      const scalarType = toGraphQLScalarType(type);
 
-  return files;
+      if (scalarType && !namedExports.includes(scalarType)) {
+        namedExports.push(scalarType);
+      }
+
+      return namedExports;
+    }, initialNamedExports);
 }
 
-exports.generateFiles = generateFiles;
+function mapToImportDeclarations(service) {
+  // Compute named exports to import from `graphql` package.
+  const initialImportDeclarations = [
+    new ImportDeclaration({
+      namedExports: uniq(flatMap(flatMap(service.resources, r => r.operations), computeGraphQLNamedExports)).sort(),
+      moduleName: 'graphql'
+    }),
+  ];
+
+  const resultTypes = flatMap(service.resources, r => r.operations).map(op => getBaseType(op.resultType))
+  const argTypes = flatMap(flatMap(service.resources, r => r.operations), op => op.arguments).map(arg => getBaseType(arg.type));
+
+  return resultTypes.concat(argTypes)
+    .filter(baseType => !isPrimitiveType(baseType))
+    .reduce((declarations, baseType) => {
+      // Compute relative path to target module, which is the type we want to
+      // import into the generated model.
+      const declaration = toImportDeclaration(service, baseType);
+      const isAlreadyImported = some(declarations, { moduleName: declaration.moduleName });
+      // TODO: Check for possible default export name collision.
+      return isAlreadyImported ? declarations : declarations.concat(declaration);
+    }, initialImportDeclarations);
+}
+
+/**
+ * Generates source file content for API Builder enum types.
+ * @param {Service} service
+ */
+function generateCode(service) {
+  const templatePath = path.resolve(__dirname, './templates/schema.ejs');
+  const importDeclarations = mapToImportDeclarations(service);
+  const config = GraphQLSchemaConfig.fromService(service);
+  return renderTemplate(templatePath, { config, importDeclarations });
+}
+
+/**
+ * Create API Builder file containing generated GraphQL query schema from
+ * provided API Builder service
+ * @param {ApiBuilderService} service
+ * @returns {ApiBuilderFile}
+ */
+function generateFile(service) {
+  const destinationPath = destinationPathFromService(service);
+  const basename = path.basename(destinationPath);
+  const dirname = path.dirname(destinationPath);
+  const contents = generateCode(service);
+  return new ApiBuilderFile(basename, dirname, contents);
+}
+
+
+exports.generateFile = generateFile;
