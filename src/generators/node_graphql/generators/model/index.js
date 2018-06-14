@@ -8,6 +8,7 @@ const {
   ApiBuilderFile,
   getBaseType,
   isArrayType,
+  isMapType,
   isPrimitiveType,
 } = require('../../../../utilities/apibuilder');
 
@@ -57,6 +58,15 @@ function mapToImportDeclarations(model) {
       moduleName: 'graphql',
     }),
   ];
+
+  if (some(model.fields.map(f => f.type), isMapType)) {
+    initialImportDeclarations.push(
+      new ImportDeclaration({
+        namedExports: ['makeMapEntry'],
+        moduleName: '../scalars',
+      })
+    );
+  }
 
   return model.fields
     .map(field => getBaseType(field.type))

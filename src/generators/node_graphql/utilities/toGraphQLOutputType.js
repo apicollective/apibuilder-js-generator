@@ -14,8 +14,7 @@ function toGraphQLOutputType(type, required = false) {
   let outputType;
 
   if (isMapType(type)) {
-    // TODO: Add support for GraphQLOutputType from ApiBuilderMap
-    invariant(false, `Cannot convert ${String(type)} to GraphQLOutputType because it is not supported.`);
+    outputType = `new GraphQLList(makeMapEntry(${toGraphQLOutputType(type.ofType)}))`;
   } else if (isArrayType(type)) {
     outputType = `new GraphQLList(${toGraphQLOutputType(type.ofType)})`;
   } else if (isPrimitiveType(type)) {
