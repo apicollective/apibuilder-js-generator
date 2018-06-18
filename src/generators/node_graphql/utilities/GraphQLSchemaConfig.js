@@ -1,5 +1,5 @@
 const toGraphQLOutputType = require('../utilities/toGraphQLOutputType');
-const { isEnclosingType, getBaseType } = require('../../../utilities/apibuilder')
+const { isEnclosingType, getBaseType, isPrimitiveType, isEnumType } = require('../../../utilities/apibuilder')
 const { flatMap, camelCase, concat } = require('lodash');
 const { get, matches } = require('lodash/fp');
 
@@ -12,12 +12,22 @@ class GraphQLQueryArgConfig {
     this.name = arg.name;
     this.fullyQualifiedType = arg.type;
     this.required = arg.required;
-    this.defaultValue = arg.default;
+    this.default = arg.defaultValue;
     this.description = arg.description;
   }
 
   get type() {
     return toGraphQLOutputType(this.fullyQualifiedType, this.required);
+  }
+
+  get defaultValue() {
+    if (this.default) {
+      if ((isPrimitiveType(this.fullyQualifiedType) && this.fullyQualifiedType.typeName === 'string')
+        || isEnumType(this.fullyQualifiedType))
+        return `'${this.default}'`;
+      else
+        return this.default;
+    }
   }
 }
 
