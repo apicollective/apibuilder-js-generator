@@ -81,6 +81,8 @@ exports.ApiBuilderUnit = new GraphQLScalarType({
 
 const mapEntryCache = {};
 
+// Creates types for map entries, of type string -> valueType
+// It is memoized because we can't have multiple types with the same name
 exports.makeMapEntry = function(valueType) {
   if (mapEntryCache[valueType.name])
     return mapEntryCache[valueType.name];
