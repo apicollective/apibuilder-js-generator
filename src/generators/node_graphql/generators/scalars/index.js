@@ -66,7 +66,6 @@ exports.ApiBuilderLong = new GraphQLScalarType({
     if (ast.kind === Kind.INT) {
       return parseInt(ast.value, 10);
     }
-    throw new Error('long isn\\'t IntValue');
   }
 });
 
