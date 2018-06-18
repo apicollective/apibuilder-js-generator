@@ -9,11 +9,83 @@ function generateFiles(service) {
   const contents = `
 const {
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
+  GraphQLScalarType
 } = require('graphql');
 
-function makeMapEntry(valueType) {
-  return new GraphQLObjectType({
+const { Kind } = require('graphql/language');
+
+function checkObject(value) {
+  if (typeof value !== 'object')
+    throw new TypeError('not an object');
+
+  if (Array.isArray(value))
+    throw new TypeError('keys should be strings');
+
+  return value;
+}
+
+exports.ApiBuilderObject = new GraphQLScalarType({
+  name: 'Object',
+  description: 'JSON object',
+  serialize: checkObject,
+  parseValue: checkObject,
+  parseLiteral(ast) {
+    console.log('parseLiteral', ast); // TODO
+    throw new Error('parsing not implemented');
+  }
+});
+
+exports.ApiBuilderJson = new GraphQLScalarType({
+  name: 'JSON',
+  description: 'any valid JSON type',
+  serialize: x => x,
+  parseValue: x => x,
+  parseLiteral(ast) {
+    console.log('parseLiteral', ast); // TODO
+    throw new Error('parsing not implemented');
+  }
+});
+
+function checkLong(value) {
+  if (typeof value !== 'number')
+    throw new TypeError(\`\${value} is not a number\`)
+
+  if (!Number.isInteger(value))
+    throw new TypeError(\`\${value} is not a long\`)
+
+  return value
+}
+
+exports.ApiBuilderLong = new GraphQLScalarType({
+  name: 'Long',
+  serialize: checkLong,
+  parseValue: checkLong,
+  parseLiteral(ast) {
+    console.log('parseLiteral', ast);
+    if (ast.kind === Kind.INT) {
+      return parseInt(ast.value, 10);
+    }
+    throw new Error('long isn\\'t IntValue');
+  }
+});
+
+exports.ApiBuilderUnit = new GraphQLScalarType({
+  name: 'Unit',
+  serialize: () => null,
+  parseValue: () => null,
+  parseLiteral(ast) {
+    console.log('parseLiteral', ast);
+    throw new Error('parsing not implemented');
+  }
+})
+
+const mapEntryCache = {};
+
+exports.makeMapEntry = function(valueType) {
+  if (mapEntryCache[valueType.name])
+    return mapEntryCache[valueType.name];
+  const type = new GraphQLObjectType({
     name: \`StringTo\${valueType}\`,
     fields: {
       key: {
@@ -24,9 +96,12 @@ function makeMapEntry(valueType) {
       }
     }
   });
-}
+  mapEntryCache[valueType.name] = type;
+  return type;
+};
 
-exports.makeMapEntry = makeMapEntry;
+exports.GraphQLDate = require('graphql-iso-date').GraphQLDate;
+exports.GraphQLDateTime = require('graphql-iso-date').GraphQLDateTime;
 `;
 
   const code = prettier.format(contents, {

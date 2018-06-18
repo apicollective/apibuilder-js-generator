@@ -10,12 +10,14 @@ const {
   isArrayType,
   isMapType,
   isPrimitiveType,
+  isEnclosingType
 } = require('../../../../utilities/apibuilder');
 
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const { destinationPathFromType } = require('../../utilities/destinationPath');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
+const toCustomScalarType = require('../../utilities/toCustomScalarType');
 const GraphQLObjectType = require('../../utilities/GraphQLObjectType');
 
 // TODO: An API Builder model may be either a GraphQL object or a GraphQL input,
@@ -35,12 +37,30 @@ function computeGraphQLNamedExports(model) {
     initialNamedExports.push('GraphQLNonNull');
   }
 
-  if (some(model.fields, field => isArrayType(field.type))) {
+  if (some(model.fields, field => isEnclosingType(field.type))) {
     initialNamedExports.push('GraphQLList');
   }
 
   return reduce(model.fields, (namedExports, field) => {
-    const scalarType = toGraphQLScalarType(field.type);
+    const scalarType = toGraphQLScalarType(isEnclosingType(field.type) ? field.type.ofType : field.type);
+
+    if (scalarType && !namedExports.includes(scalarType)) {
+      namedExports.push(scalarType);
+    }
+
+    return namedExports;
+  }, initialNamedExports).sort();
+}
+
+function computeScalarExports(model) {
+  const initialNamedExports = [];
+
+  if (some(model.fields, field => isMapType(field.type))) {
+    initialNamedExports.push('makeMapEntry');
+  }
+
+  return reduce(model.fields, (namedExports, field) => {
+    const scalarType = toCustomScalarType(isEnclosingType(field.type) ? field.type.ofType : field.type);
 
     if (scalarType && !namedExports.includes(scalarType)) {
       namedExports.push(scalarType);
@@ -57,16 +77,11 @@ function mapToImportDeclarations(model) {
       namedExports: computeGraphQLNamedExports(model),
       moduleName: 'graphql',
     }),
+    new ImportDeclaration({
+      namedExports: computeScalarExports(model),
+      moduleName: '../scalars',
+    }),
   ];
-
-  if (some(model.fields.map(f => f.type), isMapType)) {
-    initialImportDeclarations.push(
-      new ImportDeclaration({
-        namedExports: ['makeMapEntry'],
-        moduleName: '../scalars',
-      })
-    );
-  }
 
   return model.fields
     .map(field => getBaseType(field.type))
