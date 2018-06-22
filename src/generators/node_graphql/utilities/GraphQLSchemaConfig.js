@@ -40,9 +40,14 @@ class GraphQLQuery {
             && this.config.operation.resultType.fullyQualifiedType.fullyQualifiedType.match(strOrVersion(this.config.resource.type))) {
       return camelCase(this.config.resource.type.shortName);
     } else {
-      const parts = this.config.operation.path.split('/').filter(x => x.length > 0 && x[0] != ':');
-      if (parts.length > 0) {
-        return camelCase(`for_${this.config.resource.type.shortName}_get_${parts.join('_')}`);
+      const staticParts = this.config.operation.path.split('/').filter(x => x.length > 0 && x[0] !== ':');
+      const queryParts = this.config.operation.path.split('/').filter(x => x.length > 0 && x[0] === ':');
+      if (staticParts.length > 0) {
+        let res = `for_${this.config.resource.type.shortName}_get_${staticParts.join('_')}`;
+        if (queryParts.length > 0)
+          res += `_by_${queryParts.join('_and_')}`;
+        log(`🆘   ${this.config.resource.path}${this.config.operation.path} => ${camelCase(res)}`);
+        return camelCase(res);
       } else {
         log(`❌   unknown ${this.config.resource.path}${this.config.operation.path} => ${this.config.operation.resultType.fullyQualifiedType}`);
         return 'TODO';
