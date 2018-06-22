@@ -110,6 +110,7 @@ class ApiBuilderResource {
   constructor(config, service) {
     this.config = config;
     this.service = service;
+    this.operations = this.config.operations.map(op => ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 
   get type() {
@@ -118,11 +119,6 @@ class ApiBuilderResource {
 
   get plural() {
     return this.config.plural;
-  }
-
-  get operations() {
-    return this.config.operations.map(op =>
-      ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 
   get namespace() {
