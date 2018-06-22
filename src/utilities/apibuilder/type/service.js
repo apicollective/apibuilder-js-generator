@@ -115,6 +115,8 @@ exports.ApiBuilderImport = ApiBuilderImport;
 /**
  * Wraps an apibuilder service definition and provides utilities for
  * interacting with it.
+ *
+ * @prop {[ApiBuilderResource]} resources
  */
 class ApiBuilderService {
   constructor({ service: schema }) {

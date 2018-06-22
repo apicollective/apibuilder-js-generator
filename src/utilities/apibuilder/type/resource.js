@@ -52,10 +52,6 @@ class ApiBuilderOperation {
     this.resourcePath = resourcePath;
   }
 
-  get name() {
-    return this.config.name;
-  }
-
   get method() {
     return this.config.method;
   }
