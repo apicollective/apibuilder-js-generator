@@ -46,7 +46,7 @@ class GraphQLQuery {
         let res = `for_${this.config.resource.type.shortName}_get_${staticParts.join('_')}`;
         if (queryParts.length > 0)
           res += `_by_${queryParts.join('_and_')}`;
-        log(`🆘   ${this.config.resource.path}${this.config.operation.path} => ${camelCase(res)}`);
+        log(`${this.config.resource.path}${this.config.operation.path} => ${camelCase(res)}`);
         return camelCase(res);
       } else {
         log(`❌   unknown ${this.config.resource.path}${this.config.operation.path} => ${this.config.operation.resultType.fullyQualifiedType}`);
