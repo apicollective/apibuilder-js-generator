@@ -17,6 +17,8 @@ function generate(data) {
   files = files.concat(generateSchemaFile(service));
   files = files.concat(generateScalars(service));
 
+  require('debug')('apibuilder:graphql')('✅ done');
+
   return Promise.resolve(files);
 }
 
