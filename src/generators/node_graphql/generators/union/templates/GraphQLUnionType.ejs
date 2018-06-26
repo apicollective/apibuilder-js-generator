@@ -18,7 +18,7 @@ const <%= union.name %> = new GraphQLUnionType({
     <%_ union.models.forEach(({ name }) => { _%>
       <%= name %>,
     <%_ }) _%>
-    <%_ union.enums.forEach(({ name }) => { _%>
+    <%_ union.enums.forEach(({ type: { name }, discriminatorValue }) => { _%>
       new GraphQLObjectType({
         name: '<%= name %>Wrapper',
         fields: {
@@ -26,7 +26,10 @@ const <%= union.name %> = new GraphQLUnionType({
             type: new GraphQLNonNull(<%= name %>)
           }
         },
-        description: 'Wrapper for the enum <%= name %> so that it can be part of a union'
+        description: 'Wrapper for the enum <%= name %> so that it can be part of a union',
+        isTypeOf(value) {
+          return value.<%= union.discriminator %> === '<%= discriminatorValue %>';
+        }
       }),
     <%_ }) _%>
   ],

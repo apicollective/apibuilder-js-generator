@@ -1,4 +1,5 @@
 const invariant = require('invariant');
+const { conforms } = require('lodash');
 
 const { isModelType, isUnionType, isEnumType } = require('../../../utilities/apibuilder');
 const GraphQLObjectType = require('./GraphQLObjectType');
@@ -34,6 +35,10 @@ class GraphQLUnionType {
     return this.config.description;
   }
 
+  get discriminator() {
+    return this.config.discriminator;
+  }
+
   /**
    * Create a GraphQLUnionType from an ApiBuilderUnion object.
    * @param {ApiBuilderUnion} union
@@ -44,8 +49,15 @@ class GraphQLUnionType {
     // TODO: support scalars? unions in unions?
     return new GraphQLUnionType({
       name: pascalCase(union.shortName),
-      models: union.types.map(t => t.type).filter(isModelType).map(GraphQLObjectType.fromApiBuilderModel),
-      enums: union.types.map(t => t.type).filter(isEnumType).map(GraphQLEnumType.fromApiBuilderEnum),
+      discriminator: union.discriminator,
+      models: union.types.filter(conforms({ type: isModelType })).map(({ discriminatorValue, type }) => ({
+        discriminatorValue,
+        type: GraphQLObjectType.fromApiBuilderModel(type),
+      })),
+      enums: union.types.filter(conforms({ type: isEnumType })).map(({ discriminatorValue, type }) => ({
+        discriminatorValue,
+        type: GraphQLEnumType.fromApiBuilderEnum(type),
+      })),
     });
   }
 }
