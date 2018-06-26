@@ -12,27 +12,40 @@
   <%_ } _%>
 <%_ }) _%>
 
+<%_ union.enums.forEach(({ type: { name } }) => { _%>
+const <%= name %>Wrapper = new GraphQLObjectType({
+  name: '<%= name %>Wrapper',
+  fields: {
+    value: {
+      type: new GraphQLNonNull(<%= name %>)
+    }
+  },
+  description: 'Wrapper for the enum <%= name %> so that it can be part of a union',
+});
+<%_ }) _%>
+
 const <%= union.name %> = new GraphQLUnionType({
   name: '<%= union.name %>',
   types: [
     <%_ union.models.forEach(({ type: { name } }) => { _%>
       <%= name %>,
     <%_ }) _%>
-    <%_ union.enums.forEach(({ type: { name }, discriminatorValue }) => { _%>
-      new GraphQLObjectType({
-        name: '<%= name %>Wrapper',
-        fields: {
-          value: {
-            type: new GraphQLNonNull(<%= name %>)
-          }
-        },
-        description: 'Wrapper for the enum <%= name %> so that it can be part of a union',
-        isTypeOf(value) {
-          return value.<%= union.discriminator %> === '<%= discriminatorValue %>';
-        }
-      }),
+    <%_ union.enums.forEach(({ type: { name } }) => { _%>
+      <%= name %>Wrapper,
     <%_ }) _%>
   ],
+  resolveType(value) {
+    switch (value.<%= union.discriminator %>) {
+      <%_ union.types().forEach(({ type: { name }, discriminatorValue, isEnum }) => { _%>
+      case '<%= discriminatorValue %>':
+        <%_ if (isEnum) { _%>
+        return <%= name %>Wrapper;
+        <%_ } else { _%>
+        return <%= name %>;
+        <%_ } _%>
+      <%_ }) _%>
+    }
+  }
 });
 
 module.exports = <%= union.name %>;

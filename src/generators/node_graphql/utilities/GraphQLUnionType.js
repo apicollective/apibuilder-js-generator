@@ -57,6 +57,7 @@ class GraphQLUnionType {
       enums: union.types.filter(conforms({ type: isEnumType })).map(({ discriminatorValue, type }) => ({
         discriminatorValue,
         type: GraphQLEnumType.fromApiBuilderEnum(type),
+        isEnum: true,
       })),
       types() {
         return this.models.concat(this.enums);
