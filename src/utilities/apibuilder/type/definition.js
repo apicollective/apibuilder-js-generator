@@ -460,6 +460,12 @@ class ApiBuilderUnionType {
     return this.config.default;
   }
 
+  /** @property {String} */
+  get discriminatorValue() {
+    // although this field is marked as not required, I think service.json fills in the type name as default
+    return this.config.discriminator_value || this.config.type;
+  }
+
   toString() {
     return this.config.type;
   }

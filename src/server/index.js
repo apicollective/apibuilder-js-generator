@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const log = require('debug')('apibuilder:generator');
+
 const drop = require('lodash/drop');
 const find = require('lodash/find');
 const get = require('lodash/get');
@@ -63,7 +65,7 @@ app.post('/invocations/:key', (req, res) => {
     ]);
   }
 
-  console.log(`Generating with[${invocationKey}] for service[${service.namespace}.${service.name}]`);
+  log(`Generating with[${invocationKey}] for service[${service.namespace}.${service.name}]`);
 
   return generator.generate(service).then((files) => {
     res.send({

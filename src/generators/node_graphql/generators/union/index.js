@@ -1,8 +1,9 @@
 const matchesProperty = require('lodash/matchesProperty');
+const some = require('lodash/some');
 const path = require('path');
 
 const { renderTemplate } = require('../../../../utilities/template');
-const { ApiBuilderFile, isPrimitiveType } = require('../../../../utilities/apibuilder');
+const { ApiBuilderFile, isPrimitiveType, isEnumType } = require('../../../../utilities/apibuilder');
 const GraphQLUnionType = require('../../utilities/GraphQLUnionType');
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const { destinationPathFromType } = require('../../utilities/destinationPath');
@@ -11,7 +12,11 @@ const toImportDeclaration = require('../../utilities/toImportDeclaration');
 function getImportDeclarations(union) {
   const initialImportDeclarations = [
     new ImportDeclaration({
-      namedExports: ['GraphQLUnionType'],
+      namedExports: ['GraphQLUnionType'].concat(
+        some(union.types, ({ type }) => isEnumType(type))
+        ? ['GraphQLObjectType', 'GraphQLNonNull'] // used for enum wrappers
+        : []
+      ),
       moduleName: 'graphql',
     }),
   ];
