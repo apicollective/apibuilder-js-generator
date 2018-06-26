@@ -10,9 +10,6 @@ const { Kind } = require('../../../utilities/apibuilder');
 function toGraphQLScalarType(type) {
   switch (type.baseType) {
     case Kind.STRING:
-    case Kind.DATE_ISO8601:
-    case Kind.DATE_TIME_ISO8601:
-    case Kind.JSON:
       return 'GraphQLString';
     case Kind.UUID:
       return 'GraphQLID';
@@ -22,10 +19,7 @@ function toGraphQLScalarType(type) {
       return 'GraphQLInt';
     case Kind.DECIMAL:
     case Kind.DOUBLE:
-    case Kind.LONG:
       return 'GraphQLFloat';
-    case Kind.OBJECT:
-    case Kind.UNIT:
     default:
       return undefined;
   }

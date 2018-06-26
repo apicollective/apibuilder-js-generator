@@ -19,7 +19,12 @@ function destinationPathFromService(service) {
   return `${service.namespace.split('.').join('/')}/schema.js`;
 }
 
+function destinationDirForScalars(service) {
+  return service.namespace.split('.').join('/');
+}
+
 module.exports = {
   destinationPathFromType,
-  destinationPathFromService
+  destinationPathFromService,
+  destinationDirForScalars
 };

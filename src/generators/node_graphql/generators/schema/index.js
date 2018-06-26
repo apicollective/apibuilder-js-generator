@@ -7,7 +7,8 @@ const { renderTemplate } = require('../../../../utilities/template');
 const { ApiBuilderFile } = require('../../../../utilities/apibuilder');
 
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
-const { getBaseType, isArrayType, isPrimitiveType } = require('../../../../utilities/apibuilder');
+const toCustomScalarType = require('../../utilities/toCustomScalarType');
+const { getBaseType, isEnclosingType, isPrimitiveType, isMapType } = require('../../../../utilities/apibuilder');
 const { flatMap, some, map, reduce, uniq } = require('lodash');
 
 /**
@@ -23,13 +24,13 @@ function computeGraphQLNamedExports(operation) {
     initialNamedExports.push('GraphQLNonNull');
   }
 
-  if (isArrayType(operation.resultType) || some(operation.args, arg => isArrayType(arg.type))) {
+  if (isEnclosingType(operation.resultType) || some(operation.args, arg => isEnclosingType(arg.type))) {
     initialNamedExports.push('GraphQLList');
   }
 
   return operation.arguments
     .map(arg => arg.type)
-    .concat([operation.resultType])
+    .concat(operation.resultType)
     .reduce((namedExports, type) => {
       const scalarType = toGraphQLScalarType(type);
 
@@ -41,12 +42,37 @@ function computeGraphQLNamedExports(operation) {
     }, initialNamedExports);
 }
 
+function computeScalarExports(operation) {
+  const initialNamedExports = [];
+
+  const types = operation.arguments.map(arg => arg.type).concat(operation.resultType);
+
+  if (some(types, isMapType)) {
+    initialNamedExports.push('makeMapEntry');
+  }
+
+  return reduce(types, (namedExports, type) => {
+    const scalarType = toCustomScalarType(isEnclosingType(type) ? type.ofType : type);
+
+    if (scalarType && !namedExports.includes(scalarType)) {
+      namedExports.push(scalarType);
+    }
+
+    return namedExports;
+  }, initialNamedExports);
+}
+
+
 function mapToImportDeclarations(service) {
   // Compute named exports to import from `graphql` package.
   const initialImportDeclarations = [
     new ImportDeclaration({
       namedExports: uniq(flatMap(flatMap(service.resources, r => r.operations), computeGraphQLNamedExports)).sort(),
       moduleName: 'graphql'
+    }),
+    new ImportDeclaration({
+      namedExports: uniq(flatMap(flatMap(service.resources, r => r.operations), computeScalarExports)).sort(),
+      moduleName: './scalars',
     }),
   ];
 

@@ -55,7 +55,6 @@ class ApiBuilderPrimitiveType {
   /**
    * Create an ApiBuilderPrimitiveType
    * @param {FullyQualifiedType} fullyQualifiedType
-   * @param {ApiBuilderService} service
    */
   constructor(fullyQualifiedType) {
     invariant(
@@ -76,6 +75,10 @@ class ApiBuilderPrimitiveType {
 
   get packageName() {
     return this.fullyQualifiedType.packageName;
+  }
+
+  get typeName() {
+    return this.fullyQualifiedType.fullyQualifiedType;
   }
 
   toString() {

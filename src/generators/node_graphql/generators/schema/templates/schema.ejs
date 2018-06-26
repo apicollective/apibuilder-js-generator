@@ -23,11 +23,11 @@ const schema = new GraphQLSchema({
         type: <%= type %>,
         <%_ if (args.length > 0) { _%>
         args: {
-        <%_ args.forEach(({ name, type, default: defaultValue, description }) => { _%>
+        <%_ args.forEach(({ name, type, defaultValue, description }) => { _%>
           <%= name %>: {
             type: <%= type %>, <%# TODO get real type %>
             <%_ if (defaultValue != null) { _%>
-            defaultValue: <%= defaultValue %>,
+            defaultValue: <%- defaultValue %>,
             <%_ } _%>
             <%_ if (description != null) { _%>
             description: '<%= description %>',
