@@ -1,8 +1,8 @@
 const invariant = require('invariant');
-const map = require('lodash/map');
 
-const { isModelType, isUnionType } = require('../../../utilities/apibuilder');
+const { isModelType, isUnionType, isEnumType } = require('../../../utilities/apibuilder');
 const GraphQLObjectType = require('./GraphQLObjectType');
+const GraphQLEnumType = require('./GraphQLEnumType');
 const pascalCase = require('../utilities/pascalCase');
 
 class GraphQLUnionType {
@@ -16,6 +16,14 @@ class GraphQLUnionType {
 
   get types() {
     return this.config.types;
+  }
+
+  get models() {
+    return this.config.models;
+  }
+
+  get enums() {
+    return this.config.enums;
   }
 
   get resolveType() {
@@ -33,19 +41,14 @@ class GraphQLUnionType {
   static fromApiBuilderUnion(union) {
     invariant(isUnionType(union), `"${String(union)}" is not an APIBuilderUnion type.`);
 
+    // TODO: support scalars? unions in unions?
     return new GraphQLUnionType({
       name: pascalCase(union.shortName),
-      types: map(union.types, (unionType) => {
-        const { type } = unionType;
-
-        // TODO: An API builder union type accepts either an enum, model, or a
-        // primitive type. However, a GraphQLUnionType may only consist of
-        // GraphQLObjectType which can only be derived from an API builder
-        // model at the moment.
-        invariant(isModelType(type), `"${String(type)}" cannot be transformed into a GraphQLObjectType.`);
-
-        return GraphQLObjectType.fromApiBuilderModel(type);
-      }),
+      models: union.types.map(t => t.type).filter(isModelType).map(GraphQLObjectType.fromApiBuilderModel),
+      enums: union.types.map(t => t.type).filter(isEnumType).map(GraphQLEnumType.fromApiBuilderEnum),
+      types() {
+        return this.models.concat(this.enums);
+      }
     });
   }
 }
