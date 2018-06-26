@@ -59,9 +59,6 @@ class GraphQLUnionType {
         type: GraphQLEnumType.fromApiBuilderEnum(type),
         isEnum: true,
       })),
-      types() {
-        return this.models.concat(this.enums);
-      }
     });
   }
 }
