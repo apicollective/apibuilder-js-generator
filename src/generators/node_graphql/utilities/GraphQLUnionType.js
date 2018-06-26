@@ -46,9 +46,6 @@ class GraphQLUnionType {
       name: pascalCase(union.shortName),
       models: union.types.map(t => t.type).filter(isModelType).map(GraphQLObjectType.fromApiBuilderModel),
       enums: union.types.map(t => t.type).filter(isEnumType).map(GraphQLEnumType.fromApiBuilderEnum),
-      types() {
-        return this.models.concat(this.enums);
-      }
     });
   }
 }
