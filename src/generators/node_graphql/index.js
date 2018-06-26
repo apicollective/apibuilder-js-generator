@@ -1,3 +1,5 @@
+const log = require('debug')('apibuilder:graphql');
+
 const { ApiBuilderService } = require('../../utilities/apibuilder');
 const { generateFile: generateEnumFile } = require('./generators/enumeration');
 const { generateFile: generateModelFile } = require('./generators/model');
@@ -17,7 +19,7 @@ function generate(data) {
   files = files.concat(generateSchemaFile(service));
   files = files.concat(generateScalars(service));
 
-  require('debug')('apibuilder:graphql')('✅ done');
+  log('✅ done');
 
   return Promise.resolve(files);
 }
