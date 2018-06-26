@@ -52,10 +52,6 @@ class ApiBuilderOperation {
     this.resourcePath = resourcePath;
   }
 
-  get name() {
-    return this.config.name;
-  }
-
   get method() {
     return this.config.method;
   }
@@ -114,6 +110,9 @@ class ApiBuilderResource {
   constructor(config, service) {
     this.config = config;
     this.service = service;
+
+    // moved out of getter because, if we create new objects in getters, we cannot use === to check for equality
+    this.operations = this.config.operations.map(op => ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 
   get type() {
@@ -122,11 +121,6 @@ class ApiBuilderResource {
 
   get plural() {
     return this.config.plural;
-  }
-
-  get operations() {
-    return this.config.operations.map(op =>
-      ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 
   get namespace() {

@@ -2,10 +2,15 @@ const toGraphQLOutputType = require('../utilities/toGraphQLOutputType');
 const { isEnclosingType, getBaseType, isPrimitiveType, isEnumType } = require('../../../utilities/apibuilder')
 const { flatMap, camelCase, concat } = require('lodash');
 const { get, matches } = require('lodash/fp');
+const { ApiBuilderService } = require('../../../utilities/apibuilder/type/service');
+const invariant = require('invariant');
 
 const createLogger = require('debug');
 
 const log = createLogger('apibuilder:graphql-schema');
+
+// matches `str` or `str_v*`
+const strOrVersion = (str) => new RegExp(`^${str}(?:_v\\d+)?$`);
 
 class GraphQLQueryArgConfig {
   constructor(arg) {
@@ -32,31 +37,54 @@ class GraphQLQueryArgConfig {
 }
 
 class GraphQLQuery {
-  constructor(operation, resource, service) {
+  constructor(operation, resource, service, isPrimaryGetter) {
     this.config = {
       operation,
       resource,
-      service
+      service,
+      isPrimaryGetter
     };
   }
 
   get name() {
-    const strOrVersion = (str) => new RegExp(`^${str}(?:_v\\d+)?$`);
+    const { path, resultType, } = this.config.operation;
+    const staticParts = path.split('/').filter(x => x.length > 0 && x[0] !== ':');
+    const queryParts = path.split('/').filter(x => x.length > 0 && x[0] === ':');
 
-    if (isEnclosingType(this.config.operation.resultType)
-     && getBaseType(this.config.operation.resultType).fullyQualifiedType.fullyQualifiedType.match(strOrVersion(this.config.resource.type))) {
+    // get multiple instances of this resource
+    if (isEnclosingType(resultType)
+     && getBaseType(resultType).fullyQualifiedType.fullyQualifiedType.match(strOrVersion(this.config.resource.type))) {
+
       return camelCase(this.config.resource.plural);
-    } else if (!isEnclosingType(this.config.operation.resultType)
-            && this.config.operation.resultType.fullyQualifiedType.fullyQualifiedType.match(strOrVersion(this.config.resource.type))) {
-      return camelCase(this.config.resource.type.shortName);
-    } else {
-      const parts = this.config.operation.path.split('/').filter(x => x.length > 0 && x[0] != ':');
-      if (parts.length > 0) {
-        return camelCase(`for_${this.config.resource.type.shortName}_get_${parts.join('_')}`);
+
+    // get a single instance of this resource
+    } else if (!isEnclosingType(resultType)
+            && resultType.fullyQualifiedType.fullyQualifiedType.match(strOrVersion(this.config.resource.type))) {
+
+      if (this.config.isPrimaryGetter) {
+        return camelCase(this.config.resource.type.shortName);
       } else {
-        log(`❌   unknown ${this.config.resource.path}${this.config.operation.path} => ${this.config.operation.resultType.fullyQualifiedType}`);
+        invariant(queryParts.length > 0,
+          `Non-primary getter needs to have a different URL from the primary getter.
+          Resource = ${this.config.resource.type.fullyQualifiedType.fullyQualifiedType}
+          Operation = ${this.config.resource.path}${path}`);
+        return camelCase(`${this.config.resource.type.shortName}_by_${queryParts.join('_')}`);
+      }
+
+    } else {
+
+      if (staticParts.length > 0) {
+        // get sub-resource
+        let res = `for_${this.config.resource.type.shortName}_get_${staticParts.join('_')}`;
+        if (queryParts.length > 0)
+          res += `_by_${queryParts.join('_and_')}`;
+        log(`${this.config.resource.type.fullyQualifiedType.fullyQualifiedType}:\t${this.config.resource.path}${this.config.operation.path} => ${camelCase(res)}`);
+        return camelCase(res);
+      } else {
+        log(`❌   unknown ${this.config.resource.path}${this.config.operation.path} => ${resultType.fullyQualifiedType}`);
         return 'TODO';
       }
+
     }
   }
 
@@ -103,11 +131,31 @@ class GraphQLSchemaConfig {
    * @param {ApiBuilderService} service
    */
   static fromService(service) {
-    const queries = flatMap(service.resources, resource =>
-      resource.operations
+    const queries = flatMap(service.resources, resource => {
+      /*
+      need to pick 1 operation for this resource to be the getter (e.g. getById)
+      we pick the one that returns the type of the resource and that has the shortest URL
+
+      the problem this fixes:
+      GET  /:organization/orders/identifier/:identifier
+        Returns information about a specific order using an identifier number
+        => query named 'orderByIdentifier'
+      GET  /:organization/orders/:number
+        Returns information about a specific order.
+        => query named 'order'
+      */
+      const getter = resource.operations
         .filter(matches({ method: 'GET' }))
-        .map(op => new GraphQLQuery(op, resource, service))
-    );
+        .filter(op => !isEnclosingType(op.resultType) && op.resultType.fullyQualifiedType.fullyQualifiedType.match(strOrVersion(resource.type)))
+        .sort((a, b) => a.path.length - b.path.length)[0];
+      if (getter)
+        log(resource.type.fullyQualifiedType.fullyQualifiedType, 'getter', `${getter.resourcePath} + ${getter.path}`);
+      else
+        log(resource.type.fullyQualifiedType.fullyQualifiedType, 'has no getter');
+      return resource.operations
+        .filter(matches({ method: 'GET' }))
+        .map(op => new GraphQLQuery(op, resource, service, op === getter));
+    });
     return new GraphQLSchemaConfig({ queries });
   }
 }
