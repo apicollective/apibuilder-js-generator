@@ -18,28 +18,31 @@ const { flatMap, some, map, reduce, uniq } = require('lodash');
  * @returns {String[]}
  */
 function computeGraphQLNamedExports(operation) {
-  const initialNamedExports = ['GraphQLSchema', 'GraphQLObjectType'];
+  const initialNamedExports = new Set(['GraphQLSchema', 'GraphQLObjectType']);
 
   if (some(operation.arguments, { required: true })) {
-    initialNamedExports.push('GraphQLNonNull');
+    initialNamedExports.add('GraphQLNonNull');
   }
 
   if (isEnclosingType(operation.resultType) || some(operation.args, arg => isEnclosingType(arg.type))) {
-    initialNamedExports.push('GraphQLList');
+    initialNamedExports.add('GraphQLList');
+    initialNamedExports.add('GraphQLNonNull');
   }
 
-  return operation.arguments
-    .map(arg => arg.type)
-    .concat(operation.resultType)
-    .reduce((namedExports, type) => {
-      const scalarType = toGraphQLScalarType(type);
+  return Array.from(
+    operation.arguments
+      .map(arg => arg.type)
+      .concat(operation.resultType)
+      .reduce((namedExports, type) => {
+        const scalarType = toGraphQLScalarType(type);
 
-      if (scalarType && !namedExports.includes(scalarType)) {
-        namedExports.push(scalarType);
-      }
+        if (scalarType) {
+          namedExports.add(scalarType);
+        }
 
-      return namedExports;
-    }, initialNamedExports);
+        return namedExports;
+      }, initialNamedExports)
+  );
 }
 
 function computeScalarExports(operation) {

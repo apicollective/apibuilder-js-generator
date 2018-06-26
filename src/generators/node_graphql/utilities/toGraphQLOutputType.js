@@ -15,9 +15,9 @@ function toGraphQLOutputType(type, required = false) {
   let outputType;
 
   if (isMapType(type)) {
-    outputType = `new GraphQLList(makeMapEntry(${toGraphQLOutputType(type.ofType)}))`;
+    outputType = `new GraphQLList(new GraphQLNonNull(makeMapEntry(${toGraphQLOutputType(type.ofType)})))`;
   } else if (isArrayType(type)) {
-    outputType = `new GraphQLList(${toGraphQLOutputType(type.ofType)})`;
+    outputType = `new GraphQLList(new GraphQLNonNull(${toGraphQLOutputType(type.ofType)}))`;
   } else if (isPrimitiveType(type)) {
     outputType = toGraphQLScalarType(type) || toCustomScalarType(type);
   } else {

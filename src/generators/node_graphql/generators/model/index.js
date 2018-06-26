@@ -31,25 +31,26 @@ const GraphQLObjectType = require('../../utilities/GraphQLObjectType');
  * @returns {String[]}
  */
 function computeGraphQLNamedExports(model) {
-  const initialNamedExports = ['GraphQLObjectType'];
+  const initialNamedExports = new Set(['GraphQLObjectType']);
 
   if (some(model.fields, { isRequired: true })) {
-    initialNamedExports.push('GraphQLNonNull');
+    initialNamedExports.add('GraphQLNonNull');
   }
 
   if (some(model.fields, field => isEnclosingType(field.type))) {
-    initialNamedExports.push('GraphQLList');
+    initialNamedExports.add('GraphQLList');
+    initialNamedExports.add('GraphQLNonNull');
   }
 
-  return reduce(model.fields, (namedExports, field) => {
+  return Array.from(reduce(model.fields, (namedExports, field) => {
     const scalarType = toGraphQLScalarType(isEnclosingType(field.type) ? field.type.ofType : field.type);
 
-    if (scalarType && !namedExports.includes(scalarType)) {
-      namedExports.push(scalarType);
+    if (scalarType) {
+      namedExports.add(scalarType);
     }
 
     return namedExports;
-  }, initialNamedExports).sort();
+  }, initialNamedExports)).sort();
 }
 
 function computeScalarExports(model) {
