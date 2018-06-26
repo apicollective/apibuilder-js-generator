@@ -15,7 +15,7 @@
 const <%= union.name %> = new GraphQLUnionType({
   name: '<%= union.name %>',
   types: [
-    <%_ union.models.forEach(({ name }) => { _%>
+    <%_ union.models.forEach(({ type: { name } }) => { _%>
       <%= name %>,
     <%_ }) _%>
     <%_ union.enums.forEach(({ type: { name }, discriminatorValue }) => { _%>
