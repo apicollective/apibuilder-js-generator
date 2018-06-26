@@ -58,6 +58,9 @@ class GraphQLUnionType {
         discriminatorValue,
         type: GraphQLEnumType.fromApiBuilderEnum(type),
       })),
+      types() {
+        return this.models.concat(this.enums);
+      }
     });
   }
 }
