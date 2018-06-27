@@ -1,6 +1,6 @@
 /**
  * @typedef {Object} ImportDeclarationConfig
- * @property {String} defaultExport
+ * @property {String} [defaultExport]
  * @property {String[]} namedExports
  * @property {String} moduleName
  */

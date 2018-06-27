@@ -26,5 +26,5 @@ function destinationDirForScalars(service) {
 module.exports = {
   destinationPathFromType,
   destinationPathFromService,
-  destinationDirForScalars
+  destinationDirForScalars,
 };

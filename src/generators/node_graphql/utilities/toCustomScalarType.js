@@ -10,7 +10,7 @@ const { Kind } = require('../../../utilities/apibuilder');
 function toCustomScalarType(type) {
   switch (type.baseType) {
     case Kind.DATE_ISO8601:
-      return 'GraphQLDate'
+      return 'GraphQLDate';
     case Kind.DATE_TIME_ISO8601:
       return 'GraphQLDateTime';
     case Kind.JSON:

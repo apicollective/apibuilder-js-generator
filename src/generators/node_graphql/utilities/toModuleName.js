@@ -9,13 +9,14 @@ const { ApiBuilderService } = require('../../../utilities/apibuilder');
 function toModuleName(type) {
   if (type instanceof ApiBuilderService) {
     return type.namespace.split('.').concat(['schema']).join('/');
-  } else {
-    const baseType = getBaseType(type);
-    return baseType.packageName
-      .split('.')
-      .concat(toDefaultExport(baseType))
-      .join('/');
   }
+
+  // type is an ApiBuilderType
+  const baseType = getBaseType(type);
+  return baseType.packageName
+    .split('.')
+    .concat(toDefaultExport(baseType))
+    .join('/');
 }
 
 module.exports = toModuleName;

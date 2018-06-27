@@ -4,5 +4,8 @@
     "node": true,
     "mocha": true,
     "jest": true
+  },
+  "rules": {
+    "function-paren-newline": 0
   }
 }

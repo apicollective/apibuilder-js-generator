@@ -73,9 +73,12 @@ app.post('/invocations/:key', (req, res) => {
       files,
     });
   }).catch((error) => {
-    console.error(`Could not generate code for ${invocationKey}: ${error.message}`);
-    console.error(error.stack);
+    log(`Could not generate code for ${invocationKey}: ${error.message}`);
+    log(error.stack);
+
+    res.send({ error });
   });
 });
 
+// eslint-disable-next-line no-console
 app.listen(port, () => console.log(`apibuilder-javascript-generator listening on http://0.0.0.0:${port}`));

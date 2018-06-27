@@ -8,8 +8,18 @@ const { ApiBuilderFile } = require('../../../../utilities/apibuilder');
 
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const toCustomScalarType = require('../../utilities/toCustomScalarType');
-const { getBaseType, isEnclosingType, isPrimitiveType, isMapType } = require('../../../../utilities/apibuilder');
-const { flatMap, some, map, reduce, uniq } = require('lodash');
+const {
+  getBaseType,
+  isEnclosingType,
+  isPrimitiveType,
+  isMapType,
+} = require('../../../../utilities/apibuilder');
+const {
+  flatMap,
+  some,
+  reduce,
+  uniq,
+} = require('lodash');
 
 /**
  * Computes the name exports to import from the "graphql" package for writing
@@ -29,20 +39,20 @@ function computeGraphQLNamedExports(operation) {
     initialNamedExports.add('GraphQLNonNull');
   }
 
-  return Array.from(
-    operation.arguments
-      .map(arg => arg.type)
-      .concat(operation.resultType)
-      .reduce((namedExports, type) => {
-        const scalarType = toGraphQLScalarType(type);
+  const exports = operation.arguments
+    .map(arg => arg.type)
+    .concat(operation.resultType)
+    .reduce((namedExports, type) => {
+      const scalarType = toGraphQLScalarType(type);
 
-        if (scalarType) {
-          namedExports.add(scalarType);
-        }
+      if (scalarType) {
+        namedExports.add(scalarType);
+      }
 
-        return namedExports;
-      }, initialNamedExports)
-  );
+      return namedExports;
+    }, initialNamedExports);
+
+  return Array.from(exports);
 }
 
 function computeScalarExports(operation) {
@@ -71,7 +81,7 @@ function mapToImportDeclarations(service) {
   const initialImportDeclarations = [
     new ImportDeclaration({
       namedExports: uniq(flatMap(flatMap(service.resources, r => r.operations), computeGraphQLNamedExports)).sort(),
-      moduleName: 'graphql'
+      moduleName: 'graphql',
     }),
     new ImportDeclaration({
       namedExports: uniq(flatMap(flatMap(service.resources, r => r.operations), computeScalarExports)).sort(),
@@ -79,7 +89,7 @@ function mapToImportDeclarations(service) {
     }),
   ];
 
-  const resultTypes = flatMap(service.resources, r => r.operations).map(op => getBaseType(op.resultType))
+  const resultTypes = flatMap(service.resources, r => r.operations).map(op => getBaseType(op.resultType));
   const argTypes = flatMap(flatMap(service.resources, r => r.operations), op => op.arguments).map(arg => getBaseType(arg.type));
 
   return resultTypes.concat(argTypes)

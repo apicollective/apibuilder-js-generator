@@ -14,8 +14,8 @@ function getImportDeclarations(union) {
     new ImportDeclaration({
       namedExports: ['GraphQLUnionType'].concat(
         some(union.types, ({ type }) => isEnumType(type))
-        ? ['GraphQLObjectType', 'GraphQLNonNull'] // used for enum wrappers
-        : []
+          ? ['GraphQLObjectType', 'GraphQLNonNull'] // used for enum wrappers
+          : [],
       ),
       moduleName: 'graphql',
     }),

@@ -7,10 +7,9 @@ const { renderTemplate } = require('../../../../utilities/template');
 const {
   ApiBuilderFile,
   getBaseType,
-  isArrayType,
   isMapType,
   isPrimitiveType,
-  isEnclosingType
+  isEnclosingType,
 } = require('../../../../utilities/apibuilder');
 
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
