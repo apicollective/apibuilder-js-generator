@@ -8,7 +8,7 @@ const generateModel = require('./generators/generator-model');
 const generateUnion = require('./generators/generator-union');
 const toModuleName = require('./utilities/toModuleName');
 
-const debug = createLogger('prop_types');
+const debug = createLogger('apibuilder:prop_types');
 
 function generate(data) {
   const service = new Service({ service: data });
