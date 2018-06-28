@@ -1,14 +1,20 @@
 import EventEmitter from 'events';
 import querystring from 'querystring';
 
-/**
- * Use the right implementation of fetch depending on the execution environment
- */
 let fetch;
+let base64Encode;
 
+/**
+ * Use the right implementation depending on the execution environment.
+ *
+ * NOTE: Consumer is expected to polyfill the browser environment when
+ * implementation for btoa or fetch is not available.
+ */
 if (process.browser) {
   fetch = window.fetch;
+  base64Encode = window.btoa;
 } else {
+  base64Encode = value => new Buffer(value).toString('base64');
   fetch = require('node-fetch'); // eslint-disable-line global-require
 }
 
@@ -34,7 +40,7 @@ export default class Client extends EventEmitter {
   }
 
   static getBasicAuthHeaderValue(auth) {
-    return `Basic ${new Buffer(auth).toString('base64')}`;
+    return `Basic ${base64Encode(auth)}`;
   }
 
   static getFinalUrl(url, opts) {
