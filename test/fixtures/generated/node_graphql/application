@@ -4,9 +4,9 @@ const {
   GraphQLObjectType,
   GraphQLString,
 } = require('graphql');
-const Reference = require('../../../common/v0/models/Reference');
-const Visibility = require('../enums/Visibility');
-const Audit = require('../../../common/v0/models/Audit');
+const Reference = require('./../../../common/v0/models/Reference');
+const Visibility = require('./../enums/Visibility');
+const Audit = require('./../../../common/v0/models/Audit');
 
 const Application = new GraphQLObjectType({
   name: 'Application',
