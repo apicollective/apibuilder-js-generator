@@ -11,6 +11,6 @@ test('should generate graphql enumeration from apibuilder enumeration', () => {
   const enumeration = find(service.enums, { shortName: 'publication' });
   const file = generateFile(enumeration);
   expect(file.name).toEqual('Publication.js');
-  expect(file.dir).toEqual('types/com/bryzek/apidoc/api/v0/enums');
+  expect(file.dir).toEqual('com/bryzek/apidoc/api/v0/enums');
   expect(file.contents).toEqual(loadFixture('./generated/node_graphql/publication'));
 });

@@ -9,6 +9,6 @@ test('should generate GraphQL union type from API Builder union', () => {
   const union = service.findUnionByName('diff');
   const file = generateFile(union);
   expect(file.name).toBe('Diff.js');
-  expect(file.dir).toBe('types/com/bryzek/apidoc/api/v0/unions');
+  expect(file.dir).toBe('com/bryzek/apidoc/api/v0/unions');
   expect(file.contents).toBe(loadFixture('./generated/node_graphql/diff'));
 });

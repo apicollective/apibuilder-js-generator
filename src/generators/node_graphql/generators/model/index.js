@@ -81,11 +81,15 @@ function mapToImportDeclarations(model) {
       namedExports: computeGraphQLNamedExports(model),
       moduleName: 'graphql',
     }),
-    new ImportDeclaration({
+  ];
+
+  const scalarExports = computeScalarExports(model);
+  if (scalarExports.length > 0) {
+    initialImportDeclarations.push(new ImportDeclaration({
       namedExports: computeScalarExports(model),
       moduleName: '../scalars',
-    }),
-  ];
+    }));
+  }
 
   return model.fields
     .map(field => getBaseType(field.type))
