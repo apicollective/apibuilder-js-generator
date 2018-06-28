@@ -8,6 +8,6 @@ const <%= defaultExport %> = require('<%= moduleName %>');
 
 Object.assign(module.exports, {
   <%_ propTypes.forEach(({ key, validator }) => { _%>
-  <%= key %>: <%= validator %>,
+  '<%= key %>': <%= validator %>,
   <%_ }) _%>
 });

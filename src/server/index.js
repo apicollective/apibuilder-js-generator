@@ -57,7 +57,7 @@ app.post('/invocations/:key', (req, res) => {
   }
 
   if (!service) {
-    return res.status(422).send([
+    return res.status(409).send([
       {
         code: 'SERVICE_PAYLOAD_NOT_FOUND',
         message: `Service json not found for key[${invocationKey}]. Expected body of request to be a service spec json file produced by https://app.apibuilder.io.`,

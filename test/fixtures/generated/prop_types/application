@@ -7,11 +7,11 @@ const visibilityPropTypes = require('../enums/visibilityPropTypes');
 const auditPropTypes = require('../../../common/v0/models/auditPropTypes');
 
 Object.assign(module.exports, {
-  guid: PropTypes.string.isRequired,
-  organization: PropTypes.shape(referencePropTypes).isRequired,
-  name: PropTypes.string.isRequired,
-  key: PropTypes.string.isRequired,
-  visibility: PropTypes.oneOf(visibilityPropTypes).isRequired,
-  description: PropTypes.string,
-  audit: PropTypes.shape(auditPropTypes).isRequired,
+  'guid': PropTypes.string.isRequired,
+  'organization': PropTypes.shape(referencePropTypes).isRequired,
+  'name': PropTypes.string.isRequired,
+  'key': PropTypes.string.isRequired,
+  'visibility': PropTypes.oneOf(visibilityPropTypes).isRequired,
+  'description': PropTypes.string,
+  'audit': PropTypes.shape(auditPropTypes).isRequired,
 });
