@@ -85,12 +85,10 @@ class ApiBuilderOperation {
     const type = getOr(
       'unit',
       'type',
-      this.config.responses.find(
-        flow(
-          get('code.integer.value'),
-          inRange(200, 300),
-        ),
-      ),
+      this.config.responses.find(flow(
+        get('code.integer.value'),
+        inRange(200, 300),
+      )),
     );
 
     return typeFromAst(astFromTypeName(type), this.service);
@@ -117,8 +115,9 @@ class ApiBuilderResource {
     this.config = config;
     this.service = service;
 
-    // moved out of getter because, if we create new objects in getters, we cannot use === to check for equality
-    this.operations = this.config.operations.map(op => ApiBuilderOperation.fromSchema(op, this, this.service));
+    // moved out of getter so that we can use === to check for equality
+    this.operations = this.config.operations.map(op =>
+      ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 
   get type() {

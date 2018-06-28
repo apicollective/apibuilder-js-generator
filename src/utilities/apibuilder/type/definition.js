@@ -462,7 +462,7 @@ class ApiBuilderUnionType {
 
   /** @property {String} */
   get discriminatorValue() {
-    // although this field is marked as not required, I think service.json fills in the type name as default
+    // although this field is marked as not required, service.json fills in the type name as default
     return this.config.discriminator_value || this.config.type;
   }
 
