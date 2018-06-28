@@ -1,9 +1,10 @@
 const find = require('lodash/find');
-const Service = require('../../../../../src/utilities/apibuilder/Service');
+
+const { ApiBuilderService } = require('../../../../../src/utilities/apibuilder');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 const toModuleName = require('../../../../../src/generators/prop_types/utilities/toModuleName');
 
-const service = new Service({ service: schema });
+const service = new ApiBuilderService({ service: schema });
 
 describe('toModuleName', () => {
   test('should return module name for enum', () => {

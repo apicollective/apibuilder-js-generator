@@ -4,7 +4,7 @@
   "description": "apibuilder code generators for JavaScript",
   "main": "index.js",
   "scripts": {
-    "dev:start": "nodemon",
+    "dev:start": "DEBUG=apibuilder:* nodemon",
     "lint": "eslint . --cache --format=codeframe --ext js",
     "lint:fix": "eslint . --fix --cache --format=codeframe --ext js,jsx",
     "pretest": "npm run lint",
@@ -22,13 +22,16 @@
   },
   "homepage": "https://github.com/flowcommerce/apibuilder-javascript-generator#readme",
   "devDependencies": {
+    "commander": "^2.15.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "faker": "^4.1.0",
+    "got": "^8.3.1",
     "jest": "^22.4.3",
+    "mkdirp": "^0.5.1",
     "nock": "^9.2.5",
     "nodemon": "^1.17.3"
   },
@@ -43,6 +46,6 @@
     "hbs": "^4.0.1",
     "invariant": "^2.2.4",
     "lodash": "^4.17.10",
-    "mkdirp": "^0.5.1"
+    "prettier": "^1.12.1"
   }
 }

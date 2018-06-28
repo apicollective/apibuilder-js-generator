@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const log = require('debug')('apibuilder:generator');
+
 const drop = require('lodash/drop');
 const find = require('lodash/find');
 const get = require('lodash/get');
@@ -13,7 +15,7 @@ const generators = require('../generators');
 const app = express();
 app.use(bodyParser.json({ limit: '5mb' }));
 
-const port = process.env.APPLICATIN_PORT || 7050;
+const port = process.env.APPLICATION_PORT || 7050;
 
 app.get('/_internal_/healthcheck', (req, res) => {
   res.send('healthy');
@@ -58,12 +60,12 @@ app.post('/invocations/:key', (req, res) => {
     return res.status(409).send([
       {
         code: 'SERVICE_PAYLOAD_NOT_FOUND',
-        message: `Serivce json not found for key[${invocationKey}]. Expected body of request to be a service spec json file produced by https://app.apibuilder.io.`,
+        message: `Service json not found for key[${invocationKey}]. Expected body of request to be a service spec json file produced by https://app.apibuilder.io.`,
       },
     ]);
   }
 
-  console.log(`Generating with[${invocationKey}] for service[${service.namespace}.${service.name}]`);
+  log(`Generating with[${invocationKey}] for service[${service.namespace}.${service.name}]`);
 
   return generator.generate(service).then((files) => {
     res.send({
@@ -76,4 +78,5 @@ app.post('/invocations/:key', (req, res) => {
   });
 });
 
+// eslint-disable-next-line no-console
 app.listen(port, () => console.log(`apibuilder-javascript-generator listening on http://0.0.0.0:${port}`));
