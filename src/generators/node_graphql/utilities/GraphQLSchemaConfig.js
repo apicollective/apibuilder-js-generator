@@ -39,12 +39,12 @@ class GraphQLQueryArgConfig {
 
   get defaultValue() {
     if (this.default) {
-      if (
-        (isPrimitiveType(this.fullyQualifiedType) &&
-          this.fullyQualifiedType.typeName === 'string') ||
-        isEnumType(this.fullyQualifiedType)
-      ) {
-        return `'${this.default}'`;
+      if (isPrimitiveType(this.fullyQualifiedType) && this.fullyQualifiedType.typeName === 'string') {
+        return `'${this.default}'`; // strings
+      }
+
+      if (isEnumType(this.fullyQualifiedType)) {
+        return `'${this.default}'`; // enums
       }
 
       return this.default;
@@ -103,7 +103,8 @@ class GraphQLQuery {
   }
 
   get args() {
-    return this.config.operation.arguments.map(arg => new GraphQLQueryArgConfig(arg));
+    return this.config.operation.arguments.map(arg =>
+      new GraphQLQueryArgConfig(arg));
   }
 
   get type() {
@@ -121,12 +122,16 @@ class GraphQLQuery {
   get pathParts() {
     return concat(
       this.config.service.baseUrl,
-      (this.config.resource.path + this.config.operation.path).split('/').filter(x => x.length > 0),
+      (this.config.resource.path + this.config.operation.path)
+        .split('/')
+        .filter(x => x.length > 0),
     );
   }
 
   get queryParts() {
-    return this.config.operation.arguments.filter(matches({ location: 'Query' })).map(get('name'));
+    return this.config.operation.arguments
+      .filter(matches({ location: 'Query' }))
+      .map(get('name'));
   }
 }
 
