@@ -10,13 +10,16 @@ const { destinationPathFromType } = require('../../utilities/destinationPath');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
 
 function getImportDeclarations(union) {
+  const graphqlNamedExports = ['GraphQLUnionType'];
+
+  if (some(union.types, ({ type }) => isEnumType(type))) {
+    // enums in unions are built out of wrapper objects
+    graphqlNamedExports.push('GraphQLObjectType', 'GraphQLNonNull');
+  }
+
   const initialImportDeclarations = [
     new ImportDeclaration({
-      namedExports: ['GraphQLUnionType'].concat(
-        some(union.types, ({ type }) => isEnumType(type))
-        ? ['GraphQLObjectType', 'GraphQLNonNull'] // used for enum wrappers
-        : []
-      ),
+      namedExports: graphqlNamedExports,
       moduleName: 'graphql',
     }),
   ];

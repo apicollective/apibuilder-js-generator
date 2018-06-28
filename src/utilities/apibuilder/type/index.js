@@ -35,7 +35,7 @@ const {
   ApiBuilderOperation,
   ApiBuilderOperationArgument,
   ApiBuilderResource,
-} = require('./resource')
+} = require('./resource');
 
 exports.ApiBuilderArray = ApiBuilderArray;
 exports.ApiBuilderEnum = ApiBuilderEnum;

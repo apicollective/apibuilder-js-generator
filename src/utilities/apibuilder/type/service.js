@@ -5,7 +5,7 @@ const {
   matchesProperty,
   memoize,
   overSome,
-  property
+  property,
 } = require('lodash');
 
 const definition = require('./definition');
@@ -116,7 +116,7 @@ exports.ApiBuilderImport = ApiBuilderImport;
  * Wraps an apibuilder service definition and provides utilities for
  * interacting with it.
  *
- * @prop {[ApiBuilderResource]} resources
+ * @prop {ApiBuilderResource[]} resources
  */
 class ApiBuilderService {
   constructor({ service: schema }) {
@@ -221,7 +221,7 @@ class ApiBuilderService {
 
   get resources() {
     const { ApiBuilderResource } = resource;
-    return map(this.schema.resources, resource => new ApiBuilderResource(resource, this));
+    return map(this.schema.resources, res => new ApiBuilderResource(res, this));
   }
 
   get baseUrl() {

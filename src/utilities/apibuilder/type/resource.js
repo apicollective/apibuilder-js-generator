@@ -1,5 +1,10 @@
 const { typeFromAst, astFromTypeName } = require('../utilities');
-const { get, getOr, flow, inRange } = require('lodash/fp');
+const {
+  get,
+  getOr,
+  flow,
+  inRange,
+} = require('lodash/fp');
 
 /**
  * The arguments of an APIBuilder operation
@@ -37,7 +42,7 @@ class ApiBuilderOperationArgument {
   static fromSchema(config, service) {
     return new ApiBuilderOperationArgument(config, service);
   }
-};
+}
 
 exports.ApiBuilderOperationArgument = ApiBuilderOperationArgument;
 
@@ -69,22 +74,21 @@ class ApiBuilderOperation {
   }
 
   get path() {
-    if (this.config.path.startsWith(this.resourcePath))
+    if (this.config.path.startsWith(this.resourcePath)) {
       return this.config.path.substring(this.resourcePath.length);
-    else
-      return this.config.path;
+    }
+
+    return this.config.path;
   }
 
   get resultType() {
     const type = getOr(
       'unit',
       'type',
-      this.config.responses.find(
-        flow(
-          get('code.integer.value'),
-          inRange(200, 300)
-        )
-      )
+      this.config.responses.find(flow(
+        get('code.integer.value'),
+        inRange(200, 300),
+      )),
     );
 
     return typeFromAst(astFromTypeName(type), this.service);
@@ -98,7 +102,7 @@ class ApiBuilderOperation {
   static fromSchema(config, resource, service) {
     return new ApiBuilderOperation(config, resource.path, service);
   }
-};
+}
 
 exports.ApiBuilderOperation = ApiBuilderOperation;
 
@@ -111,8 +115,9 @@ class ApiBuilderResource {
     this.config = config;
     this.service = service;
 
-    // moved out of getter because, if we create new objects in getters, we cannot use === to check for equality
-    this.operations = this.config.operations.map(op => ApiBuilderOperation.fromSchema(op, this, this.service));
+    // moved out of getter so that we can use === to check for equality
+    this.operations = this.config.operations.map(op =>
+      ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 
   get type() {
@@ -130,6 +135,6 @@ class ApiBuilderResource {
   get path() {
     return this.config.path;
   }
-};
+}
 
 exports.ApiBuilderResource = ApiBuilderResource;

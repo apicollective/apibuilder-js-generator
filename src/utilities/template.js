@@ -13,7 +13,7 @@ function renderTemplate(filepath, data, options = defaultOptions) {
   return !options.prettier ? code : prettier.format(code, {
     singleQuote: true,
     trailingComma: 'es5',
-    parser: 'babylon'
+    parser: 'babylon',
   });
 }
 

@@ -8,47 +8,59 @@ const { ApiBuilderFile } = require('../../../../utilities/apibuilder');
 
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const toCustomScalarType = require('../../utilities/toCustomScalarType');
-const { getBaseType, isEnclosingType, isPrimitiveType, isMapType } = require('../../../../utilities/apibuilder');
-const { flatMap, some, map, reduce, uniq } = require('lodash');
+const {
+  getBaseType,
+  isEnclosingType,
+  isPrimitiveType,
+  isMapType,
+} = require('../../../../utilities/apibuilder');
+const {
+  flatMap,
+  some,
+  reduce,
+  uniq,
+} = require('lodash');
 
 /**
  * Computes the name exports to import from the "graphql" package for writing
  * to generated code.
- * @param {ApiBuilderOperation} operation
+ * @param {ApiBuilderOperation}
  * @returns {String[]}
  */
-function computeGraphQLNamedExports(operation) {
+function computeGraphQLNamedExports({ arguments: args, resultType }) {
   const initialNamedExports = new Set(['GraphQLSchema', 'GraphQLObjectType']);
 
-  if (some(operation.arguments, { required: true })) {
+  // required -> NonNull
+  if (some(args, { required: true })) {
     initialNamedExports.add('GraphQLNonNull');
   }
 
-  if (isEnclosingType(operation.resultType) || some(operation.args, arg => isEnclosingType(arg.type))) {
+  // maps and arrays become NonNull Lists
+  if (isEnclosingType(resultType) || some(args, arg => isEnclosingType(arg.type))) {
     initialNamedExports.add('GraphQLList');
     initialNamedExports.add('GraphQLNonNull');
   }
 
-  return Array.from(
-    operation.arguments
-      .map(arg => arg.type)
-      .concat(operation.resultType)
-      .reduce((namedExports, type) => {
-        const scalarType = toGraphQLScalarType(type);
+  const exports = args
+    .map(arg => arg.type) // get the arg types
+    .concat(resultType) // and the result type
+    .reduce((namedExports, type) => {
+      const scalarType = toGraphQLScalarType(type);
 
-        if (scalarType) {
-          namedExports.add(scalarType);
-        }
+      if (scalarType) {
+        namedExports.add(scalarType); // import the type
+      }
 
-        return namedExports;
-      }, initialNamedExports)
-  );
+      return namedExports;
+    }, initialNamedExports);
+
+  return Array.from(exports);
 }
 
-function computeScalarExports(operation) {
+function computeScalarExports({ arguments: args, resultType }) {
   const initialNamedExports = [];
 
-  const types = operation.arguments.map(arg => arg.type).concat(operation.resultType);
+  const types = args.map(arg => arg.type).concat(resultType); // all the types
 
   if (some(types, isMapType)) {
     initialNamedExports.push('makeMapEntry');
@@ -67,20 +79,23 @@ function computeScalarExports(operation) {
 
 
 function mapToImportDeclarations(service) {
-  // Compute named exports to import from `graphql` package.
+  const allOperations = flatMap(service.resources, r => r.operations);
+
   const initialImportDeclarations = [
+    // Compute named exports to import from `graphql` package.
     new ImportDeclaration({
-      namedExports: uniq(flatMap(flatMap(service.resources, r => r.operations), computeGraphQLNamedExports)).sort(),
-      moduleName: 'graphql'
+      namedExports: uniq(flatMap(allOperations, computeGraphQLNamedExports)).sort(),
+      moduleName: 'graphql',
     }),
+    // Compute named exports to import from generated `scalars.js`
     new ImportDeclaration({
-      namedExports: uniq(flatMap(flatMap(service.resources, r => r.operations), computeScalarExports)).sort(),
+      namedExports: uniq(flatMap(allOperations, computeScalarExports)).sort(),
       moduleName: './scalars',
     }),
   ];
 
-  const resultTypes = flatMap(service.resources, r => r.operations).map(op => getBaseType(op.resultType))
-  const argTypes = flatMap(flatMap(service.resources, r => r.operations), op => op.arguments).map(arg => getBaseType(arg.type));
+  const resultTypes = allOperations.map(op => getBaseType(op.resultType));
+  const argTypes = flatMap(allOperations, op => op.arguments).map(arg => getBaseType(arg.type));
 
   return resultTypes.concat(argTypes)
     .filter(baseType => !isPrimitiveType(baseType))

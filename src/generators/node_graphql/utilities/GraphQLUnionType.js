@@ -50,15 +50,20 @@ class GraphQLUnionType {
     return new GraphQLUnionType({
       name: pascalCase(union.shortName),
       discriminator: union.discriminator,
-      models: union.types.filter(conforms({ type: isModelType })).map(({ discriminatorValue, type }) => ({
-        discriminatorValue,
-        type: GraphQLObjectType.fromApiBuilderModel(type),
-      })),
-      enums: union.types.filter(conforms({ type: isEnumType })).map(({ discriminatorValue, type }) => ({
-        discriminatorValue,
-        type: GraphQLEnumType.fromApiBuilderEnum(type),
-        isEnum: true,
-      })),
+      models:
+        union.types
+          .filter(conforms({ type: isModelType }))
+          .map(({ discriminatorValue, type }) => ({
+            discriminatorValue,
+            type: GraphQLObjectType.fromApiBuilderModel(type),
+          })),
+      enums:
+        union.types
+          .filter(conforms({ type: isEnumType }))
+          .map(({ discriminatorValue, type }) => ({
+            discriminatorValue,
+            type: GraphQLEnumType.fromApiBuilderEnum(type),
+          })),
     });
   }
 }

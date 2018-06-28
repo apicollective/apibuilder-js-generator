@@ -78,4 +78,5 @@ app.post('/invocations/:key', (req, res) => {
   });
 });
 
+// eslint-disable-next-line no-console
 app.listen(port, () => console.log(`apibuilder-javascript-generator listening on http://0.0.0.0:${port}`));
