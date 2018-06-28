@@ -16,7 +16,7 @@ const createLogger = require('debug');
 const log = createLogger('apibuilder:graphql-schema');
 
 /**
- * Returns whether str or str_v* matches the type
+ * Returns whether the type matches str, str_v2, str_v*...
  * @param {ApiBuilderType} type
  * @param {string} str
  */
