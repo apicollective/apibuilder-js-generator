@@ -75,6 +75,13 @@ app.post('/invocations/:key', (req, res) => {
   }).catch((error) => {
     console.error(`Could not generate code for ${invocationKey}: ${error.message}`);
     console.error(error.stack);
+
+    res.status(409).send([
+      {
+        code: 'GENERATOR_ERROR',
+        message: `Error in generator ${invocationKey}: ${error.message}\n${error.stack}`,
+      },
+    ]);
   });
 });
 
