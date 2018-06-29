@@ -3,6 +3,7 @@ const nodeFiveEs5 = require('./node_5_es5');
 const nodeFiveEs6 = require('./node_5_es6');
 const jsIsomorphic = require('./js_isomorphic');
 const propTypes = require('./prop_types');
+const nodeGraphQL = require('./node_graphql');
 
 const generators = {
   node_0_12: {
@@ -50,6 +51,13 @@ const generators = {
     generator: propTypes,
   },
 
+  node_graphql: {
+    key: 'node_graphql',
+    name: 'Node GraphQL',
+    description: 'GraphQL types, resolvers, and schemas',
+    attributes: [],
+    generator: nodeGraphQL,
+  },
 };
 
 module.exports = generators;

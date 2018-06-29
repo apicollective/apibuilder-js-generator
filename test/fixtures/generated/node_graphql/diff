@@ -1,0 +1,18 @@
+const { GraphQLUnionType } = require('graphql');
+const DiffBreaking = require('./../models/DiffBreaking');
+const DiffNonBreaking = require('./../models/DiffNonBreaking');
+
+const Diff = new GraphQLUnionType({
+  name: 'Diff',
+  types: [DiffBreaking, DiffNonBreaking],
+  resolveType(value) {
+    switch (value.type) {
+      case 'diff_breaking':
+        return DiffBreaking;
+      case 'diff_non_breaking':
+        return DiffNonBreaking;
+    }
+  },
+});
+
+module.exports = Diff;

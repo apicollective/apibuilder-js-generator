@@ -1,0 +1,51 @@
+<%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
+  <%_ if (defaultExport != null) { _%>
+    const <%= defaultExport %> = require('<%= moduleName %>');
+  <%_ } else if (namedExports != null) { _%>
+    const {
+      <%_ namedExports.forEach((namedExport) => { _%>
+      <%= namedExport %>,
+      <%_ }) _%>
+    } = require('<%= moduleName %>');
+  <%_ } else { _%>
+    require('<%= moduleName %>');
+  <%_ } _%>
+<%_ }) _%>
+
+<%_ union.enums.forEach(({ type: { name } }) => { _%>
+const <%= name %>Wrapper = new GraphQLObjectType({
+  name: '<%= name %>Wrapper',
+  fields: {
+    value: {
+      type: new GraphQLNonNull(<%= name %>)
+    }
+  },
+  description: 'Wrapper for the enum <%= name %> so that it can be part of a union',
+});
+<%_ }) _%>
+
+const <%= union.name %> = new GraphQLUnionType({
+  name: '<%= union.name %>',
+  types: [
+    <%_ union.models.forEach(({ type: { name } }) => { _%>
+      <%= name %>,
+    <%_ }) _%>
+    <%_ union.enums.forEach(({ type: { name } }) => { _%>
+      <%= name %>Wrapper,
+    <%_ }) _%>
+  ],
+  resolveType(value) {
+    switch (value.<%= union.discriminator %>) {
+      <%_ union.models.forEach(({ type: { name }, discriminatorValue }) => { _%>
+      case '<%= discriminatorValue %>':
+        return <%= name %>;
+      <%_ }) _%>
+      <%_ union.enums.forEach(({ type: { name }, discriminatorValue }) => { _%>
+      case '<%= discriminatorValue %>':
+        return <%= name %>Wrapper;
+      <%_ }) _%>
+    }
+  }
+});
+
+module.exports = <%= union.name %>;

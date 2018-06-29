@@ -1,0 +1,20 @@
+const { GraphQLEnumType } = require('graphql');
+
+const <%= exportName %> = new GraphQLEnumType({
+  name: '<%= enumeration.name %>',
+  values: {
+    <%_ Object.entries(enumeration.values).forEach(([name, value]) => { _%>
+      <%= name %>: {
+        value: '<%= value.value %>',
+        <%_ if (value.description != null) { _%>
+        description: '<%= value.description %>',
+        <%_ } _%>
+        <%_ if (value.deprecationReason != null) { _%>
+        deprecationReason: '<%= value.deprecationReason %>',
+        <%_ } _%>
+      },
+    <%_ }) _%>
+  },
+});
+
+module.exports = <%= exportName %>;

@@ -1,0 +1,33 @@
+<%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
+  <%_ if (defaultExport != null) { _%>
+    const <%= defaultExport %> = require('<%= moduleName %>');
+  <%_ } else if (namedExports != null) { _%>
+    const {
+      <%_ namedExports.forEach((namedExport) => { _%>
+      <%= namedExport %>,
+      <%_ }) _%>
+    } = require('<%= moduleName %>');
+  <%_ } else { _%>
+    require('<%= moduleName %>');
+  <%_ } _%>
+<%_ }) _%>
+
+const <%= object.name %> = new GraphQLObjectType({
+  name: '<%= object.name %>',
+  description: '<%= object.description %>',
+  fields: {
+  <%_ Object.entries(object.fields).forEach(([key, field]) => { _%>
+    <%= key %>: {
+      type: <%= field.type %>,
+      <%_ if (field.deprecationReason != null) { _%>
+        deprecationReason: '<%= field.deprecationReason %>',
+      <%_ } _%>
+      <%_ if (field.description != null) { _%>
+        description: '<%= field.description %>',
+      <%_ } _%>
+    },
+  <%_ }) _%>
+  },
+});
+
+module.exports = <%= object.name %>;
