@@ -1,1 +1,2 @@
-DEBUG=apibuilder:* forever -o ./log/console.log -e ./log/console.error.log src/server/index.js
+#!/bin/bash
+DEBUG="apibuilder:*" forever -o ./log/console.log -e ./log/console.error.log src/server/index.js
