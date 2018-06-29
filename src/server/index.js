@@ -80,7 +80,7 @@ app.post('/invocations/:key', (req, res) => {
       {
         code: 'GENERATOR_ERROR',
         message: `Error in generator ${invocationKey}: ${error.message}\n${error.stack}`,
-      }
+      },
     ]);
   });
 });
