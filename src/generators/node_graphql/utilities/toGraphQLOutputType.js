@@ -1,6 +1,7 @@
 const invariant = require('invariant');
 
-const { isArrayType, isMapType, isPrimitiveType } = require('../../../utilities/apibuilder');
+const { isArrayType, isMapType, isPrimitiveType, typeFromAst, astFromTypeName } = require('../../../utilities/apibuilder');
+const { isReference, getFullType } = require('./reference');
 const toDefaultExport = require('./toDefaultExport');
 const toGraphQLScalarType = require('./toGraphQLScalarType');
 const toCustomScalarType = require('./toCustomScalarType');
@@ -11,17 +12,21 @@ const toCustomScalarType = require('./toCustomScalarType');
  * @param {Boolean} [required = false]
  * @returns {String}
  */
-function toGraphQLOutputType(type, required = false) {
+function toGraphQLOutputType(type, required = false, service) {
   let outputType;
 
   if (isMapType(type)) {
-    outputType = `new GraphQLList(new GraphQLNonNull(makeMapEntry(${toGraphQLOutputType(type.ofType)})))`;
+    outputType = `new GraphQLList(new GraphQLNonNull(makeMapEntry(${toGraphQLOutputType(type.ofType, false, service)})))`;
   } else if (isArrayType(type)) {
-    outputType = `new GraphQLList(new GraphQLNonNull(${toGraphQLOutputType(type.ofType)}))`;
+    outputType = `new GraphQLList(new GraphQLNonNull(${toGraphQLOutputType(type.ofType, false, service)}))`;
   } else if (isPrimitiveType(type)) {
     outputType = toGraphQLScalarType(type) || toCustomScalarType(type);
   } else {
-    outputType = toDefaultExport(type);
+    outputType = toDefaultExport(
+      isReference(type)
+      ? getFullType(type, service) || type
+      : type
+    );
   }
 
   invariant(outputType != null, `${outputType} must be a valid GraphQLOutputType`);

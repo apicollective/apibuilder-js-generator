@@ -25,16 +25,17 @@ function typeMatches(type, str) {
 }
 
 class GraphQLQueryArgConfig {
-  constructor(arg) {
+  constructor(arg, service) {
     this.name = arg.name;
     this.fullyQualifiedType = arg.type;
     this.required = arg.required;
     this.default = arg.defaultValue;
     this.description = arg.description;
+    this.service = service;
   }
 
   get type() {
-    return toGraphQLOutputType(this.fullyQualifiedType, this.required);
+    return toGraphQLOutputType(this.fullyQualifiedType, this.required, this.service);
   }
 
   get defaultValue() {
@@ -104,11 +105,11 @@ class GraphQLQuery {
 
   get args() {
     return this.config.operation.arguments.map(arg =>
-      new GraphQLQueryArgConfig(arg));
+      new GraphQLQueryArgConfig(arg, this.service));
   }
 
   get type() {
-    return toGraphQLOutputType(this.config.operation.resultType, true);
+    return toGraphQLOutputType(this.config.operation.resultType, true, this.config.service);
   }
 
   get deprecationReason() {

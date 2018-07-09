@@ -18,6 +18,7 @@ const toImportDeclaration = require('../../utilities/toImportDeclaration');
 const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
 const toCustomScalarType = require('../../utilities/toCustomScalarType');
 const GraphQLObjectType = require('../../utilities/GraphQLObjectType');
+const { isReference, getFullType } = require('../../utilities/reference');
 
 // TODO: An API Builder model may be either a GraphQL object or a GraphQL input,
 // in this iteration we will assume that they are all GraphQL objects, but we
@@ -93,6 +94,8 @@ function mapToImportDeclarations(model) {
 
   return model.fields
     .map(field => getBaseType(field.type))
+    // not importing references with a known full type because we're mapping them to the full object
+    .filter(type => !(isReference(type) && getFullType(type, model.service)))
     .filter(baseType => !isPrimitiveType(baseType))
     .reduce((declarations, baseType) => {
       // Compute relative path to target module, which is the type we want to

@@ -32,7 +32,7 @@ class GraphQLField {
    */
   static fromApiBuilderField(field) {
     return new GraphQLField({
-      type: toGraphQLOutputType(field.type, field.isRequired),
+      type: toGraphQLOutputType(field.type, field.isRequired, field.service),
       deprecationReason: field.deprecationReason,
       description: field.description,
     });
