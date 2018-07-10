@@ -12,12 +12,14 @@ const {
 const generateEnumeration = require('./generators/generator-enumeration');
 const generateModel = require('./generators/generator-model');
 const generateUnion = require('./generators/generator-union');
+const generateIndex = require('./generators/generator-index');
 const toModuleName = require('./utilities/toModuleName');
 
 const debug = createLogger('apibuilder:prop-types');
 
 function generate(data) {
   const service = new ApiBuilderService({ service: data });
+
   const generatedFiles = reduce(service.internalTypes, (files, type) => {
     debug(`Generating source code for "${type.baseType}".`);
 
@@ -39,7 +41,9 @@ function generate(data) {
     const file = new ApiBuilderFile(basename, dirname, contents);
 
     return files.concat(file);
-  }, []);
+  }, [
+    new ApiBuilderFile('index.js', 'prop-types', generateIndex(service.internalTypes, './prop-types')),
+  ]);
 
   return Promise.resolve(generatedFiles);
 }

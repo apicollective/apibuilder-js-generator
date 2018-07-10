@@ -1,5 +1,7 @@
-module.exports = [
+import PropTypes from 'prop-types';
+
+export default PropTypes.oneOf([
   <%_ enumeration.values.forEach(({ name }) => { _%>
   '<%= name %>',
   <%_ }) _%>
-];
+]);

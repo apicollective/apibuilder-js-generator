@@ -21,6 +21,7 @@ function toImportStatement(source, target) {
     moduleName = `./${path.basename(targetPath)}`;
   } else {
     moduleName = path.relative(path.dirname(sourcePath), targetPath);
+    moduleName = moduleName.startsWith('.') ? moduleName : `./${moduleName}`;
   }
 
   return {

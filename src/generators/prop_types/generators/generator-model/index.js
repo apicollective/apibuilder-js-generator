@@ -5,6 +5,7 @@ const { renderTemplate } = require('../../../../utilities/template');
 const { getBaseType, isPrimitiveType } = require('../../../../utilities/apibuilder');
 const toImportStatement = require('../../utilities/toImportStatement');
 const toPropTypes = require('../../utilities/toPropTypes');
+const isCyclic = require('../../utilities/isCyclic');
 
 function mapToImportStatements(model) {
   return model.fields
@@ -23,6 +24,7 @@ function mapToPropTypes(model) {
   return model.fields.map(field => ({
     key: field.name,
     validator: toPropTypes(field.type, field.isRequired),
+    isCyclic: isCyclic(model, field.type),
   }));
 }
 

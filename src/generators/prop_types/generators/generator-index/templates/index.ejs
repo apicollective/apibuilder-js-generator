@@ -1,0 +1,3 @@
+<% exportStatements.forEach((exportStatement) => { %>
+export { default as <%= exportStatement.defaultExport %> } from '<%= exportStatement.moduleName %>';
+<% }) %>

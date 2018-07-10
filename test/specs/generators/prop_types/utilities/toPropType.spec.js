@@ -29,26 +29,26 @@ describe('toPropTypes', () => {
     // Ridiculously nested primitive types (You would probably be fired for this).
     expect(toPropTypes(typeFromAst(astFromTypeName('map[map[[[string]]]]'), service))).toEqual('PropTypes.objectOf(PropTypes.objectOf(PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))))');
     // Internal enumeration
-    expect(toPropTypes(typeFromAst(astFromTypeName('visibility'), service))).toEqual('PropTypes.oneOf(visibilityPropTypes)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('visibility'), service))).toEqual('Visibility');
     // External enumeration
-    expect(toPropTypes(typeFromAst(astFromTypeName('com.bryzek.apidoc.spec.v0.enums.method'), service))).toEqual('PropTypes.oneOf(methodPropTypes)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('com.bryzek.apidoc.spec.v0.enums.method'), service))).toEqual('Method');
     // Internal model
-    expect(toPropTypes(typeFromAst(astFromTypeName('application'), service))).toEqual('PropTypes.shape(applicationPropTypes)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('application'), service))).toEqual('Application');
     // External model
-    expect(toPropTypes(typeFromAst(astFromTypeName('com.bryzek.apidoc.common.v0.models.reference'), service))).toEqual('PropTypes.shape(referencePropTypes)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('com.bryzek.apidoc.common.v0.models.reference'), service))).toEqual('Reference');
     // Internal union
-    expect(toPropTypes(typeFromAst(astFromTypeName('item_detail'), service))).toEqual('PropTypes.oneOfType(itemDetailPropTypes)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('item_detail'), service))).toEqual('ItemDetail');
     // External union
-    expect(toPropTypes(typeFromAst(astFromTypeName('com.bryzek.apidoc.spec.v0.unions.response_code'), service))).toEqual('PropTypes.oneOfType(responseCodePropTypes)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('com.bryzek.apidoc.spec.v0.unions.response_code'), service))).toEqual('ResponseCode');
     // Nested enumeration
-    expect(toPropTypes(typeFromAst(astFromTypeName('[visibility]'), service))).toEqual('PropTypes.arrayOf(PropTypes.oneOf(visibilityPropTypes))');
-    expect(toPropTypes(typeFromAst(astFromTypeName('map[visibility]'), service))).toEqual('PropTypes.objectOf(PropTypes.oneOf(visibilityPropTypes))');
+    expect(toPropTypes(typeFromAst(astFromTypeName('[visibility]'), service))).toEqual('PropTypes.arrayOf(Visibility)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('map[visibility]'), service))).toEqual('PropTypes.objectOf(Visibility)');
     // Nested model
-    expect(toPropTypes(typeFromAst(astFromTypeName('[application]'), service))).toEqual('PropTypes.arrayOf(PropTypes.shape(applicationPropTypes))');
-    expect(toPropTypes(typeFromAst(astFromTypeName('map[application]'), service))).toEqual('PropTypes.objectOf(PropTypes.shape(applicationPropTypes))');
+    expect(toPropTypes(typeFromAst(astFromTypeName('[application]'), service))).toEqual('PropTypes.arrayOf(Application)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('map[application]'), service))).toEqual('PropTypes.objectOf(Application)');
     // Nested union
-    expect(toPropTypes(typeFromAst(astFromTypeName('[item_detail]'), service))).toEqual('PropTypes.arrayOf(PropTypes.oneOfType(itemDetailPropTypes))');
-    expect(toPropTypes(typeFromAst(astFromTypeName('map[item_detail]'), service))).toEqual('PropTypes.objectOf(PropTypes.oneOfType(itemDetailPropTypes))');
+    expect(toPropTypes(typeFromAst(astFromTypeName('[item_detail]'), service))).toEqual('PropTypes.arrayOf(ItemDetail)');
+    expect(toPropTypes(typeFromAst(astFromTypeName('map[item_detail]'), service))).toEqual('PropTypes.objectOf(ItemDetail)');
   });
 
   test('should convert required apibuilder types to prop types', () => {

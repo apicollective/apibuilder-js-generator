@@ -1,0 +1,385 @@
+{
+  "apidoc": {
+    "version": "0.12.8"
+  },
+  "name": "people api",
+  "organization": {
+    "key": "apicollective"
+  },
+  "application": {
+    "key": "people-api"
+  },
+  "namespace": "io.apicollective.people.api.v0",
+  "version": "1.0.0",
+  "info": {
+    "license": {
+      "name": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    }
+  },
+  "headers": [],
+  "unions": [
+    {
+      "name": "funder",
+      "plural": "funders",
+      "types": [
+        {
+          "type": "organization",
+          "attributes": [],
+          "discriminator_value": "organization"
+        },
+        {
+          "type": "person",
+          "attributes": [],
+          "discriminator_value": "person"
+        }
+      ],
+      "attributes": [],
+      "discriminator": "discriminator"
+    },
+    {
+      "name": "address_country",
+      "plural": "address_countries",
+      "types": [
+        {
+          "type": "country",
+          "attributes": [],
+          "discriminator_value": "country"
+        },
+        {
+          "type": "string",
+          "attributes": [],
+          "discriminator_value": "text"
+        }
+      ],
+      "attributes": [],
+      "discriminator": "discriminator"
+    }
+  ],
+  "enums": [
+    {
+      "name": "gender",
+      "plural": "genders",
+      "values": [
+        {
+          "name": "male",
+          "attributes": []
+        },
+        {
+          "name": "female",
+          "attributes": []
+        }
+      ]
+    }
+  ],
+  "models": [
+    {
+      "name": "person",
+      "plural": "people",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "person_detail",
+          "type": "person_detail",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        }
+      ]
+    },
+    {
+      "name": "person_detail",
+      "plural": "person_details",
+      "fields": [
+        {
+          "name": "person_id",
+          "type": "uuid",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "age",
+          "type": "integer",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "gender",
+          "type": "gender",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "phone",
+          "type": "string",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "occupation",
+          "type": "occupation",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "person",
+          "type": "person",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        }
+      ]
+    },
+    {
+      "name": "organization",
+      "plural": "organizations",
+      "fields": [
+        {
+          "name": "address",
+          "type": "postal_address",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "employees",
+          "type": "[employee]",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "legal_name",
+          "type": "string",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "funder",
+          "type": "funder",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        }
+      ]
+    },
+    {
+      "name": "employee",
+      "plural": "employees",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "person_id",
+          "type": "uuid",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "employer_id",
+          "type": "uuid",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "salary",
+          "type": "double",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "person",
+          "type": "person",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "employer",
+          "type": "funder",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        }
+      ]
+    },
+    {
+      "name": "occupation",
+      "plural": "occupations",
+      "description": "A profession, may involve prolonged training and/or a formal qualification.",
+      "fields": [
+        {
+          "name": "education_requirements",
+          "type": "string",
+          "description": "Educational background needed for the position or Occupation.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "estimated_salary",
+          "type": "double",
+          "description": "A property describing the estimated salary for a job posting based on a variety of variables including, but not limited to industry, job title, and location. The estimated salary is usually computed by outside organizations and therefore the hiring organization is not bound to this estimated salary.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "experience_requirements",
+          "type": "string",
+          "description": "Description of skills and experience needed for the position or Occupation.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "occupation_location",
+          "type": "postal_address",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "qualifications",
+          "type": "string",
+          "description": "Specific qualifications required for this role or Occupation.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "responsibilities",
+          "type": "string",
+          "description": "Responsibilities associated with this role or Occupation.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "skills",
+          "type": "string",
+          "description": "Skills required to fulfill this role.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        }
+      ]
+    },
+    {
+      "name": "postal_address",
+      "plural": "postal_addresses",
+      "fields": [
+        {
+          "name": "country",
+          "type": "address_country",
+          "description": "The country. For example, USA. You can also provide the two-letter ISO 3166-1 alpha-2 country code.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "locality",
+          "type": "string",
+          "description": "The locality. For example, Mountain View.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "administrative_area",
+          "type": "string",
+          "description": "The region. For example, CA.",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "postal_code",
+          "type": "string",
+          "description": "The postal code. For example, 94043.",
+          "required": false,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "street_address",
+          "type": "string",
+          "description": "The street address. For example, 1600 Amphitheatre Pkwy.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        }
+      ]
+    },
+    {
+      "name": "country",
+      "plural": "countries",
+      "fields": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The name of the country. For example, United States.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "iso_3166_2",
+          "type": "string",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "iso_3166_3",
+          "type": "string",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "languages",
+          "type": "[string]",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        },
+        {
+          "name": "population",
+          "type": "integer",
+          "description": "The population count of the country.",
+          "required": true,
+          "attributes": [],
+          "annotations": []
+        }
+      ]
+    }
+  ]
+}

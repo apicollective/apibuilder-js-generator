@@ -8,7 +8,8 @@
     "lint": "eslint . --cache --format=codeframe --ext js",
     "lint:fix": "eslint . --fix --cache --format=codeframe --ext js,jsx",
     "pretest": "npm run lint",
-    "test": "jest --maxWorkers=4"
+    "test": "jest --maxWorkers=4",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",

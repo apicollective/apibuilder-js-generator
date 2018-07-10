@@ -1,13 +1,25 @@
-// Forward declare module.exports to avoid issues with circular dependencies.
-module.exports = {};
-
-const PropTypes = require('prop-types');
+import PropTypes from 'prop-types';
 <%_ importStatements.forEach(({ defaultExport, moduleName }) => { _%>
-const <%= defaultExport %> = require('<%= moduleName %>');
+import <%= defaultExport %> from '<%= moduleName %>';
 <%_ }) _%>
 
-Object.assign(module.exports, {
-  <%_ propTypes.forEach(({ key, validator }) => { _%>
-  '<%= key %>': <%= validator %>,
+
+<%_ if (propTypes.some(propType => propType.isCyclic)) { _%>
+// Helper used as workaround for cyclic dependencies.
+function createLazyTypeChecker(getValidator) {
+  return function checkType(...args) {
+    const validator = getValidator();
+    return validator(...args);
+  };
+}
+<%_ } _%>
+
+export default PropTypes.shape({
+  <%_ propTypes.forEach((propType) => { _%>
+    <%_ if (propType.isCyclic) { _%>
+      '<%= propType.key %>': createLazyTypeChecker(() => <%= propType.validator %>),
+    <%_ } else { _%>
+      '<%= propType.key %>': <%= propType.validator %>,
+    <%_ } _%>
   <%_ }) _%>
 });

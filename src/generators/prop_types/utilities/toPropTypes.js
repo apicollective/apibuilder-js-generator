@@ -27,11 +27,11 @@ function toPropTypes(type, required = false) {
   } else if (isPrimitiveType(type)) {
     propType = toPrimitivePropTypes(type);
   } else if (isModelType(type)) {
-    propType = `PropTypes.shape(${toDefaultExport(type)})`;
+    propType = toDefaultExport(type);
   } else if (isUnionType(type)) {
-    propType = `PropTypes.oneOfType(${toDefaultExport(type)})`;
+    propType = toDefaultExport(type);
   } else if (isEnumType(type)) {
-    propType = `PropTypes.oneOf(${toDefaultExport(type)})`;
+    propType = toDefaultExport(type);
   }
 
   if (required) {
