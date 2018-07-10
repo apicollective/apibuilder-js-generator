@@ -4,9 +4,10 @@ import Employee from './Employee';
 import Funder from '../unions/Funder';
 
 // Helper used as workaround for cyclic dependencies.
-function createLazyTypeChecker(validate) {
-  return function checkType() {
-    return validate.apply(this, arguments);
+function createLazyTypeChecker(getValidator) {
+  return function checkType(...args) {
+    const validator = getValidator();
+    return validator(...args);
   };
 }
 
