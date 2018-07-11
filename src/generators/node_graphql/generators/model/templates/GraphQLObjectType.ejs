@@ -15,7 +15,7 @@
 const <%= object.name %> = new GraphQLObjectType({
   name: '<%= object.name %>',
   description: '<%= object.description %>',
-  fields: {
+  fields: () => ({
   <%_ Object.entries(object.fields).forEach(([key, field]) => { _%>
     <%= key %>: {
       type: <%= field.type %>,
@@ -27,7 +27,7 @@ const <%= object.name %> = new GraphQLObjectType({
       <%_ } _%>
     },
   <%_ }) _%>
-  },
+  }),
 });
 
 export default <%= object.name %>;
