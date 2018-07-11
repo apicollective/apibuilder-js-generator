@@ -43,9 +43,10 @@ app.get('/generators/:key', (req, res) => {
 
 app.post('/invocations/:key', (req, res) => {
   const invocationKey = get(req, 'params.key');
-  const summary = get(generators, invocationKey, {});
-  const { generator } = summary;
-  const service = get(req, 'body.service');
+  const invocationForm = get(req, 'body');
+
+  const generator = get(generators, [invocationKey, 'generator']);
+  const service = get(invocationForm, 'service');
 
   if (!generator) {
     return res.status(409).send([
@@ -67,7 +68,7 @@ app.post('/invocations/:key', (req, res) => {
 
   log(`Generating with[${invocationKey}] for service[${service.namespace}.${service.name}]`);
 
-  return generator.generate(service).then((files) => {
+  return generator.generate(invocationForm).then((files) => {
     res.send({
       source: '',
       files,

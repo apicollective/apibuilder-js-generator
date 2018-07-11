@@ -7,7 +7,7 @@ const { generateFile: generateUnionFile } = require('./generators/union');
 const { generateFile: generateSchemaFile } = require('./generators/schema');
 const { generateFiles: generateScalars } = require('./generators/scalars');
 
-function generate(data) {
+function generate({ service: data }) {
   const service = new ApiBuilderService({ service: data });
 
   let files = [];

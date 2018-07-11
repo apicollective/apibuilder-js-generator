@@ -1,7 +1,7 @@
 const babel = require('babel-core');
 const es6Generate = require('../node_5_es6');
 
-function generate(service) {
+function generate({ service }) {
   return es6Generate.generate(service)
     .then(files => files.map((file) => {
       if (file.name.endsWith('.js')) {

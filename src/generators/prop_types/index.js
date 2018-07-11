@@ -17,7 +17,7 @@ const toModuleName = require('./utilities/toModuleName');
 
 const debug = createLogger('apibuilder:prop-types');
 
-function generate(data) {
+function generate({ service: data }) {
   const service = new ApiBuilderService({ service: data });
 
   const generatedFiles = reduce(service.internalTypes, (files, type) => {
