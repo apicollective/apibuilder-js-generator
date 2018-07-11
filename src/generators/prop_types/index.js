@@ -44,7 +44,7 @@ function generate(invocationForm) {
     return files.concat(file);
   }, [
     new ApiBuilderFile('index.js', 'prop-types', generateIndex(service.internalTypes, './prop-types')),
-    new ApiBuilderFile('index.d.ts', 'prop-types', generateTypeDefinition(service.internalTypes)),
+    new ApiBuilderFile('index.d.ts', 'prop-types', generateTypeDefinition(service)),
   ]);
 
   return Promise.resolve(generatedFiles);

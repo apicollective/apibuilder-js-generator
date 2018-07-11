@@ -1,9 +1,4 @@
-<%_ if (libraryName && versionNumber) { _%>
-// Type definitions for <%= libraryName %> <%= versionNumber %>
-<%_ } _%>
-<%_ if (repository) { _%>
-// Project: <%= repository %>
-<%_ } _%>
+// Type definitions for <%= organizationKey %> <%= applicationKey %> <%= versionNumber %>
 // Definitions by: API Builder <https://www.apibuilder.io/>
 
 export type Validator<T> = (object: T, key: string, componentName: string, ...rest: any[]) => Error | null;

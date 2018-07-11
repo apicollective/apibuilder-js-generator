@@ -47,11 +47,7 @@ const generators = {
     name: 'React PropTypes',
     language: 'JavaScript',
     description: 'React PropTypes using es2017. Utilizes the `prop-types` npm module',
-    attributes: [
-      'libraryName',
-      'versionNumber',
-      'repository',
-    ],
+    attributes: [],
     generator: propTypes,
   },
 
