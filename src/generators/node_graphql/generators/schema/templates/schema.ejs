@@ -1,18 +1,18 @@
 <%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
   <%_ if (defaultExport != null) { _%>
-    const <%= defaultExport %> = require('<%= moduleName %>');
+    import <%= defaultExport %> from '<%= moduleName %>';
   <%_ } else if (namedExports != null) { _%>
-    const {
+    import {
       <%_ namedExports.forEach((namedExport) => { _%>
       <%= namedExport %>,
       <%_ }) _%>
-    } = require('<%= moduleName %>');
+    } from '<%= moduleName %>';
   <%_ } else { _%>
-    require('<%= moduleName %>');
+    import '<%= moduleName %>';
   <%_ } _%>
 <%_ }) _%>
 
-const got = require('got');
+import got from 'got';
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -80,4 +80,4 @@ const schema = new GraphQLSchema({
   }),
 });
 
-module.exports = schema;
+export default schema;

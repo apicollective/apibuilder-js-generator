@@ -1,14 +1,14 @@
 <%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
   <%_ if (defaultExport != null) { _%>
-    const <%= defaultExport %> = require('<%= moduleName %>');
+    import <%= defaultExport %> from '<%= moduleName %>';
   <%_ } else if (namedExports != null) { _%>
-    const {
+    import {
       <%_ namedExports.forEach((namedExport) => { _%>
       <%= namedExport %>,
       <%_ }) _%>
-    } = require('<%= moduleName %>');
+    } from '<%= moduleName %>';
   <%_ } else { _%>
-    require('<%= moduleName %>');
+    import '<%= moduleName %>';
   <%_ } _%>
 <%_ }) _%>
 
@@ -48,4 +48,4 @@ const <%= union.name %> = new GraphQLUnionType({
   }
 });
 
-module.exports = <%= union.name %>;
+export default <%= union.name %>;
