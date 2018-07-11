@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import PostalAddress from './PostalAddress';
-import Employee from './Employee';
-import Funder from '../unions/Funder';
+import postalAddress from './postalAddress';
+import employee from './employee';
+import funder from '../unions/funder';
 
 // Helper used as workaround for cyclic dependencies.
 function createLazyTypeChecker(getValidator) {
@@ -12,10 +12,10 @@ function createLazyTypeChecker(getValidator) {
 }
 
 export default PropTypes.shape({
-  address: PostalAddress.isRequired,
+  address: postalAddress.isRequired,
   employees: createLazyTypeChecker(
-    () => PropTypes.arrayOf(Employee).isRequired
+    () => PropTypes.arrayOf(employee).isRequired
   ),
   legal_name: PropTypes.string.isRequired,
-  funder: createLazyTypeChecker(() => Funder),
+  funder: createLazyTypeChecker(() => funder),
 });

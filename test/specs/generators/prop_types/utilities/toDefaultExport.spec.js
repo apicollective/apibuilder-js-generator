@@ -7,16 +7,16 @@ const service = new ApiBuilderService({ service: schema });
 describe('toDefaultExport', () => {
   test('should return default export name for enum', () => {
     const enumeration = service.findEnumByName('original_type');
-    expect(toDefaultExport(enumeration)).toBe('OriginalType');
+    expect(toDefaultExport(enumeration)).toBe('originalType');
   });
 
   test('should return default export name for model', () => {
     const model = service.findModelByName('attribute_value_form');
-    expect(toDefaultExport(model)).toBe('AttributeValueForm');
+    expect(toDefaultExport(model)).toBe('attributeValueForm');
   });
 
   test('should return default export name for union', () => {
     const union = service.findUnionByName('item_detail');
-    expect(toDefaultExport(union)).toBe('ItemDetail');
+    expect(toDefaultExport(union)).toBe('itemDetail');
   });
 });

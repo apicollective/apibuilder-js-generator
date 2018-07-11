@@ -13,8 +13,8 @@ describe('toImportStatement', () => {
     // com/bryzek/apidoc/api/v0/models/AttributeValue
     const target = find(service.models, { shortName: 'attribute_value' });
     expect(toImportStatement(source, target)).toEqual({
-      defaultExport: 'AttributeValue',
-      moduleName: './AttributeValue',
+      defaultExport: 'attributeValue',
+      moduleName: './attributeValue',
     });
   });
 
@@ -24,8 +24,8 @@ describe('toImportStatement', () => {
     // com/bryzek/apidoc/api/v0/enums/OriginalType
     const target = find(service.enums, { shortName: 'original_type' });
     expect(toImportStatement(source, target)).toEqual({
-      defaultExport: 'OriginalType',
-      moduleName: '../enums/OriginalType',
+      defaultExport: 'originalType',
+      moduleName: '../enums/originalType',
     });
   });
 
@@ -35,8 +35,8 @@ describe('toImportStatement', () => {
     // com/bryzek/apidoc/common/v0/models/Audit
     const target = find(service.models, { baseType: 'com.bryzek.apidoc.common.v0.models.audit' });
     expect(toImportStatement(source, target)).toEqual({
-      defaultExport: 'Audit',
-      moduleName: '../../../common/v0/models/Audit',
+      defaultExport: 'audit',
+      moduleName: '../../../common/v0/models/audit',
     });
   });
 });

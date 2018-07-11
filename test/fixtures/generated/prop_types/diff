@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import DiffBreaking from '../models/DiffBreaking';
-import DiffNonBreaking from '../models/DiffNonBreaking';
+import diffBreaking from '../models/diffBreaking';
+import diffNonBreaking from '../models/diffNonBreaking';
 
-export default PropTypes.oneOfType([DiffBreaking, DiffNonBreaking]);
+export default PropTypes.oneOfType([diffBreaking, diffNonBreaking]);

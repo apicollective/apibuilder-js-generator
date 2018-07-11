@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
-import Reference from '../../../common/v0/models/Reference';
-import Visibility from '../enums/Visibility';
-import Audit from '../../../common/v0/models/Audit';
+import reference from '../../../common/v0/models/reference';
+import visibility from '../enums/visibility';
+import audit from '../../../common/v0/models/audit';
 
 export default PropTypes.shape({
   guid: PropTypes.string.isRequired,
-  organization: Reference.isRequired,
+  organization: reference.isRequired,
   name: PropTypes.string.isRequired,
   key: PropTypes.string.isRequired,
-  visibility: Visibility.isRequired,
+  visibility: visibility.isRequired,
   description: PropTypes.string,
-  audit: Audit.isRequired,
+  audit: audit.isRequired,
 });
