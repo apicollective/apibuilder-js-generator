@@ -1,6 +1,6 @@
 const find = require('lodash/find');
 
-const { ApiBuilderService } = require('../../../../../src/utilities/apibuilder');
+const { ApiBuilderService, ApiBuilderModel, FullyQualifiedType } = require('../../../../../src/utilities/apibuilder');
 const schema = require('../../../../fixtures/schemas/apidoc-api.json');
 const toModuleName = require('../../../../../src/generators/prop_types/utilities/toModuleName');
 
@@ -20,5 +20,14 @@ describe('toModuleName', () => {
   test('should return module name for union', () => {
     const union = find(service.unions, { shortName: 'item_detail' });
     expect(toModuleName(union)).toBe('com/bryzek/apidoc/api/v0/unions/itemDetail');
+  });
+
+  test('should allow reserved words as file basename', () => {
+    const model = new ApiBuilderModel({
+      name: 'export',
+      plural: 'exports',
+      fields: [],
+    }, new FullyQualifiedType('io.flow.api.v0.models.export'), service);
+    expect(toModuleName(model)).toBe('io/flow/api/v0/models/export');
   });
 });
