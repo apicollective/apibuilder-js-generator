@@ -18,7 +18,7 @@ const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-    <% config.queries.forEach(({ name, type, args, deprecationReason, description, pathParts, queryParts }) => { %>
+    <% config.queries.forEach(({ name, type, isListType, isPrimitiveType, args, deprecationReason, description, pathParts, queryParts }) => { %>
       <%= name %>: {
         type: <%= type %>,
         <%_ if (args.length > 0) { _%>
@@ -60,11 +60,13 @@ const schema = new GraphQLSchema({
               <%_ queryParts.forEach(part => { _%>
                 '<%= part %>',
               <%_ }) _%>
-            ].forEach(key => {
+            ].forEach((key) => {
               if (args.hasOwnProperty(key))
                 query[key] = args[key];
             });
           <%_ } _%>
+
+          console.log(`${path}?${Object.entries(query).map(p => p.join('=')).join('?')}`);
 
           return got(path, {
             json: true,
@@ -72,7 +74,19 @@ const schema = new GraphQLSchema({
             headers: {
               authorization: context.headers.authorization
             }
-          }).then(response => response.body);
+          }).then(response =>
+            <%_ if (isPrimitiveType) { _%>
+              response.body,
+            <%_ } else if (isListType) { _%>
+              response.body.map(elem => Object.assign({}, elem, {
+                __args: args
+              })),
+            <%_ } else { _%>
+              Object.assign({}, response.body, {
+                __args: args // used to pass e.g. organization to child references
+              }),
+            <%_ } _%>
+          );
         }
       },
     <% }) %>

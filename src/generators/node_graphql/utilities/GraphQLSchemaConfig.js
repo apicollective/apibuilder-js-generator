@@ -112,6 +112,14 @@ class GraphQLQuery {
     return toGraphQLOutputType(this.config.operation.resultType, true, this.config.service);
   }
 
+  get isListType() {
+    return isEnclosingType(this.config.operation.resultType);
+  }
+
+  get isPrimitiveType() {
+    return isPrimitiveType(getBaseType(this.config.operation.resultType));
+  }
+
   get deprecationReason() {
     return get('deprecation.description', this.config.operation);
   }

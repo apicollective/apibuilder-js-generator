@@ -61,3 +61,5 @@ exports.isModelType = isModelType;
 exports.isPrimitiveType = isPrimitiveType;
 exports.isType = isType;
 exports.isUnionType = isUnionType;
+
+export * from './definition';

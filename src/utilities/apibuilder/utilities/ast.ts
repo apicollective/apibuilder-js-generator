@@ -1,6 +1,12 @@
 const invariant = require('invariant');
 const type = require('../type');
 const schema = require('./schema');
+import { ApiBuilderType } from '../type';
+
+export type Ast = {
+  name: string,
+  type?: Ast,
+};
 
 /**
  * Produces an AST given the name of a type as it appears in an API builder schema.
@@ -13,7 +19,7 @@ const schema = require('./schema');
  * @param {String} typeName
  * @return {Object}
  */
-function astFromTypeName(typeName) {
+export function astFromTypeName(typeName): Ast {
   const {
     Kind,
     isMapTypeName,
@@ -37,8 +43,6 @@ function astFromTypeName(typeName) {
   }
 }
 
-exports.astFromTypeName = astFromTypeName;
-
 
 /**
  * Returns the type name for the specified API builder AST.
@@ -48,7 +52,7 @@ exports.astFromTypeName = astFromTypeName;
  * @param {Object} ast
  * @returns {String}
  */
-function typeNameFromAst(ast) {
+export function typeNameFromAst(ast: Ast): string {
   const { Kind } = schema;
 
   switch (ast.name) {
@@ -61,8 +65,6 @@ function typeNameFromAst(ast) {
   }
 }
 
-exports.typeNameFromAst = typeNameFromAst;
-
 /**
  * Returns the API builder type from the specified API Builder AST.
  * Types are resolved from the provided service unless it is primitive type.
@@ -73,7 +75,7 @@ exports.typeNameFromAst = typeNameFromAst;
  * @param {ApiBuilderService} service
  * @returns {ApiBuilderType}
  */
-function typeFromAst(ast, service) {
+export function typeFromAst(ast: Ast, service: any): ApiBuilderType {
   const { FullyQualifiedType, Kind, isPrimitiveTypeName } = schema;
   const { ApiBuilderArray, ApiBuilderMap, ApiBuilderPrimitiveType } = type;
 
@@ -92,5 +94,3 @@ function typeFromAst(ast, service) {
     invariant(false, `${ast.name} is not a type defined in ${String(service)} service.`)
   );
 }
-
-exports.typeFromAst = typeFromAst;

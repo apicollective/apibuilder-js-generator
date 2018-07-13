@@ -1,12 +1,12 @@
 const invariant = require('invariant');
-const includes = require('lodash/includes');
-const ast = require('./ast');
+import { includes } from 'lodash';
+import { Ast, astFromTypeName } from './ast';
 
 const EMPTY_STRING = '';
 const ARRAYOF_REGEX = /^\[(.+)\]$/;
 const OBJECTOF_REGEX = /^map\[(.+)\]$/;
 
-const Kind = {
+export const Kind = {
   ARRAY: 'array',
   BOOLEAN: 'boolean',
   DATE_ISO8601: 'date-iso8601',
@@ -23,8 +23,6 @@ const Kind = {
   UUID: 'uuid',
 };
 
-exports.Kind = Kind;
-
 /**
  * Given the name of a type as it appears in an API builder schema, returns
  * whether it is a representation of a map type.
@@ -33,14 +31,10 @@ exports.Kind = Kind;
  * //=> true
  * isMapTypeName("string");
  * //=> false
- * @param {String} type
- * @returns {Boolean}
  */
-function isMapTypeName(type) {
+export function isMapTypeName(type: string) {
   return OBJECTOF_REGEX.test(type);
 }
-
-exports.isMapTypeName = isMapTypeName;
 
 /**
  * Given the name of a type as it appears in an API builder schema, returns
@@ -50,14 +44,10 @@ exports.isMapTypeName = isMapTypeName;
  * //=> true
  * isArrayTypeName("string");
  * //=> false
- * @param {String} type
- * @returns {Boolean}
  */
-function isArrayTypeName(type) {
+export function isArrayTypeName(type: string) {
   return ARRAYOF_REGEX.test(type);
 }
-
-exports.isArrayTypeName = isArrayTypeName;
 
 /**
  * API Builder types can be complex (e.g. array of strings, map of strings,
@@ -68,12 +58,8 @@ exports.isArrayTypeName = isArrayTypeName;
  * //=> "string"
  * getBaseTypeName("map[[string]]")
  * //=> "string"
- * @param {String} type
- * @returns {String}
  */
-function getBaseTypeName(type) {
-  const { astFromTypeName } = ast;
-
+export function getBaseTypeName(type: string | Ast): string {
   if (typeof type === 'string') {
     return getBaseTypeName(astFromTypeName(type));
   }
@@ -85,8 +71,6 @@ function getBaseTypeName(type) {
   return type.name;
 }
 
-exports.getBaseTypeName = getBaseTypeName;
-
 
 /**
  * Given the name of an enclosing type as it appears in an API builder schema,
@@ -96,10 +80,8 @@ exports.getBaseTypeName = getBaseTypeName;
  * //=> "string"
  * getNestedTypeName("map[[string]]");
  * //=> "[string]"
- * @param {String} type
- * @returns {String}
  */
-function getNestedTypeName(type) {
+export function getNestedTypeName(type: string): string {
   if (isMapTypeName(type)) {
     const [, $1] = type.match(OBJECTOF_REGEX);
     return $1;
@@ -113,8 +95,6 @@ function getNestedTypeName(type) {
   return type;
 }
 
-exports.getNestedTypeName = getNestedTypeName;
-
 
 /**
  * Given the name of a type as it appears in an API builder schema, returns
@@ -126,10 +106,8 @@ exports.getNestedTypeName = getNestedTypeName;
  * // => true
  * isPrimitiveTypeName("[com.bryzek.spec.v0.models.reference]");
  * // => false
- * @param {String} type
- * @returns {Boolean}
  */
-function isPrimitiveTypeName(type) {
+export function isPrimitiveTypeName(type: string) {
   return includes([
     Kind.BOOLEAN,
     Kind.DATE_ISO8601,
@@ -146,12 +124,11 @@ function isPrimitiveTypeName(type) {
   ], getBaseTypeName(type));
 }
 
-exports.isPrimitiveTypeName = isPrimitiveTypeName;
+export class FullyQualifiedType {
+  fullyQualifiedType: string;
 
-class FullyQualifiedType {
   /**
    * Create a fully qualified type.
-   * @param {String} fullyQualifiedType
    * @example
    * new FullyQualifiedType("string");
    * new FullyQualifiedType("[string]");
@@ -160,7 +137,7 @@ class FullyQualifiedType {
    * new FullyQualifiedType("[com.bryzek.apidoc.common.v0.models.reference]");
    * new FullyQualifiedType("map[com.bryzek.apidoc.common.v0.models.reference]");
    */
-  constructor(fullyQualifiedType) {
+  constructor(fullyQualifiedType: string) {
     invariant(
       getBaseTypeName(fullyQualifiedType).lastIndexOf('.') >= 0 ||
       isPrimitiveTypeName(fullyQualifiedType),
@@ -216,7 +193,6 @@ class FullyQualifiedType {
 
   /**
    * This property holds whether this is an array.
-   * @property {Boolean}
    */
   get isArrayType() {
     return isArrayTypeName(this.fullyQualifiedType);
@@ -255,5 +231,3 @@ class FullyQualifiedType {
     return this.fullyQualifiedType;
   }
 }
-
-exports.FullyQualifiedType = FullyQualifiedType;

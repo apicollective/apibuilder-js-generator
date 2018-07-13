@@ -94,13 +94,21 @@ function mapToImportDeclarations(model) {
 
   return model.fields
     .map(field => getBaseType(field.type))
-    // not importing references with a known full type because we're mapping them to the full object
-    .filter(type => !(isReference(type) && getFullType(type, model.service)))
     .filter(baseType => !isPrimitiveType(baseType))
     .reduce((declarations, baseType) => {
+      let type = baseType;
+      if (isReference(baseType)) {
+        const fullType = getFullType(baseType, model.service);
+        // ReservationItem has a field of type ReservationItemReference
+        // Don't let the file import itself
+        if (fullType && fullType !== model) {
+          type = fullType;
+        }
+      }
+
       // Compute relative path to target module, which is the type we want to
       // import into the generated model.
-      const declaration = toImportDeclaration(model, baseType);
+      const declaration = toImportDeclaration(model, type);
       const isAlreadyImported = some(declarations, { moduleName: declaration.moduleName });
       // TODO: Check for possible default export name collision.
       return isAlreadyImported ? declarations : declarations.concat(declaration);

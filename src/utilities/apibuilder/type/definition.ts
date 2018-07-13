@@ -1,15 +1,16 @@
 const invariant = require('invariant');
 const get = require('lodash/get');
 const map = require('lodash/map');
+const matches = require('lodash/fp/matches');
 
-const ast = require('../utilities/ast');
 const language = require('./language');
-const schema = require('../utilities/schema');
+import { FullyQualifiedType } from '../utilities/schema';
+import { typeFromAst, astFromTypeName } from '../utilities';
 
 /* eslint-disable max-len */
 
-/** @typedef {(ApiBuilderArray|ApiBuilderMap)} ApiBuilderEnclosingType */
-/** @typedef {(ApiBuilderEnclosingType|ApiBuilderPrimitiveType|ApiBuilderEnum|ApiBuilderModel|ApiBuilderUnion)} ApiBuilderType */
+export type ApiBuilderEnclosingType = ApiBuilderArray | ApiBuilderMap;
+export type ApiBuilderType = ApiBuilderEnclosingType | ApiBuilderPrimitiveType | ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion
 
 /* eslint-enable max-len */
 
@@ -18,7 +19,9 @@ const schema = require('../utilities/schema');
  * Arrays are often created within the context of defining the fields of
  * a model type.
  */
-class ApiBuilderArray {
+export class ApiBuilderArray {
+  ofType: ApiBuilderType;
+
   constructor(ofType) {
     const { isType } = language;
     invariant(isType(ofType), `${String(ofType)} is not an API Builder type.`);
@@ -30,14 +33,14 @@ class ApiBuilderArray {
   }
 }
 
-exports.ApiBuilderArray = ApiBuilderArray;
-
 /**
  * A map is an enclosing type which points to another type.
  * Maps are often created within the context of defining the fields of
  * a model type.
  */
-class ApiBuilderMap {
+export class ApiBuilderMap {
+  ofType: ApiBuilderType;
+
   constructor(ofType) {
     const { isType } = language;
     invariant(isType(ofType), `${String(ofType)} is not an API Builder type.`);
@@ -49,9 +52,9 @@ class ApiBuilderMap {
   }
 }
 
-exports.ApiBuilderMap = ApiBuilderMap;
+export class ApiBuilderPrimitiveType {
+  fullyQualifiedType: FullyQualifiedType;
 
-class ApiBuilderPrimitiveType {
   /**
    * Create an ApiBuilderPrimitiveType
    * @param {FullyQualifiedType} fullyQualifiedType
@@ -86,8 +89,6 @@ class ApiBuilderPrimitiveType {
   }
 }
 
-exports.ApiBuilderPrimitiveType = ApiBuilderPrimitiveType;
-
 /**
  * @typedef {Object} ApiBuilderEnumValueConfig
  * @see https://app.apibuilder.io/bryzek/apidoc-spec/latest#model-enum_value
@@ -96,8 +97,9 @@ exports.ApiBuilderPrimitiveType = ApiBuilderPrimitiveType;
  * @property {?String} deprecation
  * @property {!Object[]} attributes
  */
+export class ApiBuilderEnumValue {
+  config: any;
 
-class ApiBuilderEnumValue {
   /**
    * Create an ApiBuilderEnumValue
    * @param {ApiBuilderEnumValueConfig} config
@@ -153,8 +155,6 @@ class ApiBuilderEnumValue {
   }
 }
 
-exports.ApiBuilderEnumValue = ApiBuilderEnumValue;
-
 /**
  * An object representing an API builder enum definition.
  * @typedef {Object} ApiBuilderEnumConfig
@@ -167,7 +167,11 @@ exports.ApiBuilderEnumValue = ApiBuilderEnumValue;
  * @see https://app.apibuilder.io/bryzek/apidoc-spec/latest#model-enum
  */
 
-class ApiBuilderEnum {
+export class ApiBuilderEnum {
+  config: any;
+  fullyQualifiedType: FullyQualifiedType;
+  service: any;
+
   /**
    * Create an ApiBuilderEnum.
    * @param {ApiBuilderEnumConfig} config
@@ -250,13 +254,10 @@ class ApiBuilderEnum {
    * @returns {ApiBuilderEnum}
    */
   static fromSchema(config, service, namespace = service.namespace) {
-    const { FullyQualifiedType } = schema;
     const fullyQualifiedType = new FullyQualifiedType(`${namespace}.enums.${config.name}`);
     return new ApiBuilderEnum(config, fullyQualifiedType, service);
   }
 }
-
-exports.ApiBuilderEnum = ApiBuilderEnum;
 
 /**
  * @typedef {Object} ApiBuilderFieldConfig
@@ -273,7 +274,10 @@ exports.ApiBuilderEnum = ApiBuilderEnum;
  * @property {!Object[]} attributes
  */
 
-class ApiBuilderField {
+export class ApiBuilderField {
+  config: any;
+  service: any;
+
   /**
    * Create an ApiBuilderField
    * @param {ApiBuilderFieldConfig} config
@@ -289,7 +293,6 @@ class ApiBuilderField {
   }
 
   get type() {
-    const { typeFromAst, astFromTypeName } = ast;
     return typeFromAst(astFromTypeName(this.config.type), this.service);
   }
 
@@ -343,9 +346,21 @@ class ApiBuilderField {
   }
 }
 
-exports.ApiBuilderField = ApiBuilderField;
 
-class ApiBuilderModel {
+/**
+ * Returns whether the type matches str, str_v2, str_v*...
+ * @param {ApiBuilderType} type
+ * @param {string} str
+ */
+function typeMatches(type: ApiBuilderType, str: string) {
+  return type.fullyQualifiedType.fullyQualifiedType.match(new RegExp(`^${str}(?:_v\\d+)?$`));
+}
+
+export class ApiBuilderModel {
+  config: any;
+  fullyQualifiedType: FullyQualifiedType;
+  service: any;
+
   /**
    * Create an ApiBuilderModel.
    * @param {Object} config - An object representing an API builder model definition.
@@ -393,6 +408,22 @@ class ApiBuilderModel {
       ApiBuilderField.fromSchema(field, this.service));
   }
 
+  /** @property {!ApiBuilderOperation} */
+  get getter() {
+    const { isEnclosingType } = language;
+    const resource = this.service.resources.find(resource => resource.type === this);
+
+    if (!resource)
+      return undefined;
+    
+    const getter = resource.operations
+      .filter(matches({ method: 'GET' }))
+      .filter(op => !isEnclosingType(op.resultType) && typeMatches(op.resultType, this.toString()))
+      .sort((a, b) => a.path.length - b.path.length)[0];
+
+    return getter;
+  }
+
   toString() {
     return this.baseType;
   }
@@ -405,13 +436,10 @@ class ApiBuilderModel {
    * @returns {ApiBuilderModel}
    */
   static fromSchema(config, service, namespace = service.namespace) {
-    const { FullyQualifiedType } = schema;
     const fullyQualifiedType = new FullyQualifiedType(`${namespace}.models.${config.name}`);
     return new ApiBuilderModel(config, fullyQualifiedType, service);
   }
 }
-
-exports.ApiBuilderModel = ApiBuilderModel;
 
 /**
  * @typedef {Object} ApiBuilderUnionTypeConfig
@@ -422,8 +450,10 @@ exports.ApiBuilderModel = ApiBuilderModel;
  * @property {!Object[]} attributes
  * @property {?Boolean} default
  */
+export class ApiBuilderUnionType {
+  config: any;
+  service: any;
 
-class ApiBuilderUnionType {
   /**
    * Create an ApiBuilderUnionTypee
    * @param {ApiBuilderUnionTypeConfig} config
@@ -436,7 +466,6 @@ class ApiBuilderUnionType {
 
   /** @property {!ApiBuilderType} */
   get type() {
-    const { typeFromAst, astFromTypeName } = ast;
     return typeFromAst(astFromTypeName(this.config.type), this.service);
   }
 
@@ -481,8 +510,6 @@ class ApiBuilderUnionType {
   }
 }
 
-exports.ApiBuilderUnionType = ApiBuilderUnionType;
-
 /**
  * @typedef {Object} ApiBuilderUnionConfig
  * @see https://app.apibuilder.io/bryzek/apidoc-spec/0.11.94#model-union
@@ -495,7 +522,11 @@ exports.ApiBuilderUnionType = ApiBuilderUnionType;
  * @property {!Object[]} attributes
  */
 
-class ApiBuilderUnion {
+export class ApiBuilderUnion {
+  config: any;
+  fullyQualifiedType: FullyQualifiedType;
+  service: any;
+
   /**
    * Create an ApiBuilderUnion
    * @param {ApiBuilderUnionConfig} config
@@ -581,10 +612,7 @@ class ApiBuilderUnion {
    * @returns {ApiBuilderUnion}
    */
   static fromSchema(config, service, namespace = service.namespace) {
-    const { FullyQualifiedType } = schema;
     const fullyQualifiedType = new FullyQualifiedType(`${namespace}.unions.${config.name}`);
     return new ApiBuilderUnion(config, fullyQualifiedType, service);
   }
 }
-
-exports.ApiBuilderUnion = ApiBuilderUnion;

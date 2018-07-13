@@ -1,7 +1,7 @@
 const invariant = require('invariant');
 
-const { isArrayType, isMapType, isPrimitiveType, typeFromAst, astFromTypeName } = require('../../../utilities/apibuilder');
-const { isReference, getFullType } = require('./reference');
+const { isArrayType, isMapType, isPrimitiveType } = require('../../../utilities/apibuilder');
+const { expandReference } = require('./reference');
 const toDefaultExport = require('./toDefaultExport');
 const toGraphQLScalarType = require('./toGraphQLScalarType');
 const toCustomScalarType = require('./toCustomScalarType');
@@ -22,11 +22,8 @@ function toGraphQLOutputType(type, required = false, service) {
   } else if (isPrimitiveType(type)) {
     outputType = toGraphQLScalarType(type) || toCustomScalarType(type);
   } else {
-    outputType = toDefaultExport(
-      isReference(type)
-      ? getFullType(type, service) || type
-      : type
-    );
+    const finalType = expandReference(type, service) || type;
+    outputType = toDefaultExport(finalType);
   }
 
   invariant(outputType != null, `${outputType} must be a valid GraphQLOutputType`);

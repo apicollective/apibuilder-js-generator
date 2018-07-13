@@ -12,6 +12,8 @@
   <%_ } _%>
 <%_ }) _%>
 
+import got from 'got';
+
 const <%= object.name %> = new GraphQLObjectType({
   name: '<%= object.name %>',
   description: '<%= object.description %>',
@@ -25,6 +27,65 @@ const <%= object.name %> = new GraphQLObjectType({
       <%_ if (field.description != null) { _%>
         description: '<%= field.description %>',
       <%_ } _%>
+      resolve: (parent, args, context) => {
+      <%_ if (field.isReference && field.referenceGetter.getter) { _%>
+        <%_ const { getter, pathParts, queryParts } = field.referenceGetter; _%>
+
+      <%_ } else if (field.isPrimitive) { _%>
+
+      <%_ } else { _%>
+
+        return 
+
+      <%_ } _%>
+      }
+
+      <%_
+      if (field.isReference) {
+        const { getter, pathParts, queryParts } = field.referenceGetter;
+        if (getter) {
+      _%>
+          resolve: (parent, args, context) => {
+            const path = [
+              <%_ pathParts.forEach(part => { _%>
+                <%_ if (part[0] === ':') { _%>
+                  parent.<%= key %>.<%= part.substring(1) %> || parent.__args.<%= part.substring(1) %>,
+                <%_ } else { _%>
+                  '<%= part %>',
+                <%_ } _%>
+              <%_ }) _%>
+            ].join('/');
+
+            const query = {};
+
+            <%_ if (queryParts.length > 0) { _%>
+              [
+                <%_ queryParts.forEach(part => { _%>
+                  '<%= part %>',
+                <%_ }) _%>
+              ].forEach((key) => {
+                if (parent.<%= key %>.hasOwnProperty(key))
+                  query[key] = parent.<%= key %>[key];
+                else if (parent.__args.hasOwnProperty(key))
+                  query[key] = parent.__args[key];
+              });
+            <%_ } _%>
+
+            console.log(`${path}?${Object.entries(query).map(p => p.join('=')).join('?')}`);
+
+            return got(path, {
+              json: true,
+              query,
+              headers: {
+                authorization: context.headers.authorization
+              }
+            }).then(response => response.body);
+            // TODO add __args
+          },
+      <%_ 
+        }
+      }
+      _%>
     },
   <%_ }) _%>
   }),
