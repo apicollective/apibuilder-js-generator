@@ -1,5 +1,5 @@
 {
-    "exec": "node ./src/server/index.js",
+    "exec": "ts-node ./src/server/index.js",
     "ext": "js,ejs",
     "watch": [
       "src"

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev:start": "DEBUG=apibuilder:* nodemon",
-    "lint": "eslint . --cache --format=codeframe --ext js",
+    "build": "tsc",
+    "lint": "eslint . --cache --format=codeframe --ext js --ext ts",
     "lint:fix": "eslint . --fix --cache --format=codeframe --ext js,jsx",
     "pretest": "npm run lint",
     "test": "jest --maxWorkers=4"
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/flowcommerce/apibuilder-javascript-generator#readme",
   "devDependencies": {
+    "@types/invariant": "^2.2.29",
     "@types/lodash": "^4.14.111",
     "@types/node": "^10.5.2",
     "commander": "^2.15.1",
@@ -50,6 +52,7 @@
     "invariant": "^2.2.4",
     "lodash": "^4.17.10",
     "prettier": "^1.12.1",
+    "tslint": "^5.10.0",
     "typescript": "^2.9.2"
   }
 }

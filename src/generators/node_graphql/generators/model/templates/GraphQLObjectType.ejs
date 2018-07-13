@@ -27,6 +27,7 @@ const <%= object.name %> = new GraphQLObjectType({
       <%_ if (field.description != null) { _%>
         description: '<%= field.description %>',
       <%_ } _%>
+      <% /* %>
       resolve: (parent, args, context) => {
       <%_ if (field.isReference && field.referenceGetter.getter) { _%>
         <%_ const { getter, pathParts, queryParts } = field.referenceGetter; _%>
@@ -39,6 +40,7 @@ const <%= object.name %> = new GraphQLObjectType({
 
       <%_ } _%>
       }
+      <% */ %>
 
       <%_
       if (field.isReference) {

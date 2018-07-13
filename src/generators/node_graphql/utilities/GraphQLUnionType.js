@@ -4,7 +4,7 @@ const { conforms } = require('lodash');
 const { isModelType, isUnionType, isEnumType } = require('../../../utilities/apibuilder');
 const GraphQLObjectType = require('./GraphQLObjectType');
 const GraphQLEnumType = require('./GraphQLEnumType');
-const pascalCase = require('../utilities/pascalCase');
+const pascalCase = require('./pascalCase');
 
 class GraphQLUnionType {
   constructor(config) {

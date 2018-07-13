@@ -10,7 +10,8 @@ import { typeFromAst, astFromTypeName } from '../utilities';
 /* eslint-disable max-len */
 
 export type ApiBuilderEnclosingType = ApiBuilderArray | ApiBuilderMap;
-export type ApiBuilderType = ApiBuilderEnclosingType | ApiBuilderPrimitiveType | ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion
+export type ApiBuilderBaseType = ApiBuilderPrimitiveType | ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion;
+export type ApiBuilderType = ApiBuilderEnclosingType | ApiBuilderBaseType;
 
 /* eslint-enable max-len */
 
@@ -352,7 +353,7 @@ export class ApiBuilderField {
  * @param {ApiBuilderType} type
  * @param {string} str
  */
-function typeMatches(type: ApiBuilderType, str: string) {
+function typeMatches(type: ApiBuilderBaseType, str: string) {
   return type.fullyQualifiedType.fullyQualifiedType.match(new RegExp(`^${str}(?:_v\\d+)?$`));
 }
 

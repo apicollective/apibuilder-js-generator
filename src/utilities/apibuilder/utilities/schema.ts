@@ -1,4 +1,4 @@
-const invariant = require('invariant');
+import invariant = require('invariant');
 import { includes } from 'lodash';
 import { Ast, astFromTypeName } from './ast';
 

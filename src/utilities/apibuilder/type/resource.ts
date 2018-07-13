@@ -1,15 +1,18 @@
-const { typeFromAst, astFromTypeName } = require('../utilities');
-const {
+import { typeFromAst, astFromTypeName } from '../utilities';
+import {
   get,
   getOr,
   flow,
   inRange,
-} = require('lodash/fp');
+} from 'lodash/fp';
 
 /**
  * The arguments of an APIBuilder operation
  */
-class ApiBuilderOperationArgument {
+export class ApiBuilderOperationArgument {
+  config: any;
+  service: any;
+
   constructor(config, service) {
     this.config = config;
     this.service = service;
@@ -44,13 +47,15 @@ class ApiBuilderOperationArgument {
   }
 }
 
-exports.ApiBuilderOperationArgument = ApiBuilderOperationArgument;
-
 
 /**
  * An APIBuilder operation, inside of a resource
  */
-class ApiBuilderOperation {
+export class ApiBuilderOperation {
+  config: any;
+  service: any;
+  resourcePath: string;
+
   constructor(config, resourcePath, service) {
     this.config = config;
     this.service = service;
@@ -104,13 +109,15 @@ class ApiBuilderOperation {
   }
 }
 
-exports.ApiBuilderOperation = ApiBuilderOperation;
-
 
 /**
  * An APIBuilder resource
  */
-class ApiBuilderResource {
+export class ApiBuilderResource {
+  config: any;
+  service: any;
+  operations: ApiBuilderOperation[];
+
   constructor(config, service) {
     this.config = config;
     this.service = service;
@@ -136,5 +143,3 @@ class ApiBuilderResource {
     return this.config.path;
   }
 }
-
-exports.ApiBuilderResource = ApiBuilderResource;

@@ -1,4 +1,4 @@
-const toGraphQLOutputType = require('../utilities/toGraphQLOutputType');
+const toGraphQLOutputType = require('./toGraphQLOutputType');
 const {
   isEnclosingType,
   getBaseType,

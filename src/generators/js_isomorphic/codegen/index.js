@@ -1,6 +1,6 @@
 const generateLoggerFile = require('./files/logger');
 const generateClientFile = require('./files/client');
-const generateIndexFile = require('./files/index');
+const generateIndexFile = require('./files');
 const generateResourceFile = require('./files/resource');
 
 const defaultOpts = {
