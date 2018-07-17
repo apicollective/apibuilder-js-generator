@@ -63,20 +63,25 @@ const schema = new GraphQLSchema({
               authorization: context.headers.authorization
             }
           }).then(response => {
-            const value = response.body;
-            <%_ references.forEach((path) => { _%>
-              value<% path.forEach(elem => { %>.<%= elem %><% }) %> = args.<%= path[path.length - 1] %>;
-            <%_ }) _%>
-            return value;
+            function insertMetadata(obj, data) {
+              if (Array.isArray(data)) {
+                return obj.map(elem => insertMetadata(elem, data));
+              } else if (typeof obj === 'object') {
+                const transformed = Object.keys(obj).reduce((newobj, key) => {
+                  newobj[key] = insertMetadata(obj[key], data);
+                  return newobj;
+                }, {});
+                return Object.assign({}, transformed, data);
+              } else {
+                return obj;
+              }
+            }
 
-            <%_ if (isPrimitiveType) { _%>
-              response.body
-            <%_ } else if (isListType) { _%>
-              response.body.map(elem => Object.assign({}, elem, { __args: args }))
-            <%_ } else { _%>
-              Object.assign({}, response.body, { __args: args })
-            <%_ } _%>
-          });
+            return insertMetadata(response.body, {
+              __args: args,
+              __parent: parent,
+            });
+         });
         }
       },
     <% }) %>

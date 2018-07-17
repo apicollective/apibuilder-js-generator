@@ -59,7 +59,7 @@ export function isUnionType(type): type is ApiBuilderUnion {
  * Returns whether the specified object is one of the possible
  * API Builder enclosing types.
  * @param {?ApiBuilderType} type
- * @returns {Boolen}
+ * @returns {Boolean}
  */
 export function isEnclosingType(type): type is ApiBuilderEnclosingType {
   return (

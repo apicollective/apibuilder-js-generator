@@ -163,23 +163,6 @@ class GraphQLQuery {
       .filter(matches({ location: 'Query' }))
       .map(get('name'));
   }
-
-  get references() {
-    return [
-      ['targeting', 'catalog', 'organization'],
-    ];
-    function findReferences(type: ApiBuilderModel) {
-      type.fields.forEach((field) => {
-        if (isReference(field.type)) {
-
-        }
-      });
-    }
-    const { resultType } = this.config.operation;
-    if (isModelType(resultType)) {
-      resultType.fields
-    }
-  }
 }
 
 class GraphQLSchemaConfig {
