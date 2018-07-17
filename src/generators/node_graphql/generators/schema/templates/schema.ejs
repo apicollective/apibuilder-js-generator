@@ -64,7 +64,7 @@ const schema = new GraphQLSchema({
             }
           }).then(response => {
             function insertMetadata(obj, data) {
-              if (Array.isArray(data)) {
+              if (Array.isArray(obj)) {
                 return obj.map(elem => insertMetadata(elem, data));
               } else if (typeof obj === 'object') {
                 const transformed = Object.keys(obj).reduce((newobj, key) => {
