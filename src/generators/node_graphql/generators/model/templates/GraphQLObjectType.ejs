@@ -1,18 +1,24 @@
-<%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
-  <%_ if (defaultExport != null) { _%>
-    import <%= defaultExport %> from '<%= moduleName %>';
-  <%_ } else if (namedExports != null) { _%>
-    import {
-      <%_ namedExports.forEach((namedExport) => { _%>
-      <%= namedExport %>,
-      <%_ }) _%>
-    } from '<%= moduleName %>';
-  <%_ } else { _%>
-    import '<%= moduleName %>';
-  <%_ } _%>
-<%_ }) _%>
+<%- include('../../../partials/imports') %>
 
 import got from 'got';
+
+<%
+  const getters = Object.values(object.fields).filter(field => field.isReference).map(field => field.referenceGetter.getter);
+  if (getters.filter(getter => getter != null).length > 0) {
+%>
+    function searchParent(obj, key) {
+      if (obj === undefined)
+        return undefined;
+
+      if (obj.__args[key])
+        return obj.__args[key];
+
+      if (obj.__parent && obj.__parent[key])
+        return obj.__parent[key];
+
+      return searchParent(obj.__parent);
+    }
+<% } %>
 
 const <%= object.name %> = new GraphQLObjectType({
   name: '<%= object.name %>',
@@ -27,31 +33,16 @@ const <%= object.name %> = new GraphQLObjectType({
       <%_ if (field.description != null) { _%>
         description: '<%= field.description %>',
       <%_ } _%>
-      <% /* %>
-      resolve: (parent, args, context) => {
-      <%_ if (field.isReference && field.referenceGetter.getter) { _%>
-        <%_ const { getter, pathParts, queryParts } = field.referenceGetter; _%>
-
-      <%_ } else if (field.isPrimitive) { _%>
-
-      <%_ } else { _%>
-
-        return 
-
-      <%_ } _%>
-      }
-      <% */ %>
-
       <%_
       if (field.isReference) {
-        const { getter, pathParts, queryParts } = field.referenceGetter;
+        const { getter, pathParts, queryParts, isListType, isPrimitiveType } = field.referenceGetter;
         if (getter) {
       _%>
           resolve: (parent, args, context) => {
             const path = [
               <%_ pathParts.forEach(part => { _%>
                 <%_ if (part[0] === ':') { _%>
-                  parent.<%= key %>.<%= part.substring(1) %> || parent.__args.<%= part.substring(1) %>,
+                  parent.<%= key %>.<%= part.substring(1) %> || searchParent(parent, '<%= part.substring(1) %>'),
                 <%_ } else { _%>
                   '<%= part %>',
                 <%_ } _%>
@@ -62,8 +53,10 @@ const <%= object.name %> = new GraphQLObjectType({
 
             <%_ if (queryParts.length > 0) { _%>
               [
-                <%_ queryParts.forEach(part => { _%>
-                  '<%= part %>',
+                <%_ queryParts.forEach(({ name, default: defaultValue, required }) => { _%>
+                  <%_ if (!defaultValue && required) { _%>
+                    '<%= name %>',
+                  <%_ } _%>
                 <%_ }) _%>
               ].forEach((key) => {
                 if (parent.<%= key %>.hasOwnProperty(key))
@@ -71,9 +64,15 @@ const <%= object.name %> = new GraphQLObjectType({
                 else if (parent.__args.hasOwnProperty(key))
                   query[key] = parent.__args[key];
               });
+
+              <%_ queryParts.forEach(({ name, default: defaultValue }) => { _%>
+                <%_ if (defaultValue) { _%>
+                  query.<%= name %> = '<%= defaultValue %>';
+                <%_ } _%>
+              <%_ }); _%>
             <%_ } _%>
 
-            console.log(`${path}?${Object.entries(query).map(p => p.join('=')).join('?')}`);
+            console.log(`${path}?${Object.entries(query).map(p => p.join('=')).join('&')}`);
 
             return got(path, {
               json: true,
@@ -81,8 +80,21 @@ const <%= object.name %> = new GraphQLObjectType({
               headers: {
                 authorization: context.headers.authorization
               }
-            }).then(response => response.body);
-            // TODO add __args
+            }).then(response =>
+              <%_ if (isPrimitiveType) { _%>
+                response.body
+              <%_ } else if (isListType) { _%>
+                response.body.map(elem => Object.assign({}, elem, {
+                  __args: args,
+                  __parent: parent,
+                }))
+              <%_ } else { _%>
+                Object.assign({}, response.body, {
+                  __args: args,
+                  __parent: parent,
+                })
+              <%_ } _%>
+            );
           },
       <%_ 
         }

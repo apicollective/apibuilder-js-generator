@@ -1,3 +1,5 @@
+import { ApiBuilderType, ApiBuilderBaseType, ApiBuilderEnclosingType, ApiBuilderPrimitiveType, ApiBuilderUnion, ApiBuilderModel, ApiBuilderMap, ApiBuilderArray, ApiBuilderEnum } from "./definition";
+
 const definition = require('./definition');
 
 /**
@@ -5,8 +7,7 @@ const definition = require('./definition');
  * @param {?ApiBuilderType} type
  * @returns {Boolean}
  */
-export function isEnumType(type) {
-  const { ApiBuilderEnum } = definition;
+export function isEnumType(type): type is ApiBuilderEnum {
   return type instanceof ApiBuilderEnum;
 }
 
@@ -15,8 +16,7 @@ export function isEnumType(type) {
  * @param {?ApiBuilderType} type
  * @returns {Boolean}
  */
-export function isArrayType(type) {
-  const { ApiBuilderArray } = definition;
+export function isArrayType(type): type is ApiBuilderArray {
   return type instanceof ApiBuilderArray;
 }
 
@@ -25,8 +25,7 @@ export function isArrayType(type) {
  * @param {?ApiBuilderType} type
  * @returns {Boolean}
  */
-export function isMapType(type) {
-  const { ApiBuilderMap } = definition;
+export function isMapType(type): type is ApiBuilderMap {
   return type instanceof ApiBuilderMap;
 }
 
@@ -35,18 +34,15 @@ export function isMapType(type) {
  * @param {?ApiBuilderType} type
  * @returns {Boolean}
  */
-export function isModelType(type) {
-  const { ApiBuilderModel } = definition;
+export function isModelType(type): type is ApiBuilderModel {
   return type instanceof ApiBuilderModel;
 }
 
 /**
  * Returns whether the specified object is an API Builder primitive type.
- * @param {?ApiBuilderType} type
  * @returns {Boolean}
  */
-export function isPrimitiveType(type) {
-  const { ApiBuilderPrimitiveType } = definition;
+export function isPrimitiveType(type): type is ApiBuilderPrimitiveType {
   return type instanceof ApiBuilderPrimitiveType;
 }
 
@@ -55,8 +51,7 @@ export function isPrimitiveType(type) {
  * @param {?ApiBuilderType} type
  * @returns {Boolean}
  */
-export function isUnionType(type) {
-  const { ApiBuilderUnion } = definition;
+export function isUnionType(type): type is ApiBuilderUnion {
   return type instanceof ApiBuilderUnion;
 }
 
@@ -66,7 +61,7 @@ export function isUnionType(type) {
  * @param {?ApiBuilderType} type
  * @returns {Boolen}
  */
-export function isEnclosingType(type) {
+export function isEnclosingType(type): type is ApiBuilderEnclosingType {
   return (
     isArrayType(type) ||
     isMapType(type)
@@ -76,10 +71,11 @@ export function isEnclosingType(type) {
 /**
  * Returns whether the specified object is one of the possible
  * API Builder types.
+ * TODO: remove? this is redundant with TypeScript
  * @param {?ApiBuilderType} type
  * @returns {Boolean}
  */
-export function isType(type) {
+export function isType(type: ApiBuilderType) {
   return (
     isArrayType(type) ||
     isMapType(type) ||
@@ -93,10 +89,8 @@ export function isType(type) {
 /**
  * If a given type is an enclosing type, this recursively strips the enclosing
  * wrappers and returns the underlying type.
- * @param {?ApiBuilderType} type
- * @returns {?ApiBuilderType}
  */
-export function getBaseType(type) {
+export function getBaseType(type: ApiBuilderType): ApiBuilderBaseType {
   if (isEnclosingType(type)) {
     return getBaseType(type.ofType);
   }

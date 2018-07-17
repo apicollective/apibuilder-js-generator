@@ -1,11 +1,8 @@
-const invariant = require('invariant');
-const get = require('lodash/get');
-const map = require('lodash/map');
-const matches = require('lodash/fp/matches');
-
-const language = require('./language');
-import { FullyQualifiedType } from '../utilities/schema';
-import { typeFromAst, astFromTypeName } from '../utilities';
+import invariant = require('invariant');
+import { get, map } from 'lodash';
+import { matches } from 'lodash/fp';
+import { astFromTypeName, typeFromAst, FullyQualifiedType } from '../utilities';
+import { isEnclosingType, isType } from './language';
 
 /* eslint-disable max-len */
 
@@ -24,7 +21,6 @@ export class ApiBuilderArray {
   ofType: ApiBuilderType;
 
   constructor(ofType) {
-    const { isType } = language;
     invariant(isType(ofType), `${String(ofType)} is not an API Builder type.`);
     this.ofType = ofType;
   }
@@ -43,7 +39,6 @@ export class ApiBuilderMap {
   ofType: ApiBuilderType;
 
   constructor(ofType) {
-    const { isType } = language;
     invariant(isType(ofType), `${String(ofType)} is not an API Builder type.`);
     this.ofType = ofType;
   }
@@ -262,17 +257,7 @@ export class ApiBuilderEnum {
 
 /**
  * @typedef {Object} ApiBuilderFieldConfig
- * @see https://app.apibuilder.io/bryzek/apidoc-spec/latest#model-field
- * @property {!String} name
- * @property {!String} type
- * @property {?String} description
- * @property {?Object} deprecation
- * @property {?String} default
- * @property {!Boolean} required
- * @property {?Number} minimum
- * @property {?Number} maximum
- * @property {?String} example
- * @property {!Object[]} attributes
+ * @see https://app.apibuilder.io/apicollective/apibuilder-spec/latest#model-field
  */
 
 export class ApiBuilderField {
@@ -289,39 +274,39 @@ export class ApiBuilderField {
     this.service = service;
   }
 
-  get name() {
+  get name(): string {
     return this.config.name;
   }
 
-  get type() {
+  get type(): ApiBuilderType {
     return typeFromAst(astFromTypeName(this.config.type), this.service);
   }
 
-  get description() {
+  get description(): string {
     return this.config.description;
   }
 
-  get isRequired() {
+  get isRequired(): boolean {
     return this.config.required;
   }
 
-  get default() {
+  get default(): string {
     return this.config.default;
   }
 
-  get example() {
+  get example(): string {
     return this.config.example;
   }
 
-  get minimum() {
+  get minimum(): number {
     return this.config.minimum;
   }
 
-  get maximum() {
+  get maximum(): number {
     return this.config.maximum;
   }
 
-  get attributes() {
+  get attributes(): any[] {
     return this.config.attributes;
   }
 
@@ -329,7 +314,7 @@ export class ApiBuilderField {
     return this.config.deprecation;
   }
 
-  get deprecationReason() {
+  get deprecationReason(): string {
     return get(this, 'deprecation.description');
   }
 
@@ -411,7 +396,6 @@ export class ApiBuilderModel {
 
   /** @property {!ApiBuilderOperation} */
   get getter() {
-    const { isEnclosingType } = language;
     const resource = this.service.resources.find(resource => resource.type === this);
 
     if (!resource)

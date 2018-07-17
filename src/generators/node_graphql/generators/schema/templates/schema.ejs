@@ -1,16 +1,4 @@
-<%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
-  <%_ if (defaultExport != null) { _%>
-    import <%= defaultExport %> from '<%= moduleName %>';
-  <%_ } else if (namedExports != null) { _%>
-    import {
-      <%_ namedExports.forEach((namedExport) => { _%>
-      <%= namedExport %>,
-      <%_ }) _%>
-    } from '<%= moduleName %>';
-  <%_ } else { _%>
-    import '<%= moduleName %>';
-  <%_ } _%>
-<%_ }) _%>
+<%- include('../../../partials/imports') %>
 
 import got from 'got';
 
@@ -18,7 +6,7 @@ const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-    <% config.queries.forEach(({ name, type, isListType, isPrimitiveType, args, deprecationReason, description, pathParts, queryParts }) => { %>
+    <% config.queries.forEach(({ name, type, isListType, isPrimitiveType, args, deprecationReason, description, pathParts, queryParts, references }) => { %>
       <%= name %>: {
         type: <%= type %>,
         <%_ if (args.length > 0) { _%>
@@ -66,7 +54,7 @@ const schema = new GraphQLSchema({
             });
           <%_ } _%>
 
-          console.log(`${path}?${Object.entries(query).map(p => p.join('=')).join('?')}`);
+          console.log(`${path}?${Object.entries(query).map(p => p.join('=')).join('&')}`);
 
           return got(path, {
             json: true,
@@ -74,19 +62,21 @@ const schema = new GraphQLSchema({
             headers: {
               authorization: context.headers.authorization
             }
-          }).then(response =>
+          }).then(response => {
+            const value = response.body;
+            <%_ references.forEach((path) => { _%>
+              value<% path.forEach(elem => { %>.<%= elem %><% }) %> = args.<%= path[path.length - 1] %>;
+            <%_ }) _%>
+            return value;
+
             <%_ if (isPrimitiveType) { _%>
-              response.body,
+              response.body
             <%_ } else if (isListType) { _%>
-              response.body.map(elem => Object.assign({}, elem, {
-                __args: args
-              })),
+              response.body.map(elem => Object.assign({}, elem, { __args: args }))
             <%_ } else { _%>
-              Object.assign({}, response.body, {
-                __args: args // used to pass e.g. organization to child references
-              }),
+              Object.assign({}, response.body, { __args: args })
             <%_ } _%>
-          );
+          });
         }
       },
     <% }) %>

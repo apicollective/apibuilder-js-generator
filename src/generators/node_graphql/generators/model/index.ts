@@ -1,16 +1,17 @@
 const path = require('path');
-const reduce = require('lodash/reduce');
-const some = require('lodash/some');
+import { reduce, some } from 'lodash';
 
 const { renderTemplate } = require('../../../../utilities/template');
 
-const {
+import {
   ApiBuilderFile,
+  ApiBuilderModel,
   getBaseType,
   isMapType,
   isPrimitiveType,
   isEnclosingType,
-} = require('../../../../utilities/apibuilder');
+  ApiBuilderEnclosingType,
+} from '../../../../utilities/apibuilder';
 
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const { destinationPathFromType } = require('../../utilities/destinationPath');
@@ -27,10 +28,8 @@ const { isReference, getFullType } = require('../../utilities/reference');
 /**
  * Computes the name exports to import from the "graphql" package for writing
  * to generated code.
- * @param {ApiBuilderModel} model
- * @returns {String[]}
  */
-function computeGraphQLNamedExports(model) {
+function computeGraphQLNamedExports(model: ApiBuilderModel): string[] {
   const initialNamedExports = new Set(['GraphQLObjectType']);
 
   // required fields -> NonNull
@@ -56,7 +55,7 @@ function computeGraphQLNamedExports(model) {
   }, initialNamedExports)).sort();
 }
 
-function computeScalarExports(model) {
+function computeScalarExports(model: ApiBuilderModel) {
   const initialNamedExports = [];
 
   if (some(model.fields, field => isMapType(field.type))) {
@@ -75,7 +74,7 @@ function computeScalarExports(model) {
   }, initialNamedExports).sort();
 }
 
-function mapToImportDeclarations(model) {
+function mapToImportDeclarations(model: ApiBuilderModel) {
   // Compute named exports to import from `graphql` package.
   const initialImportDeclarations = [
     new ImportDeclaration({
@@ -115,12 +114,12 @@ function mapToImportDeclarations(model) {
     }, initialImportDeclarations);
 }
 
-function generateCode(model) {
+function generateCode(model: ApiBuilderModel) {
   const templatePath = path.resolve(__dirname, './templates/GraphQLObjectType.ejs');
   return renderTemplate(templatePath, {
     importDeclarations: mapToImportDeclarations(model),
     object: GraphQLObjectType.fromApiBuilderModel(model),
-  });
+  })
 }
 
 exports.generateCode = generateCode;
@@ -128,10 +127,8 @@ exports.generateCode = generateCode;
 /**
  * Create API Builder file containing generated GraphQL object type schema from
  * provided API Builder model.
- * @param {ApiBuilderModel} model
- * @returns {ApiBuilderFile}
  */
-function generateFile(model) {
+function generateFile(model: ApiBuilderModel) {
   const destinationPath = destinationPathFromType(model);
   const basename = path.basename(destinationPath);
   const dirname = path.dirname(destinationPath);

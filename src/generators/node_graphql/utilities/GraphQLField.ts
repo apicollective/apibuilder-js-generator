@@ -1,13 +1,14 @@
-const invariant = require('invariant');
-const toGraphQLOutputType = require('./toGraphQLOutputType');
-const { isPrimitiveType } = require('../../../utilities/apibuilder/');
-const { expandReference } = require('./reference');
-const { concat, matches } = require('lodash');
-const { get } = require('lodash/fp');
+import invariant = require('invariant');
+import toGraphQLOutputType = require('./toGraphQLOutputType');
+import { isPrimitiveType, isArrayType, ApiBuilderField } from '../../../utilities/apibuilder';
+import { expandReference } from './reference';
+import { concat, matches } from 'lodash';
+import { get } from 'lodash/fp';
 
 interface Config {
   type: string,
   isPrimitive: boolean,
+  isListType: boolean,
   expandedReference: any,
   deprecationReason: string,
   description: string
@@ -28,6 +29,10 @@ class GraphQLField {
     return this.config.isPrimitive;
   }
 
+  get isListType() {
+    return this.config.isListType;
+  }
+
   get isReference() {
     return !!this.config.expandedReference;
   }
@@ -39,10 +44,12 @@ class GraphQLField {
     const getter = this.config.expandedReference.getter;
 
     if (!getter)
-      return { getter };
+      return { getter: null };
 
     return {
       getter,
+      isPrimitive: this.isPrimitive,
+      isListType: this.isListType,
       pathParts: concat(
         getter.service.baseUrl,
         (getter.resourcePath + getter.path)
@@ -51,7 +58,6 @@ class GraphQLField {
       ),
       queryParts: getter.arguments
         .filter(matches({ location: 'Query' }))
-        .map(get('name'))
     };
   }
 
@@ -65,13 +71,12 @@ class GraphQLField {
 
   /**
    * Creates a GraphQLField from an ApiBuilderField.
-   * @param {ApiBuilderField} field
-   * @returns {GraphQLField}
    */
-  static fromApiBuilderField(field) {
+  static fromApiBuilderField(field: ApiBuilderField) {
     return new GraphQLField({
       type: toGraphQLOutputType(field.type, field.isRequired, field.service),
       isPrimitive: isPrimitiveType(field.type),
+      isListType: isArrayType(field.type),
       expandedReference: expandReference(field.type, field.service),
       deprecationReason: field.deprecationReason,
       description: field.description,

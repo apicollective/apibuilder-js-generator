@@ -1,31 +1,43 @@
-const toGraphQLOutputType = require('./toGraphQLOutputType');
-const {
+import toGraphQLOutputType = require('./toGraphQLOutputType');
+import {
   isEnclosingType,
   getBaseType,
   isPrimitiveType,
   isEnumType,
-} = require('../../../utilities/apibuilder');
-const {
-  flatMap, camelCase, concat, partition,
-} = require('lodash');
-const { get, matches } = require('lodash/fp');
-const invariant = require('invariant');
+  ApiBuilderType,
+  ApiBuilderBaseType,
+  ApiBuilderOperation,
+  ApiBuilderResource,
+  ApiBuilderService,
+  ApiBuilderOperationArgument,
+  ApiBuilderModel,
+  isModelType,
+} from '../../../utilities/apibuilder';
+import { flatMap, camelCase, concat, partition } from 'lodash';
+import { get, matches } from 'lodash/fp';
+import { isReference, getFullType } from './reference';
+import invariant = require('invariant');
 
-const createLogger = require('debug');
+import createLogger from 'debug';
 
 const log = createLogger('apibuilder:graphql-schema');
 
 /**
  * Returns whether the type matches str, str_v2, str_v*...
- * @param {ApiBuilderType} type
- * @param {string} str
  */
-function typeMatches(type, str) {
+function typeMatches(type: ApiBuilderBaseType, str: string) {
   return type.fullyQualifiedType.fullyQualifiedType.match(new RegExp(`^${str}(?:_v\\d+)?$`));
 }
 
 class GraphQLQueryArgConfig {
-  constructor(arg, service) {
+  name: string;
+  fullyQualifiedType: ApiBuilderType;
+  required: boolean;
+  default: string;
+  description: string;
+  service: ApiBuilderService;
+
+  constructor(arg: ApiBuilderOperationArgument, service: ApiBuilderService) {
     this.name = arg.name;
     this.fullyQualifiedType = arg.type;
     this.required = arg.required;
@@ -54,8 +66,17 @@ class GraphQLQueryArgConfig {
   }
 }
 
+interface GraphQLQueryConfig {
+  operation: ApiBuilderOperation;
+  resource: ApiBuilderResource;
+  service: ApiBuilderService;
+  isPrimaryGetter: boolean;
+}
+
 class GraphQLQuery {
-  constructor(operation, resource, service, isPrimaryGetter) {
+  config: GraphQLQueryConfig;
+
+  constructor(operation: ApiBuilderOperation, resource: ApiBuilderResource, service: ApiBuilderService, isPrimaryGetter: boolean) {
     this.config = {
       operation,
       resource,
@@ -73,10 +94,10 @@ class GraphQLQuery {
       x => x[0] !== ':',
     );
 
-    if (isEnclosingType(resultType) && typeMatches(getBaseType(resultType), resource.type)) {
+    if (isEnclosingType(resultType) && typeMatches(getBaseType(resultType), resource.type.toString())) {
       // Gets multiple instances of this resource
       return camelCase(this.config.resource.plural);
-    } else if (!isEnclosingType(resultType) && typeMatches(resultType, resource.type)) {
+    } else if (!isEnclosingType(resultType) && typeMatches(resultType, resource.type.toString())) {
       // Gets a single instance of this resource
       if (this.config.isPrimaryGetter) {
         return camelCase(resource.type.shortName); // primary getter is just resource name
@@ -99,13 +120,13 @@ class GraphQLQuery {
       return camelCase(res);
     }
 
-    log(`❌   unknown ${resource.path}${operation.path} => ${resultType.fullyQualifiedType}`);
+    log(`❌   unknown ${resource.path}${operation.path} => ${resultType}`);
     return 'TODO';
   }
 
   get args() {
     return this.config.operation.arguments.map(arg =>
-      new GraphQLQueryArgConfig(arg, this.service));
+      new GraphQLQueryArgConfig(arg, this.config.service));
   }
 
   get type() {
@@ -142,18 +163,36 @@ class GraphQLQuery {
       .filter(matches({ location: 'Query' }))
       .map(get('name'));
   }
+
+  get references() {
+    return [
+      ['targeting', 'catalog', 'organization'],
+    ];
+    function findReferences(type: ApiBuilderModel) {
+      type.fields.forEach((field) => {
+        if (isReference(field.type)) {
+
+        }
+      });
+    }
+    const { resultType } = this.config.operation;
+    if (isModelType(resultType)) {
+      resultType.fields
+    }
+  }
 }
 
 class GraphQLSchemaConfig {
+  queries: GraphQLQuery[];
+
   constructor(config) {
     this.queries = config.queries;
   }
 
   /**
    * Creates a GraphQLSchemaConfig from an ApiBuilderService instance
-   * @param {ApiBuilderService} service
    */
-  static fromService(service) {
+  static fromService(service: ApiBuilderService) {
     const queries = flatMap(service.resources, (resource) => {
       /*
       need to pick 1 operation for this resource to be the getter (e.g. getById)
@@ -169,7 +208,7 @@ class GraphQLSchemaConfig {
       */
       const getter = resource.operations
         .filter(matches({ method: 'GET' }))
-        .filter(op => !isEnclosingType(op.resultType) && typeMatches(op.resultType, resource.type))
+        .filter(op => !isEnclosingType(op.resultType) && typeMatches(op.resultType, resource.type.toString()))
         .sort((a, b) => a.path.length - b.path.length)[0];
 
       if (getter) {

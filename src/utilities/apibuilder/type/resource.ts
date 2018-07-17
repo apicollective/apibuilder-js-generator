@@ -5,6 +5,7 @@ import {
   flow,
   inRange,
 } from 'lodash/fp';
+import { ApiBuilderBaseType } from './definition';
 
 /**
  * The arguments of an APIBuilder operation
@@ -26,11 +27,11 @@ export class ApiBuilderOperationArgument {
     return typeFromAst(astFromTypeName(this.config.type), this.service);
   }
 
-  get defaultValue() {
+  get defaultValue(): string {
     return this.config.default;
   }
 
-  get description() {
+  get description(): string {
     return this.config.description;
   }
 
@@ -38,7 +39,7 @@ export class ApiBuilderOperationArgument {
     return this.config.location;
   }
 
-  get required() {
+  get required(): boolean {
     return this.config.required;
   }
 
@@ -78,7 +79,7 @@ export class ApiBuilderOperation {
     return this.config.description;
   }
 
-  get path() {
+  get path(): string {
     if (this.config.path.startsWith(this.resourcePath)) {
       return this.config.path.substring(this.resourcePath.length);
     }
@@ -99,7 +100,7 @@ export class ApiBuilderOperation {
     return typeFromAst(astFromTypeName(type), this.service);
   }
 
-  get arguments() {
+  get arguments(): ApiBuilderOperationArgument[] {
     return this.config.parameters.map(arg =>
       ApiBuilderOperationArgument.fromSchema(arg, this.service));
   }
@@ -127,8 +128,9 @@ export class ApiBuilderResource {
       ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 
-  get type() {
-    return typeFromAst(astFromTypeName(this.config.type), this.service);
+  get type(): ApiBuilderBaseType {
+    // TODO: is this type assertion correct?
+    return <ApiBuilderBaseType>typeFromAst(astFromTypeName(this.config.type), this.service);
   }
 
   get plural() {
