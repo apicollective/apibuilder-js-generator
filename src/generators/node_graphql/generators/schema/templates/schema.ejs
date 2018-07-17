@@ -2,6 +2,20 @@
 
 import got from 'got';
 
+function insertMetadata(obj, data) {
+  if (Array.isArray(obj)) {
+    return obj.map(elem => insertMetadata(elem, data));
+  } else if (typeof obj === 'object') {
+    const transformed = Object.keys(obj).reduce((newobj, key) => {
+      newobj[key] = insertMetadata(obj[key], data);
+      return newobj;
+    }, {});
+    return Object.assign({}, transformed, data);
+  } else {
+    return obj;
+  }
+}
+
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
@@ -63,20 +77,6 @@ const schema = new GraphQLSchema({
               authorization: context.headers.authorization
             }
           }).then(response => {
-            function insertMetadata(obj, data) {
-              if (Array.isArray(obj)) {
-                return obj.map(elem => insertMetadata(elem, data));
-              } else if (typeof obj === 'object') {
-                const transformed = Object.keys(obj).reduce((newobj, key) => {
-                  newobj[key] = insertMetadata(obj[key], data);
-                  return newobj;
-                }, {});
-                return Object.assign({}, transformed, data);
-              } else {
-                return obj;
-              }
-            }
-
             return insertMetadata(response.body, {
               __args: args,
               __parent: parent,
