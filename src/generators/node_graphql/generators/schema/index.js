@@ -77,7 +77,6 @@ function computeScalarExports({ arguments: args, resultType }) {
   }, initialNamedExports);
 }
 
-
 function mapToImportDeclarations(service) {
   const allOperations = flatMap(service.resources, r => r.operations);
 
@@ -133,6 +132,5 @@ function generateFile(service) {
   const contents = generateCode(service);
   return new ApiBuilderFile(basename, dirname, contents);
 }
-
 
 exports.generateFile = generateFile;

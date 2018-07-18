@@ -6,7 +6,7 @@
   "scripts": {
     "dev:start": "DEBUG=apibuilder:* nodemon",
     "build": "tsc",
-    "lint": "tslint -c tslint.json src/**/*.{ts,js}",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,js}'",
     "pretest": "npm run lint",
     "test": "jest --maxWorkers=4"
   },
@@ -53,11 +53,14 @@
     "invariant": "^2.2.4",
     "lodash": "^4.17.10",
     "prettier": "^1.12.1",
-    "tslint": "^5.10.0",
+    "tslint": "^5.11.0",
     "typescript": "^2.9.2"
   },
   "jest": {
-    "moduleFileExtensions": ["ts", "js"],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "transform": {
       "\\.ts$": "ts-jest"
     },
