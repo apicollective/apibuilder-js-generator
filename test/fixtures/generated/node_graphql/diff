@@ -1,6 +1,6 @@
-const { GraphQLUnionType } = require('graphql');
-const DiffBreaking = require('./../models/DiffBreaking');
-const DiffNonBreaking = require('./../models/DiffNonBreaking');
+import { GraphQLUnionType } from 'graphql';
+import DiffBreaking from './../models/DiffBreaking';
+import DiffNonBreaking from './../models/DiffNonBreaking';
 
 const Diff = new GraphQLUnionType({
   name: 'Diff',
@@ -15,4 +15,4 @@ const Diff = new GraphQLUnionType({
   },
 });
 
-module.exports = Diff;
+export default Diff;
