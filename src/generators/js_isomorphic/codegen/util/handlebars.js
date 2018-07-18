@@ -33,7 +33,7 @@ handlebars.registerHelper('operationPath', operation =>
   getEndpointUriStr(operation));
 
 // eslint-disable-next-line func-names
-handlebars.registerHelper('nonGetMethod', function (operation, options) {
+handlebars.registerHelper('nonGetMethod', function(operation, options) {
   return operation.method !== 'GET' ? options.fn(this) : options.inverse(this);
 });
 

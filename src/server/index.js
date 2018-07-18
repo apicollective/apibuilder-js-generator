@@ -60,7 +60,8 @@ app.post('/invocations/:key', (req, res) => {
     return res.status(409).send([
       {
         code: 'SERVICE_PAYLOAD_NOT_FOUND',
-        message: `Service json not found for key[${invocationKey}]. Expected body of request to be a service spec json file produced by https://app.apibuilder.io.`,
+        message: `Service json not found for key[${invocationKey}]. Expected body of request to` +
+                 'be a service spec json file produced by https://app.apibuilder.io.',
       },
     ]);
   }
@@ -73,7 +74,9 @@ app.post('/invocations/:key', (req, res) => {
       files,
     });
   }).catch((error) => {
+    // tslint:disable-next-line:no-console
     console.error(`Could not generate code for ${invocationKey}: ${error.message}`);
+    // tslint:disable-next-line:no-console
     console.error(error.stack);
 
     res.status(409).send([
@@ -85,5 +88,5 @@ app.post('/invocations/:key', (req, res) => {
   });
 });
 
-// eslint-disable-next-line no-console
+// tslint:disable-next-line:no-console
 app.listen(port, () => console.log(`apibuilder-javascript-generator listening on http://0.0.0.0:${port}`));

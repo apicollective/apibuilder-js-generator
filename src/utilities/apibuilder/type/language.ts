@@ -1,6 +1,14 @@
-import { ApiBuilderType, ApiBuilderBaseType, ApiBuilderEnclosingType, ApiBuilderPrimitiveType, ApiBuilderUnion, ApiBuilderModel, ApiBuilderMap, ApiBuilderArray, ApiBuilderEnum } from "./definition";
-
-const definition = require('./definition');
+import {
+  ApiBuilderArray,
+  ApiBuilderBaseType,
+  ApiBuilderEnclosingType,
+  ApiBuilderEnum,
+  ApiBuilderMap,
+  ApiBuilderModel,
+  ApiBuilderPrimitiveType,
+  ApiBuilderType,
+  ApiBuilderUnion,
+} from '.';
 
 /**
  * Returns whether the specified object is an API Builder enumeration type.

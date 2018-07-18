@@ -1,9 +1,9 @@
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function alphaNumOnly(string) {
-  return string.replace(/[^a-zA-Z0-9]/gi, '');
+function alphaNumOnly(str) {
+  return str.replace(/[^a-zA-Z0-9]/gi, '');
 }
 
 module.exports = {

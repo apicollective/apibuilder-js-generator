@@ -6,8 +6,7 @@
   "scripts": {
     "dev:start": "DEBUG=apibuilder:* nodemon",
     "build": "tsc",
-    "lint": "eslint . --cache --format=codeframe --ext js --ext ts",
-    "lint:fix": "eslint . --fix --cache --format=codeframe --ext js,jsx",
+    "lint": "tslint -c tslint.json src/**/*.{ts,js}",
     "pretest": "npm run lint",
     "test": "jest --maxWorkers=4"
   },
@@ -38,7 +37,8 @@
     "mkdirp": "^0.5.1",
     "nock": "^9.2.5",
     "nodemon": "^1.17.3",
-    "ts-node": "^7.0.0"
+    "ts-node": "^7.0.0",
+    "tslint-config-airbnb": "^5.9.2"
   },
   "dependencies": {
     "babel-core": "^6.26.3",

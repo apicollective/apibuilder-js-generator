@@ -16,6 +16,7 @@ function toGraphQLOutputType(type, required = false, service) {
   let outputType;
 
   if (isMapType(type)) {
+    // tslint:disable-next-line:max-line-length
     outputType = `new GraphQLList(new GraphQLNonNull(makeMapEntry(${toGraphQLOutputType(type.ofType, false, service)})))`;
   } else if (isArrayType(type)) {
     outputType = `new GraphQLList(new GraphQLNonNull(${toGraphQLOutputType(type.ofType, false, service)}))`;
@@ -34,6 +35,5 @@ function toGraphQLOutputType(type, required = false, service) {
 
   return outputType;
 }
-
 
 module.exports = toGraphQLOutputType;

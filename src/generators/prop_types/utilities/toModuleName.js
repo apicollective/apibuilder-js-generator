@@ -1,7 +1,6 @@
 const { getBaseType } = require('../../../utilities/apibuilder');
 const toDefaultExport = require('./toDefaultExport');
 
-
 /**
  * Calculates the module name for writing into generated code.
  * @param {ApiBuilderType} type - The type in question

@@ -4,7 +4,7 @@ import {
   astFromTypeName,
   isEnclosingType,
   isType,
-  typeFromAst
+  typeFromAst,
 } from '../../../utilities/apibuilder';
 
 import invariant = require('invariant');
@@ -39,7 +39,8 @@ export function expandReference(type: ApiBuilderType, service: ApiBuilderService
   if (isReference(type)) {
     const full = getFullType(type, service);
     // TODO: union types and containers?
-    if (full !== null /*&& !isUnionType(full) && !isEnclosingType(full)*/)
+    if (full !== null /*&& !isUnionType(full) && !isEnclosingType(full)*/) {
       return full;
+    }
   }
 }

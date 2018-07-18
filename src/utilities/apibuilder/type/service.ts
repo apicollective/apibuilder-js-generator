@@ -1,21 +1,14 @@
+import { find, flatMap, map, matchesProperty, memoize, overSome, property } from 'lodash';
 import {
-  find,
-  flatMap,
-  map,
-  matchesProperty,
-  memoize,
-  overSome,
-  property,
-} from 'lodash';
+  ApiBuilderEnum,
+  ApiBuilderImport,
+  ApiBuilderModel,
+  ApiBuilderResource,
+  ApiBuilderType,
+  ApiBuilderUnion,
+} from '.';
 
-import { ApiBuilderEnum, ApiBuilderModel, ApiBuilderUnion } from './definition';
-import { ApiBuilderResource } from './resource';
-
-/**
- * @param {ApiBuilderType[]} types
- * @param {string} name
- */
-function findTypeByName(types, name) {
+function findTypeByName(types: ApiBuilderType[], name: string) {
   return find(types, overSome([
     matchesProperty('shortName', name),
     matchesProperty('baseType', name),
@@ -33,79 +26,6 @@ const mapToModelType = memoize((schema, service) => {
 const mapToUnionType = memoize((schema, service) => {
   return ApiBuilderUnion.fromSchema(schema, service);
 });
-
-/**
- * An import in APIBuilder
- */
-export class ApiBuilderImport {
-  schema: any;
-  service: any;
-
-  constructor(schema, service) {
-    this.schema = schema;
-    this.service = service;
-  }
-
-  get namespace() {
-    return this.schema.namespace;
-  }
-
-  get organizationKey() {
-    return this.schema.organization.key;
-  }
-
-  get applicationKey() {
-    return this.schema.application.key;
-  }
-
-  get version() {
-    return this.schema.version;
-  }
-
-  get enums() {
-    return map(this.schema.enums, (enumeration) => {
-      const { namespace, service } = this;
-      const schema = { name: enumeration };
-      return ApiBuilderEnum.fromSchema(schema, service, namespace);
-    });
-  }
-
-  get models() {
-    return map(this.schema.models, (model) => {
-      const { namespace, service } = this;
-      const schema = { name: model };
-      return ApiBuilderModel.fromSchema(schema, service, namespace);
-    });
-  }
-
-  get unions() {
-    return map(this.schema.unions, (union) => {
-      const { namespace, service } = this;
-      const schema = { name: union };
-      return ApiBuilderUnion.fromSchema(schema, service, namespace);
-    });
-  }
-
-  findEnumByName(name) {
-    return findTypeByName(this.enums, name);
-  }
-
-  findModelByName(name) {
-    return findTypeByName(this.models, name);
-  }
-
-  findUnionByName(name) {
-    return findTypeByName(this.unions, name);
-  }
-
-  toString() {
-    return `${this.applicationKey}@${this.version}`;
-  }
-
-  static fromSchema(schema, service) {
-    return new ApiBuilderImport(schema, service);
-  }
-}
 
 /**
  * Wraps an apibuilder service definition and provides utilities for
@@ -141,7 +61,7 @@ export class ApiBuilderService {
   }
 
   get imports() {
-    return map(this.schema.imports, schema =>
+    return map(this.schema.imports, (schema) =>
       ApiBuilderImport.fromSchema(schema, this));
   }
 
@@ -174,17 +94,17 @@ export class ApiBuilderService {
   }
 
   get internalEnums() {
-    return map(this.schema.enums, enumeration =>
+    return map(this.schema.enums, (enumeration) =>
       mapToEnumType(enumeration, this));
   }
 
   get internalModels() {
-    return map(this.schema.models, model =>
+    return map(this.schema.models, (model) =>
       mapToModelType(model, this));
   }
 
   get internalUnions() {
-    return map(this.schema.unions, union =>
+    return map(this.schema.unions, (union) =>
       mapToUnionType(union, this));
   }
 
@@ -197,15 +117,15 @@ export class ApiBuilderService {
   }
 
   get externalEnums() {
-    return flatMap(this.imports, property('enums'));
+    return flatMap(this.imports, (im) => im.enums);
   }
 
   get externalModels() {
-    return flatMap(this.imports, property('models'));
+    return flatMap(this.imports, (im) => im.models);
   }
 
   get externalUnions() {
-    return flatMap(this.imports, property('unions'));
+    return flatMap(this.imports, (im) => im.unions);
   }
 
   get externalTypes() {
@@ -217,7 +137,7 @@ export class ApiBuilderService {
   }
 
   get resources() {
-    return map(this.schema.resources, res => new ApiBuilderResource(res, this));
+    return map(this.schema.resources, (res) => new ApiBuilderResource(res, this));
   }
 
   get baseUrl() {

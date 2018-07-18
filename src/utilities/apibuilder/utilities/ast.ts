@@ -1,12 +1,18 @@
-const invariant = require('invariant');
-const type = require('../type');
-const schema = require('./schema');
-import { ApiBuilderType } from '../type';
+import invariant = require('invariant');
+import { ApiBuilderArray, ApiBuilderMap, ApiBuilderPrimitiveType, ApiBuilderType } from '../type';
+import {
+  FullyQualifiedType,
+  getNestedTypeName,
+  isArrayTypeName,
+  isMapTypeName,
+  isPrimitiveTypeName,
+  Kind,
+} from './schema';
 
-export type Ast = {
-  name: string,
-  type?: Ast,
-};
+export interface Ast {
+  name: string;
+  type?: Ast;
+}
 
 /**
  * Produces an AST given the name of a type as it appears in an API builder schema.
@@ -20,13 +26,6 @@ export type Ast = {
  * @return {Object}
  */
 export function astFromTypeName(typeName): Ast {
-  const {
-    Kind,
-    isMapTypeName,
-    getNestedTypeName,
-    isArrayTypeName,
-  } = schema;
-
   switch (true) {
     case isMapTypeName(typeName):
       return {
@@ -43,7 +42,6 @@ export function astFromTypeName(typeName): Ast {
   }
 }
 
-
 /**
  * Returns the type name for the specified API builder AST.
  * @example
@@ -53,8 +51,6 @@ export function astFromTypeName(typeName): Ast {
  * @returns {String}
  */
 export function typeNameFromAst(ast: Ast): string {
-  const { Kind } = schema;
-
   switch (ast.name) {
     case Kind.MAP:
       return `map[${typeNameFromAst(ast.type)}]`;
@@ -76,9 +72,6 @@ export function typeNameFromAst(ast: Ast): string {
  * @returns {ApiBuilderType}
  */
 export function typeFromAst(ast: Ast, service: any): ApiBuilderType {
-  const { FullyQualifiedType, Kind, isPrimitiveTypeName } = schema;
-  const { ApiBuilderArray, ApiBuilderMap, ApiBuilderPrimitiveType } = type;
-
   if (ast.name === Kind.MAP) {
     return new ApiBuilderMap(typeFromAst(ast.type, service));
   } else if (ast.name === Kind.ARRAY) {

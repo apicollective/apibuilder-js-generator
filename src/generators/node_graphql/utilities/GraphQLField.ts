@@ -1,20 +1,33 @@
 import invariant = require('invariant');
-import toGraphQLOutputType = require('./toGraphQLOutputType');
-import { isPrimitiveType, isArrayType, ApiBuilderField } from '../../../utilities/apibuilder';
-import { expandReference } from './reference';
 import { concat, matches } from 'lodash';
-import { get } from 'lodash/fp';
+import { ApiBuilderField, isArrayType, isPrimitiveType } from '../../../utilities/apibuilder';
+import { expandReference } from './reference';
+import toGraphQLOutputType = require('./toGraphQLOutputType');
 
 interface Config {
-  type: string,
-  isPrimitive: boolean,
-  isListType: boolean,
-  expandedReference: any,
-  deprecationReason: string,
-  description: string
+  type: string;
+  isPrimitive: boolean;
+  isListType: boolean;
+  expandedReference: any;
+  deprecationReason: string;
+  description: string;
 }
 
-class GraphQLField {
+export default class GraphQLField {
+  /**
+   * Creates a GraphQLField from an ApiBuilderField.
+   */
+  static fromApiBuilderField(field: ApiBuilderField) {
+    return new GraphQLField({
+      type: toGraphQLOutputType(field.type, field.isRequired, field.service),
+      isPrimitive: isPrimitiveType(field.type),
+      isListType: isArrayType(field.type),
+      expandedReference: expandReference(field.type, field.service),
+      deprecationReason: field.deprecationReason,
+      description: field.description,
+    });
+  }
+
   config: Config;
 
   constructor(config: Config) {
@@ -43,8 +56,9 @@ class GraphQLField {
 
     const getter = this.config.expandedReference.getter;
 
-    if (!getter)
+    if (!getter) {
       return { getter: null };
+    }
 
     return {
       getter,
@@ -54,10 +68,10 @@ class GraphQLField {
         getter.service.baseUrl,
         (getter.resourcePath + getter.path)
           .split('/')
-          .filter(x => x.length > 0),
+          .filter((x) => x.length > 0),
       ),
       queryParts: getter.arguments
-        .filter(matches({ location: 'Query' }))
+        .filter(matches({ location: 'Query' })),
     };
   }
 
@@ -68,20 +82,4 @@ class GraphQLField {
   get description() {
     return this.config.description;
   }
-
-  /**
-   * Creates a GraphQLField from an ApiBuilderField.
-   */
-  static fromApiBuilderField(field: ApiBuilderField) {
-    return new GraphQLField({
-      type: toGraphQLOutputType(field.type, field.isRequired, field.service),
-      isPrimitive: isPrimitiveType(field.type),
-      isListType: isArrayType(field.type),
-      expandedReference: expandReference(field.type, field.service),
-      deprecationReason: field.deprecationReason,
-      description: field.description,
-    });
-  }
 }
-
-module.exports = GraphQLField;

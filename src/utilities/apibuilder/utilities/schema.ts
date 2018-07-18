@@ -71,7 +71,6 @@ export function getBaseTypeName(type: string | Ast): string {
   return type.name;
 }
 
-
 /**
  * Given the name of an enclosing type as it appears in an API builder schema,
  * returns the API builder type name of the underlying type.
@@ -94,7 +93,6 @@ export function getNestedTypeName(type: string): string {
 
   return type;
 }
-
 
 /**
  * Given the name of a type as it appears in an API builder schema, returns
@@ -177,7 +175,9 @@ export class FullyQualifiedType {
    */
   get shortName() {
     const lastIndex = this.baseType.lastIndexOf('.');
-    if (lastIndex === -1) return this.baseType;
+    if (lastIndex === -1) {
+      return this.baseType;
+    }
     return this.baseType.substring(lastIndex + 1);
   }
 
@@ -187,7 +187,9 @@ export class FullyQualifiedType {
    */
   get packageName() {
     const lastIndex = this.baseType.lastIndexOf('.');
-    if (this.isPrimitiveType || lastIndex === -1) return EMPTY_STRING;
+    if (this.isPrimitiveType || lastIndex === -1) {
+      return EMPTY_STRING;
+    }
     return this.baseType.substring(0, lastIndex);
   }
 

@@ -1,25 +1,22 @@
-const path = require('path');
 import { reduce, some } from 'lodash';
-
-const { renderTemplate } = require('../../../../utilities/template');
-
+import path = require('path');
 import {
   ApiBuilderFile,
   ApiBuilderModel,
   getBaseType,
+  isEnclosingType,
   isMapType,
   isPrimitiveType,
-  isEnclosingType,
-  ApiBuilderEnclosingType,
 } from '../../../../utilities/apibuilder';
+import { renderTemplate } from '../../../../utilities/template';
+import { destinationPathFromType } from '../../utilities/destinationPath';
+import { getFullType, isReference } from '../../utilities/reference';
 
-const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
-const { destinationPathFromType } = require('../../utilities/destinationPath');
-const toImportDeclaration = require('../../utilities/toImportDeclaration');
-const toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
-const toCustomScalarType = require('../../utilities/toCustomScalarType');
-const GraphQLObjectType = require('../../utilities/GraphQLObjectType');
-const { isReference, getFullType } = require('../../utilities/reference');
+import ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
+import GraphQLObjectType = require('../../utilities/GraphQLObjectType');
+import toCustomScalarType = require('../../utilities/toCustomScalarType');
+import toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
+import toImportDeclaration = require('../../utilities/toImportDeclaration');
 
 // TODO: An API Builder model may be either a GraphQL object or a GraphQL input,
 // in this iteration we will assume that they are all GraphQL objects, but we
@@ -38,7 +35,7 @@ function computeGraphQLNamedExports(model: ApiBuilderModel): string[] {
   }
 
   // maps and arrays become NonNull Lists
-  if (some(model.fields, field => isEnclosingType(field.type))) {
+  if (some(model.fields, (field) => isEnclosingType(field.type))) {
     initialNamedExports.add('GraphQLList');
     initialNamedExports.add('GraphQLNonNull');
   }
@@ -58,7 +55,7 @@ function computeGraphQLNamedExports(model: ApiBuilderModel): string[] {
 function computeScalarExports(model: ApiBuilderModel) {
   const initialNamedExports = [];
 
-  if (some(model.fields, field => isMapType(field.type))) {
+  if (some(model.fields, (field) => isMapType(field.type))) {
     initialNamedExports.push('makeMapEntry');
   }
 
@@ -92,8 +89,8 @@ function mapToImportDeclarations(model: ApiBuilderModel) {
   }
 
   return model.fields
-    .map(field => getBaseType(field.type))
-    .filter(baseType => !isPrimitiveType(baseType))
+    .map((field) => getBaseType(field.type))
+    .filter((baseType) => !isPrimitiveType(baseType))
     .reduce((declarations, baseType) => {
       let type = baseType;
       if (isReference(baseType)) {
@@ -119,7 +116,7 @@ function generateCode(model: ApiBuilderModel) {
   return renderTemplate(templatePath, {
     importDeclarations: mapToImportDeclarations(model),
     object: GraphQLObjectType.fromApiBuilderModel(model),
-  })
+  });
 }
 
 exports.generateCode = generateCode;
