@@ -1,5 +1,5 @@
+const camelCase = require('lodash/camelCase');
 const { getBaseType } = require('../../../utilities/apibuilder');
-const toDefaultExport = require('./toDefaultExport');
 
 /**
  * Calculates the module name for writing into generated code.
@@ -9,7 +9,7 @@ function toModuleName(type) {
   const baseType = getBaseType(type);
   return baseType.packageName
     .split('.')
-    .concat(toDefaultExport(baseType))
+    .concat(camelCase(baseType.shortName))
     .join('/');
 }
 

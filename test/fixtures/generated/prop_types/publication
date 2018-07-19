@@ -1,6 +1,8 @@
-module.exports = [
+import PropTypes from 'prop-types';
+
+export default PropTypes.oneOf([
   'membership_requests.create',
   'memberships.create',
   'applications.create',
   'versions.create',
-];
+]);

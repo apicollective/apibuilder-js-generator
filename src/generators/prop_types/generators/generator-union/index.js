@@ -2,11 +2,15 @@ const path = require('path');
 
 const { renderTemplate } = require('../../../../utilities/template');
 const { getBaseType, isPrimitiveType } = require('../../../../utilities/apibuilder');
+const isCyclic = require('../../utilities/isCyclic');
 const toImportStatement = require('../../utilities/toImportStatement');
 const toPropTypes = require('../../utilities/toPropTypes');
 
 function mapToPropTypes(union) {
-  return union.types.map(({ type }) => toPropTypes(type));
+  return union.types.map(unionType => ({
+    validator: toPropTypes(unionType.type),
+    isCyclic: isCyclic(union, unionType.type),
+  }));
 }
 
 function mapToImportStatements(union) {
@@ -21,9 +25,9 @@ function mapToImportStatements(union) {
 function generate(union) {
   const templatePath = path.resolve(__dirname, './templates/union.ejs');
   const importStatements = mapToImportStatements(union);
-  const validators = mapToPropTypes(union);
+  const propTypes = mapToPropTypes(union);
   // TODO: Need to include discriminator.
-  return renderTemplate(templatePath, { importStatements, validators });
+  return renderTemplate(templatePath, { importStatements, propTypes });
 }
 
 module.exports = generate;

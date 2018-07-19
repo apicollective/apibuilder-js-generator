@@ -1,0 +1,16 @@
+import PropTypes from 'prop-types';
+import organization from '../models/organization';
+import person from '../models/person';
+
+// Helper used as workaround for cyclic dependencies.
+function createLazyTypeChecker(getValidator) {
+  return function checkType(...args) {
+    const validator = getValidator();
+    return validator(...args);
+  };
+}
+
+export default PropTypes.oneOfType([
+  createLazyTypeChecker(() => organization),
+  person,
+]);

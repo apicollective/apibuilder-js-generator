@@ -1,0 +1,16 @@
+// Type definitions for <%= organizationKey %> <%= applicationKey %> <%= versionNumber %>
+// Definitions by: API Builder <https://www.apibuilder.io/>
+
+export type Validator<T> = (object: T, key: string, componentName: string, ...rest: any[]) => Error | null;
+
+export interface Requireable<T> {
+  isRequired: Validator<T>;
+}
+
+declare const defaultExport: {
+  <%_ identifierNames.forEach((identifierName) => { _%>
+  <%= identifierName %>: Requireable<any> & Validator<any>;
+  <%_ }) _%>
+}
+
+export default defaultExport;

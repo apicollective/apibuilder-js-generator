@@ -1,8 +1,5 @@
-const PropTypes = require('prop-types');
-const diffBreakingPropTypes = require('../models/diffBreakingPropTypes');
-const diffNonBreakingPropTypes = require('../models/diffNonBreakingPropTypes');
+import PropTypes from 'prop-types';
+import diffBreaking from '../models/diffBreaking';
+import diffNonBreaking from '../models/diffNonBreaking';
 
-module.exports = [
-  PropTypes.shape(diffBreakingPropTypes),
-  PropTypes.shape(diffNonBreakingPropTypes),
-];
+export default PropTypes.oneOfType([diffBreaking, diffNonBreaking]);

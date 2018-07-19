@@ -200,7 +200,7 @@ function createPackageFile(service) {
   };
 }
 
-function generate(service) {
+function generate({ service }) {
   const template = getClientTemplate();
   const utilsTemplate = getUtilsTemplate();
   const resourceFiles = createResources(service);

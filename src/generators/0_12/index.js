@@ -4,7 +4,7 @@ const hbs = require('hbs');
 const resource = require('./resource');
 const { alphaNumOnly, capitalizeFirstLetter } = require('./utils');
 
-function generate(service) {
+function generate({ service }) {
   const { resources } = service;
   const clients = [];
 

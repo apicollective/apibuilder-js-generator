@@ -1,17 +1,14 @@
-// Forward declare module.exports to avoid issues with circular dependencies.
-module.exports = {};
+import PropTypes from 'prop-types';
+import reference from '../../../common/v0/models/reference';
+import visibility from '../enums/visibility';
+import audit from '../../../common/v0/models/audit';
 
-const PropTypes = require('prop-types');
-const referencePropTypes = require('../../../common/v0/models/referencePropTypes');
-const visibilityPropTypes = require('../enums/visibilityPropTypes');
-const auditPropTypes = require('../../../common/v0/models/auditPropTypes');
-
-Object.assign(module.exports, {
+export default PropTypes.shape({
   guid: PropTypes.string.isRequired,
-  organization: PropTypes.shape(referencePropTypes).isRequired,
+  organization: reference.isRequired,
   name: PropTypes.string.isRequired,
   key: PropTypes.string.isRequired,
-  visibility: PropTypes.oneOf(visibilityPropTypes).isRequired,
+  visibility: visibility.isRequired,
   description: PropTypes.string,
-  audit: PropTypes.shape(auditPropTypes).isRequired,
+  audit: audit.isRequired,
 });
