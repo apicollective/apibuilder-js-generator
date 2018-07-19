@@ -3,6 +3,7 @@ import path = require('path');
 import {
   ApiBuilderFile,
   ApiBuilderModel,
+  ApiBuilderType,
   getBaseType,
   isEnclosingType,
   isMapType,
@@ -92,7 +93,7 @@ function mapToImportDeclarations(model: ApiBuilderModel) {
     .map((field) => getBaseType(field.type))
     .filter((baseType) => !isPrimitiveType(baseType))
     .reduce((declarations, baseType) => {
-      let type = baseType;
+      let type: ApiBuilderType = baseType;
       if (isReference(baseType)) {
         const fullType = getFullType(baseType, model.service);
         // ReservationItem has a field of type ReservationItemReference
