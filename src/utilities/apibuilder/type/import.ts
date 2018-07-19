@@ -12,12 +12,12 @@ function findTypeByName(types: ApiBuilderType[], name: string) {
  * An import in APIBuilder
  */
 export class ApiBuilderImport {
-  static fromSchema(schema, service) {
+  public static fromSchema(schema, service) {
     return new ApiBuilderImport(schema, service);
   }
 
-  schema: any;
-  service: any;
+  private schema: any;
+  private service: any;
 
   constructor(schema, service) {
     this.schema = schema;
@@ -42,41 +42,38 @@ export class ApiBuilderImport {
 
   get enums() {
     return map(this.schema.enums, (enumeration) => {
-      const { namespace, service } = this;
       const schema = { name: enumeration };
-      return ApiBuilderEnum.fromSchema(schema, service, namespace);
+      return ApiBuilderEnum.fromSchema(schema, this.service, this.namespace);
     });
   }
 
   get models() {
     return map(this.schema.models, (model) => {
-      const { namespace, service } = this;
       const schema = { name: model };
-      return ApiBuilderModel.fromSchema(schema, service, namespace);
+      return ApiBuilderModel.fromSchema(schema, this.service, this.namespace);
     });
   }
 
   get unions() {
     return map(this.schema.unions, (union) => {
-      const { namespace, service } = this;
       const schema = { name: union };
-      return ApiBuilderUnion.fromSchema(schema, service, namespace);
+      return ApiBuilderUnion.fromSchema(schema, this.service, this.namespace);
     });
   }
 
-  findEnumByName(name) {
+  public findEnumByName(name) {
     return findTypeByName(this.enums, name);
   }
 
-  findModelByName(name) {
+  public findModelByName(name) {
     return findTypeByName(this.models, name);
   }
 
-  findUnionByName(name) {
+  public findUnionByName(name) {
     return findTypeByName(this.unions, name);
   }
 
-  toString() {
+  public toString() {
     return `${this.applicationKey}@${this.version}`;
   }
 }

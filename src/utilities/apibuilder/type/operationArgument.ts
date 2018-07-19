@@ -4,12 +4,12 @@ import { astFromTypeName, typeFromAst } from '../utilities';
  * The arguments of an APIBuilder operation
  */
 export class ApiBuilderOperationArgument {
-  static fromSchema(config, service) {
+  public static fromSchema(config, service) {
     return new ApiBuilderOperationArgument(config, service);
   }
 
-  config: any;
-  service: any;
+  private config: any;
+  private service: any;
 
   constructor(config, service) {
     this.config = config;

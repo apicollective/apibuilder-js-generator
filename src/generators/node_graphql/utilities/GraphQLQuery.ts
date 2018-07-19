@@ -1,4 +1,4 @@
-import createLogger = require('debug');
+import debug = require('debug');
 import invariant = require('invariant');
 import { camelCase, concat, matches, partition } from 'lodash';
 import { get } from 'lodash/fp';
@@ -10,19 +10,20 @@ import {
   isEnclosingType,
   isPrimitiveType,
 } from '../../../utilities/apibuilder';
+import GraphQLQueryArgConfig from './GraphQLQueryArgConfig';
 import toGraphQLOutputType = require('./toGraphQLOutputType');
 
-const log = createLogger('apibuilder:graphql-query');
+const log = debug('apibuilder:graphql-query');
 
-interface GraphQLQueryConfig {
+interface IGraphQLQueryConfig {
   operation: ApiBuilderOperation;
   resource: ApiBuilderResource;
   service: ApiBuilderService;
   isPrimaryGetter: boolean;
 }
 
-class GraphQLQuery {
-  config: GraphQLQueryConfig;
+export default class GraphQLQuery {
+  private config: IGraphQLQueryConfig;
 
   constructor(
     operation: ApiBuilderOperation,
@@ -31,10 +32,10 @@ class GraphQLQuery {
     isPrimaryGetter: boolean,
   ) {
     this.config = {
+      isPrimaryGetter,
       operation,
       resource,
       service,
-      isPrimaryGetter,
     };
   }
 
@@ -43,14 +44,16 @@ class GraphQLQuery {
     const { path, resultType } = this.config.operation;
 
     const [staticParts, queryParts] = partition(
-      path.split('/').filter((x) => x.length > 0),
-      (x) => x[0] !== ':',
+      path.split('/').filter(x => x.length > 0),
+      x => x[0] !== ':',
     );
 
-    if (isEnclosingType(resultType) && typeMatches(getBaseType(resultType), resource.type.toString())) {
+    if (isEnclosingType(resultType) && typeMatches(getBaseType(resultType), resource.type)) {
       // Gets multiple instances of this resource
       return camelCase(this.config.resource.plural);
-    } else if (!isEnclosingType(resultType) && typeMatches(resultType, resource.type.toString())) {
+    }
+
+    if (!isEnclosingType(resultType) && typeMatches(resultType, resource.type)) {
       // Gets a single instance of this resource
       if (this.config.isPrimaryGetter) {
         return camelCase(resource.type.shortName); // primary getter is just resource name
@@ -63,7 +66,9 @@ class GraphQLQuery {
         Operation = ${resource.path}${path}`,
       );
       return camelCase(`${resource.type.shortName}_by_${queryParts.join('_')}`); // get by {args}
-    } else if (staticParts.length > 0) {
+    }
+
+    if (staticParts.length > 0) {
       // Get sub-resource
       let res = `for_${resource.type.shortName}_get_${staticParts.join('_')}`;
       if (queryParts.length > 0) {
@@ -79,7 +84,7 @@ class GraphQLQuery {
   }
 
   get args() {
-    return this.config.operation.arguments.map((arg) =>
+    return this.config.operation.arguments.map(arg =>
       new GraphQLQueryArgConfig(arg, this.config.service));
   }
 
@@ -108,7 +113,7 @@ class GraphQLQuery {
       this.config.service.baseUrl,
       (this.config.resource.path + this.config.operation.path)
         .split('/')
-        .filter((x) => x.length > 0),
+        .filter(x => x.length > 0),
     );
   }
 

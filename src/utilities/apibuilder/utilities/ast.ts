@@ -9,9 +9,9 @@ import {
   Kind,
 } from './schema';
 
-export interface Ast {
+export interface IAst {
   name: string;
-  type?: Ast;
+  type?: IAst;
 }
 
 /**
@@ -71,12 +71,16 @@ export function typeNameFromAst(ast: Ast): string {
  * @param {ApiBuilderService} service
  * @returns {ApiBuilderType}
  */
-export function typeFromAst(ast: Ast, service: any): ApiBuilderType {
+export function typeFromAst(ast: IAst, service: any): ApiBuilderType {
   if (ast.name === Kind.MAP) {
     return new ApiBuilderMap(typeFromAst(ast.type, service));
-  } else if (ast.name === Kind.ARRAY) {
+  }
+
+  if (ast.name === Kind.ARRAY) {
     return new ApiBuilderArray(typeFromAst(ast.type, service));
-  } else if (isPrimitiveTypeName(ast.name)) {
+  }
+
+  if (isPrimitiveTypeName(ast.name)) {
     return new ApiBuilderPrimitiveType(new FullyQualifiedType(ast.name));
   }
 

@@ -3,9 +3,9 @@
  * @see https://app.apibuilder.io/bryzek/apidoc-generator/latest#model-file
  */
 export class ApiBuilderFile {
-  name: string;
-  dir: string;
-  contents: string;
+  public name: string;
+  public dir: string;
+  public contents: string;
 
   /**
    * Create a source file.

@@ -19,14 +19,18 @@ export class ApiBuilderEnum {
    * Returns the ApiBuilderEnum corresponding to the specified enum definition.
    * @param {ApiBuilderEnumConfig} config
    */
-  static fromSchema(config, service: ApiBuilderService, namespace: string = service.namespace) {
+  public static fromSchema(
+    config,
+    service: ApiBuilderService,
+    namespace: string = service.namespace,
+  ) {
     const fullyQualifiedType = new FullyQualifiedType(`${namespace}.enums.${config.name}`);
     return new ApiBuilderEnum(config, fullyQualifiedType, service);
   }
 
-  config: any;
-  fullyQualifiedType: FullyQualifiedType;
-  service: any;
+  public fullyQualifiedType: FullyQualifiedType;
+  private config: any;
+  private service: any;
 
   /**
    * Create an ApiBuilderEnum.
@@ -84,7 +88,7 @@ export class ApiBuilderEnum {
 
   /** @property {!ApiBuilderEnumValue[]} */
   get values() {
-    return map(this.config.values, (value) =>
+    return map(this.config.values, value =>
       ApiBuilderEnumValue.fromSchema(value));
   }
 
@@ -98,7 +102,7 @@ export class ApiBuilderEnum {
     return this.config.deprecation;
   }
 
-  toString() {
+  public toString() {
     return this.baseType;
   }
 }

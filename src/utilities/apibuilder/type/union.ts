@@ -23,14 +23,14 @@ export class ApiBuilderUnion {
    * @param {String} [namespace = service.namespace]
    * @returns {ApiBuilderUnion}
    */
-  static fromSchema(config, service, namespace = service.namespace) {
+  public static fromSchema(config, service, namespace = service.namespace) {
     const fullyQualifiedType = new FullyQualifiedType(`${namespace}.unions.${config.name}`);
     return new ApiBuilderUnion(config, fullyQualifiedType, service);
   }
 
-  config: any;
-  fullyQualifiedType: FullyQualifiedType;
-  service: any;
+  public fullyQualifiedType: FullyQualifiedType;
+  private config: any;
+  private service: any;
 
   /**
    * Create an ApiBuilderUnion
@@ -95,7 +95,7 @@ export class ApiBuilderUnion {
 
   /** @property {!ApiBuilderUnionType[]} */
   get types() {
-    return map(this.config.types, (type) =>
+    return map(this.config.types, type =>
       ApiBuilderUnionType.fromSchema(type, this.service));
   }
 
@@ -104,7 +104,7 @@ export class ApiBuilderUnion {
     return this.config.attributes;
   }
 
-  toString() {
+  public toString() {
     return this.baseType;
   }
 }

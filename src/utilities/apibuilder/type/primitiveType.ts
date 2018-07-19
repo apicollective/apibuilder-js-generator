@@ -2,7 +2,7 @@ import invariant = require('invariant');
 import { FullyQualifiedType } from '..';
 
 export class ApiBuilderPrimitiveType {
-  fullyQualifiedType: FullyQualifiedType;
+  public fullyQualifiedType: FullyQualifiedType;
 
   /**
    * Create an ApiBuilderPrimitiveType
@@ -33,7 +33,7 @@ export class ApiBuilderPrimitiveType {
     return this.fullyQualifiedType.fullyQualifiedType;
   }
 
-  toString() {
+  public toString() {
     return this.baseType;
   }
 }

@@ -15,13 +15,13 @@ function typeMatches(type: ApiBuilderBaseType, str: string) {
   return type.fullyQualifiedType.fullyQualifiedType.match(new RegExp(`^${str}(?:_v\\d+)?$`));
 }
 
-class GraphQLQueryArgConfig {
-  name: string;
-  fullyQualifiedType: ApiBuilderType;
-  required: boolean;
-  default: string;
-  description: string;
-  service: ApiBuilderService;
+export default class GraphQLQueryArgConfig {
+  public name: string;
+  public fullyQualifiedType: ApiBuilderType;
+  public required: boolean;
+  public default: string;
+  public description: string;
+  public service: ApiBuilderService;
 
   constructor(arg: ApiBuilderOperationArgument, service: ApiBuilderService) {
     this.name = arg.name;
@@ -38,7 +38,8 @@ class GraphQLQueryArgConfig {
 
   get defaultValue() {
     if (this.default) {
-      if (isPrimitiveType(this.fullyQualifiedType) && this.fullyQualifiedType.typeName === 'string') {
+      if (isPrimitiveType(this.fullyQualifiedType)
+       && this.fullyQualifiedType.typeName === 'string') {
         return `'${this.default}'`; // strings
       }
 

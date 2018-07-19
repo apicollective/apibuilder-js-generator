@@ -11,12 +11,12 @@ export class ApiBuilderField {
    * @param {ApiBuilderFieldConfig} config
    * @param {ApiBuilderService} service
    */
-  static fromSchema(config, service) {
+  public static fromSchema(config, service) {
     return new ApiBuilderField(config, service);
   }
 
-  config: any;
-  service: any;
+  private config: any;
+  private service: any;
 
   /**
    * Create an ApiBuilderField
@@ -72,7 +72,7 @@ export class ApiBuilderField {
     return get(this, 'deprecation.description');
   }
 
-  toString() {
+  public toString() {
     return this.name;
   }
 }

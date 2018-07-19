@@ -36,80 +36,91 @@ function computeGraphQLNamedExports(model: ApiBuilderModel): string[] {
   }
 
   // maps and arrays become NonNull Lists
-  if (some(model.fields, (field) => isEnclosingType(field.type))) {
+  if (some(model.fields, field => isEnclosingType(field.type))) {
     initialNamedExports.add('GraphQLList');
     initialNamedExports.add('GraphQLNonNull');
   }
 
-  return Array.from(reduce(model.fields, (namedExports, field) => {
-    const type = isEnclosingType(field.type) ? field.type.ofType : field.type;
-    const scalarType = toGraphQLScalarType(type);
+  return Array.from(reduce(
+    model.fields,
+    (namedExports, field) => {
+      const type = isEnclosingType(field.type) ? field.type.ofType : field.type;
+      const scalarType = toGraphQLScalarType(type);
 
-    if (scalarType) {
-      namedExports.add(scalarType);
-    }
+      if (scalarType) {
+        namedExports.add(scalarType);
+      }
 
-    return namedExports;
-  }, initialNamedExports)).sort();
+      return namedExports;
+    },
+    initialNamedExports,
+  )).sort();
 }
 
 function computeScalarExports(model: ApiBuilderModel) {
   const initialNamedExports = [];
 
-  if (some(model.fields, (field) => isMapType(field.type))) {
+  if (some(model.fields, field => isMapType(field.type))) {
     initialNamedExports.push('makeMapEntry');
   }
 
-  return reduce(model.fields, (namedExports, field) => {
-    const type = isEnclosingType(field.type) ? field.type.ofType : field.type;
-    const scalarType = toCustomScalarType(type);
+  return reduce(
+    model.fields,
+    (namedExports, field) => {
+      const type = isEnclosingType(field.type) ? field.type.ofType : field.type;
+      const scalarType = toCustomScalarType(type);
 
-    if (scalarType && !namedExports.includes(scalarType)) {
-      namedExports.push(scalarType);
-    }
+      if (scalarType && !namedExports.includes(scalarType)) {
+        namedExports.push(scalarType);
+      }
 
-    return namedExports;
-  }, initialNamedExports).sort();
+      return namedExports;
+    },
+    initialNamedExports,
+  ).sort();
 }
 
 function mapToImportDeclarations(model: ApiBuilderModel) {
   // Compute named exports to import from `graphql` package.
   const initialImportDeclarations = [
     new ImportDeclaration({
-      namedExports: computeGraphQLNamedExports(model),
       moduleName: 'graphql',
+      namedExports: computeGraphQLNamedExports(model),
     }),
   ];
 
   const scalarExports = computeScalarExports(model);
   if (scalarExports.length > 0) {
     initialImportDeclarations.push(new ImportDeclaration({
-      namedExports: computeScalarExports(model),
       moduleName: '../scalars',
+      namedExports: computeScalarExports(model),
     }));
   }
 
   return model.fields
-    .map((field) => getBaseType(field.type))
-    .filter((baseType) => !isPrimitiveType(baseType))
-    .reduce((declarations, baseType) => {
-      let type: ApiBuilderType = baseType;
-      if (isReference(baseType)) {
-        const fullType = getFullType(baseType, model.service);
-        // ReservationItem has a field of type ReservationItemReference
-        // Don't let the file import itself
-        if (fullType && fullType !== model) {
-          type = fullType;
+    .map(field => getBaseType(field.type))
+    .filter(baseType => !isPrimitiveType(baseType))
+    .reduce(
+      (declarations, baseType) => {
+        let type: ApiBuilderType = baseType;
+        if (isReference(baseType)) {
+          const fullType = getFullType(baseType, model.service);
+          // ReservationItem has a field of type ReservationItemReference
+          // Don't let the file import itself
+          if (fullType && fullType !== model) {
+            type = fullType;
+          }
         }
-      }
 
-      // Compute relative path to target module, which is the type we want to
-      // import into the generated model.
-      const declaration = toImportDeclaration(model, type);
-      const isAlreadyImported = some(declarations, { moduleName: declaration.moduleName });
-      // TODO: Check for possible default export name collision.
-      return isAlreadyImported ? declarations : declarations.concat(declaration);
-    }, initialImportDeclarations);
+        // Compute relative path to target module, which is the type we want to
+        // import into the generated model.
+        const declaration = toImportDeclaration(model, type);
+        const isAlreadyImported = some(declarations, { moduleName: declaration.moduleName });
+        // TODO: Check for possible default export name collision.
+        return isAlreadyImported ? declarations : declarations.concat(declaration);
+      },
+      initialImportDeclarations,
+    );
 }
 
 function generateCode(model: ApiBuilderModel) {

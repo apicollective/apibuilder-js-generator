@@ -16,12 +16,12 @@ export class ApiBuilderUnionType {
    * union type definition.
    * @param {ApiBuilderUnionTypeConfig} config
    */
-  static fromSchema(config, service: ApiBuilderService) {
+  public static fromSchema(config, service: ApiBuilderService) {
     return new ApiBuilderUnionType(config, service);
   }
 
-  config: any;
-  service: any;
+  private config: any;
+  private service: any;
 
   /**
    * Create an ApiBuilderUnionTypee
@@ -64,7 +64,7 @@ export class ApiBuilderUnionType {
     return this.config.discriminator_value || this.config.type;
   }
 
-  toString() {
+  public toString() {
     return this.config.type;
   }
 }

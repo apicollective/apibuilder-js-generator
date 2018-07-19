@@ -34,7 +34,7 @@ const mapToUnionType = memoize((schema, service) => {
  * @prop {ApiBuilderResource[]} resources
  */
 export class ApiBuilderService {
-  schema: any;
+  private schema: any;
 
   constructor({ service: schema }) {
     this.schema = schema;
@@ -61,7 +61,7 @@ export class ApiBuilderService {
   }
 
   get imports() {
-    return map(this.schema.imports, (schema) =>
+    return map(this.schema.imports, schema =>
       ApiBuilderImport.fromSchema(schema, this));
   }
 
@@ -94,17 +94,17 @@ export class ApiBuilderService {
   }
 
   get internalEnums() {
-    return map(this.schema.enums, (enumeration) =>
+    return map(this.schema.enums, enumeration =>
       mapToEnumType(enumeration, this));
   }
 
   get internalModels() {
-    return map(this.schema.models, (model) =>
+    return map(this.schema.models, model =>
       mapToModelType(model, this));
   }
 
   get internalUnions() {
-    return map(this.schema.unions, (union) =>
+    return map(this.schema.unions, union =>
       mapToUnionType(union, this));
   }
 
@@ -117,15 +117,15 @@ export class ApiBuilderService {
   }
 
   get externalEnums() {
-    return flatMap(this.imports, (im) => im.enums);
+    return flatMap(this.imports, im => im.enums);
   }
 
   get externalModels() {
-    return flatMap(this.imports, (im) => im.models);
+    return flatMap(this.imports, im => im.models);
   }
 
   get externalUnions() {
-    return flatMap(this.imports, (im) => im.unions);
+    return flatMap(this.imports, im => im.unions);
   }
 
   get externalTypes() {
@@ -137,26 +137,26 @@ export class ApiBuilderService {
   }
 
   get resources() {
-    return map(this.schema.resources, (res) => new ApiBuilderResource(res, this));
+    return map(this.schema.resources, res => new ApiBuilderResource(res, this));
   }
 
   get baseUrl() {
     return this.schema.base_url;
   }
 
-  findModelByName(name) {
+  public findModelByName(name) {
     return findTypeByName(this.models, name);
   }
 
-  findEnumByName(name) {
+  public findEnumByName(name) {
     return findTypeByName(this.enums, name);
   }
 
-  findUnionByName(name) {
+  public findUnionByName(name) {
     return findTypeByName(this.unions, name);
   }
 
-  toString() {
+  public toString() {
     return `${this.applicationKey}@${this.version}`;
   }
 }

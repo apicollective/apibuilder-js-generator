@@ -25,5 +25,8 @@ import {
 } from '.';
 
 export type ApiBuilderEnclosingType = ApiBuilderArray | ApiBuilderMap;
-export type ApiBuilderBaseType = ApiBuilderPrimitiveType | ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion;
+export type ApiBuilderBaseType = ApiBuilderPrimitiveType
+                               | ApiBuilderEnum
+                               | ApiBuilderModel
+                               | ApiBuilderUnion;
 export type ApiBuilderType = ApiBuilderEnclosingType | ApiBuilderBaseType;

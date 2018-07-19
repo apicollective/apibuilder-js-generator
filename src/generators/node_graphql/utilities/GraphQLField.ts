@@ -4,7 +4,7 @@ import { ApiBuilderField, isArrayType, isPrimitiveType } from '../../../utilitie
 import { expandReference } from './reference';
 import toGraphQLOutputType = require('./toGraphQLOutputType');
 
-interface Config {
+interface IConfig {
   type: string;
   isPrimitive: boolean;
   isListType: boolean;
@@ -17,20 +17,20 @@ export default class GraphQLField {
   /**
    * Creates a GraphQLField from an ApiBuilderField.
    */
-  static fromApiBuilderField(field: ApiBuilderField) {
+  public static fromApiBuilderField(field: ApiBuilderField) {
     return new GraphQLField({
-      type: toGraphQLOutputType(field.type, field.isRequired, field.service),
-      isPrimitive: isPrimitiveType(field.type),
-      isListType: isArrayType(field.type),
-      expandedReference: expandReference(field.type, field.service),
       deprecationReason: field.deprecationReason,
       description: field.description,
+      expandedReference: expandReference(field.type, field.service),
+      isListType: isArrayType(field.type),
+      isPrimitive: isPrimitiveType(field.type),
+      type: toGraphQLOutputType(field.type, field.isRequired, field.service),
     });
   }
 
-  config: Config;
+  private config: IConfig;
 
-  constructor(config: Config) {
+  constructor(config: IConfig) {
     this.config = config;
   }
 
@@ -62,13 +62,13 @@ export default class GraphQLField {
 
     return {
       getter,
-      isPrimitive: this.isPrimitive,
       isListType: this.isListType,
+      isPrimitive: this.isPrimitive,
       pathParts: concat(
         getter.service.baseUrl,
         (getter.resourcePath + getter.path)
           .split('/')
-          .filter((x) => x.length > 0),
+          .filter(x => x.length > 0),
       ),
       queryParts: getter.arguments
         .filter(matches({ location: 'Query' })),

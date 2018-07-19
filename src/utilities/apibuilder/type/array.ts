@@ -7,14 +7,14 @@ import { ApiBuilderType, isType } from '..';
  * a model type.
  */
 export class ApiBuilderArray {
-  ofType: ApiBuilderType;
+  public ofType: ApiBuilderType;
 
   constructor(ofType) {
     invariant(isType(ofType), `${String(ofType)} is not an API Builder type.`);
     this.ofType = ofType;
   }
 
-  toString() {
+  public toString() {
     return `[${String(this.ofType)}]`;
   }
 }

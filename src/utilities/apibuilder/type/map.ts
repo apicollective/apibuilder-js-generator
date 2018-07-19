@@ -6,14 +6,14 @@ import { ApiBuilderType, isType } from '.';
  * a model type.
  */
 export class ApiBuilderMap {
-  ofType: ApiBuilderType;
+  public ofType: ApiBuilderType;
 
   constructor(ofType) {
     invariant(isType(ofType), `${String(ofType)} is not an API Builder type.`);
     this.ofType = ofType;
   }
 
-  toString() {
+  public toString() {
     return `map[${String(this.ofType)}]`;
   }
 }

@@ -4,16 +4,16 @@ import { ApiBuilderBaseType, ApiBuilderOperation, astFromTypeName, typeFromAst }
  * An APIBuilder resource
  */
 export class ApiBuilderResource {
-  config: any;
-  service: any;
-  operations: ApiBuilderOperation[];
+  public operations: ApiBuilderOperation[];
+  private config: any;
+  private service: any;
 
   constructor(config, service) {
     this.config = config;
     this.service = service;
 
     // moved out of getter so that we can use === to check for equality
-    this.operations = this.config.operations.map((op) =>
+    this.operations = this.config.operations.map(op =>
       ApiBuilderOperation.fromSchema(op, this, this.service));
   }
 

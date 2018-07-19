@@ -15,14 +15,18 @@ export class ApiBuilderModel {
    * Returns the ApiBuilderModel corresponding to the specified API builder model definition.
    * @param {Object} config An object representing an API Builder model definition.
    */
-  static fromSchema(config, service: ApiBuilderService, namespace: string = service.namespace) {
+  public static fromSchema(
+    config,
+    service: ApiBuilderService,
+    namespace: string = service.namespace,
+  ) {
     const fullyQualifiedType = new FullyQualifiedType(`${namespace}.models.${config.name}`);
     return new ApiBuilderModel(config, fullyQualifiedType, service);
   }
 
-  config: any;
-  fullyQualifiedType: FullyQualifiedType;
-  service: any;
+  public fullyQualifiedType: FullyQualifiedType;
+  private config: any;
+  private service: any;
 
   /**
    * Create an ApiBuilderModel.
@@ -67,13 +71,13 @@ export class ApiBuilderModel {
 
   /** @property {!ApiBuilderField[]} */
   get fields() {
-    return map(this.config.fields, (field) =>
+    return map(this.config.fields, field =>
       ApiBuilderField.fromSchema(field, this.service));
   }
 
   /** @property {!ApiBuilderOperation} */
   get getter() {
-    const resource = this.service.resources.find((res) => res.type === this);
+    const resource = this.service.resources.find(res => res.type === this);
 
     if (!resource) {
       return undefined;
@@ -81,13 +85,14 @@ export class ApiBuilderModel {
 
     const getter = resource.operations
       .filter(matches({ method: 'GET' }))
-      .filter((op) => !isEnclosingType(op.resultType) && typeMatches(op.resultType, this.toString()))
+      .filter(op => !isEnclosingType(op.resultType))
+      .filter(op => typeMatches(op.resultType, resource.type.toString()))
       .sort((a, b) => a.path.length - b.path.length)[0];
 
     return getter;
   }
 
-  toString() {
+  public toString() {
     return this.baseType;
   }
 }

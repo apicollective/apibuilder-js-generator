@@ -1,15 +1,16 @@
-import createLogger from 'debug';
+import debug from 'debug';
 import { flatMap } from 'lodash';
 import { matches } from 'lodash/fp';
 import { ApiBuilderService, isEnclosingType } from '../../../utilities/apibuilder';
+import GraphQLQuery from './GraphQLQuery';
 
-const log = createLogger('apibuilder:graphql-schema');
+const log = debug('apibuilder:graphql-schema');
 
 class GraphQLSchemaConfig {
   /**
    * Creates a GraphQLSchemaConfig from an ApiBuilderService instance
    */
-  static fromService(service: ApiBuilderService) {
+  public static fromService(service: ApiBuilderService) {
     const queries = flatMap(service.resources, (resource) => {
       /*
       need to pick 1 operation for this resource to be the getter (e.g. getById)
@@ -25,7 +26,8 @@ class GraphQLSchemaConfig {
       */
       const getter = resource.operations
         .filter(matches({ method: 'GET' }))
-        .filter((op) => !isEnclosingType(op.resultType) && typeMatches(op.resultType, resource.type.toString()))
+        .filter(op => !isEnclosingType(op.resultType))
+        .filter(op => typeMatches(op.resultType, resource.type.toString()))
         .sort((a, b) => a.path.length - b.path.length)[0];
 
       if (getter) {
@@ -40,12 +42,12 @@ class GraphQLSchemaConfig {
 
       return resource.operations
         .filter(matches({ method: 'GET' }))
-        .map((op) => new GraphQLQuery(op, resource, service, op === getter));
+        .map(op => new GraphQLQuery(op, resource, service, op === getter));
     });
     return new GraphQLSchemaConfig({ queries });
   }
 
-  queries: GraphQLQuery[];
+  public queries: GraphQLQuery[];
 
   constructor(config) {
     this.queries = config.queries;

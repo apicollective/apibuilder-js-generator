@@ -7,11 +7,11 @@ export class ApiBuilderEnumValue {
    * Returns the ApiBuilderEnumValue corresponding to the specified API builder
    * enum value definition.
    */
-  static fromSchema(config) {
+  public static fromSchema(config) {
     return new ApiBuilderEnumValue(config);
   }
 
-  config: any;
+  private config: any;
 
   /**
    * Create an ApiBuilderEnumValue
@@ -50,7 +50,7 @@ export class ApiBuilderEnumValue {
     return this.config.deprecation;
   }
 
-  toString() {
+  public toString() {
     return this.name;
   }
 }

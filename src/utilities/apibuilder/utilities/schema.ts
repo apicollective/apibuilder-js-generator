@@ -1,12 +1,12 @@
 import invariant = require('invariant');
 import { includes } from 'lodash';
-import { Ast, astFromTypeName } from './ast';
+import { astFromTypeName, IAst } from './ast';
 
 const EMPTY_STRING = '';
 const ARRAYOF_REGEX = /^\[(.+)\]$/;
 const OBJECTOF_REGEX = /^map\[(.+)\]$/;
 
-export const Kind = {
+export const Kind = { // tslint:disable-line:variable-name
   ARRAY: 'array',
   BOOLEAN: 'boolean',
   DATE_ISO8601: 'date-iso8601',
@@ -59,7 +59,7 @@ export function isArrayTypeName(type: string) {
  * getBaseTypeName("map[[string]]")
  * //=> "string"
  */
-export function getBaseTypeName(type: string | Ast): string {
+export function getBaseTypeName(type: string | IAst): string {
   if (typeof type === 'string') {
     return getBaseTypeName(astFromTypeName(type));
   }
@@ -106,24 +106,27 @@ export function getNestedTypeName(type: string): string {
  * // => false
  */
 export function isPrimitiveTypeName(type: string) {
-  return includes([
-    Kind.BOOLEAN,
-    Kind.DATE_ISO8601,
-    Kind.DATE_TIME_ISO8601,
-    Kind.DECIMAL,
-    Kind.DOUBLE,
-    Kind.INTEGER,
-    Kind.JSON,
-    Kind.LONG,
-    Kind.OBJECT,
-    Kind.STRING,
-    Kind.UNIT,
-    Kind.UUID,
-  ], getBaseTypeName(type));
+  return includes(
+    [
+      Kind.BOOLEAN,
+      Kind.DATE_ISO8601,
+      Kind.DATE_TIME_ISO8601,
+      Kind.DECIMAL,
+      Kind.DOUBLE,
+      Kind.INTEGER,
+      Kind.JSON,
+      Kind.LONG,
+      Kind.OBJECT,
+      Kind.STRING,
+      Kind.UNIT,
+      Kind.UUID,
+    ],
+    getBaseTypeName(type),
+  );
 }
 
 export class FullyQualifiedType {
-  fullyQualifiedType: string;
+  public fullyQualifiedType: string;
 
   /**
    * Create a fully qualified type.
@@ -229,7 +232,7 @@ export class FullyQualifiedType {
     return isPrimitiveTypeName(this.fullyQualifiedType);
   }
 
-  toString() {
+  public toString() {
     return this.fullyQualifiedType;
   }
 }
