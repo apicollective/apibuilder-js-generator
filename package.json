@@ -23,9 +23,6 @@
   },
   "homepage": "https://github.com/flowcommerce/apibuilder-javascript-generator#readme",
   "devDependencies": {
-    "@types/invariant": "^2.2.29",
-    "@types/lodash": "^4.14.111",
-    "@types/node": "^10.5.2",
     "commander": "^2.15.1",
     "faker": "^4.1.0",
     "got": "^8.3.1",
@@ -38,6 +35,9 @@
     "tslint-config-airbnb": "^5.9.2"
   },
   "dependencies": {
+    "@types/invariant": "^2.2.29",
+    "@types/lodash": "^4.14.111",
+    "@types/node": "^10.5.2",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.2",

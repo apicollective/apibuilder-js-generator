@@ -123,7 +123,7 @@ function mapToImportDeclarations(model: ApiBuilderModel) {
     );
 }
 
-function generateCode(model: ApiBuilderModel) {
+export function generateCode(model: ApiBuilderModel) {
   const templatePath = path.resolve(__dirname, './templates/GraphQLObjectType.ejs');
   return renderTemplate(templatePath, {
     importDeclarations: mapToImportDeclarations(model),
@@ -131,18 +131,14 @@ function generateCode(model: ApiBuilderModel) {
   });
 }
 
-exports.generateCode = generateCode;
-
 /**
  * Create API Builder file containing generated GraphQL object type schema from
  * provided API Builder model.
  */
-function generateFile(model: ApiBuilderModel) {
+export function generateFile(model: ApiBuilderModel) {
   const destinationPath = destinationPathFromType(model);
   const basename = path.basename(destinationPath);
   const dirname = path.dirname(destinationPath);
   const contents = generateCode(model);
   return new ApiBuilderFile(basename, dirname, contents);
 }
-
-exports.generateFile = generateFile;

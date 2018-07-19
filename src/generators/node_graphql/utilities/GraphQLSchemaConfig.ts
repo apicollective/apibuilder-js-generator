@@ -7,7 +7,7 @@ import typeMatches from './typeMatches';
 
 const log = debug('apibuilder:graphql-schema');
 
-class GraphQLSchemaConfig {
+export default class GraphQLSchemaConfig {
   /**
    * Creates a GraphQLSchemaConfig from an ApiBuilderService instance
    */
@@ -53,5 +53,3 @@ class GraphQLSchemaConfig {
     this.queries = config.queries;
   }
 }
-
-module.exports = GraphQLSchemaConfig;

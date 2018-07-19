@@ -2,6 +2,8 @@ FROM node:8
 
 ENV NODE_ENV production
 
+RUN apt-get update && apt-get install -y rsync
+
 RUN npm install -q -g forever
 
 ADD . /opt/apibuilder
