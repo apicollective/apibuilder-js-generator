@@ -32,6 +32,7 @@
     "nodemon": "^1.17.3",
     "ts-jest": "^23.0.1",
     "ts-node": "^7.0.0",
+    "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.9.2"
   },
   "dependencies": {
@@ -49,7 +50,6 @@
     "invariant": "^2.2.4",
     "lodash": "^4.17.10",
     "prettier": "^1.12.1",
-    "tslint": "^5.11.0",
     "typescript": "^2.9.2"
   },
   "jest": {
