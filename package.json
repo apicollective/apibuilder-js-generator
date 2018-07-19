@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev:start": "DEBUG=apibuilder:* nodemon",
-    "build": "tsc",
+    "build": "tsc && rsync -a --include '*/' --include '*.hbs' --include '*.ejs' --exclude '*' src/ dist",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,js}'",
     "pretest": "npm run lint",
     "test": "jest --maxWorkers=4",

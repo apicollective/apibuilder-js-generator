@@ -12,4 +12,6 @@ RUN mkdir ./log
 
 RUN npm install -q
 
+RUN npm run build
+
 ENTRYPOINT ./run.sh
