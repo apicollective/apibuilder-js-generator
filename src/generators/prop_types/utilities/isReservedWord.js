@@ -44,8 +44,8 @@ const reservedWords = [
   'yield',
 ];
 
-function isReservedWord(string) {
-  return reservedWords.includes(string);
+function isReservedWord(str) {
+  return reservedWords.includes(str);
 }
 
 module.exports = isReservedWord;
