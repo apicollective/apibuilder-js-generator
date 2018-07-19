@@ -1,6 +1,6 @@
-import { ApiBuilderService, ApiBuilderPrimitiveType, FullyQualifiedType } from '../../../../../src/utilities/apibuilder';
-import isCyclic from '../../../../../src/generators/prop_types/utilities/isCyclic';
-import peopleApiSchema from '../../../../fixtures/schemas/people-api.json';
+const { ApiBuilderService, ApiBuilderPrimitiveType, FullyQualifiedType } = require('../../../../../src/utilities/apibuilder');
+const isCyclic = require('../../../../../src/generators/prop_types/utilities/isCyclic');
+const peopleApiSchema = require('../../../../fixtures/schemas/people-api.json');
 
 const peopleService = new ApiBuilderService({ service: peopleApiSchema });
 
