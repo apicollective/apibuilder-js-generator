@@ -8,13 +8,6 @@ import {
 } from '../../../utilities/apibuilder';
 import toGraphQLOutputType = require('./toGraphQLOutputType');
 
-/**
- * Returns whether the type matches str, str_v2, str_v*...
- */
-function typeMatches(type: ApiBuilderBaseType, str: string) {
-  return type.fullyQualifiedType.fullyQualifiedType.match(new RegExp(`^${str}(?:_v\\d+)?$`));
-}
-
 export default class GraphQLQueryArgConfig {
   public name: string;
   public fullyQualifiedType: ApiBuilderType;

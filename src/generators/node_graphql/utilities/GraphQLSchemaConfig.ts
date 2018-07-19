@@ -3,6 +3,7 @@ import { flatMap } from 'lodash';
 import { matches } from 'lodash/fp';
 import { ApiBuilderService, isEnclosingType } from '../../../utilities/apibuilder';
 import GraphQLQuery from './GraphQLQuery';
+import typeMatches from './typeMatches';
 
 const log = debug('apibuilder:graphql-schema');
 
@@ -26,8 +27,7 @@ class GraphQLSchemaConfig {
       */
       const getter = resource.operations
         .filter(matches({ method: 'GET' }))
-        .filter(op => !isEnclosingType(op.resultType))
-        .filter(op => typeMatches(op.resultType, resource.type.toString()))
+        .filter(op => !isEnclosingType(op.resultType) && typeMatches(op.resultType, resource.type))
         .sort((a, b) => a.path.length - b.path.length)[0];
 
       if (getter) {

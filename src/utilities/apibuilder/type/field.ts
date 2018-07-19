@@ -15,8 +15,8 @@ export class ApiBuilderField {
     return new ApiBuilderField(config, service);
   }
 
+  public service: any;
   private config: any;
-  private service: any;
 
   /**
    * Create an ApiBuilderField

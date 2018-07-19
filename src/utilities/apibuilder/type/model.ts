@@ -25,8 +25,8 @@ export class ApiBuilderModel {
   }
 
   public fullyQualifiedType: FullyQualifiedType;
+  public service: any;
   private config: any;
-  private service: any;
 
   /**
    * Create an ApiBuilderModel.

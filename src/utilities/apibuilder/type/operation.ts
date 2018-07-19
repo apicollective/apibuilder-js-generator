@@ -9,9 +9,9 @@ export class ApiBuilderOperation {
     return new ApiBuilderOperation(config, resource.path, service);
   }
 
+  public resourcePath: string;
   private config: any;
   private service: any;
-  private resourcePath: string;
 
   constructor(config, resourcePath, service) {
     this.config = config;

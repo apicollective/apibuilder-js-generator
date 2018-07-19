@@ -12,6 +12,7 @@ import {
 } from '../../../utilities/apibuilder';
 import GraphQLQueryArgConfig from './GraphQLQueryArgConfig';
 import toGraphQLOutputType = require('./toGraphQLOutputType');
+import typeMatches from './typeMatches';
 
 const log = debug('apibuilder:graphql-query');
 

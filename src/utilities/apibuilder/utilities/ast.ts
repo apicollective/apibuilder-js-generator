@@ -25,7 +25,7 @@ export interface IAst {
  * @param {String} typeName
  * @return {Object}
  */
-export function astFromTypeName(typeName): Ast {
+export function astFromTypeName(typeName): IAst {
   switch (true) {
     case isMapTypeName(typeName):
       return {
@@ -50,7 +50,7 @@ export function astFromTypeName(typeName): Ast {
  * @param {Object} ast
  * @returns {String}
  */
-export function typeNameFromAst(ast: Ast): string {
+export function typeNameFromAst(ast: IAst): string {
   switch (ast.name) {
     case Kind.MAP:
       return `map[${typeNameFromAst(ast.type)}]`;
