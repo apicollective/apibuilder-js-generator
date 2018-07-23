@@ -1,6 +1,7 @@
 import invariant = require('invariant');
 import { map, matches } from 'lodash';
 import { ApiBuilderBaseType, ApiBuilderField, FullyQualifiedType, isEnclosingType } from '..';
+import { ApiBuilderResource } from './resource';
 import { ApiBuilderService } from './service';
 
 /**
@@ -75,9 +76,8 @@ export class ApiBuilderModel {
       ApiBuilderField.fromSchema(field, this.service));
   }
 
-  /** @property {!ApiBuilderOperation} */
   get getter() {
-    const resource = this.service.resources.find(res => res.type === this);
+    const resource: ApiBuilderResource = this.service.resources.find(res => res.type === this);
 
     if (!resource) {
       return undefined;
@@ -86,7 +86,7 @@ export class ApiBuilderModel {
     const getter = resource.operations
       .filter(matches({ method: 'GET' }))
       .filter(op => !isEnclosingType(op.resultType))
-      .filter(op => typeMatches(op.resultType, resource.type.toString()))
+      .filter(op => typeMatches(op.resultType as ApiBuilderBaseType, resource.type.toString()))
       .sort((a, b) => a.path.length - b.path.length)[0];
 
     return getter;

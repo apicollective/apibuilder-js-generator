@@ -83,7 +83,7 @@ export function isEnclosingType(type): type is ApiBuilderEnclosingType {
  * @param {?ApiBuilderType} type
  * @returns {Boolean}
  */
-export function isType(type: ApiBuilderType) {
+export function isType(type): type is ApiBuilderType {
   return (
     isArrayType(type) ||
     isMapType(type) ||

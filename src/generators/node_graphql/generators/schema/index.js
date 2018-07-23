@@ -1,6 +1,6 @@
 const path = require('path');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
-const GraphQLSchemaConfig = require('../../utilities/GraphQLSchemaConfig');
+const { default: GraphQLSchemaConfig } = require('../../utilities/GraphQLSchemaConfig');
 const { destinationPathFromService } = require('../../utilities/destinationPath');
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const { renderTemplate } = require('../../../../utilities/template');
