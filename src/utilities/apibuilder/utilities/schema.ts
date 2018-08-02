@@ -1,12 +1,12 @@
-const invariant = require('invariant');
-const includes = require('lodash/includes');
-const ast = require('./ast');
+import invariant = require('invariant');
+import { includes } from 'lodash';
+import { astFromTypeName, IAst } from './ast';
 
 const EMPTY_STRING = '';
 const ARRAYOF_REGEX = /^\[(.+)\]$/;
 const OBJECTOF_REGEX = /^map\[(.+)\]$/;
 
-const Kind = {
+export const Kind = { // tslint:disable-line:variable-name
   ARRAY: 'array',
   BOOLEAN: 'boolean',
   DATE_ISO8601: 'date-iso8601',
@@ -23,8 +23,6 @@ const Kind = {
   UUID: 'uuid',
 };
 
-exports.Kind = Kind;
-
 /**
  * Given the name of a type as it appears in an API builder schema, returns
  * whether it is a representation of a map type.
@@ -33,14 +31,10 @@ exports.Kind = Kind;
  * //=> true
  * isMapTypeName("string");
  * //=> false
- * @param {String} type
- * @returns {Boolean}
  */
-function isMapTypeName(type) {
+export function isMapTypeName(type: string) {
   return OBJECTOF_REGEX.test(type);
 }
-
-exports.isMapTypeName = isMapTypeName;
 
 /**
  * Given the name of a type as it appears in an API builder schema, returns
@@ -50,14 +44,10 @@ exports.isMapTypeName = isMapTypeName;
  * //=> true
  * isArrayTypeName("string");
  * //=> false
- * @param {String} type
- * @returns {Boolean}
  */
-function isArrayTypeName(type) {
+export function isArrayTypeName(type: string) {
   return ARRAYOF_REGEX.test(type);
 }
-
-exports.isArrayTypeName = isArrayTypeName;
 
 /**
  * API Builder types can be complex (e.g. array of strings, map of strings,
@@ -68,12 +58,8 @@ exports.isArrayTypeName = isArrayTypeName;
  * //=> "string"
  * getBaseTypeName("map[[string]]")
  * //=> "string"
- * @param {String} type
- * @returns {String}
  */
-function getBaseTypeName(type) {
-  const { astFromTypeName } = ast;
-
+export function getBaseTypeName(type: string | IAst): string {
   if (typeof type === 'string') {
     return getBaseTypeName(astFromTypeName(type));
   }
@@ -85,9 +71,6 @@ function getBaseTypeName(type) {
   return type.name;
 }
 
-exports.getBaseTypeName = getBaseTypeName;
-
-
 /**
  * Given the name of an enclosing type as it appears in an API builder schema,
  * returns the API builder type name of the underlying type.
@@ -96,10 +79,8 @@ exports.getBaseTypeName = getBaseTypeName;
  * //=> "string"
  * getNestedTypeName("map[[string]]");
  * //=> "[string]"
- * @param {String} type
- * @returns {String}
  */
-function getNestedTypeName(type) {
+export function getNestedTypeName(type: string): string {
   if (isMapTypeName(type)) {
     const [, $1] = type.match(OBJECTOF_REGEX);
     return $1;
@@ -113,9 +94,6 @@ function getNestedTypeName(type) {
   return type;
 }
 
-exports.getNestedTypeName = getNestedTypeName;
-
-
 /**
  * Given the name of a type as it appears in an API builder schema, returns
  * whether its base type represents a primitive type.
@@ -126,32 +104,32 @@ exports.getNestedTypeName = getNestedTypeName;
  * // => true
  * isPrimitiveTypeName("[com.bryzek.spec.v0.models.reference]");
  * // => false
- * @param {String} type
- * @returns {Boolean}
  */
-function isPrimitiveTypeName(type) {
-  return includes([
-    Kind.BOOLEAN,
-    Kind.DATE_ISO8601,
-    Kind.DATE_TIME_ISO8601,
-    Kind.DECIMAL,
-    Kind.DOUBLE,
-    Kind.INTEGER,
-    Kind.JSON,
-    Kind.LONG,
-    Kind.OBJECT,
-    Kind.STRING,
-    Kind.UNIT,
-    Kind.UUID,
-  ], getBaseTypeName(type));
+export function isPrimitiveTypeName(type: string) {
+  return includes(
+    [
+      Kind.BOOLEAN,
+      Kind.DATE_ISO8601,
+      Kind.DATE_TIME_ISO8601,
+      Kind.DECIMAL,
+      Kind.DOUBLE,
+      Kind.INTEGER,
+      Kind.JSON,
+      Kind.LONG,
+      Kind.OBJECT,
+      Kind.STRING,
+      Kind.UNIT,
+      Kind.UUID,
+    ],
+    getBaseTypeName(type),
+  );
 }
 
-exports.isPrimitiveTypeName = isPrimitiveTypeName;
+export class FullyQualifiedType {
+  public fullyQualifiedType: string;
 
-class FullyQualifiedType {
   /**
    * Create a fully qualified type.
-   * @param {String} fullyQualifiedType
    * @example
    * new FullyQualifiedType("string");
    * new FullyQualifiedType("[string]");
@@ -160,7 +138,7 @@ class FullyQualifiedType {
    * new FullyQualifiedType("[com.bryzek.apidoc.common.v0.models.reference]");
    * new FullyQualifiedType("map[com.bryzek.apidoc.common.v0.models.reference]");
    */
-  constructor(fullyQualifiedType) {
+  constructor(fullyQualifiedType: string) {
     invariant(
       getBaseTypeName(fullyQualifiedType).lastIndexOf('.') >= 0 ||
       isPrimitiveTypeName(fullyQualifiedType),
@@ -200,7 +178,9 @@ class FullyQualifiedType {
    */
   get shortName() {
     const lastIndex = this.baseType.lastIndexOf('.');
-    if (lastIndex === -1) return this.baseType;
+    if (lastIndex === -1) {
+      return this.baseType;
+    }
     return this.baseType.substring(lastIndex + 1);
   }
 
@@ -210,13 +190,14 @@ class FullyQualifiedType {
    */
   get packageName() {
     const lastIndex = this.baseType.lastIndexOf('.');
-    if (this.isPrimitiveType || lastIndex === -1) return EMPTY_STRING;
+    if (this.isPrimitiveType || lastIndex === -1) {
+      return EMPTY_STRING;
+    }
     return this.baseType.substring(0, lastIndex);
   }
 
   /**
    * This property holds whether this is an array.
-   * @property {Boolean}
    */
   get isArrayType() {
     return isArrayTypeName(this.fullyQualifiedType);
@@ -251,9 +232,7 @@ class FullyQualifiedType {
     return isPrimitiveTypeName(this.fullyQualifiedType);
   }
 
-  toString() {
+  public toString() {
     return this.fullyQualifiedType;
   }
 }
-
-exports.FullyQualifiedType = FullyQualifiedType;

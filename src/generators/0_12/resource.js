@@ -66,7 +66,7 @@ function getPathStringBuilder(pathRoot, operation) {
   const parts = fullPath.split('/')
     .map((part) => {
       if (part.indexOf(':') === 0) {
-        // eslint-disable-next-line max-len
+        // tslint:disable-next-line:max-line-length
         return PATH_DELIMETER + SINGLE_QUOTE + SPACE + PLUS + SPACE + camelCase(part.slice(1)) + SPACE + PLUS + SPACE + SINGLE_QUOTE;
       }
 

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev:start": "DEBUG=apibuilder:* nodemon",
-    "lint": "eslint . --cache --format=codeframe --ext js",
-    "lint:fix": "eslint . --fix --cache --format=codeframe --ext js,jsx",
+    "build": "tsc && rsync -a --include '*/' --include '*.hbs' --include '*.ejs' --exclude '*' src/ dist",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,js}'",
     "pretest": "npm run lint",
     "test": "jest --maxWorkers=4",
     "test:watch": "jest --watch"
@@ -24,19 +24,21 @@
   "homepage": "https://github.com/flowcommerce/apibuilder-javascript-generator#readme",
   "devDependencies": {
     "commander": "^2.15.1",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
     "faker": "^4.1.0",
     "got": "^8.3.1",
-    "jest": "^22.4.3",
+    "jest": "^23.4.1",
     "mkdirp": "^0.5.1",
     "nock": "^9.2.5",
-    "nodemon": "^1.17.3"
+    "nodemon": "^1.17.3",
+    "ts-jest": "^23.0.1",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.9.2"
   },
   "dependencies": {
+    "@types/invariant": "^2.2.29",
+    "@types/lodash": "^4.14.111",
+    "@types/node": "^10.5.2",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.2",
@@ -47,6 +49,21 @@
     "hbs": "^4.0.1",
     "invariant": "^2.2.4",
     "lodash": "^4.17.10",
-    "prettier": "^1.12.1"
+    "prettier": "^1.12.1",
+    "typescript": "^2.9.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "\\.ts$": "ts-jest"
+    },
+    "collectCoverage": true,
+    "coverageReporters": [
+      "html",
+      "text-summary"
+    ]
   }
 }

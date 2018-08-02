@@ -32,17 +32,17 @@ class ImportDeclaration {
   toString() {
     const { defaultExport, namedExports, moduleName } = this;
 
-    let string;
+    let str;
 
     if (defaultExport) {
-      string = `const ${defaultExport} = require('${moduleName}');`;
+      str = `const ${defaultExport} = require('${moduleName}');`;
     } else if (namedExports && namedExports.length) {
-      string = `const { ${namedExports.join(', ')} } = require('${moduleName}');`;
+      str = `const { ${namedExports.join(', ')} } = require('${moduleName}');`;
     } else {
-      string = `require('${moduleName}');`;
+      str = `require('${moduleName}');`;
     }
 
-    return string;
+    return str;
   }
 }
 

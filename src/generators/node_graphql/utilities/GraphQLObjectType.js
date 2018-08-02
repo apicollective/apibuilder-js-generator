@@ -2,7 +2,7 @@ const invariant = require('invariant');
 const fromPairs = require('lodash/fromPairs');
 
 const { isModelType } = require('../../../utilities/apibuilder');
-const GraphQLField = require('./GraphQLField');
+const { default: GraphQLField } = require('./GraphQLField');
 const toDefaultExport = require('./toDefaultExport');
 
 /**

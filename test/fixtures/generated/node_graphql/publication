@@ -26,4 +26,4 @@ const Publication = new GraphQLEnumType({
   },
 });
 
-module.exports = Publication;
+export default Publication;

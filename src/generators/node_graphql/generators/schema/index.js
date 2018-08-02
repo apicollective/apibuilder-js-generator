@@ -1,6 +1,6 @@
 const path = require('path');
 const toImportDeclaration = require('../../utilities/toImportDeclaration');
-const GraphQLSchemaConfig = require('../../utilities/GraphQLSchemaConfig');
+const { default: GraphQLSchemaConfig } = require('../../utilities/GraphQLSchemaConfig');
 const { destinationPathFromService } = require('../../utilities/destinationPath');
 const ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
 const { renderTemplate } = require('../../../../utilities/template');
@@ -77,7 +77,6 @@ function computeScalarExports({ arguments: args, resultType }) {
   }, initialNamedExports);
 }
 
-
 function mapToImportDeclarations(service) {
   const allOperations = flatMap(service.resources, r => r.operations);
 
@@ -133,6 +132,5 @@ function generateFile(service) {
   const contents = generateCode(service);
   return new ApiBuilderFile(basename, dirname, contents);
 }
-
 
 exports.generateFile = generateFile;

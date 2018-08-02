@@ -19,6 +19,8 @@ function generate({ service: data }) {
   files = files.concat(generateSchemaFile(service));
   files = files.concat(generateScalars(service));
 
+  files = files.filter(f => f != null);
+
   log('✅ done');
 
   return Promise.resolve(files);

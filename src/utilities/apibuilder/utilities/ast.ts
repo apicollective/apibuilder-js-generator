@@ -1,6 +1,18 @@
-const invariant = require('invariant');
-const type = require('../type');
-const schema = require('./schema');
+import invariant = require('invariant');
+import { ApiBuilderArray, ApiBuilderMap, ApiBuilderPrimitiveType, ApiBuilderType } from '../type';
+import {
+  FullyQualifiedType,
+  getNestedTypeName,
+  isArrayTypeName,
+  isMapTypeName,
+  isPrimitiveTypeName,
+  Kind,
+} from './schema';
+
+export interface IAst {
+  name: string;
+  type?: IAst;
+}
 
 /**
  * Produces an AST given the name of a type as it appears in an API builder schema.
@@ -13,14 +25,7 @@ const schema = require('./schema');
  * @param {String} typeName
  * @return {Object}
  */
-function astFromTypeName(typeName) {
-  const {
-    Kind,
-    isMapTypeName,
-    getNestedTypeName,
-    isArrayTypeName,
-  } = schema;
-
+export function astFromTypeName(typeName): IAst {
   switch (true) {
     case isMapTypeName(typeName):
       return {
@@ -37,9 +42,6 @@ function astFromTypeName(typeName) {
   }
 }
 
-exports.astFromTypeName = astFromTypeName;
-
-
 /**
  * Returns the type name for the specified API builder AST.
  * @example
@@ -48,9 +50,7 @@ exports.astFromTypeName = astFromTypeName;
  * @param {Object} ast
  * @returns {String}
  */
-function typeNameFromAst(ast) {
-  const { Kind } = schema;
-
+export function typeNameFromAst(ast: IAst): string {
   switch (ast.name) {
     case Kind.MAP:
       return `map[${typeNameFromAst(ast.type)}]`;
@@ -60,8 +60,6 @@ function typeNameFromAst(ast) {
       return ast.name;
   }
 }
-
-exports.typeNameFromAst = typeNameFromAst;
 
 /**
  * Returns the API builder type from the specified API Builder AST.
@@ -73,15 +71,16 @@ exports.typeNameFromAst = typeNameFromAst;
  * @param {ApiBuilderService} service
  * @returns {ApiBuilderType}
  */
-function typeFromAst(ast, service) {
-  const { FullyQualifiedType, Kind, isPrimitiveTypeName } = schema;
-  const { ApiBuilderArray, ApiBuilderMap, ApiBuilderPrimitiveType } = type;
-
+export function typeFromAst(ast: IAst, service: any): ApiBuilderType {
   if (ast.name === Kind.MAP) {
     return new ApiBuilderMap(typeFromAst(ast.type, service));
-  } else if (ast.name === Kind.ARRAY) {
+  }
+
+  if (ast.name === Kind.ARRAY) {
     return new ApiBuilderArray(typeFromAst(ast.type, service));
-  } else if (isPrimitiveTypeName(ast.name)) {
+  }
+
+  if (isPrimitiveTypeName(ast.name)) {
     return new ApiBuilderPrimitiveType(new FullyQualifiedType(ast.name));
   }
 
@@ -92,5 +91,3 @@ function typeFromAst(ast, service) {
     invariant(false, `${ast.name} is not a type defined in ${String(service)} service.`)
   );
 }
-
-exports.typeFromAst = typeFromAst;

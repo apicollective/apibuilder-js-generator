@@ -1,24 +1,26 @@
-<%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
-  <%_ if (defaultExport != null) { _%>
-    const <%= defaultExport %> = require('<%= moduleName %>');
-  <%_ } else if (namedExports != null) { _%>
-    const {
-      <%_ namedExports.forEach((namedExport) => { _%>
-      <%= namedExport %>,
-      <%_ }) _%>
-    } = require('<%= moduleName %>');
-  <%_ } else { _%>
-    require('<%= moduleName %>');
-  <%_ } _%>
-<%_ }) _%>
+<%- include('../../../partials/imports') %>
 
-const got = require('got');
+import got from 'got';
+
+function insertMetadata(obj, data) {
+  if (Array.isArray(obj)) {
+    return obj.map(elem => insertMetadata(elem, data));
+  } else if (typeof obj === 'object') {
+    const transformed = Object.keys(obj).reduce((newobj, key) => {
+      newobj[key] = insertMetadata(obj[key], data);
+      return newobj;
+    }, {});
+    return Object.assign({}, transformed, data);
+  } else {
+    return obj;
+  }
+}
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-    <% config.queries.forEach(({ name, type, args, deprecationReason, description, pathParts, queryParts }) => { %>
+    <% config.queries.forEach(({ name, type, isListType, isPrimitiveType, args, deprecationReason, description, pathParts, queryParts, references }) => { %>
       <%= name %>: {
         type: <%= type %>,
         <%_ if (args.length > 0) { _%>
@@ -60,11 +62,13 @@ const schema = new GraphQLSchema({
               <%_ queryParts.forEach(part => { _%>
                 '<%= part %>',
               <%_ }) _%>
-            ].forEach(key => {
+            ].forEach((key) => {
               if (args.hasOwnProperty(key))
                 query[key] = args[key];
             });
           <%_ } _%>
+
+          console.log(`${path}?${Object.entries(query).map(p => p.join('=')).join('&')}`);
 
           return got(path, {
             json: true,
@@ -72,7 +76,12 @@ const schema = new GraphQLSchema({
             headers: {
               authorization: context.headers.authorization
             }
-          }).then(response => response.body);
+          }).then(response => {
+            return insertMetadata(response.body, {
+              __args: args,
+              __parent: parent,
+            });
+         });
         }
       },
     <% }) %>
@@ -80,4 +89,4 @@ const schema = new GraphQLSchema({
   }),
 });
 
-module.exports = schema;
+export default schema;

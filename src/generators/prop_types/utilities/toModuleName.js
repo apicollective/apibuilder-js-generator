@@ -1,5 +1,4 @@
 const camelCase = require('lodash/camelCase');
-
 const { getBaseType } = require('../../../utilities/apibuilder');
 
 /**

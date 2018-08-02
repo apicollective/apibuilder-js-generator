@@ -1,9 +1,9 @@
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function toCamelCase(string) {
-  const parts = string
+function toCamelCase(str) {
+  const parts = str
     .split(/(-|_)/)
     .filter(p => p !== '-' && p !== '_');
   const capitalized = parts.map((part, idx) => {
@@ -17,12 +17,12 @@ function toCamelCase(string) {
   return capitalized.join('');
 }
 
-function alphaNumOnly(string) {
-  return string.replace(/[^a-zA-Z0-9]/gi, '');
+function alphaNumOnly(str) {
+  return str.replace(/[^a-zA-Z0-9]/gi, '');
 }
 
-function slug(string) {
-  return string
+function slug(str) {
+  return str
     .replace(/[^a-zA-Z0-9\-_\s]/gi, '')
     .replace(/(\s+|_)/gi, '-')
     .toLowerCase();

@@ -1,16 +1,4 @@
-<%_ importDeclarations.forEach(({ defaultExport, namedExports, moduleName }) => { _%>
-  <%_ if (defaultExport != null) { _%>
-    const <%= defaultExport %> = require('<%= moduleName %>');
-  <%_ } else if (namedExports != null) { _%>
-    const {
-      <%_ namedExports.forEach((namedExport) => { _%>
-      <%= namedExport %>,
-      <%_ }) _%>
-    } = require('<%= moduleName %>');
-  <%_ } else { _%>
-    require('<%= moduleName %>');
-  <%_ } _%>
-<%_ }) _%>
+<%- include('../../../partials/imports') %>
 
 <%_ union.enums.forEach(({ type: { name } }) => { _%>
 const <%= name %>Wrapper = new GraphQLObjectType({
@@ -48,4 +36,4 @@ const <%= union.name %> = new GraphQLUnionType({
   }
 });
 
-module.exports = <%= union.name %>;
+export default <%= union.name %>;
