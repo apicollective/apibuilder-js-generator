@@ -16,7 +16,7 @@ import got from 'got';
       if (obj.__parent && obj.__parent[key])
         return obj.__parent[key];
 
-      return searchParent(obj.__parent);
+      return searchParent(obj.__parent, key);
     }
 <% } %>
 
