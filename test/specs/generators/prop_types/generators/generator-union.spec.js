@@ -8,11 +8,11 @@ const apidocService = new ApiBuilderService({ service: apidocSchema });
 const peopleService = new ApiBuilderService({ service: peopleSchema });
 
 test('should generate prop types for union types', () => {
-  const union = apidocService.findUnionByName('diff');
+  const union = apidocService.findTypeByName('diff');
   expect(generateUnion(union)).toEqual(loadFixture('./generated/prop_types/diff'));
 });
 
 test('should generate prop types for union types with cyclic dependencies', () => {
-  const union = peopleService.findUnionByName('funder');
+  const union = peopleService.findTypeByName('funder');
   expect(generateUnion(union)).toEqual(loadFixture('./generated/prop_types/funder'));
 });
