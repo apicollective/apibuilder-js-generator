@@ -24,7 +24,8 @@ function genResources(service: ApiBuilderService) {
   // tslint:disable:object-literal-sort-keys
   const result = {};
   for (const [resource, operations] of Object.entries(ops)) {
-    const [[many], [one]] = _.partition(operations, op => isArrayType(op.resultType))
+    // tslint:disable-next-line:no-shadowed-variable
+    const [[many], [one]] = _.partition(operations, op => isArrayType(op.resultType));
     const op = many || one;
     result[resource] = {
       [many != null ? 'many' : 'one']: {
@@ -107,6 +108,7 @@ export function generate({ service: data }) {
     })),
   }));
 
+  // tslint:disable-next-line:prefer-array-literal Is this a TSLint bug?
   const enumWrappers: Array<{type: string}> = [];
 
   const unions = service.unions.map(union => ({
