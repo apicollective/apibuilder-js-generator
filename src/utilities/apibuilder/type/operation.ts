@@ -11,7 +11,7 @@ export class ApiBuilderOperation {
   }
 
   public resource: ApiBuilderResource;
-  public config: any;
+  private config: any;
   private service: any;
 
   constructor(config, resource, service) {
