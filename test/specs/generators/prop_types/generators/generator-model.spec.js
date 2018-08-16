@@ -8,11 +8,11 @@ const apidocService = new ApiBuilderService({ service: apidocSchema });
 const peopleService = new ApiBuilderService({ service: peopleSchema });
 
 test('should generate prop types for model types', () => {
-  const model = apidocService.findModelByName('application');
+  const model = apidocService.findTypeByName('application');
   expect(generateModel(model)).toEqual(loadFixture('./generated/prop_types/application'));
 });
 
 test('should generate prop types for models with cyclic dependencies', () => {
-  const model = peopleService.findModelByName('organization');
+  const model = peopleService.findTypeByName('organization');
   expect(generateModel(model)).toEqual(loadFixture('./generated/prop_types/organization'));
 });
