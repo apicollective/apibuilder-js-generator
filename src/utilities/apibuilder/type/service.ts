@@ -4,16 +4,8 @@ import {
   ApiBuilderImport,
   ApiBuilderModel,
   ApiBuilderResource,
-  ApiBuilderType,
   ApiBuilderUnion,
 } from '.';
-
-function findTypeByName(types: ApiBuilderType[], name: string) {
-  return find(types, overSome([
-    matchesProperty('shortName', name),
-    matchesProperty('baseType', name),
-  ]));
-}
 
 const mapToEnumType = memoize((schema, service) => {
   return ApiBuilderEnum.fromSchema(schema, service);
@@ -144,16 +136,16 @@ export class ApiBuilderService {
     return this.schema.base_url;
   }
 
-  public findModelByName(name) {
-    return findTypeByName(this.models, name);
-  }
-
-  public findEnumByName(name) {
-    return findTypeByName(this.enums, name);
-  }
-
-  public findUnionByName(name) {
-    return findTypeByName(this.unions, name);
+  public findTypeByName(typeName: string) {
+    // By definition, a field or union type whose name is not fully qualified
+    // implies the type is defined internally, that is such type is not imported.
+    // Since internal types precede external types in the list of types held
+    // by this object, we can guarantee that searching for a type by name will
+    // honor this rule.
+    return find(this.types, overSome([
+      matchesProperty('shortName', typeName),
+      matchesProperty('baseType', typeName),
+    ]));
   }
 
   public toString() {

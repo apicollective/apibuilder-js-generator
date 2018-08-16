@@ -105,7 +105,7 @@ export function getNestedTypeName(type: string): string {
  * isPrimitiveTypeName("[com.bryzek.spec.v0.models.reference]");
  * // => false
  */
-export function isPrimitiveTypeName(type: string) {
+export function isPrimitiveTypeName(type: string): boolean {
   return includes(
     [
       Kind.BOOLEAN,
@@ -125,6 +125,10 @@ export function isPrimitiveTypeName(type: string) {
   );
 }
 
+export function isValidFullyQualifiedTypeName(typeName: string): boolean {
+  return getBaseTypeName(typeName).lastIndexOf('.') >= 0 || isPrimitiveTypeName(typeName);
+}
+
 export class FullyQualifiedType {
   public fullyQualifiedType: string;
 
@@ -140,8 +144,7 @@ export class FullyQualifiedType {
    */
   constructor(fullyQualifiedType: string) {
     invariant(
-      getBaseTypeName(fullyQualifiedType).lastIndexOf('.') >= 0 ||
-      isPrimitiveTypeName(fullyQualifiedType),
+      isValidFullyQualifiedTypeName(fullyQualifiedType),
       `"${fullyQualifiedType}" is not fully qualified type or primitive type. ` +
       'A fully qualified type consists of a package name followed by the ' +
       'base short name. (e.g. "com.bryzek.apidoc.common.v0.models.reference").',

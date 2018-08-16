@@ -3,6 +3,7 @@ import {
   ApiBuilderArray,
   ApiBuilderMap,
   ApiBuilderPrimitiveType,
+  ApiBuilderService,
   ApiBuilderType,
   isArrayType,
   isMapType,
@@ -78,7 +79,7 @@ export function typeNameFromAst(ast: IAst): string {
  * @param {ApiBuilderService} service
  * @returns {ApiBuilderType}
  */
-export function typeFromAst(ast: IAst, service: any): ApiBuilderType {
+export function typeFromAst(ast: IAst, service: ApiBuilderService): ApiBuilderType {
   if (ast.name === Kind.MAP) {
     return new ApiBuilderMap(typeFromAst(ast.type, service));
   }
@@ -92,9 +93,7 @@ export function typeFromAst(ast: IAst, service: any): ApiBuilderType {
   }
 
   return (
-    service.findModelByName(ast.name) ||
-    service.findUnionByName(ast.name) ||
-    service.findEnumByName(ast.name) ||
+    service.findTypeByName(ast.name) ||
     invariant(false, `${ast.name} is not a type defined in ${String(service)} service.`)
   );
 }
