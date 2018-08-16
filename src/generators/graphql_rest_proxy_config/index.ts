@@ -18,8 +18,6 @@ function genResources(service: ApiBuilderService) {
     .filter(op => op.method === 'GET')
     .groupBy(op => getBaseType(op.resultType).shortName)
     .value();
-    // .mapValues(ops => ops.map(value => value.config))
-    // .value();
 
   // tslint:disable:object-literal-sort-keys
   const result = {};
