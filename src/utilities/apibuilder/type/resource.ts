@@ -14,7 +14,7 @@ export class ApiBuilderResource {
 
     // moved out of getter so that we can use === to check for equality
     this.operations = this.config.operations.map(op =>
-      ApiBuilderOperation.fromSchema(op, this, this.service));
+      ApiBuilderOperation.fromSchema(op, this, service));
   }
 
   get type(): ApiBuilderBaseType {

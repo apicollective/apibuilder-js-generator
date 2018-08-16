@@ -4,6 +4,7 @@ const nodeFiveEs6 = require('./node_5_es6');
 const jsIsomorphic = require('./js_isomorphic');
 const propTypes = require('./prop_types');
 const nodeGraphQL = require('./node_graphql');
+const graphqlRestProxy = require('./graphql_rest_proxy_config')
 
 const generators = {
   node_0_12: {
@@ -58,6 +59,14 @@ const generators = {
     attributes: [],
     generator: nodeGraphQL,
   },
+
+  graphql_rest_proxy_config: {
+    key: 'graphql_rest_proxy_config',
+    name: 'GraphQL Rest Proxy config generator',
+    description: '',
+    attributes: [],
+    generator: graphqlRestProxy,
+  }
 };
 
 module.exports = generators;

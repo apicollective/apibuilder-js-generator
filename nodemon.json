@@ -1,6 +1,6 @@
 {
     "exec": "ts-node ./src/server/index.js",
-    "ext": "js,ejs",
+    "ext": "ts,js,ejs",
     "watch": [
       "src"
     ]

@@ -1,22 +1,23 @@
 import { flow, get, getOr, inRange } from 'lodash/fp';
 import { ApiBuilderOperationArgument, astFromTypeName, typeFromAst } from '..';
+import { ApiBuilderResource } from './resource';
 
 /**
  * An APIBuilder operation, inside of a resource
  */
 export class ApiBuilderOperation {
   public static fromSchema(config, resource, service) {
-    return new ApiBuilderOperation(config, resource.path, service);
+    return new ApiBuilderOperation(config, resource, service);
   }
 
-  public resourcePath: string;
-  private config: any;
+  public resource: ApiBuilderResource;
+  public config: any;
   private service: any;
 
-  constructor(config, resourcePath, service) {
+  constructor(config, resource, service) {
     this.config = config;
     this.service = service;
-    this.resourcePath = resourcePath;
+    this.resource = resource;
   }
 
   get method() {
@@ -33,6 +34,10 @@ export class ApiBuilderOperation {
 
   get description() {
     return this.config.description;
+  }
+
+  get resourcePath() {
+    return this.resource.path;
   }
 
   get path(): string {

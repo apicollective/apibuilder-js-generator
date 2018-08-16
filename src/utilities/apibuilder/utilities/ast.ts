@@ -1,5 +1,12 @@
 import invariant = require('invariant');
-import { ApiBuilderArray, ApiBuilderMap, ApiBuilderPrimitiveType, ApiBuilderType } from '../type';
+import {
+  ApiBuilderArray,
+  ApiBuilderMap,
+  ApiBuilderPrimitiveType,
+  ApiBuilderType,
+  isArrayType,
+  isMapType,
+} from '../type';
 import {
   FullyQualifiedType,
   getNestedTypeName,
@@ -90,4 +97,24 @@ export function typeFromAst(ast: IAst, service: any): ApiBuilderType {
     service.findEnumByName(ast.name) ||
     invariant(false, `${ast.name} is not a type defined in ${String(service)} service.`)
   );
+}
+
+export function astFromType(type: ApiBuilderType): IAst {
+  if (isMapType(type)) {
+    return {
+      name: Kind.MAP,
+      type: astFromType(type.ofType),
+    };
+  }
+
+  if (isArrayType(type)) {
+    return {
+      name: Kind.ARRAY,
+      type: astFromType(type.ofType),
+    };
+  }
+
+  return {
+    name: type.shortName,
+  };
 }
