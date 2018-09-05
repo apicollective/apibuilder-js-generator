@@ -1,3 +1,6 @@
+// tslint:disable:object-literal-sort-keys
+// tslint:disable:object-shorthand-properties-first
+// tslint:disable:no-console
 import _ = require('lodash'); // tslint:disable-line:import-name
 import {
   ApiBuilderFile,
@@ -10,7 +13,6 @@ import {
   isEnumType,
   Kind,
   typeNameFromAst,
-  isModelType,
 } from '../../utilities/apibuilder';
 
 function genResources(service: ApiBuilderService) {
@@ -21,7 +23,6 @@ function genResources(service: ApiBuilderService) {
     // pick op with no path
     .value();
 
-  // tslint:disable:object-literal-sort-keys
   const result = {};
   for (const [resource, operations] of Object.entries(ops)) {
     // tslint:disable-next-line:no-shadowed-variable
@@ -53,7 +54,6 @@ function genResources(service: ApiBuilderService) {
       },
     };
   }
-  // tslint:enable:object-literal-sort-keys
   return result;
 }
 
@@ -91,8 +91,6 @@ export function generate({ service: data }) {
 
   const resources = genResources(service);
 
-  // tslint:disable:object-literal-sort-keys
-  // tslint:disable:object-shorthand-properties-first
   const enums = service.enums.map(enm => ({
     name: enm.shortName,
     values: enm.values.map(value => ({
