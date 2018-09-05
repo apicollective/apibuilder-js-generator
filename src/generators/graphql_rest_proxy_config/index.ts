@@ -10,6 +10,7 @@ import {
   isEnumType,
   Kind,
   typeNameFromAst,
+  isModelType,
 } from '../../utilities/apibuilder';
 
 function genResources(service: ApiBuilderService) {
@@ -17,6 +18,7 @@ function genResources(service: ApiBuilderService) {
     .flatMap(res => res.operations)
     .filter(op => op.method === 'GET')
     .groupBy(op => getBaseType(op.resultType).shortName)
+    // pick op with no path
     .value();
 
   // tslint:disable:object-literal-sort-keys
@@ -87,7 +89,10 @@ function typeToString(type: ApiBuilderType) {
 export function generate({ service: data }) {
   const service = new ApiBuilderService({ service: data });
 
+  const resources = genResources(service);
+
   // tslint:disable:object-literal-sort-keys
+  // tslint:disable:object-shorthand-properties-first
   const enums = service.enums.map(enm => ({
     name: enm.shortName,
     values: enm.values.map(value => ({
@@ -99,11 +104,32 @@ export function generate({ service: data }) {
   const models = service.models.map(model => ({
     name: model.shortName,
     description: model.description,
-    fields: model.fields.map(field => ({
-      name: field.name,
-      type: typeToString(field.type),
-      description: field.description,
-    })),
+    fields: model.fields
+      .filter(field => !field.name.endsWith('_reference'))
+      .map(field => ({
+        name: field.name,
+        type: typeToString(field.type),
+        description: field.description,
+      })),
+    links: model.fields
+      .filter(field => getBaseType(field.type).shortName.endsWith('_reference'))
+      .map((field) => {
+        const typeName = getBaseType(field.type).shortName;
+        const targetType = typeName.substring(0, typeName.length - '_reference'.length);
+        const type = service.findTypeByName(targetType);
+        if (type && targetType in resources) {
+          return {
+            name: field.name,
+            type: targetType,
+            params: [],
+          };
+        }
+
+        console.log(`Warning: found type ${typeName} but cannot find type ${targetType}`);
+
+        return null;
+      })
+      .filter(x => x !== null),
   }));
 
   // tslint:disable-next-line:prefer-array-literal Is this a TSLint bug?
@@ -136,6 +162,7 @@ export function generate({ service: data }) {
           description: 'The enum value',
         },
       ],
+      links: [],
     });
   }
 
@@ -144,9 +171,8 @@ export function generate({ service: data }) {
     enums: keyByProp(enums, 'name'),
     models: keyByProp(models, 'name'),
     unions: keyByProp(unions, 'name'),
-    resources: genResources(service),
+    resources,
   };
-  // tslint:enable:object-literal-sort-keys
 
   return Promise.resolve([
     new ApiBuilderFile('config.json', '', JSON.stringify(contents)),

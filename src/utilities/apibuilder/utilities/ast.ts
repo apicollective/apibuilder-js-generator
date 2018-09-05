@@ -92,10 +92,13 @@ export function typeFromAst(ast: IAst, service: ApiBuilderService): ApiBuilderTy
     return new ApiBuilderPrimitiveType(new FullyQualifiedType(ast.name));
   }
 
-  return (
-    service.findTypeByName(ast.name) ||
-    invariant(false, `${ast.name} is not a type defined in ${String(service)} service.`)
-  );
+  const type = service.findTypeByName(ast.name);
+
+  if (type === undefined) {
+    throw new Error(`${ast.name} is not a type defined in ${String(service)} service.`);
+  }
+
+  return type;
 }
 
 export function astFromType(type: ApiBuilderType): IAst {

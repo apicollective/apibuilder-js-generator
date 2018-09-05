@@ -136,7 +136,8 @@ export class ApiBuilderService {
     return this.schema.base_url;
   }
 
-  public findTypeByName(typeName: string) {
+  public findTypeByName(typeName: string)
+  : ApiBuilderEnum | ApiBuilderUnion | ApiBuilderModel | undefined {
     // By definition, a field or union type whose name is not fully qualified
     // implies the type is defined internally, that is such type is not imported.
     // Since internal types precede external types in the list of types held
