@@ -46,6 +46,8 @@ function genResources(service: ApiBuilderService) {
               param.default = parseInt(arg.defaultValue, 10);
             } else if (type === 'double') {
               param.default = parseFloat(arg.defaultValue);
+            } else if (arg.defaultValue != null) {
+              param.default = arg.defaultValue;
             }
           }
 
