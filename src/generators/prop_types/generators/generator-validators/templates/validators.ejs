@@ -1,0 +1,13 @@
+<%_ exportStatements.forEach(({ defaultExport, moduleName }) => { _%>
+import <%= defaultExport %> from '<%= moduleName %>';
+<%_ }) _%>
+
+export default {
+  <%_ exportStatements.forEach(({ defaultExport }) => { _%>
+    <%_ if (defaultExport.startsWith('$')) { _%>
+      <%= defaultExport.substring(1) %>: <%= defaultExport %>,
+    <%_ } else { _%>
+      <%= defaultExport %>,
+    <%_ } _%>
+  <%_ }) _%>
+};
