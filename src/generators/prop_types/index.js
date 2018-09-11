@@ -13,7 +13,9 @@ const generateEnumeration = require('./generators/generator-enumeration');
 const generateModel = require('./generators/generator-model');
 const generateUnion = require('./generators/generator-union');
 const generateIndex = require('./generators/generator-index');
+const generateMocks = require('./generators/generator-mocks');
 const generateTypeDefinition = require('./generators/generator-type-definition');
+const generateValidators = require('./generators/generator-validators');
 const toModuleName = require('./utilities/toModuleName');
 
 const debug = createLogger('apibuilder:prop-types');
@@ -45,6 +47,8 @@ function generate(invocationForm) {
   }, [
     new ApiBuilderFile('index.js', 'prop-types', generateIndex(service.internalTypes, './prop-types')),
     new ApiBuilderFile('index.d.ts', 'prop-types', generateTypeDefinition(service)),
+    new ApiBuilderFile('mocks.js', 'prop-types', generateMocks(service.internalTypes, './prop-types')),
+    new ApiBuilderFile('validators.js', 'prop-types', generateValidators(service.internalTypes, './prop-types')),
   ]);
 
   return Promise.resolve(generatedFiles);

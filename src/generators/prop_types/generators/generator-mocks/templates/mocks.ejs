@@ -1,0 +1,13 @@
+function noop() { return null; }
+noop.isRequired = noop;
+function noopThunk() { return noop; }
+
+export default {
+  <%_ exportStatements.forEach(({ defaultExport }) => { _%>
+    <%_ if (defaultExport.startsWith('$')) { _%>
+      <%= defaultExport.substring(1) %>: noopThunk,
+    <%_ } else { _%>
+      <%= defaultExport %>: noopThunk,
+    <%_ } _%>
+  <%_ }) _%>
+};
