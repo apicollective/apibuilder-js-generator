@@ -30,7 +30,7 @@ export class ApiBuilderResource {
     return this.service.namespace;
   }
 
-  get path() {
+  get path(): string {
     return this.config.path;
   }
 }

@@ -25,11 +25,29 @@ function genResources(service: ApiBuilderService) {
 
   const result = {};
   for (const [resource, operations] of Object.entries(ops)) {
-    // tslint:disable-next-line:no-shadowed-variable
-    const [[many], [one]] = _.partition(operations, op => isArrayType(op.resultType));
-    const op = many || one;
+    const orderedOps = operations.sort((a, b) => {
+      let aScore = 0;
+      let bScore = 0;
+
+      const aPath = a.resourcePath + a.path;
+      const bPath = b.resourcePath + b.path;
+
+      if (a.path.length === 0) aScore += 4;
+      if (b.path.length === 0) bScore += 4;
+
+      if (isArrayType(a.resultType)) aScore += 2;
+      if (isArrayType(b.resultType)) bScore += 2;
+
+      if (aPath.length < bPath.length) aScore += 1;
+      if (aPath.length > bPath.length) bScore += 1;
+
+      return bScore - aScore;
+    });
+
+    const op = orderedOps[0];
+
     result[resource] = {
-      [many != null ? 'many' : 'one']: {
+      [isArrayType(op.resultType) ? 'many' : 'one']: {
         path: op.resourcePath + op.path,
         params: _.fromPairs(op.arguments.map((arg) => {
           const type = typeToString(arg.type);
@@ -118,6 +136,9 @@ export function generate({ service: data }) {
         const targetType = typeName.substring(0, typeName.length - '_reference'.length);
         const type = service.findTypeByName(targetType);
         if (type && targetType in resources) {
+          const res = resources[targetType];
+          const operation = res.many || res.one;
+
           return {
             name: field.name,
             type: targetType,
