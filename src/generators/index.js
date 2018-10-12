@@ -50,14 +50,6 @@ const generators = {
     attributes: [],
     generator: propTypes,
   },
-
-  node_graphql: {
-    key: 'node_graphql',
-    name: 'Node GraphQL',
-    description: 'GraphQL types, resolvers, and schemas',
-    attributes: [],
-    generator: nodeGraphQL,
-  },
 };
 
 module.exports = generators;
