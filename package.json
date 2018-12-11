@@ -6,7 +6,7 @@
   "scripts": {
     "dev:start": "DEBUG=apibuilder:* nodemon",
     "build": "tsc && rsync -a --include '*/' --include '*.hbs' --include '*.ejs' --exclude '*' src/ dist",
-    "lint": "tslint -c tslint.json 'src/**/*.{ts,js}'",
+    "lint": "tslint --project tsconfig.json 'src/**/*.{ts,js}'",
     "pretest": "npm run lint",
     "test": "jest --maxWorkers=4",
     "test:watch": "jest --watch"
@@ -39,6 +39,7 @@
     "@types/invariant": "^2.2.29",
     "@types/lodash": "^4.14.111",
     "@types/node": "^10.5.2",
+    "apibuilder-js": "0.0.1",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.2",
