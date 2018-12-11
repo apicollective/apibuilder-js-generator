@@ -58,7 +58,7 @@ const generators = {
     description: 'Constant definitions using TypeScript',
     attributes: [],
     generator: tsConstants,
-  }
+  },
 };
 
 module.exports = generators;
