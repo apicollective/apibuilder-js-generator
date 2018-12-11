@@ -4,6 +4,7 @@ const nodeFiveEs6 = require('./node_5_es6');
 const jsIsomorphic = require('./js_isomorphic');
 const propTypes = require('./prop_types');
 const nodeGraphQL = require('./node_graphql');
+const tsConstants = require('./ts_constants');
 
 const generators = {
   node_0_12: {
@@ -50,6 +51,14 @@ const generators = {
     attributes: [],
     generator: propTypes,
   },
+
+  ts_constants: {
+    key: 'ts_constants',
+    name: 'TypeScript Constants',
+    description: 'Constant definitions using TypeScript',
+    attributes: [],
+    generator: tsConstants,
+  }
 };
 
 module.exports = generators;

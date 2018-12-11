@@ -1,0 +1,5 @@
+export enum <%= enumeration.nickname %> {
+  <%_ enumeration.values.forEach((value) => { _%>
+  <%= value.nickname %> = '<%= value.name %>',
+  <%_ }) _%>
+}
