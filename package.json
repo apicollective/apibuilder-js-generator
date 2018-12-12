@@ -39,7 +39,7 @@
     "@types/invariant": "^2.2.29",
     "@types/lodash": "^4.14.111",
     "@types/node": "^10.5.2",
-    "apibuilder-js": "0.0.1",
+    "apibuilder-js": "0.0.2",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.2",
