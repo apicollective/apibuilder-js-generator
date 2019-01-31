@@ -5,6 +5,7 @@ const jsIsomorphic = require('./js_isomorphic');
 const propTypes = require('./prop_types');
 const nodeGraphQL = require('./node_graphql');
 const tsConstants = require('./ts_constants');
+const openapi = require('./openapi');
 
 const generators = {
   node_0_12: {
@@ -59,6 +60,14 @@ const generators = {
     attributes: [],
     generator: tsConstants,
   },
+
+  openapi: {
+    key: 'openapi',
+    name: 'OpenAPI specification',
+    description: 'OpenAPI specification 3.0, see https://swagger.io/specification/ for details',
+    attributes: [],
+    generator: openapi,
+  }
 };
 
 module.exports = generators;
