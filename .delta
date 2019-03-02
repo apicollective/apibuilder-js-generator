@@ -2,3 +2,4 @@ builds:
     - root:
         port.container: 7050
         version: 1.3
+        instance.type: t3.micro
