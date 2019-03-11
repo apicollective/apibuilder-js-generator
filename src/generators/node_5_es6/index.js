@@ -85,8 +85,14 @@ function getEndpointUriStr(operation) {
   const fullPath = operation.path.slice(1);
   const parts = fullPath.split('/')
     .map((part) => {
-      if (part.indexOf(':') === 0) {
-        return `/${START_LITERAL}${camelCase(part.slice(1))}${END_LITERAL}`;
+      // match path parameter with possible file suffix delimitee by period.
+      const pathParamMatch = part.match(/^:([\w-]+)(?:\.\w*)?/);
+      if (pathParamMatch !== null) {
+        const subParts = [`/${START_LITERAL}${toCamelCase(pathParamMatch[1])}${END_LITERAL}`];
+        if (pathParamMatch.length > 2) {  // match has possible suffix (i.e. .json, .csv etc..)
+          subParts.push(pathParamMatch[2]);
+        }
+        return subParts.join('');
       }
       return `/${part}`;
     });

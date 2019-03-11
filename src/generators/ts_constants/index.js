@@ -7,7 +7,7 @@ exports.generate = function generate(invocationForm) {
   const service = new ApiBuilderService(invocationForm.service);
   const templatePath = resolve(__dirname, './templates/enumerations.ejs');
   const dirname = service.namespace.split('.').join('/');
-  const basename = `enums.ts`;
+  const basename = 'enums.ts';
   const contents = renderTemplate(templatePath, {
     enumerations: sortBy(service.enums, 'nickname'),
   }, {
