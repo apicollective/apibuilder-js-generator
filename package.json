@@ -26,11 +26,11 @@
     "commander": "^2.15.1",
     "faker": "^4.1.0",
     "got": "^8.3.1",
-    "jest": "^23.4.1",
+    "jest": "^24.4.0",
     "mkdirp": "^0.5.1",
     "nock": "^9.2.5",
     "nodemon": "^1.17.3",
-    "ts-jest": "^23.10.5",
+    "ts-jest": "^24.0.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.9.2"
