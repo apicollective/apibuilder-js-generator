@@ -28,4 +28,11 @@ describe ('getEndpointUriStr', () => {
     });
     expect(result).toEqual('/${dannyDeVito}/is/${prettySmall}.csv');
   });
+
+  test('should maintain url suffix with extra periods', () => {
+    const result = getEndpointUriStr({
+      path: '/:dannyDeVito/is/:pretty_small.tar.gz'
+    });
+    expect(result).toEqual('/${dannyDeVito}/is/${prettySmall}.tar.gz');
+  });
 });
