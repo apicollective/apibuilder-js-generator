@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@types/invariant": "^2.2.29",
-    "@types/lodash": "^4.14.111",
+    "@types/lodash": "^4.14.122",
     "@types/node": "^10.5.2",
     "apibuilder-js": "0.0.2",
     "babel-core": "^6.26.3",
@@ -51,7 +51,7 @@
     "invariant": "^2.2.4",
     "lodash": "^4.17.11",
     "prettier": "^1.12.1",
-    "typescript": "^2.9.2"
+    "typescript": "^3.3.3333"
   },
   "jest": {
     "moduleFileExtensions": [
