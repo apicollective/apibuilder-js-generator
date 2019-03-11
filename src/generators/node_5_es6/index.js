@@ -86,7 +86,7 @@ function getEndpointUriStr(operation) {
   const parts = fullPath.split('/')
     .map((part) => {
       // match path parameter with possible file suffix delimitee by period.
-      const pathParamMatch = part.match(/^:([\w-]+)(?:\.\w*)?/);
+      const pathParamMatch = part.match(/^:([\w-]+)(\.[\w.]*)?/);
       if (pathParamMatch !== null) {
         const subParts = [`/${START_LITERAL}${toCamelCase(pathParamMatch[1])}${END_LITERAL}`];
         if (pathParamMatch.length > 2) {  // match has possible suffix (i.e. .json, .csv etc..)
