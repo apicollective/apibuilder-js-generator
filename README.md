@@ -1,5 +1,7 @@
 # apibuilder-javascript-generator
 
+![apibuilder-javascript-generator Travis build status badge](https://travis-ci.org/apicollective/apibuilder-js-generator.svg?branch=master)
+
 apibuilder code generators for JavaScript
 
 ## Development
