@@ -67,7 +67,7 @@ const generators = {
     description: 'OpenAPI specification 3.0, see https://swagger.io/specification/ for details',
     attributes: [],
     generator: openapi,
-  }
+  },
 };
 
 module.exports = generators;

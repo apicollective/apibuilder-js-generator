@@ -36,6 +36,7 @@
     "tslint-config-airbnb": "^5.9.2"
   },
   "dependencies": {
+    "@loopback/openapi-v3-types": "^1.0.5",
     "@types/invariant": "^2.2.29",
     "@types/lodash": "^4.14.111",
     "@types/node": "^10.5.2",
