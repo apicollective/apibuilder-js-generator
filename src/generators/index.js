@@ -5,6 +5,7 @@ const jsIsomorphic = require('./js_isomorphic');
 const propTypes = require('./prop_types');
 const nodeGraphQL = require('./node_graphql');
 const tsConstants = require('./ts_constants');
+const jsdoc = require('./jsdoc');
 
 const generators = {
   node_0_12: {
@@ -59,6 +60,14 @@ const generators = {
     attributes: [],
     generator: tsConstants,
   },
+
+  jsdoc: {
+    key: 'jsdoc',
+    name: 'JSDoc 3 Type Definitions',
+    description: 'JSDoc 3 type definitions for your ApiBuilder entities',
+    attributes: [],
+    generator: jsdoc,
+  }
 };
 
 module.exports = generators;

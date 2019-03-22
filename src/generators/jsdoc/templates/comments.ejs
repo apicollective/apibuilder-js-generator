@@ -1,0 +1,50 @@
+// -----------------------------------------------------------------------------
+// Enum Typedefs
+// -----------------------------------------------------------------------------
+
+<%_ service.enums.forEach((enumeration) => { _%>
+/**
+ <%_ if (enumeration.description != null) { _%>
+ * <%= enumeration.description %>
+ <%_ } _%>
+ * @typedef {<%- enumeration.values.map(value => JSON.stringify(value.name)).join(' | ') %>} <%- toJavaScriptTypeName(enumeration) %>
+ */
+
+<%_ }) _%>
+
+// -----------------------------------------------------------------------------
+// Model Typedefs
+// -----------------------------------------------------------------------------
+
+<%_ service.models.forEach((model) => { _%>
+/**
+ <%_ if (model.description != null) { _%>
+ * <%= model.description %>
+ <%_ } _%>
+ * @typedef {Object} <%- toJavaScriptTypeName(model) %>
+ <%_ model.fields.forEach((field) => { _%>
+  <%_ let fieldName = field.name; _%>
+  <%_ let defaultValue = field.default; _%>
+  <%_ let isOptional = !field.isRequired; _%>
+  <%_ if (isOptional) { _%>
+    <%_ fieldName = defaultValue != null ? `[${fieldName} = ${JSON.stringify(defaultValue)}]` : `[${fieldName}]`; _%>
+  <%_ } _%>
+ * @property {<%- toJavaScriptTypeName(field.type) %>} <%- fieldName %> <%= field.description %>
+ <%_ }) _%>
+ */
+
+<%_ }) _%>
+
+// -----------------------------------------------------------------------------
+// Union Typedefs
+// -----------------------------------------------------------------------------
+
+<%_ service.unions.forEach((union) => { _%>
+/**
+ <%_ if (union.description != null) { _%>
+ * <%= union.description %>
+ <%_ } _%>
+ * @typedef {(<% union.types.forEach((type, index, array) => { %><%- toJavaScriptTypeName(type.type) %> & { <%= union.discriminator %>: <%- JSON.stringify(type.discriminatorValue) %> }<% if (index !== array.length - 1) { %> | <% } %><% }) %>)} <%- toJavaScriptTypeName(union) %>
+ */
+
+<%_ }) _%>
