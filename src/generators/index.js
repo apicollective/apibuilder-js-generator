@@ -67,7 +67,7 @@ const generators = {
     description: 'JSDoc 3 type definitions for your ApiBuilder entities',
     attributes: [],
     generator: jsdoc,
-  }
+  },
 };
 
 module.exports = generators;

@@ -63,4 +63,4 @@ exports.generate = function generate(invocationForm) {
   });
   const file = new ApiBuilderFile(basename, dirname, contents);
   return Promise.resolve([file]);
-}
+};
