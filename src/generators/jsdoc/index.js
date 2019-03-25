@@ -14,20 +14,20 @@ function primitiveToJavaScriptTypeName(type) {
   case Kind.DATE_ISO8601:
   case Kind.DATE_TIME_ISO8601:
   case Kind.UUID:
-    return 'String';
+    return 'string';
   case Kind.BOOLEAN:
-    return 'Boolean';
+    return 'boolean';
   case Kind.DECIMAL:
   case Kind.DOUBLE:
   case Kind.INTEGER:
   case Kind.LONG:
-    return 'Number';
+    return 'number';
   case Kind.ARRAY:
     return 'Array';
   case Kind.OBJECT:
     return 'Object';
   default:
-    return 'Any';
+    return '*';
   }
 }
 
@@ -41,7 +41,7 @@ function toJavaScriptTypeName(type) {
   }
 
   if (isMapType(type)) {
-    return `Object.<String, ${toJavaScriptTypeName(type.ofType)}>`;
+    return `Object.<string, ${toJavaScriptTypeName(type.ofType)}>`;
   }
 
   return pascalCase(type.shortName);
