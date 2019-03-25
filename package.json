@@ -38,6 +38,7 @@
   "dependencies": {
     "@loopback/openapi-v3-types": "^1.0.5",
     "@types/invariant": "^2.2.29",
+    "@types/jest": "^23.3.10",
     "@types/lodash": "^4.14.111",
     "@types/node": "^10.5.2",
     "apibuilder-js": "0.0.2",
