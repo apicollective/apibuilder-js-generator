@@ -19,6 +19,7 @@ function generatePathsObject(service: ApiBuilderService): PathsObject {
       (resourcePaths, operation) => {
         resourcePaths[operation.method.toLowerCase()] = generateOperationObject(
           operation,
+          service,
           validator,
         );
         return resourcePaths;

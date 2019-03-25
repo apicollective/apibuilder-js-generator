@@ -8,7 +8,7 @@ import { generateComponentsObject } from '../openapi-components';
 import { generateInfoObject } from '../openapi-info';
 import { generatePathsObject } from '../openapi-paths';
 
-const openApiSpec = (service: ApiBuilderService): OpenAPIObject => {
+const generateOpenApiSpec = (service: ApiBuilderService): OpenAPIObject => {
   const openapi = '3.0.2';
   const info = generateInfoObject(service);
   const paths = generatePathsObject(service);
@@ -21,6 +21,6 @@ const openApiSpec = (service: ApiBuilderService): OpenAPIObject => {
   };
 };
 
-export default openApiSpec;
+export default generateOpenApiSpec;
 
-module.exports = openApiSpec;
+module.exports = generateOpenApiSpec;
