@@ -22,5 +22,3 @@ const generateOpenApiSpec = (service: ApiBuilderService): OpenAPIObject => {
 };
 
 export default generateOpenApiSpec;
-
-module.exports = generateOpenApiSpec;

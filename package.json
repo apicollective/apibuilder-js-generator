@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/flowcommerce/apibuilder-javascript-generator#readme",
   "devDependencies": {
+    "@types/jest": "^24.0.11",
     "commander": "^2.15.1",
     "faker": "^4.1.0",
     "got": "^8.3.1",
@@ -53,20 +54,6 @@
     "invariant": "^2.2.4",
     "lodash": "^4.17.10",
     "prettier": "^1.12.1",
-    "typescript": "^2.9.2"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "transform": {
-      "\\.ts$": "ts-jest"
-    },
-    "collectCoverage": true,
-    "coverageReporters": [
-      "html",
-      "text-summary"
-    ]
+    "typescript": "^3.2.2"
   }
 }
