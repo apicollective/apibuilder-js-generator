@@ -54,7 +54,7 @@ function computeGraphQLNamedExports(model: ApiBuilderModel): string[] {
       return namedExports;
     },
     initialNamedExports,
-  )).sort();
+  )).sort() as string[];
 }
 
 function computeScalarExports(model: ApiBuilderModel) {
