@@ -1,7 +1,8 @@
 const createLogger = require('debug');
 const { ApiBuilderFile, ApiBuilderService } = require('apibuilder-js');
 const generateOpenApiSpec = require('./generators/openapi-spec/generateOpenApiSpec').default;
-const debug = createLogger('apibuilder:openapi');
+/* uncomment for debugging */
+// const debug = createLogger('apibuilder:openapi');
 
 function generate(invocationForm) {
   const service = new ApiBuilderService(invocationForm.service);
