@@ -1,0 +1,53 @@
+{
+  "name": "organization",
+  "plural": "organizations",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "attributes": [],
+      "annotations": [],
+      "description": "Globally unique identifier"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "attributes": [],
+      "annotations": []
+    },
+    {
+      "name": "environment",
+      "type": "environment",
+      "required": true,
+      "attributes": [],
+      "annotations": []
+    },
+    {
+      "name": "parent",
+      "type": "organization_reference",
+      "required": false,
+      "attributes": [],
+      "annotations": [],
+      "description": "When creating an organization in the test environment, it is linked to your production organization. This allows you to have as many test organizations as you like."
+    },
+    {
+      "name": "defaults",
+      "type": "organization_defaults",
+      "required": false,
+      "attributes": [],
+      "annotations": [],
+      "description": "Always present. Marked optional for backwards compatibility."
+    },
+    {
+      "name": "created_at",
+      "type": "date-time-iso8601",
+      "required": false,
+      "attributes": [],
+      "annotations": []
+    }
+  ],
+  "attributes": [],
+  "description": "Represents a single organization in the system, and what environment it is currently operating in."
+}

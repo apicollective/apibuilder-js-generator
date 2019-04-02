@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/flowcommerce/apibuilder-javascript-generator#readme",
   "devDependencies": {
+    "@types/jest": "^24.0.11",
     "commander": "^2.15.1",
     "faker": "^4.1.0",
     "got": "^8.3.1",
@@ -36,6 +37,7 @@
     "tslint-config-airbnb": "^5.9.2"
   },
   "dependencies": {
+    "@loopback/openapi-v3-types": "^1.0.5",
     "@types/invariant": "^2.2.29",
     "@types/lodash": "^4.14.122",
     "@types/node": "^10.5.2",
@@ -52,19 +54,5 @@
     "lodash": "^4.17.11",
     "prettier": "^1.12.1",
     "typescript": "^3.3.3333"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "js"
-    ],
-    "transform": {
-      "\\.ts$": "ts-jest"
-    },
-    "collectCoverage": true,
-    "coverageReporters": [
-      "html",
-      "text-summary"
-    ]
   }
 }

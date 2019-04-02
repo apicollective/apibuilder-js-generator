@@ -1,0 +1,34 @@
+{
+  "apidoc": {
+    "version": "0.14.67"
+  },
+  "name": "API",
+  "organization": {
+    "key": "flow"
+  },
+  "application": {
+    "key": "api"
+  },
+  "namespace": "io.flow.v0",
+  "version": "0.7.25",
+  "info": {
+    "license": {
+      "name": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    },
+    "contact": {
+      "email": "tech@flow.io"
+    }
+  },
+  "headers": [],
+  "imports": [],
+  "enums": [],
+  "unions": [],
+  "models": [],
+  "resources": [],
+  "attributes": [],
+  "annotations": [],
+  "base_url": "https://api.flow.io",
+  "description":
+    "The Flow Commerce REST API provides full access to the global ecommerce platform."
+}
