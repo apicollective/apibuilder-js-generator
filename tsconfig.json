@@ -3,7 +3,8 @@
     "allowJs": true,
     "outDir": "dist/",
     "module": "commonjs",
-    "target": "es2016"
+    "target": "es2016",
+    "resolveJsonModule": true
   },
   "include": [
     "src/**/*"
