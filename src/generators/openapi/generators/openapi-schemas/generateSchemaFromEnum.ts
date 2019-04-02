@@ -1,6 +1,7 @@
+import { ApiBuilderEnum } from 'apibuilder-js';
 import { map } from 'lodash';
 
-function generateSchemaFromEnum(enm) {
+function generateSchemaFromEnum(enm: ApiBuilderEnum) {
   const enumValues = map(enm.values, value => value.name);
   return {
     [enm.name]: {

@@ -4,7 +4,6 @@ import {
   ApiBuilderOperation,
   ApiBuilderService,
 } from 'apibuilder-js';
-import debug from 'debug';
 import {
   map,
 } from 'lodash';
@@ -33,6 +32,7 @@ function generateOperationObject(
       requestBody: generateRequestBodyObjectWithValidation(apibuilderOperation.body),
     },
     responses: generateResponsesObject(apibuilderOperation.responses),
+    tags: [apibuilderOperation.resource.typeName],
   };
 }
 
