@@ -5,6 +5,7 @@ const jsIsomorphic = require('./js_isomorphic');
 const propTypes = require('./prop_types');
 const nodeGraphQL = require('./node_graphql');
 const tsConstants = require('./ts_constants');
+const tsDeclarations = require('./ts_declarations');
 const jsdoc = require('./jsdoc');
 
 const generators = {
@@ -68,6 +69,14 @@ const generators = {
     attributes: [],
     generator: jsdoc,
   },
+
+  ts_declarations: {
+    key: 'ts_declarations',
+    name: 'TypeScript Declaration File',
+    description: 'TypeScript declaration file covering enums, models and unions from Apibuilder',
+    attributes: [],
+    generator: tsDeclarations,
+  }
 };
 
 module.exports = generators;
