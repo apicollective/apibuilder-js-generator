@@ -42,7 +42,7 @@ function toJavaScriptTypeName(type) {
   }
 
   if (isMapType(type)) {
-    return `Object`;
+    return 'Object';
   }
 
   return camelCapitalize(type.shortName);
@@ -56,7 +56,7 @@ exports.generate = function generate(invocationForm) {
   const contents = renderTemplate(templatePath, {
     service,
     camelCapitalize,
-    toJavaScriptTypeName
+    toJavaScriptTypeName,
   }, {
     prettier: {
       parser: 'typescript',

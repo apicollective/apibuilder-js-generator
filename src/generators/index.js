@@ -76,7 +76,7 @@ const generators = {
     description: 'TypeScript declaration file covering enums, models and unions from Apibuilder',
     attributes: [],
     generator: tsDeclarations,
-  }
+  },
 };
 
 module.exports = generators;
