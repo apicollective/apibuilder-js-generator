@@ -1,0 +1,35 @@
+{
+  "name": "day_of_week",
+  "plural": "day_of_weeks",
+  "values": [
+    {
+      "name": "sunday",
+      "attributes": []
+    },
+    {
+      "name": "monday",
+      "attributes": []
+    },
+    {
+      "name": "tuesday",
+      "attributes": []
+    },
+    {
+      "name": "wednesday",
+      "attributes": []
+    },
+    {
+      "name": "thursday",
+      "attributes": []
+    },
+    {
+      "name": "friday",
+      "attributes": []
+    },
+    {
+      "name": "saturday",
+      "attributes": []
+    }
+  ],
+  "attributes": []
+}
