@@ -51,7 +51,7 @@ function toJavaScriptTypeName(type) {
 exports.generate = function generate(invocationForm) {
   const service = new ApiBuilderService(invocationForm.service);
   const templatePath = resolve(__dirname, './templates/declarations.ejs');
-  const dirname = service.namespace.split('.').join('/');
+  const dirname = '';
   const basename = 'index.d.ts';
   const contents = renderTemplate(templatePath, {
     service,
