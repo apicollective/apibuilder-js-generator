@@ -1,14 +1,15 @@
 const { ApiBuilderFile, ApiBuilderService, Kind, isPrimitiveType, isArrayType, isMapType } = require('apibuilder-js');
+const { reduce, sortBy, uniqBy } = require('lodash');
 const { resolve } = require('path');
-const camelCase = require('lodash/camelCase');
-const flow = require('lodash/flow');
 const upperFirst = require('lodash/upperFirst');
-
+const camelCase = require('lodash/camelCase');
 const { renderTemplate } = require('../../utilities/template');
 
-const pascalCase = flow(camelCase, upperFirst);
+function camelCapitalize(value) {
+  return upperFirst(camelCase(value));
+}
 
-function primitiveToJavaScriptTypeName(type) {
+function primitiveToTypeScriptTypeName(type) {
   switch (type.shortName) {
   case Kind.STRING:
   case Kind.DATE_ISO8601:
@@ -25,40 +26,40 @@ function primitiveToJavaScriptTypeName(type) {
   case Kind.ARRAY:
     return 'Array';
   case Kind.OBJECT:
-    return 'Object';
+    return 'object';
   default:
-    return '*';
+    return 'any';
   }
 }
 
 function toJavaScriptTypeName(type) {
   if (isPrimitiveType(type)) {
-    return primitiveToJavaScriptTypeName(type);
+    return primitiveToTypeScriptTypeName(type);
   }
 
   if (isArrayType(type)) {
-    return `${toJavaScriptTypeName(type.ofType)}[]`;
+    return `Array<${toJavaScriptTypeName(type.ofType)}>`;
   }
 
   if (isMapType(type)) {
-    return `Object.<string, ${toJavaScriptTypeName(type.ofType)}>`;
+    return 'Object';
   }
 
-  return type.packageName != null
-    ? `${type.packageName}.${pascalCase(type.shortName)}`
-    : pascalCase(type.shortName);
+  return camelCapitalize(type.shortName);
 }
 
 exports.generate = function generate(invocationForm) {
   const service = new ApiBuilderService(invocationForm.service);
-  const templatePath = resolve(__dirname, './templates/comments.ejs');
-  const dirname = '.';
-  const basename = 'index.js';
+  const templatePath = resolve(__dirname, './templates/declarations.ejs');
+  const dirname = '';
+  const basename = 'index.d.ts';
   const contents = renderTemplate(templatePath, {
     service,
+    camelCapitalize,
     toJavaScriptTypeName,
   }, {
     prettier: {
+      parser: 'typescript',
       singleQuote: true,
       trailingComma: 'es5',
     },

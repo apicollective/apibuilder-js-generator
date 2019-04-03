@@ -13,7 +13,7 @@ const log = debug('apibuilder:generator');
 
 let serviceJson;
 
-// generate --generator prop_types --source ./api-internal.json --output ./generated
+// ./scripts/generate.js ./api.json --generator jsdoc --output ./generated
 
 program
   .version('0.1.0')

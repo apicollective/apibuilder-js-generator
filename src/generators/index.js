@@ -5,6 +5,7 @@ const jsIsomorphic = require('./js_isomorphic');
 const propTypes = require('./prop_types');
 const nodeGraphQL = require('./node_graphql');
 const tsConstants = require('./ts_constants');
+const tsDeclarations = require('./ts_declarations');
 const jsdoc = require('./jsdoc');
 const openapi = require('./openapi');
 
@@ -76,6 +77,14 @@ const generators = {
     description: 'OpenAPI specification 3.0, see https://swagger.io/specification/ for details',
     attributes: [],
     generator: openapi,
+  },
+
+  ts_declarations: {
+    key: 'ts_declarations',
+    name: 'TypeScript Declaration File',
+    description: 'TypeScript declaration file covering enums, models and unions from Apibuilder',
+    attributes: [],
+    generator: tsDeclarations,
   },
 };
 
