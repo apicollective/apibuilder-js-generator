@@ -12,9 +12,12 @@ function generateComponentsObject(service) {
   const schemaEnums = generateSchemaEnums(service);
   const schemaUnions = generateSchemaUnions(service);
   const schemas = reduce(
-    [].concat(schemaModels, schemaEnums, schemaUnions),
+    [...schemaModels, ...schemaEnums, ...schemaUnions],
     (acc, value) => {
-      return Object.assign(acc, value);
+      return {
+        ...acc,
+        ...value,
+      };
     },
     {},
    );
