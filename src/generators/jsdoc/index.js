@@ -44,9 +44,7 @@ function toJavaScriptTypeName(type) {
     return `Object.<string, ${toJavaScriptTypeName(type.ofType)}>`;
   }
 
-  return type.packageName != null
-    ? `${type.packageName}.${pascalCase(type.shortName)}`
-    : pascalCase(type.shortName);
+  return pascalCase(type.shortName);
 }
 
 exports.generate = function generate(invocationForm) {
