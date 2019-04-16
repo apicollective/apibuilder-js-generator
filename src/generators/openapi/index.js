@@ -6,7 +6,8 @@ const generateOpenApiSpec = require('./generators/openapi-spec/generateOpenApiSp
 
 function generate(invocationForm) {
   const service = new ApiBuilderService(invocationForm.service);
-  const contents = generateOpenApiSpec(service);
+  const contentsData = generateOpenApiSpec(service);
+  const contents = JSON.stringify(contentsData, null, 2);
   const file = new ApiBuilderFile('openapi.json', '', contents);
 
   return Promise.resolve([file]);
