@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const hbs = require('hbs');
 const camelCase = require('lodash/camelCase');
+const map = require('lodash/map');
+const filter = require('lodash/filter');
 
 const { capitalizeFirstLetter } = require('./utils');
 
@@ -27,12 +29,12 @@ function getGeneratorDescription() {
 
 /* private */
 function getPathParameters(operation) {
-  return operation.parameters.filter(param => param.location === 'Path');
+  return filter(operation.parameters, param => param.location === 'Path');
 }
 
 /* private */
 function getQueryParameters(operation) {
-  return operation.parameters.filter(param => param.location === 'Query');
+  return filter(operation.parameters, param => param.location === 'Query');
 }
 
 function requestCanHaveBody(method) {
@@ -41,7 +43,7 @@ function requestCanHaveBody(method) {
 }
 
 function getFunctionParamsStr(operation) {
-  const params = getPathParameters(operation).map(p => camelCase(p.name));
+  const params = map(getPathParameters(operation), p => camelCase(p.name));
   return params.concat(['options']).join(', ');
 }
 
@@ -88,7 +90,7 @@ function getEndpointUriStr(operation) {
       // match path parameter with possible file suffix delimitee by period.
       const pathParamMatch = part.match(/^:([\w-]+)(\.[\w.]*)?/);
       if (pathParamMatch !== null) {
-        const subParts = [`/${START_LITERAL}${toCamelCase(pathParamMatch[1])}${END_LITERAL}`];
+        const subParts = [`/${START_LITERAL}${camelCase(pathParamMatch[1])}${END_LITERAL}`];
         if (pathParamMatch.length > 2) {  // match has possible suffix (i.e. .json, .csv etc..)
           subParts.push(pathParamMatch[2]);
         }
@@ -101,16 +103,16 @@ function getEndpointUriStr(operation) {
 }
 
 function getQueryParameterNames(operation) {
-  return getQueryParameters(operation).map(param => ({
+  return map(getQueryParameters(operation), param => ({
     name: param.name,
     nameCamelCase: camelCase(param.name),
   }));
 }
 
 function getDeclaredResponses(operation) {
-  return operation.responses
-    .filter(response => response.code && response.code.integer)
-    .map((response) => {
+  return map(
+    filter(operation.responses, response => response.code && response.code.integer),
+    (response) => {
       const status = response.code.integer.value;
       return {
         code: status,
@@ -178,7 +180,7 @@ function getOperations(operations, resourcePath, service) {
 function createResources(service) {
   const template = getResourceTemplate();
 
-  return service.resources.map((resource) => {
+  return map(service.resources, (resource) => {
     const resourceFile = {
       name: `${resource.plural}.js`,
       contents: template({
