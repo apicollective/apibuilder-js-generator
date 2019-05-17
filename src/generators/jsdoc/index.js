@@ -23,9 +23,9 @@ function primitiveToJavaScriptTypeName(type) {
   case Kind.LONG:
     return 'number';
   case Kind.ARRAY:
-    return 'Array';
+    return 'Array.<*>';
   case Kind.OBJECT:
-    return 'Object';
+    return 'Object.<string, *>';
   default:
     return '*';
   }
@@ -37,14 +37,14 @@ function toJavaScriptTypeName(type) {
   }
 
   if (isArrayType(type)) {
-    return `${toJavaScriptTypeName(type.ofType)}[]`;
+    return `Array.<${toJavaScriptTypeName(type.ofType)}>`;
   }
 
   if (isMapType(type)) {
     return `Object.<string, ${toJavaScriptTypeName(type.ofType)}>`;
   }
 
-  return pascalCase(type.shortName);
+  return [type.packageName, pascalCase(type.shortName)].filter(Boolean).join('.');
 }
 
 exports.generate = function generate(invocationForm) {
