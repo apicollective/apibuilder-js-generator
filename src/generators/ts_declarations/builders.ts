@@ -22,14 +22,34 @@ import {
 } from 'ast-types';
 
 import {
+  IdentifierKind,
+  StatementKind,
+  TSQualifiedNameKind,
   TSTypeAnnotationKind,
   TSTypeKind,
 } from 'ast-types/gen/kinds';
 
 import {
   camelCase,
+  flatMap,
   upperFirst,
 } from 'lodash';
+
+import {
+  isReservedWord,
+} from './reserved-words';
+
+// tslint:disable-next-line:interface-name
+interface GeneratorMetadata {
+  namespaces: string[];
+  isReferenceable: (type: ApiBuilderEnum | ApiBuilderUnion | ApiBuilderModel) => boolean;
+}
+
+function safeIdentifier(identifier: string) {
+  return isReservedWord(identifier)
+    ? `RESERVED_WORD_${identifier}`
+    : identifier;
+}
 
 /**
  * Converts `value` to pascal case.
@@ -37,36 +57,6 @@ import {
  */
 function pascalCase(value: string) {
   return upperFirst(camelCase(value));
-}
-
-/**
- * Returns whether `enumeration` is not an imported enum.
- * @param enumeration
- */
-function isInternalEnum(enumeration: ApiBuilderEnum) {
-  // API Builder does not fully resolve imported types,
-  // therefore only imported enums lack values.
-  return enumeration.values.length > 0;
-}
-
-/**
- * Returns whether `model` is not an imported model.
- * @param model
- */
-function isInternalModel(model: ApiBuilderModel) {
-  // API Builder does not fully resolve imported types,
-  // therefore only imported models lack fields.
-  return model.fields.length > 0;
-}
-
-/**
- * Returns whether `union` is not an imported union.
- * @param union
- */
-function isInternalUnion(union: ApiBuilderUnion) {
-  // API Builder does not fully resolve imported types,
-  // therefore only imported unions lack union types.
-  return union.types.length > 0;
 }
 
 /**
@@ -78,8 +68,39 @@ export function buildTypeIdentifier(
   type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
 ) {
   return b.identifier(
-    pascalCase(type.shortName),
+    safeIdentifier(pascalCase(type.shortName)),
   );
+}
+
+function buildRecursiveQualifiedName(
+  identifiers: IdentifierKind[] = [],
+  left: IdentifierKind | TSQualifiedNameKind,
+): IdentifierKind | TSQualifiedNameKind {
+  if (!identifiers.length) {
+    return left;
+  }
+
+  const [right, ...remaining] = identifiers;
+
+  const ast = right != null
+    ? b.tsQualifiedName(left, right)
+    : left;
+
+  if (!remaining.length) {
+    return ast;
+  }
+
+  return buildRecursiveQualifiedName(remaining, ast);
+}
+
+export function buildTypeQualifiedName(
+  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+) {
+  const identifiers = type.packageName.split('.').map(safeIdentifier).concat([
+    safeIdentifier(pascalCase(type.shortName)),
+  ]);
+  const [left, ...remaining] = identifiers.map(identifier => b.identifier(identifier));
+  return buildRecursiveQualifiedName(remaining, left);
 }
 
 /**
@@ -117,7 +138,7 @@ export function buildApiBuilderPrimitiveTypeKind(
         ),
       ]);
     default:
-      return b.tsAnyKeyword();
+      return b.tsUnknownKeyword();
   }
 }
 
@@ -127,9 +148,10 @@ export function buildApiBuilderPrimitiveTypeKind(
  */
 export function buildApiBuilderArrayKind(
   array: ApiBuilderArray,
+  metadata: GeneratorMetadata,
 ) {
   return b.tsArrayType(
-    buildReferenceableApiBuilderTypeKind(array.ofType),
+    buildApiBuilderType(array.ofType, metadata, true),
   );
 }
 
@@ -139,6 +161,7 @@ export function buildApiBuilderArrayKind(
  */
 export function buildApiBuilderFieldPropertySignature(
   field: ApiBuilderField,
+  metadata: GeneratorMetadata,
 ) {
   const { isRequired, name, type } = field;
 
@@ -146,17 +169,13 @@ export function buildApiBuilderFieldPropertySignature(
     key: b.stringLiteral(name),
     optional: !isRequired,
     readonly: true,
-    typeAnnotation: buildReferenceableApiBuilderTypeAnnotation(type),
+    typeAnnotation: buildApiBuilderTypeAnnotation(type, metadata, true),
   });
 }
 
-export function buildApiBuilderEnumKind(
+export function buildApiBuilderEnum(
   enumeration: ApiBuilderEnum,
 ) {
-  if (!enumeration.values.length) {
-    return b.tsUnknownKeyword();
-  }
-
   return b.tsUnionType(
     enumeration.values.map(value => (
       b.tsLiteralType(
@@ -166,16 +185,31 @@ export function buildApiBuilderEnumKind(
   );
 }
 
-export function buildReferenceableApiBuilderEnumKind(
+/**
+ * Similar to `buildApiBuilderEnum`, but enhanced to return a reference type
+ * when `enumeration` is known to be generated or unknown keyword when it
+ * cannot be generated due to lack of information.
+ * @param enumeration
+ * @param metadata
+ */
+export function buildApiBuilderEnumReference(
   enumeration: ApiBuilderEnum,
+  metadata: GeneratorMetadata,
 ) {
-  return isInternalEnum(enumeration)
-    ? b.tsTypeReference(buildTypeIdentifier(enumeration))
-    : buildApiBuilderEnumKind(enumeration);
+  if (metadata.isReferenceable(enumeration)) {
+    return b.tsTypeReference(buildTypeQualifiedName(enumeration));
+  }
+
+  if (enumeration.values.length > 0) {
+    return buildApiBuilderEnum(enumeration);
+  }
+
+  return b.tsUnknownKeyword();
 }
 
-export function buildApiBuilderMapKind(
+export function buildApiBuilderMap(
   type: ApiBuilderMap,
+  metadata: GeneratorMetadata,
 ) {
   return b.tsTypeLiteral([
     b.tsIndexSignature(
@@ -185,38 +219,48 @@ export function buildApiBuilderMapKind(
           b.tsStringKeyword(),
         ),
       })],
-      buildReferenceableApiBuilderTypeAnnotation(type.ofType),
+      buildApiBuilderTypeAnnotation(type.ofType, metadata, true),
     ),
   ]);
 }
 
-export function buildApiBuilderModelKind(
+export function buildApiBuilderModel(
   model: ApiBuilderModel,
+  metadata: GeneratorMetadata,
 ) {
-  if (!model.fields.length) {
-    return b.tsUnknownKeyword();
-  }
-
   return b.tsTypeLiteral(
-    model.fields.map(field => buildApiBuilderFieldPropertySignature(field)),
+    model.fields.map(field => (
+      buildApiBuilderFieldPropertySignature(field, metadata)
+    )),
   );
 }
 
-export function buildReferenceableApiBuilderModelKind(
+/**
+ * Similar to `buildApiBuilderModel`, but enhanced to return a reference type
+ * when the provided `model` is known to be generated or an unknown keyword
+ * when it cannot be generated due to lack of information.
+ * @param model
+ * @param metadata
+ */
+export function buildApiBuilderModelReference(
   model: ApiBuilderModel,
+  metadata: GeneratorMetadata,
 ) {
-  return isInternalModel(model)
-    ? b.tsTypeReference(buildTypeIdentifier(model))
-    : buildApiBuilderModelKind(model);
-}
-
-export function buildApiBuilderUnionKind(
-  union: ApiBuilderUnion,
-) {
-  if (!union.types.length) {
-    return b.tsUnknownKeyword();
+  if (metadata.isReferenceable(model)) {
+    return b.tsTypeReference(buildTypeQualifiedName(model));
   }
 
+  if (model.fields.length > 0) {
+    return buildApiBuilderModel(model, metadata);
+  }
+
+  return b.tsUnknownKeyword();
+}
+
+export function buildApiBuilderUnion(
+  union: ApiBuilderUnion,
+  metadata: GeneratorMetadata,
+) {
   return b.tsParenthesizedType(
     b.tsUnionType(
       union.types.map((unionType) => {
@@ -234,7 +278,7 @@ export function buildApiBuilderUnionKind(
         if (isModelType(type)) {
           return b.tsIntersectionType([
             b.tsTypeLiteral([discriminator]),
-            buildReferenceableApiBuilderModelKind(type),
+            buildApiBuilderModelReference(type, metadata),
           ]);
         }
 
@@ -244,7 +288,7 @@ export function buildApiBuilderUnionKind(
             b.tsPropertySignature(
               b.identifier('value'),
               b.tsTypeAnnotation(
-                buildReferenceableApiBuilderEnumKind(type),
+                buildApiBuilderEnumReference(type, metadata),
               ),
             ),
           ]);
@@ -272,24 +316,39 @@ export function buildApiBuilderUnionKind(
   );
 }
 
-export function buildReferenceableApiBuilderUnionKind(
+/**
+ * Similar to `buildApiBuilderUnion`, but enhanced to return a reference type
+ * when the provided `union` is known to be generated or unknown keyword
+ * when it cannot be generated due to lack of information.
+ * @param union
+ * @param metadata
+ */
+export function buildApiBuilderUnionReference(
   union: ApiBuilderUnion,
+  metadata: GeneratorMetadata,
 ) {
-  return isInternalUnion(union)
-    ? b.tsTypeReference(buildTypeIdentifier(union))
-    : buildApiBuilderUnionKind(union);
+  if (metadata.isReferenceable(union)) {
+    b.tsTypeReference(buildTypeQualifiedName(union));
+  }
+
+  if (union.types.length > 0) {
+    return buildApiBuilderUnion(union, metadata);
+  }
+
+  return b.tsUnknownKeyword();
 }
 
-export function buildApiBuilderTypeKind(
+export function buildApiBuilderType(
   type: ApiBuilderType,
+  metadata: GeneratorMetadata,
   referenceable: boolean = false,
 ): TSTypeKind {
   if (isArrayType(type)) {
-    return buildApiBuilderArrayKind(type);
+    return buildApiBuilderArrayKind(type, metadata);
   }
 
   if (isMapType(type)) {
-    return buildApiBuilderMapKind(type);
+    return buildApiBuilderMap(type, metadata);
   }
 
   if (isPrimitiveType(type)) {
@@ -298,48 +357,32 @@ export function buildApiBuilderTypeKind(
 
   if (isModelType(type)) {
     return referenceable
-      ? buildReferenceableApiBuilderModelKind(type)
-      : buildApiBuilderModelKind(type);
+      ? buildApiBuilderModelReference(type, metadata)
+      : buildApiBuilderModel(type, metadata);
   }
 
   if (isEnumType(type)) {
     return referenceable
-      ? buildReferenceableApiBuilderEnumKind(type)
-      : buildApiBuilderEnumKind(type);
+      ? buildApiBuilderEnumReference(type, metadata)
+      : buildApiBuilderEnum(type);
   }
 
   if (isUnionType(type)) {
     return referenceable
-      ? buildReferenceableApiBuilderUnionKind(type)
-      : buildApiBuilderUnionKind(type);
+      ? buildApiBuilderUnionReference(type, metadata)
+      : buildApiBuilderUnion(type, metadata);
   }
 
   return b.tsAnyKeyword();
 }
 
-export function buildReferenceableApiBuilderTypeKind(
-  type: ApiBuilderType,
-) {
-  return buildApiBuilderTypeKind(type, true);
-}
-
 export function buildApiBuilderTypeAnnotation(
   type: ApiBuilderType,
+  metadata: GeneratorMetadata,
+  referenceable: boolean = false,
 ): TSTypeAnnotationKind {
   return b.tsTypeAnnotation(
-    buildApiBuilderTypeKind(type),
-  );
-}
-
-/**
- * Similar to `buildApiBuilderTypeAnnotation`, but enhanced to return a
- * type reference for internal types.
- */
-export function buildReferenceableApiBuilderTypeAnnotation(
-  type: ApiBuilderType,
-) {
-  return b.tsTypeAnnotation(
-    buildApiBuilderTypeKind(type, true),
+    buildApiBuilderType(type, metadata, referenceable),
   );
 }
 
@@ -348,25 +391,29 @@ export function buildApiBuilderEnumTypeAliasDeclaration(
 ) {
   return b.tsTypeAliasDeclaration(
     buildTypeIdentifier(enumeration),
-    buildApiBuilderEnumKind(enumeration),
+    buildApiBuilderEnum(enumeration),
   );
 }
 
 export function buildApiBuilderModelInterfaceDeclaration(
   model: ApiBuilderModel,
+  metadata: GeneratorMetadata,
 ) {
   return b.tsInterfaceDeclaration(
     buildTypeIdentifier(model),
-    b.tsInterfaceBody(model.fields.map(field => buildApiBuilderFieldPropertySignature(field))),
+    b.tsInterfaceBody(model.fields.map(field => (
+      buildApiBuilderFieldPropertySignature(field, metadata)
+    ))),
   );
 }
 
 export function buildApiBuilderUnionTypeAliasDeclaration(
   union: ApiBuilderUnion,
+  metadata: GeneratorMetadata,
 ) {
   return b.tsTypeAliasDeclaration(
     buildTypeIdentifier(union),
-    buildApiBuilderUnionKind(union),
+    buildApiBuilderUnion(union, metadata),
   );
 }
 
@@ -380,28 +427,117 @@ export function buildApiBuilderEnumExportNamedDeclaration(
 
 export function buildApiBuilderModelExportNamedDeclaration(
   model: ApiBuilderModel,
+  metadata: GeneratorMetadata,
 ) {
   return b.exportNamedDeclaration(
-    buildApiBuilderModelInterfaceDeclaration(model),
+    buildApiBuilderModelInterfaceDeclaration(model, metadata),
   );
 }
 
 export function buildApiBuilderUnionExportNamedDeclaration(
   union: ApiBuilderUnion,
+  metadata: GeneratorMetadata,
 ) {
   return b.exportNamedDeclaration(
-    buildApiBuilderUnionTypeAliasDeclaration(union),
+    buildApiBuilderUnionTypeAliasDeclaration(union, metadata),
   );
+}
+
+export function buildApiBuilderNamespace(
+  service: ApiBuilderService,
+  type: 'models' | 'enums' | 'unions',
+  metadata: GeneratorMetadata,
+) {
+  let statements: StatementKind[] = [];
+
+  if (type === 'models') {
+    statements = service.models.map(model => (
+      buildApiBuilderModelExportNamedDeclaration(model, metadata)
+    ));
+  } else if (type === 'enums') {
+    statements = service.enums.map(enumeration => (
+      buildApiBuilderEnumExportNamedDeclaration(enumeration)
+    ));
+  } else {
+    statements = service.unions.map(union => (
+      buildApiBuilderUnionExportNamedDeclaration(union, metadata)
+    ));
+  }
+
+  const identifiers = service.namespace.split('.').map(safeIdentifier).concat([type]);
+
+  const initialIdentifier = identifiers[identifiers.length - 1];
+
+  const initialValue = b.tsModuleDeclaration(
+    b.identifier(initialIdentifier),
+    b.tsModuleBlock(statements),
+  );
+
+  return identifiers.slice(0, identifiers.length - 1).reverse().reduce(
+    (previousValue, namespace) => b.tsModuleDeclaration(
+      b.identifier(namespace),
+      previousValue,
+    ),
+    initialValue,
+  );
+}
+
+export function buildApiBuilderQualifiedTypeAliasDeclaration(
+  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+) {
+  return b.exportNamedDeclaration(
+    b.tsTypeAliasDeclaration(
+      buildTypeIdentifier(type),
+      b.tsTypeReference(
+        buildTypeQualifiedName(type),
+      ),
+    ),
+  );
+}
+
+function shortNameCompare(a1, a2) {
+  if (a1.shortName > a2.shortName) {
+    return 1;
+  }
+  if (a1.shortName < a2.shortName) {
+    return -1;
+  }
+  return 0;
 }
 
 export function buildFile(
   service: ApiBuilderService,
+  importedServices: ApiBuilderService[] = [],
 ) {
+  const metadata: GeneratorMetadata = {
+    namespaces: importedServices
+      .map(importedService => importedService.namespace)
+      .concat(service.namespace),
+    isReferenceable(type) {
+      return this.namespaces.some(namespace => type.fullName.startsWith(namespace));
+    },
+  };
+
   return b.file(
     b.program([
-      ...service.enums.map(enumeration => buildApiBuilderEnumExportNamedDeclaration(enumeration)),
-      ...service.models.map(model => buildApiBuilderModelExportNamedDeclaration(model)),
-      ...service.unions.map(union => buildApiBuilderUnionExportNamedDeclaration(union)),
+      ...flatMap(importedServices, (importedService) => {
+        return [
+          buildApiBuilderNamespace(importedService, 'enums', metadata),
+          buildApiBuilderNamespace(importedService, 'models', metadata),
+          buildApiBuilderNamespace(importedService, 'unions', metadata),
+        ];
+      }),
+      buildApiBuilderNamespace(service, 'enums', metadata),
+      buildApiBuilderNamespace(service, 'models', metadata),
+      buildApiBuilderNamespace(service, 'unions', metadata),
+      ...[
+        ...service.enums,
+        ...service.models,
+        ...service.unions,
+      ].sort(shortNameCompare).map(buildApiBuilderQualifiedTypeAliasDeclaration),
+      // ...service.enums.map(enumeration => buildApiBuilderEnumExportNamedDeclaration(enumeration)),
+      // ...service.models.map(model => buildApiBuilderModelExportNamedDeclaration(model)),
+      // ...service.unions.map(union => buildApiBuilderUnionExportNamedDeclaration(union)),
     ]),
   );
 }

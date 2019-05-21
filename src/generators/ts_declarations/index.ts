@@ -13,9 +13,11 @@ export interface InvocationForm {
 
 export function generate(form: InvocationForm): Promise<ApiBuilderFile[]> {
   return new Promise((resolve) => {
-    const { service: schema } = form;
-    const service = new ApiBuilderService(schema);
-    const ast = buildFile(service);
+    const service = new ApiBuilderService(form.service);
+    const importedServices = form.imported_services != null
+      ? form.imported_services.map(importedService => new ApiBuilderService(importedService))
+      : [];
+    const ast = buildFile(service, importedServices);
     const basename = `${service.applicationKey}.ts`;
     const dirname = service.namespace.split('.').join('/');
     resolve([
