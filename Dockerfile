@@ -1,16 +1,28 @@
-FROM node:8
+FROM node:8 AS builder
 
-ENV NODE_ENV production
-
-RUN apt-get update && apt-get install -y rsync
-RUN npm install -q -g forever
-
-ADD . /opt/apibuilder
+# Define working directory and copy source
 WORKDIR /opt/apibuilder
-
-RUN mkdir ./log
-
+COPY . .
+# Install dependencies and build application
+RUN apt-get update && apt-get install -y rsync
 RUN npm install -q
 RUN npm run build
+
+##########################
+
+FROM node:8
+ENV NODE_ENV=production
+WORKDIR /opt/apibuilder
+
+# Install dependencies for production only
+COPY ./package* ./
+RUN npm install -q
+RUN npm install -q -g forever
+
+# Copy built source from the upper builder stage
+COPY --from=builder /opt/apibuilder/dist ./dist
+COPY ./run.sh .
+
+RUN mkdir ./log
 
 ENTRYPOINT ./run.sh
