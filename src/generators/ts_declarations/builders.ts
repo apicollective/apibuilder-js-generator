@@ -32,6 +32,7 @@ import {
 import {
   camelCase,
   flatMap,
+  property,
   upperFirst,
 } from 'lodash';
 
@@ -41,7 +42,7 @@ import {
 
 // tslint:disable-next-line:interface-name
 interface GeneratorMetadata {
-  namespaces: string[];
+  indexedTypes: { [key: string]: true };
   isReferenceable: (type: ApiBuilderEnum | ApiBuilderUnion | ApiBuilderModel) => boolean;
 }
 
@@ -509,12 +510,34 @@ export function buildFile(
   service: ApiBuilderService,
   importedServices: ApiBuilderService[] = [],
 ) {
+  const indexed = (
+    // tslint:disable-next-line:array-type
+    types: (ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion)[],
+    initialValue = {},
+  ): { [key: string]: true } => types.reduce(
+    (previousValue, currentValue) => ({
+      ...previousValue,
+      [currentValue.fullName]: true,
+    }),
+    initialValue,
+  );
+
   const metadata: GeneratorMetadata = {
-    namespaces: importedServices
-      .map(importedService => importedService.namespace)
-      .concat(service.namespace),
+    indexedTypes: importedServices.reduce(
+      (previousValue, importedService) => ({
+        ...previousValue,
+        ...indexed(importedService.enums),
+        ...indexed(importedService.models),
+        ...indexed(importedService.unions),
+      }),
+      {
+        ...indexed(service.enums),
+        ...indexed(service.models),
+        ...indexed(service.unions),
+      },
+    ),
     isReferenceable(type) {
-      return this.namespaces.some(namespace => type.fullName.startsWith(namespace));
+      return this.indexedTypes[type.fullName] === true;
     },
   };
 
@@ -535,9 +558,6 @@ export function buildFile(
         ...service.models,
         ...service.unions,
       ].sort(shortNameCompare).map(buildApiBuilderQualifiedTypeAliasDeclaration),
-      // ...service.enums.map(enumeration => buildApiBuilderEnumExportNamedDeclaration(enumeration)),
-      // ...service.models.map(model => buildApiBuilderModelExportNamedDeclaration(model)),
-      // ...service.unions.map(union => buildApiBuilderUnionExportNamedDeclaration(union)),
     ]),
   );
 }
