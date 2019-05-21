@@ -16,9 +16,10 @@ export function generate(form: InvocationForm): Promise<ApiBuilderFile[]> {
     const { service: schema } = form;
     const service = new ApiBuilderService(schema);
     const ast = buildFile(service);
-
+    const basename = `${service.applicationKey}.ts`
+    const dirname = service.namespace.split('.').join('/');
     resolve([
-      new ApiBuilderFile('index.ts', '.', format(print(ast).code, {
+      new ApiBuilderFile(basename, dirname, format(print(ast).code, {
         parser: 'typescript',
         singleQuote: true,
         trailingComma: 'es5',
