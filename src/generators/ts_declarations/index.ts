@@ -12,14 +12,17 @@ export interface InvocationForm {
 }
 
 export function generate(form: InvocationForm): Promise<ApiBuilderFile[]> {
-  const { service: schema } = form;
-  const service = new ApiBuilderService(schema);
-  const ast = buildFile(service);
-  return Promise.resolve([
-    new ApiBuilderFile('index.ts', '.', format(print(ast).code, {
-      parser: 'typescript',
-      singleQuote: true,
-      trailingComma: 'es5',
-    })),
-  ]);
+  return new Promise((resolve) => {
+    const { service: schema } = form;
+    const service = new ApiBuilderService(schema);
+    const ast = buildFile(service);
+
+    resolve([
+      new ApiBuilderFile('index.ts', '.', format(print(ast).code, {
+        parser: 'typescript',
+        singleQuote: true,
+        trailingComma: 'es5',
+      })),
+    ]);
+  });
 }
