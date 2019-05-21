@@ -1,4 +1,4 @@
-import { OperationObject } from '@loopback/openapi-v3-types';
+import { OperationObject, RequestBodyObject } from '@loopback/openapi-v3-types';
 import {
   ApiBuilderBody,
   ApiBuilderOperation,
@@ -16,6 +16,16 @@ function generateOperationObject(
   service: ApiBuilderService,
   typeValidator,
 ): OperationObject {
+  const mangleOperationPath = (path: string): string => {
+    return path.replace(/[^a-zA-Z\/_]/g, '').split('/').filter(Boolean).join('-');
+  };
+
+  const generateOperationId = (path: string, method: string): string => {
+    const pathKey = mangleOperationPath(path);
+    const operationId = `${method.toLowerCase()}--${pathKey}`;
+    return operationId;
+  };
+
   const generateParameterObjectWithValidation = (parameter) => {
     return generateParameterObject(parameter, typeValidator);
   };
@@ -27,6 +37,7 @@ function generateOperationObject(
 
   return {
     description: apibuilderOperation.description,
+    operationId: generateOperationId(apibuilderOperation.path, apibuilderOperation.method),
     parameters: map(apibuilderOperation.parameters, generateParameterObjectWithValidation),
     ...apibuilderOperation.body && {
       requestBody: generateRequestBodyObjectWithValidation(apibuilderOperation.body),
