@@ -15,6 +15,7 @@ const fs = require('fs');
 const got = require('got');
 const mkdirp = require('mkdirp');
 const path = require('path');
+const uniq = require('lodash/uniq');
 
 const log = debug('apibuilder:generator');
 
@@ -27,9 +28,9 @@ let stdin = '';
 // $ ./scripts/generate.js ${cat api.json} --generator jsdoc --output ./generated
 
 async function buildInvocationForm(schema) {
-  const uris = schema.imports.map(({ organization, application }) => (
+  const uris = uniq(schema.imports.map(({ organization, application }) => (
     `https://api.apibuilder.io/${organization.key}/${application.key}/latest`
-  ));
+  )));
 
   log(`fetching imported services from: ${JSON.stringify(uris)}`);
 
