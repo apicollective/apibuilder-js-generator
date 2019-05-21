@@ -5,6 +5,7 @@ const log = require('debug')('apibuilder:generator');
 const drop = require('lodash/drop');
 const find = require('lodash/find');
 const get = require('lodash/get');
+const keys = require('lodash/keys');
 const map = require('lodash/map');
 const omit = require('lodash/omit');
 const take = require('lodash/take');
@@ -67,7 +68,14 @@ app.post('/invocations/:key', (req, res) => {
     ]);
   }
 
-  log(`Generating with[${invocationKey}] for service[${service.namespace}.${service.name}]`);
+  const scrubbedInvocationForm = {
+    attributes: keys(get(invocationForm, 'attributes')),
+    imported_services: map(get(invocationForm, 'imported_services'), importedService => `${importedService.namespace}.${importedService.name}`),
+    service: `${service.namespace}.${service.name}`,
+    user_agent: get(invocationForm, 'user_agent'),
+  };
+
+  log(`Generating [${invocationKey}] with: ${JSON.stringify(scrubbedInvocationForm)}`);
 
   return generator.generate(invocationForm).then((files) => {
     res.send({
