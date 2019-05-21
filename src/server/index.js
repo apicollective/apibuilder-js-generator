@@ -70,7 +70,10 @@ app.post('/invocations/:key', (req, res) => {
 
   const scrubbedInvocationForm = {
     attributes: keys(get(invocationForm, 'attributes')),
-    imported_services: map(get(invocationForm, 'imported_services'), importedService => `${importedService.namespace}.${importedService.name}`),
+    imported_services: map(
+      get(invocationForm, 'imported_services'),
+      importedService => `${importedService.namespace}.${importedService.name}`,
+    ),
     service: `${service.namespace}.${service.name}`,
     user_agent: get(invocationForm, 'user_agent'),
   };
