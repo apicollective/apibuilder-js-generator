@@ -44,10 +44,12 @@ import {
 
 const log = debug('apibuilder:ts_declaration:builders');
 
+type ReferenceableType = ApiBuilderEnum | ApiBuilderUnion | ApiBuilderModel;
+
 // tslint:disable-next-line:interface-name
-interface GeneratorMetadata {
+interface Metadata {
   indexedTypes: { [key: string]: true };
-  isReferenceable: (type: ApiBuilderEnum | ApiBuilderUnion | ApiBuilderModel) => boolean;
+  isReferenceable: (type: ReferenceableType) => boolean;
 }
 
 function safeIdentifier(identifier: string) {
@@ -75,7 +77,7 @@ function buildUnknownType(missingType: ApiBuilderType) {
  * @param type
  */
 export function buildTypeIdentifier(
-  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+  type: ReferenceableType,
 ) {
   return b.identifier(
     safeIdentifier(pascalCase(type.shortName)),
@@ -104,7 +106,7 @@ function buildRecursiveQualifiedName(
 }
 
 export function buildTypeQualifiedName(
-  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+  type: ReferenceableType,
 ) {
   const identifiers = type.packageName.split('.').map(safeIdentifier).concat([
     safeIdentifier(pascalCase(type.shortName)),
@@ -159,7 +161,7 @@ export function buildApiBuilderPrimitiveTypeKind(
  */
 export function buildApiBuilderArrayKind(
   array: ApiBuilderArray,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   return b.tsArrayType(
     buildApiBuilderType(array.ofType, metadata, true),
@@ -172,7 +174,7 @@ export function buildApiBuilderArrayKind(
  */
 export function buildApiBuilderFieldPropertySignature(
   field: ApiBuilderField,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   const { isRequired, name, type } = field;
 
@@ -205,7 +207,7 @@ export function buildApiBuilderEnum(
  */
 export function buildApiBuilderEnumReference(
   enumeration: ApiBuilderEnum,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   if (metadata.isReferenceable(enumeration)) {
     return b.tsTypeReference(buildTypeQualifiedName(enumeration));
@@ -220,7 +222,7 @@ export function buildApiBuilderEnumReference(
 
 export function buildApiBuilderMap(
   type: ApiBuilderMap,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   return b.tsTypeLiteral([
     b.tsIndexSignature(
@@ -237,7 +239,7 @@ export function buildApiBuilderMap(
 
 export function buildApiBuilderModel(
   model: ApiBuilderModel,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   return b.tsTypeLiteral(
     model.fields.map(field => (
@@ -255,7 +257,7 @@ export function buildApiBuilderModel(
  */
 export function buildApiBuilderModelReference(
   model: ApiBuilderModel,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   if (metadata.isReferenceable(model)) {
     return b.tsTypeReference(buildTypeQualifiedName(model));
@@ -270,7 +272,7 @@ export function buildApiBuilderModelReference(
 
 export function buildApiBuilderUnion(
   union: ApiBuilderUnion,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   return b.tsParenthesizedType(
     b.tsUnionType(
@@ -336,7 +338,7 @@ export function buildApiBuilderUnion(
  */
 export function buildApiBuilderUnionReference(
   union: ApiBuilderUnion,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   if (metadata.isReferenceable(union)) {
     b.tsTypeReference(buildTypeQualifiedName(union));
@@ -351,7 +353,7 @@ export function buildApiBuilderUnionReference(
 
 export function buildApiBuilderType(
   type: ApiBuilderType,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
   referenceable: boolean = false,
 ): TSTypeKind {
   if (isArrayType(type)) {
@@ -389,7 +391,7 @@ export function buildApiBuilderType(
 
 export function buildApiBuilderTypeAnnotation(
   type: ApiBuilderType,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
   referenceable: boolean = false,
 ): TSTypeAnnotationKind {
   return b.tsTypeAnnotation(
@@ -408,7 +410,7 @@ export function buildApiBuilderEnumTypeAliasDeclaration(
 
 export function buildApiBuilderModelInterfaceDeclaration(
   model: ApiBuilderModel,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   return b.tsInterfaceDeclaration(
     buildTypeIdentifier(model),
@@ -420,7 +422,7 @@ export function buildApiBuilderModelInterfaceDeclaration(
 
 export function buildApiBuilderUnionTypeAliasDeclaration(
   union: ApiBuilderUnion,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   return b.tsTypeAliasDeclaration(
     buildTypeIdentifier(union),
@@ -438,7 +440,7 @@ export function buildApiBuilderEnumExportNamedDeclaration(
 
 export function buildApiBuilderModelExportNamedDeclaration(
   model: ApiBuilderModel,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   return b.exportNamedDeclaration(
     buildApiBuilderModelInterfaceDeclaration(model, metadata),
@@ -447,7 +449,7 @@ export function buildApiBuilderModelExportNamedDeclaration(
 
 export function buildApiBuilderUnionExportNamedDeclaration(
   union: ApiBuilderUnion,
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   return b.exportNamedDeclaration(
     buildApiBuilderUnionTypeAliasDeclaration(union, metadata),
@@ -457,7 +459,7 @@ export function buildApiBuilderUnionExportNamedDeclaration(
 export function buildApiBuilderNamespace(
   service: ApiBuilderService,
   type: 'models' | 'enums' | 'unions',
-  metadata: GeneratorMetadata,
+  metadata: Metadata,
 ) {
   let statements: StatementKind[] = [];
 
@@ -494,7 +496,7 @@ export function buildApiBuilderNamespace(
 }
 
 export function buildApiBuilderQualifiedTypeAliasDeclaration(
-  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+  type: ReferenceableType,
 ) {
   return b.exportNamedDeclaration(
     b.tsTypeAliasDeclaration(
@@ -506,14 +508,14 @@ export function buildApiBuilderQualifiedTypeAliasDeclaration(
   );
 }
 
-function shortNameCompare(a1, a2) {
-  if (a1.shortName > a2.shortName) {
-    return 1;
-  }
-  if (a1.shortName < a2.shortName) {
-    return -1;
-  }
+function stringCompare(s1: string, s2: string) {
+  if (s1 > s2) return 1;
+  if (s1 < s2) return -1;
   return 0;
+}
+
+function shortNameCompare(t1: ReferenceableType, t2: ReferenceableType) {
+  return stringCompare(t1.shortName, t2.shortName);
 }
 
 export function buildFile(
@@ -522,7 +524,7 @@ export function buildFile(
 ) {
   const indexed = (
     // tslint:disable-next-line:array-type
-    types: (ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion)[],
+    types: ReferenceableType[],
     initialValue = {},
   ): { [key: string]: true } => types.reduce(
     (previousValue, currentValue) => ({
@@ -532,7 +534,7 @@ export function buildFile(
     initialValue,
   );
 
-  const metadata: GeneratorMetadata = {
+  const metadata: Metadata = {
     indexedTypes: importedServices.reduce(
       (previousValue, importedService) => ({
         ...previousValue,
@@ -553,7 +555,11 @@ export function buildFile(
 
   log(
     'INFO: building the following types: ' +
-    `${JSON.stringify(Object.keys(metadata.indexedTypes), null, 2)}`);
+    `${JSON.stringify(
+      Object.keys(metadata.indexedTypes).sort(stringCompare),
+      null,
+      2,
+    )}`);
 
   return b.file(
     b.program([
