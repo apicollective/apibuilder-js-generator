@@ -125,6 +125,7 @@ export function buildApiBuilderPrimitiveTypeKind(
     case Kind.DATE_ISO8601:
     case Kind.DATE_TIME_ISO8601:
     case Kind.UUID:
+    case Kind.JSON:
       return b.tsStringKeyword();
     case Kind.BOOLEAN:
       return b.tsBooleanKeyword();
