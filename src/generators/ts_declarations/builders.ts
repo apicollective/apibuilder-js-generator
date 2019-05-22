@@ -36,9 +36,13 @@ import {
   upperFirst,
 } from 'lodash';
 
+import debug from 'debug';
+
 import {
   isReservedWord,
 } from './reserved-words';
+
+const log = debug('apibuilder:ts_declaration:builders');
 
 // tslint:disable-next-line:interface-name
 interface GeneratorMetadata {
@@ -58,6 +62,11 @@ function safeIdentifier(identifier: string) {
  */
 function pascalCase(value: string) {
   return upperFirst(camelCase(value));
+}
+
+function buildUnknownType(missingType: ApiBuilderType) {
+  log(`WARN: ${missingType.toString()} is an unknown type.`);
+  return b.tsUnknownKeyword();
 }
 
 /**
@@ -139,7 +148,7 @@ export function buildApiBuilderPrimitiveTypeKind(
         ),
       ]);
     default:
-      return b.tsUnknownKeyword();
+      return buildUnknownType(type);
   }
 }
 
@@ -205,7 +214,7 @@ export function buildApiBuilderEnumReference(
     return buildApiBuilderEnum(enumeration);
   }
 
-  return b.tsUnknownKeyword();
+  return buildUnknownType(enumeration);
 }
 
 export function buildApiBuilderMap(
@@ -255,7 +264,7 @@ export function buildApiBuilderModelReference(
     return buildApiBuilderModel(model, metadata);
   }
 
-  return b.tsUnknownKeyword();
+  return buildUnknownType(model);
 }
 
 export function buildApiBuilderUnion(
@@ -336,7 +345,7 @@ export function buildApiBuilderUnionReference(
     return buildApiBuilderUnion(union, metadata);
   }
 
-  return b.tsUnknownKeyword();
+  return buildUnknownType(union);
 }
 
 export function buildApiBuilderType(
@@ -540,6 +549,10 @@ export function buildFile(
       return this.indexedTypes[type.fullName] === true;
     },
   };
+
+  log(
+    'INFO: building the following types: ' +
+    `${JSON.stringify(Object.keys(metadata.indexedTypes), null, 2)}`);
 
   return b.file(
     b.program([
