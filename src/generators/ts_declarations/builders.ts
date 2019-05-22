@@ -32,7 +32,6 @@ import {
 import {
   camelCase,
   flatMap,
-  property,
   upperFirst,
 } from 'lodash';
 
@@ -47,8 +46,9 @@ const log = debug('apibuilder:ts_declaration:builders');
 type ReferenceableType = ApiBuilderEnum | ApiBuilderUnion | ApiBuilderModel;
 
 // tslint:disable-next-line:interface-name
-interface Metadata {
-  indexedTypes: { [key: string]: true };
+interface Context {
+  knownTypes: { [key: string]: true };
+  unknownTypes: { [key: string]: true };
   isReferenceable: (type: ReferenceableType) => boolean;
 }
 
@@ -66,8 +66,11 @@ function pascalCase(value: string) {
   return upperFirst(camelCase(value));
 }
 
-function buildUnknownType(missingType: ApiBuilderType) {
-  log(`WARN: ${missingType.toString()} is an unknown type.`);
+function buildUnknownType(missingType: ApiBuilderType, context: Context) {
+  if (!context.unknownTypes.hasOwnProperty(missingType.toString())) {
+    context.unknownTypes[missingType.toString()] = true;
+  }
+
   return b.tsUnknownKeyword();
 }
 
@@ -121,6 +124,7 @@ export function buildTypeQualifiedName(
  */
 export function buildApiBuilderPrimitiveTypeKind(
   type: ApiBuilderPrimitiveType,
+  context: Context,
 ): TSTypeKind {
   switch (type.shortName) {
     case Kind.STRING:
@@ -151,7 +155,7 @@ export function buildApiBuilderPrimitiveTypeKind(
         ),
       ]);
     default:
-      return buildUnknownType(type);
+      return buildUnknownType(type, context);
   }
 }
 
@@ -161,10 +165,10 @@ export function buildApiBuilderPrimitiveTypeKind(
  */
 export function buildApiBuilderArrayKind(
   array: ApiBuilderArray,
-  metadata: Metadata,
+  context: Context,
 ) {
   return b.tsArrayType(
-    buildApiBuilderType(array.ofType, metadata, true),
+    buildApiBuilderType(array.ofType, context, true),
   );
 }
 
@@ -174,7 +178,7 @@ export function buildApiBuilderArrayKind(
  */
 export function buildApiBuilderFieldPropertySignature(
   field: ApiBuilderField,
-  metadata: Metadata,
+  context: Context,
 ) {
   const { isRequired, name, type } = field;
 
@@ -182,7 +186,7 @@ export function buildApiBuilderFieldPropertySignature(
     key: b.stringLiteral(name),
     optional: !isRequired,
     readonly: true,
-    typeAnnotation: buildApiBuilderTypeAnnotation(type, metadata, true),
+    typeAnnotation: buildApiBuilderTypeAnnotation(type, context, true),
   });
 }
 
@@ -203,13 +207,13 @@ export function buildApiBuilderEnum(
  * when `enumeration` is known to be generated or unknown keyword when it
  * cannot be generated due to lack of information.
  * @param enumeration
- * @param metadata
+ * @param context
  */
 export function buildApiBuilderEnumReference(
   enumeration: ApiBuilderEnum,
-  metadata: Metadata,
+  context: Context,
 ) {
-  if (metadata.isReferenceable(enumeration)) {
+  if (context.isReferenceable(enumeration)) {
     return b.tsTypeReference(buildTypeQualifiedName(enumeration));
   }
 
@@ -217,12 +221,12 @@ export function buildApiBuilderEnumReference(
     return buildApiBuilderEnum(enumeration);
   }
 
-  return buildUnknownType(enumeration);
+  return buildUnknownType(enumeration, context);
 }
 
 export function buildApiBuilderMap(
   type: ApiBuilderMap,
-  metadata: Metadata,
+  context: Context,
 ) {
   return b.tsTypeLiteral([
     b.tsIndexSignature(
@@ -232,18 +236,18 @@ export function buildApiBuilderMap(
           b.tsStringKeyword(),
         ),
       })],
-      buildApiBuilderTypeAnnotation(type.ofType, metadata, true),
+      buildApiBuilderTypeAnnotation(type.ofType, context, true),
     ),
   ]);
 }
 
 export function buildApiBuilderModel(
   model: ApiBuilderModel,
-  metadata: Metadata,
+  context: Context,
 ) {
   return b.tsTypeLiteral(
     model.fields.map(field => (
-      buildApiBuilderFieldPropertySignature(field, metadata)
+      buildApiBuilderFieldPropertySignature(field, context)
     )),
   );
 }
@@ -253,26 +257,26 @@ export function buildApiBuilderModel(
  * when the provided `model` is known to be generated or an unknown keyword
  * when it cannot be generated due to lack of information.
  * @param model
- * @param metadata
+ * @param context
  */
 export function buildApiBuilderModelReference(
   model: ApiBuilderModel,
-  metadata: Metadata,
+  context: Context,
 ) {
-  if (metadata.isReferenceable(model)) {
+  if (context.isReferenceable(model)) {
     return b.tsTypeReference(buildTypeQualifiedName(model));
   }
 
   if (model.fields.length > 0) {
-    return buildApiBuilderModel(model, metadata);
+    return buildApiBuilderModel(model, context);
   }
 
-  return buildUnknownType(model);
+  return buildUnknownType(model, context);
 }
 
 export function buildApiBuilderUnion(
   union: ApiBuilderUnion,
-  metadata: Metadata,
+  context: Context,
 ) {
   return b.tsParenthesizedType(
     b.tsUnionType(
@@ -291,7 +295,7 @@ export function buildApiBuilderUnion(
         if (isModelType(type)) {
           return b.tsIntersectionType([
             b.tsTypeLiteral([discriminator]),
-            buildApiBuilderModelReference(type, metadata),
+            buildApiBuilderModelReference(type, context),
           ]);
         }
 
@@ -301,7 +305,7 @@ export function buildApiBuilderUnion(
             b.tsPropertySignature(
               b.identifier('value'),
               b.tsTypeAnnotation(
-                buildApiBuilderEnumReference(type, metadata),
+                buildApiBuilderEnumReference(type, context),
               ),
             ),
           ]);
@@ -313,7 +317,7 @@ export function buildApiBuilderUnion(
             b.tsPropertySignature(
               b.identifier('value'),
               b.tsTypeAnnotation(
-                buildApiBuilderPrimitiveTypeKind(type),
+                buildApiBuilderPrimitiveTypeKind(type, context),
               ),
             ),
           ]);
@@ -334,56 +338,56 @@ export function buildApiBuilderUnion(
  * when the provided `union` is known to be generated or unknown keyword
  * when it cannot be generated due to lack of information.
  * @param union
- * @param metadata
+ * @param context
  */
 export function buildApiBuilderUnionReference(
   union: ApiBuilderUnion,
-  metadata: Metadata,
+  context: Context,
 ) {
-  if (metadata.isReferenceable(union)) {
+  if (context.isReferenceable(union)) {
     b.tsTypeReference(buildTypeQualifiedName(union));
   }
 
   if (union.types.length > 0) {
-    return buildApiBuilderUnion(union, metadata);
+    return buildApiBuilderUnion(union, context);
   }
 
-  return buildUnknownType(union);
+  return buildUnknownType(union, context);
 }
 
 export function buildApiBuilderType(
   type: ApiBuilderType,
-  metadata: Metadata,
+  context: Context,
   referenceable: boolean = false,
 ): TSTypeKind {
   if (isArrayType(type)) {
-    return buildApiBuilderArrayKind(type, metadata);
+    return buildApiBuilderArrayKind(type, context);
   }
 
   if (isMapType(type)) {
-    return buildApiBuilderMap(type, metadata);
+    return buildApiBuilderMap(type, context);
   }
 
   if (isPrimitiveType(type)) {
-    return buildApiBuilderPrimitiveTypeKind(type);
+    return buildApiBuilderPrimitiveTypeKind(type, context);
   }
 
   if (isModelType(type)) {
     return referenceable
-      ? buildApiBuilderModelReference(type, metadata)
-      : buildApiBuilderModel(type, metadata);
+      ? buildApiBuilderModelReference(type, context)
+      : buildApiBuilderModel(type, context);
   }
 
   if (isEnumType(type)) {
     return referenceable
-      ? buildApiBuilderEnumReference(type, metadata)
+      ? buildApiBuilderEnumReference(type, context)
       : buildApiBuilderEnum(type);
   }
 
   if (isUnionType(type)) {
     return referenceable
-      ? buildApiBuilderUnionReference(type, metadata)
-      : buildApiBuilderUnion(type, metadata);
+      ? buildApiBuilderUnionReference(type, context)
+      : buildApiBuilderUnion(type, context);
   }
 
   return b.tsAnyKeyword();
@@ -391,11 +395,11 @@ export function buildApiBuilderType(
 
 export function buildApiBuilderTypeAnnotation(
   type: ApiBuilderType,
-  metadata: Metadata,
+  context: Context,
   referenceable: boolean = false,
 ): TSTypeAnnotationKind {
   return b.tsTypeAnnotation(
-    buildApiBuilderType(type, metadata, referenceable),
+    buildApiBuilderType(type, context, referenceable),
   );
 }
 
@@ -410,23 +414,23 @@ export function buildApiBuilderEnumTypeAliasDeclaration(
 
 export function buildApiBuilderModelInterfaceDeclaration(
   model: ApiBuilderModel,
-  metadata: Metadata,
+  context: Context,
 ) {
   return b.tsInterfaceDeclaration(
     buildTypeIdentifier(model),
     b.tsInterfaceBody(model.fields.map(field => (
-      buildApiBuilderFieldPropertySignature(field, metadata)
+      buildApiBuilderFieldPropertySignature(field, context)
     ))),
   );
 }
 
 export function buildApiBuilderUnionTypeAliasDeclaration(
   union: ApiBuilderUnion,
-  metadata: Metadata,
+  context: Context,
 ) {
   return b.tsTypeAliasDeclaration(
     buildTypeIdentifier(union),
-    buildApiBuilderUnion(union, metadata),
+    buildApiBuilderUnion(union, context),
   );
 }
 
@@ -440,32 +444,32 @@ export function buildApiBuilderEnumExportNamedDeclaration(
 
 export function buildApiBuilderModelExportNamedDeclaration(
   model: ApiBuilderModel,
-  metadata: Metadata,
+  context: Context,
 ) {
   return b.exportNamedDeclaration(
-    buildApiBuilderModelInterfaceDeclaration(model, metadata),
+    buildApiBuilderModelInterfaceDeclaration(model, context),
   );
 }
 
 export function buildApiBuilderUnionExportNamedDeclaration(
   union: ApiBuilderUnion,
-  metadata: Metadata,
+  context: Context,
 ) {
   return b.exportNamedDeclaration(
-    buildApiBuilderUnionTypeAliasDeclaration(union, metadata),
+    buildApiBuilderUnionTypeAliasDeclaration(union, context),
   );
 }
 
 export function buildApiBuilderNamespace(
   service: ApiBuilderService,
   type: 'models' | 'enums' | 'unions',
-  metadata: Metadata,
+  context: Context,
 ) {
   let statements: StatementKind[] = [];
 
   if (type === 'models') {
     statements = service.models.map(model => (
-      buildApiBuilderModelExportNamedDeclaration(model, metadata)
+      buildApiBuilderModelExportNamedDeclaration(model, context)
     ));
   } else if (type === 'enums') {
     statements = service.enums.map(enumeration => (
@@ -473,7 +477,7 @@ export function buildApiBuilderNamespace(
     ));
   } else {
     statements = service.unions.map(union => (
-      buildApiBuilderUnionExportNamedDeclaration(union, metadata)
+      buildApiBuilderUnionExportNamedDeclaration(union, context)
     ));
   }
 
@@ -534,8 +538,8 @@ export function buildFile(
     initialValue,
   );
 
-  const metadata: Metadata = {
-    indexedTypes: importedServices.reduce(
+  const context: Context = {
+    knownTypes: importedServices.reduce(
       (previousValue, importedService) => ({
         ...previousValue,
         ...indexed(importedService.enums),
@@ -549,30 +553,26 @@ export function buildFile(
       },
     ),
     isReferenceable(type) {
-      return this.indexedTypes[type.fullName] === true;
+      return this.knownTypes[type.fullName] === true;
     },
+    unknownTypes: {},
   };
 
-  log(
-    'INFO: building the following types: ' +
-    `${JSON.stringify(
-      Object.keys(metadata.indexedTypes).sort(stringCompare),
-      null,
-      2,
-    )}`);
+  const knownTypes = Object.keys(context.knownTypes).sort(stringCompare);
+  log(`INFO: building the following types: ${JSON.stringify(knownTypes)}`);
 
-  return b.file(
+  const ast = b.file(
     b.program([
       ...flatMap(importedServices, (importedService) => {
         return [
-          buildApiBuilderNamespace(importedService, 'enums', metadata),
-          buildApiBuilderNamespace(importedService, 'models', metadata),
-          buildApiBuilderNamespace(importedService, 'unions', metadata),
+          buildApiBuilderNamespace(importedService, 'enums', context),
+          buildApiBuilderNamespace(importedService, 'models', context),
+          buildApiBuilderNamespace(importedService, 'unions', context),
         ];
       }),
-      buildApiBuilderNamespace(service, 'enums', metadata),
-      buildApiBuilderNamespace(service, 'models', metadata),
-      buildApiBuilderNamespace(service, 'unions', metadata),
+      buildApiBuilderNamespace(service, 'enums', context),
+      buildApiBuilderNamespace(service, 'models', context),
+      buildApiBuilderNamespace(service, 'unions', context),
       ...[
         ...service.enums,
         ...service.models,
@@ -580,4 +580,11 @@ export function buildFile(
       ].sort(shortNameCompare).map(buildApiBuilderQualifiedTypeAliasDeclaration),
     ]),
   );
+
+  const unknownTypes = Object.keys(context.unknownTypes).sort(stringCompare);
+  if (unknownTypes.length) {
+    log(`WARN: the following types were unknown: ${JSON.stringify(unknownTypes)}.`);
+  }
+
+  return ast;
 }
