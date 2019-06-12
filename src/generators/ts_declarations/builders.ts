@@ -345,7 +345,7 @@ export function buildApiBuilderUnionReference(
   context: Context,
 ) {
   if (context.isReferenceable(union)) {
-    b.tsTypeReference(buildTypeQualifiedName(union));
+    return b.tsTypeReference(buildTypeQualifiedName(union));
   }
 
   if (union.types.length > 0) {
