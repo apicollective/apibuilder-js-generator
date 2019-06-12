@@ -38,8 +38,8 @@ import {
 import debug from 'debug';
 
 import {
-  isReservedWord,
-} from './reserved-words';
+  checkIdentifier,
+} from '../../utilities/language';
 
 const log = debug('apibuilder:ts_declaration:builders');
 
@@ -53,7 +53,8 @@ interface Context {
 }
 
 function safeIdentifier(identifier: string) {
-  return isReservedWord(identifier)
+  const feedback = checkIdentifier(identifier);
+  return feedback.es3Warning
     ? `RESERVED_WORD_${identifier}`
     : identifier;
 }

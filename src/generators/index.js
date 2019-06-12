@@ -6,6 +6,7 @@ const propTypes = require('./prop_types');
 const nodeGraphQL = require('./node_graphql');
 const tsConstants = require('./ts_constants');
 const tsDeclarations = require('./ts_declarations');
+const tsPropTypes = require('./ts_prop_types');
 const jsdoc = require('./jsdoc');
 const openapi = require('./openapi');
 
@@ -53,6 +54,15 @@ const generators = {
     description: 'React PropTypes using es2017. Utilizes the `prop-types` npm module',
     attributes: [],
     generator: propTypes,
+  },
+
+  ts_prop_types: {
+    key: 'ts_prop_types',
+    name: 'PropType Validators',
+    language: 'TypeScript',
+    description: 'PropType Validators in TypeScript',
+    attributes: [],
+    generator: tsPropTypes,
   },
 
   ts_constants: {
