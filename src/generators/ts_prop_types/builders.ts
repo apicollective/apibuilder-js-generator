@@ -41,6 +41,7 @@ const log = debug('apibuilder:ts_prop_types');
 
 // tslint:disable-next-line:interface-name
 interface Context {
+  cache: { [key: string]: ExpressionKind };
   /**
    * This property holds the service being generated
    */
@@ -60,6 +61,11 @@ interface Context {
    */
   cyclicTypes: string[];
 }
+
+type ExpressionBuilder = (
+  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+  context: Context,
+) => ExpressionKind;
 
 function stringCompare(s1: string, s2: string) {
   if (s1 > s2) return 1;
@@ -93,48 +99,6 @@ function needsResolution(
   }
 
   return type.types.length === 0;
-}
-
-function resolveApiBuilderType(
-  type: ApiBuilderEnum,
-  context: Context,
-): ApiBuilderEnum | undefined;
-
-function resolveApiBuilderType(
-  type: ApiBuilderModel,
-  context: Context,
-): ApiBuilderModel | undefined;
-
-function resolveApiBuilderType(
-  type: ApiBuilderUnion,
-  context: Context,
-): ApiBuilderUnion | undefined;
-
-function resolveApiBuilderType(
-  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-  context: Context,
-): ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion | undefined {
-  if (!needsResolution(type)) {
-    return type;
-  }
-
-  const service = context.importedServices.find(
-    importedService => type.packageName.startsWith(importedService.namespace,
-  ));
-
-  const resolvedType = service != null
-    ? service.findTypeByName(type.fullName)
-    : undefined;
-
-  if (resolvedType != null) {
-    return resolvedType;
-  }
-
-  if (!context.unknownTypes.includes(type.fullName)) {
-    context.unknownTypes.push(type.fullName);
-  }
-
-  return undefined;
 }
 
 function buildSafePropertyKey(value: string) {
@@ -186,6 +150,44 @@ function isCyclic(
   }
 
   return false;
+}
+
+function withCache(builder: ExpressionBuilder): ExpressionBuilder {
+  return function builderWithCache(
+    type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+    context: Context,
+  ) {
+    if (context.cache[type.fullName]) {
+      return context.cache[type.fullName];
+    }
+
+    const expression = builder(type, context);
+    context.cache[type.fullName] = expression;
+    return expression;
+  };
+}
+
+function withResolution(builder: ExpressionBuilder): ExpressionBuilder {
+  return function builderWithResolution(
+    type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+    context: Context,
+  ): ExpressionKind {
+    if (!needsResolution(type)) {
+      return builder(type, context);
+    }
+
+    const service = context.importedServices.find(
+      importedService => type.packageName.startsWith(importedService.namespace,
+    ));
+
+    const resolvedType = service != null
+      ? service.findTypeByName(type.fullName)
+      : undefined;
+
+    return resolvedType != null
+      ? builder(resolvedType, context)
+      : b.memberExpression(b.identifier('propTypes'), b.identifier('any'));
+  };
 }
 
 /**
@@ -266,16 +268,9 @@ export function buildApiBuilderMapPropTypeExpression(
   );
 }
 
-export function buildApiBuilderEnumPropTypeExpression(
-  enumeration: ApiBuilderEnum | undefined,
-) {
-  if (enumeration == null) {
-    return b.memberExpression(
-      b.identifier('propTypes'),
-      b.identifier('any'),
-    );
-  }
-
+export const buildApiBuilderEnumPropTypeExpression = withResolution(withCache((
+  enumeration: ApiBuilderEnum,
+) => {
   return b.callExpression(
     b.memberExpression(
       b.identifier('propTypes'),
@@ -285,80 +280,12 @@ export function buildApiBuilderEnumPropTypeExpression(
       enumeration.values.map(value => b.literal(value.name)),
     )],
   );
-}
+}));
 
-export function buildApiBuilderFieldPropTypeExpression(
-  field: ApiBuilderField,
+export const buildApiBuilderModelPropTypeExpression = withResolution(withCache((
   model: ApiBuilderModel,
   context: Context,
-) {
-  let expression: ExpressionKind = b.memberExpression(
-    b.identifier('propTypes'),
-    b.identifier('any'),
-  );
-
-  if (!isCyclic(model, field.type)) {
-    expression = buildApiBuilderPropTypeExpression(field.type, context);
-  } else {
-    if (!context.cyclicTypes.includes(field.type.toString())) {
-      context.cyclicTypes.push(field.type.toString());
-    }
-  }
-
-  return field.isRequired
-    ? b.memberExpression(expression, b.identifier('isRequired'))
-    : expression;
-}
-
-export function buildApiBuilderEnumDeclaration(
-  enumeration: ApiBuilderEnum,
-) {
-  return b.variableDeclaration(
-    'const',
-    [b.variableDeclarator(
-      buildApiBuilderTypeIdentifier(enumeration),
-      buildApiBuilderEnumPropTypeExpression(enumeration),
-    )],
-  );
-}
-
-export function buildApiBuilderModelDeclaration(
-  model: ApiBuilderModel,
-  context: Context,
-) {
-  return b.variableDeclaration(
-    'const',
-    [b.variableDeclarator(
-      buildApiBuilderTypeIdentifier(model),
-      buildApiBuilderModelPropTypeExpression(model, context),
-    )],
-  );
-}
-
-export function buildApiBuilderUnionDeclaration(
-  union: ApiBuilderUnion,
-  context: Context,
-) {
-  return b.variableDeclaration(
-    'const',
-    [b.variableDeclarator(
-      buildApiBuilderTypeIdentifier(union),
-      buildApiBuilderUnionPropTypeExpression(union, context),
-    )],
-  );
-}
-
-export function buildApiBuilderModelPropTypeExpression(
-  model: ApiBuilderModel | undefined,
-  context: Context,
-): ExpressionKind {
-  if (model == null) {
-    return b.memberExpression(
-      b.identifier('propTypes'),
-      b.identifier('any'),
-    );
-  }
-
+): ExpressionKind => {
   return b.callExpression(
     b.memberExpression(
       b.identifier('propTypes'),
@@ -372,19 +299,12 @@ export function buildApiBuilderModelPropTypeExpression(
       )),
     )],
   );
-}
+}));
 
-export function buildApiBuilderUnionPropTypeExpression(
-  union: ApiBuilderUnion | undefined,
+export const buildApiBuilderUnionPropTypeExpression = withResolution(withCache((
+  union: ApiBuilderUnion,
   context: Context,
-) {
-  if (union == null) {
-    return b.memberExpression(
-      b.identifier('propTypes'),
-      b.identifier('any'),
-    );
-  }
-
+) => {
   return b.callExpression(
     b.memberExpression(
       b.identifier('propTypes'),
@@ -446,7 +366,7 @@ export function buildApiBuilderUnionPropTypeExpression(
               b.property(
                 'init',
                 b.identifier('value'),
-                buildApiBuilderEnumPropTypeExpression(unionType.type),
+                buildApiBuilderEnumPropTypeExpression(unionType.type, context),
               ),
             ])],
           );
@@ -477,6 +397,68 @@ export function buildApiBuilderUnionPropTypeExpression(
       }),
     )],
   );
+}));
+
+export function buildApiBuilderFieldPropTypeExpression(
+  field: ApiBuilderField,
+  model: ApiBuilderModel,
+  context: Context,
+) {
+  let expression: ExpressionKind = b.memberExpression(
+    b.identifier('propTypes'),
+    b.identifier('any'),
+  );
+
+  if (!isCyclic(model, field.type)) {
+    expression = buildApiBuilderPropTypeExpression(field.type, context);
+  } else {
+    if (!context.cyclicTypes.includes(field.type.toString())) {
+      context.cyclicTypes.push(field.type.toString());
+    }
+  }
+
+  return field.isRequired
+    ? b.memberExpression(expression, b.identifier('isRequired'))
+    : expression;
+}
+
+export function buildApiBuilderEnumDeclaration(
+  enumeration: ApiBuilderEnum,
+  context: Context,
+) {
+  return b.variableDeclaration(
+    'const',
+    [b.variableDeclarator(
+      buildApiBuilderTypeIdentifier(enumeration),
+      buildApiBuilderEnumPropTypeExpression(enumeration, context),
+    )],
+  );
+}
+
+export function buildApiBuilderModelDeclaration(
+  model: ApiBuilderModel,
+  context: Context,
+) {
+  return b.variableDeclaration(
+    'const',
+    [b.variableDeclarator(
+      buildApiBuilderTypeIdentifier(model),
+      buildApiBuilderModelPropTypeExpression(model, context),
+    )],
+  );
+}
+
+export function buildApiBuilderUnionDeclaration(
+  union: ApiBuilderUnion,
+  context: Context,
+) {
+  return b.variableDeclaration(
+    'const',
+    [b.variableDeclarator(
+      buildApiBuilderTypeIdentifier(union),
+      buildApiBuilderUnionPropTypeExpression(union, context),
+    )],
+  );
 }
 
 export function buildApiBuilderPropTypeExpression(
@@ -496,23 +478,15 @@ export function buildApiBuilderPropTypeExpression(
   }
 
   if (isEnumType(type)) {
-    return buildApiBuilderEnumPropTypeExpression(
-      resolveApiBuilderType(type, context),
-    );
+    return buildApiBuilderEnumPropTypeExpression(type, context);
   }
 
   if (isModelType(type)) {
-    return buildApiBuilderModelPropTypeExpression(
-      resolveApiBuilderType(type, context),
-      context,
-    );
+    return buildApiBuilderModelPropTypeExpression(type, context);
   }
 
   if (isUnionType(type)) {
-    return buildApiBuilderUnionPropTypeExpression(
-      resolveApiBuilderType(type, context),
-      context,
-    );
+    return buildApiBuilderUnionPropTypeExpression(type, context);
   }
 
   return b.memberExpression(
@@ -530,7 +504,7 @@ export function buildExportNameDeclaration(
   log(`DEBUG: Building AST declaration for ${type.fullName}`);
 
   if (isEnumType(type)) {
-    declaration = buildApiBuilderEnumDeclaration(type);
+    declaration = buildApiBuilderEnumDeclaration(type, context);
   } else if (isModelType(type)) {
     declaration = buildApiBuilderModelDeclaration(type, context);
   } else {
@@ -546,6 +520,7 @@ export function buildFile(
   importedServices: ApiBuilderService[] = [],
 ) {
   const context: Context = {
+    cache: {},
     cyclicTypes: [],
     importedServices,
     service,
