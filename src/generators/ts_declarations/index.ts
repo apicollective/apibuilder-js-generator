@@ -1,5 +1,4 @@
 import { ApiBuilderFile, ApiBuilderService, ApiBuilderServiceConfig } from 'apibuilder-js';
-import { format } from 'prettier';
 import { print } from 'recast';
 import { buildFile } from './builders';
 
@@ -20,12 +19,14 @@ export function generate(form: InvocationForm): Promise<ApiBuilderFile[]> {
     const ast = buildFile(service, importedServices);
     const basename = `${service.applicationKey}.ts`;
     const dirname = service.namespace.split('.').join('/');
+    const code = print(ast, {
+      quote: 'single',
+      tabWidth: 2,
+      trailingComma: true,
+      useTabs: false,
+    }).code;
     resolve([
-      new ApiBuilderFile(basename, dirname, format(print(ast).code, {
-        parser: 'typescript',
-        singleQuote: true,
-        trailingComma: 'es5',
-      })),
+      new ApiBuilderFile(basename, dirname, code),
     ]);
   });
 }

@@ -1,6 +1,5 @@
 import { ApiBuilderFile, ApiBuilderService, ApiBuilderServiceConfig } from 'apibuilder-js';
 import debug from 'debug';
-import { format } from 'prettier';
 import { print } from 'recast';
 
 import { buildFile } from './builders';
@@ -23,19 +22,18 @@ export function generate(form: InvocationForm): Promise<ApiBuilderFile[]> {
       : [];
     const basename = `${service.applicationKey}.ts`;
     const dirname = service.namespace.split('.').join('/');
-    log('DEBUG: Building AST');
+    log('INFO: Building AST');
     const ast = buildFile(service, importedServices);
-    log('DEBUG: Transforming AST to code');
-    const code = print(ast).code;
-    log('DEBUG: Formatting code');
-    const content = format(code, {
-      parser: 'typescript',
-      singleQuote: true,
-      trailingComma: 'es5',
-    });
-    log('DEBUG: Code generation completed');
+    log('INFO: Transforming AST to code');
+    const code = print(ast, {
+      quote: 'single',
+      tabWidth: 2,
+      trailingComma: true,
+      useTabs: false,
+    }).code;
+    log('INFO: Code generation completed');
     resolve([
-      new ApiBuilderFile(basename, dirname, content),
+      new ApiBuilderFile(basename, dirname, code),
     ]);
   });
 }

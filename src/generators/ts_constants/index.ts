@@ -4,7 +4,6 @@ import {
   ApiBuilderService,
 } from 'apibuilder-js';
 import { builders } from 'ast-types';
-import { format } from 'prettier';
 import { print } from 'recast';
 
 function buildFile(
@@ -37,13 +36,14 @@ export function generate(
     const ast = buildFile(service);
     const basename = `${service.applicationKey}.ts`;
     const dirname = service.namespace.split('.').join('/');
-    const content = format(print(ast).code, {
-      parser: 'typescript',
-      singleQuote: true,
-      trailingComma: 'es5',
-    });
+    const code = print(ast, {
+      quote: 'single',
+      tabWidth: 2,
+      trailingComma: true,
+      useTabs: false,
+    }).code;
     resolve([
-      new ApiBuilderFile(basename, dirname, content),
+      new ApiBuilderFile(basename, dirname, code),
     ]);
   });
 }
