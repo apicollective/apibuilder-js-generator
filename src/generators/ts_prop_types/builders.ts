@@ -527,6 +527,8 @@ export function buildExportNameDeclaration(
 ) {
   let declaration;
 
+  log(`DEBUG: Building AST declaration for ${type.fullName}`);
+
   if (isEnumType(type)) {
     declaration = buildApiBuilderEnumDeclaration(type);
   } else if (isModelType(type)) {

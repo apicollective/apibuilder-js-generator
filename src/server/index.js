@@ -8,6 +8,7 @@ const get = require('lodash/get');
 const keys = require('lodash/keys');
 const map = require('lodash/map');
 const omit = require('lodash/omit');
+const size = require('lodash/size');
 const take = require('lodash/take');
 const values = require('lodash/values');
 
@@ -78,14 +79,16 @@ app.post('/invocations/:key', (req, res) => {
     user_agent: get(invocationForm, 'user_agent'),
   };
 
-  log(`Generating [${invocationKey}] with: ${JSON.stringify(scrubbedInvocationForm)}`);
+  log(`INFO: Generating [${invocationKey}] with: ${JSON.stringify(scrubbedInvocationForm)}`);
 
   return generator.generate(invocationForm).then((files) => {
+    log(`INFO: Completed code generation for ${invocationKey} (${size(files)} Files)`);
     res.send({
       source: '',
       files,
     });
   }).catch((error) => {
+    log(`ERROR: Could not generate code for ${invocationKey}: ${error.message}`);
     // tslint:disable-next-line:no-console
     console.error(`Could not generate code for ${invocationKey}: ${error.message}`);
     // tslint:disable-next-line:no-console
