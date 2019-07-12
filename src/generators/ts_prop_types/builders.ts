@@ -26,12 +26,12 @@ import {
 
 import {
   camelCase,
+  identity,
 } from 'lodash';
 
 import debug from 'debug';
 
 import { checkIdentifier } from '../../utilities/language';
-import { sortTypes } from './sort';
 
 const log = debug('apibuilder:ts_prop_types');
 
@@ -39,45 +39,170 @@ type GeneratableType = ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion;
 
 type PropTypeExpression = namedTypes.CallExpression | namedTypes.MemberExpression;
 
+type PropTypeExpressionBuilder = (
+  type: GeneratableType,
+  context: Context,
+) => PropTypeExpression;
+
 // tslint:disable-next-line:interface-name
 interface Context {
   /**
    * This property holds prop type expressions built at runtime indexed by
    * their fully qualified name.
    */
-  cache: { [key: string]: PropTypeExpression };
+  cache: Record<string, PropTypeExpression>;
   /**
-   * This property holds the service being generated
+   * This property holds an index of all generatable types derived from the
+   * invocation form.
    */
-  service: ApiBuilderService;
+  typesByName: Record<string, GeneratableType>;
   /**
-   * This property holds the imported services for the service being generated
+   * This property holds a list of fully qualified name for unresolved types, a
+   * type missing in the invocation form. Typically, types in imported services
+   * missing their definition.
    */
-  importedServices: ApiBuilderService[];
+  unresolvedTypes: string[];
   /**
-   * This property holds a list of fully qualified name for types that are
-   * available to be generated.
-   */
-  knownTypes: string[];
-  /**
-   * This property holds the fully qualified name for types that could not be
-   * resolved from invocation form at runtime.
-   */
-  unknownTypes: string[];
-  /**
-   * This property holds the fully qualified name for types that could not be
-   * generated because of their recursive nature
+   * This property holds the fully qualified name for recursive types.
    */
   cyclicTypes: string[];
+  /**
+   * This property holds an ordered list of fully qualified name for types
+   * derived from the invocation form such that all dependencies come before
+   * the type in the ordering.
+   */
+  sortedTypes: GeneratableType[];
 }
 
-type PropTypeExpressionBuilder = (
-  type: GeneratableType,
-  context: Context,
-) => PropTypeExpression;
+type Edge = [string, string];
 
-function isGeneratableType(type: any): type is GeneratableType {
-  return isEnumType(type) || isModelType(type) || isUnionType(type);
+class Node {
+  public id: string;
+  public afters: string[];
+
+  constructor(id: string) {
+    this.id = id;
+    this.afters = [];
+  }
+}
+
+function createDependencyList(type: ApiBuilderType): Set<string> {
+  const dependencies = new Set<string>([]);
+
+  function addDependency(dependency: ApiBuilderType) {
+    if (isPrimitiveType(dependency)) return;
+    if (isArrayType(dependency) || isMapType(dependency)) return addDependency(dependency.ofType);
+    dependencies.add(dependency.toString());
+  }
+
+  if (isModelType(type)) {
+    type.fields.forEach(field => addDependency(field.type));
+  } else if (isUnionType(type)) {
+    type.types.forEach(unionType => addDependency(unionType.type));
+  }
+
+  return dependencies;
+}
+
+function createEdges(
+  dependencies: Record<string, Set<string>>,
+): Edge[] {
+  const edges = [];
+  Object.keys(dependencies).forEach((dependent) => {
+    dependencies[dependent].forEach((dependency) => {
+      edges.push([dependency, dependent]);
+    });
+  });
+  return edges;
+}
+
+function topologicalSort(edges: Edge[]) {
+  const nodes: Record<string, Node> = {};
+  const sorted: string[] = [];
+  const visited: Record<string, boolean> = {};
+  const cyclic: string[] = [];
+
+  edges.forEach(([from, to]) => {
+    if (!nodes[from]) nodes[from] = new Node(from);
+    if (!nodes[to]) nodes[to] = new Node(to);
+    nodes[from].afters.push(to);
+  });
+
+  function visit(key: string, ancestors: string[] = []) {
+    const node = nodes[key];
+    const id = node.id;
+
+    if (visited[key]) return;
+
+    ancestors.push(id);
+    visited[key] = true;
+    node.afters.forEach((afterId) => {
+      // When there are cycles, there is no definite order, so that would make
+      // the order ambiguous. We are going to record the cyclic type to return
+      // as feedback to the generator.
+      if (ancestors.includes(afterId)) {
+        cyclic.push(id);
+      } else {
+        visit(afterId.toString(), ancestors.map(identity));
+      }
+    });
+
+    sorted.unshift(id);
+  }
+
+  Object.keys(nodes).forEach((key) => {
+    visit(key);
+  });
+
+  return {
+    cyclicTypes: cyclic,
+    sortedTypes: sorted,
+  };
+}
+
+export function createContext(
+  services: ApiBuilderService[],
+): Context {
+  const typesByName: Record<string, GeneratableType> = services.reduce(
+    (result, service) => {
+      service.enums.forEach(enumeration => result[enumeration.toString()] = enumeration);
+      service.models.forEach(model => result[model.toString()] = model);
+      service.unions.forEach(union => result[union.toString()] = union);
+      return result;
+    },
+    {},
+  );
+
+  const dependencies = Object.entries(typesByName).reduce(
+    (previousValue, [key, value]) => {
+      return Object.assign(previousValue, {
+        [key]: createDependencyList(value),
+      });
+    },
+    {},
+  );
+
+  const {
+    cyclicTypes,
+    sortedTypes,
+  } = topologicalSort(createEdges(dependencies));
+
+  // Types not included in the topological graph because they are independent
+  // and can be added at any position in the ordered list.
+  const orphanTypes = Object.keys(typesByName)
+    .filter(key => !sortedTypes.includes(key));
+
+  // Types not included in the invocation form.
+  const unresolvedTypes = sortedTypes.filter(key => typesByName[key] == null);
+
+  return {
+    cache: {},
+    cyclicTypes,
+    sortedTypes: sortedTypes.concat(orphanTypes).map(key => typesByName[key]).filter(Boolean),
+    // tslint:disable-next-line:object-shorthand-properties-first
+    typesByName,
+    unresolvedTypes,
+  };
 }
 
 function stringCompare(s1: string, s2: string) {
@@ -150,25 +275,20 @@ function withResolution(builder: PropTypeExpressionBuilder): PropTypeExpressionB
     type: GeneratableType,
     context: Context,
   ): PropTypeExpression {
-    if (!needsResolution(type)) {
-      return builder(type, context);
+    if (context.unresolvedTypes.includes(type.fullName)) {
+      return buildAnyPropTypeExpression();
     }
 
-    const service = context.importedServices.find(
-      importedService => type.packageName.startsWith(importedService.namespace),
-    );
-
-    const resolvedType = service != null
-      ? service.findTypeByName(type.fullName)
-      : undefined;
-
-    if (resolvedType != null) {
-      return builder(resolvedType, context);
-    }
-
-    context.unknownTypes.push(type.toString());
-    return b.memberExpression(b.identifier('propTypes'), b.identifier('any'));
+    const resolvedType = needsResolution(type) ? context.typesByName[type.fullName] : type;
+    return builder(resolvedType, context);
   };
+}
+
+function buildAnyPropTypeExpression() {
+  return b.memberExpression(
+    b.identifier('propTypes'),
+    b.identifier('any'),
+  );
 }
 
 function buildNestedMemberExpression(
@@ -282,10 +402,7 @@ function buildPrimitivePropTypeExpression(
         b.identifier('object'),
       );
     default:
-      return b.memberExpression(
-        b.identifier('propTypes'),
-        b.identifier('any'),
-      );
+      return buildAnyPropTypeExpression();
   }
 }
 
@@ -494,17 +611,6 @@ function buildUnionVariableDeclaration(
   );
 }
 
-const buildGeneratablePropTypeReferenceExpression = withResolution((type) => {
-  const identifiers = type.packageName
-    .split('.')
-    .concat(type.shortName)
-    .map(camelCase)
-    .map(safeIdentifier)
-    .map(b.identifier);
-
-  return buildNestedMemberExpression(identifiers);
-});
-
 function buildPropTypeReferenceExpression(
   type: ApiBuilderType,
   context: Context,
@@ -533,7 +639,22 @@ function buildPropTypeReferenceExpression(
     );
   }
 
-  return buildGeneratablePropTypeReferenceExpression(type, context);
+  if (context.cyclicTypes.includes(type.fullName)) {
+    return buildAnyPropTypeExpression();
+  }
+
+  if (context.unresolvedTypes.includes(type.fullName)) {
+    return buildAnyPropTypeExpression();
+  }
+
+  const identifiers = type.packageName
+    .split('.')
+    .concat(type.shortName)
+    .map(camelCase)
+    .map(safeIdentifier)
+    .map(b.identifier);
+
+  return buildNestedMemberExpression(identifiers);
 }
 
 function buildPropTypeExpression(
@@ -564,10 +685,7 @@ function buildPropTypeExpression(
     return buildUnionPropTypeExpression(type, context);
   }
 
-  return b.memberExpression(
-    b.identifier('propTypes'),
-    b.identifier('any'),
-  );
+  return buildAnyPropTypeExpression();
 }
 
 function buildTypeExportNamedDeclaration(
@@ -610,18 +728,23 @@ export function buildFile(
   service: ApiBuilderService,
   importedServices: ApiBuilderService[] = [],
 ) {
-  const sortedTypes = sortTypes(importedServices.concat(service));
+  const allServices = importedServices.concat([service]);
+  const context = createContext(allServices);
 
-  const context: Context = {
-    cache: {},
-    cyclicTypes: [],
-    importedServices,
-    knownTypes: sortedTypes.map(type => type.fullName),
-    service,
-    unknownTypes: [],
-  };
+  if (context.unresolvedTypes.length) {
+    log(
+      'WARN: the following types could not be resolved and will be ignored: '
+      + `${JSON.stringify(context.unresolvedTypes)}`,
+    );
+  }
 
-  const declarations = buildTypeModuleDeclarations(sortedTypes, context);
+  if (context.cyclicTypes.length) {
+    log(
+      'WARN: the following types are cyclic and will be ignored: '
+      + `${JSON.stringify(context.cyclicTypes)}`);
+  }
+
+  const declarations = buildTypeModuleDeclarations(context.sortedTypes, context);
 
   const aliases = [
     ...service.enums,
@@ -637,14 +760,6 @@ export function buildFile(
     ...declarations,
     ...aliases,
   ]));
-
-  if (context.unknownTypes.length) {
-    log(`WARN: the following types were unknown: ${JSON.stringify(context.unknownTypes)}.`);
-  }
-
-  if (context.cyclicTypes.length) {
-    log(`WARN: the following types were cyclic: ${JSON.stringify(context.cyclicTypes)}`);
-  }
 
   return ast;
 }
