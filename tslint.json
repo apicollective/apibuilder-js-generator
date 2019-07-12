@@ -7,6 +7,9 @@
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
     "object-literal-sort-keys": false
   },
+  "rules": {
+    "array-type": false
+  },
   "defaultSeverity": "error",
   "rulesDirectory": []
 }
