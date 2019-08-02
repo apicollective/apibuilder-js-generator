@@ -16,19 +16,10 @@ import {
   isPrimitiveType,
   Kind,
 } from 'apibuilder-js';
-
-import {
-  builders as b,
-  namedTypes,
-} from 'ast-types';
-
-import {
-  camelCase,
-} from 'lodash';
-
+import { builders as b, namedTypes } from 'ast-types';
 import debug from 'debug';
-
-import { Context, buildModuleDeclarations } from '../../builders';
+import { camelCase } from 'lodash';
+import { Context } from '../../builders';
 import { checkIdentifier } from '../../utilities/language';
 
 const log = debug('apibuilder:ts_prop_types');
@@ -83,7 +74,7 @@ function withCache(builder: PropTypeExpressionBuilder): PropTypeExpressionBuilde
  * generated prop type declarations.
  */
 function withReference(
-  builder: PropTypeExpressionBuilder
+  builder: PropTypeExpressionBuilder,
 ): PropTypeExpressionBuilder {
   const referenceable = {};
   return function buildWithReference(
@@ -97,7 +88,7 @@ function withReference(
     const expression = builder(type, context);
     referenceable[type.fullName] = true;
     return expression;
-  }
+  };
 }
 
 export function buildTypeIdentifier(
@@ -409,11 +400,17 @@ export function buildFile(context: Context) {
   } = context;
 
   if (unresolvedTypes.length) {
-    log(`WARN: the following types could not be resolved and will be ignored: ${JSON.stringify(unresolvedTypes)}`);
+    log(
+      'WARN: the following types could not be resolved and will be ignored: '
+      + `${JSON.stringify(unresolvedTypes)}`,
+    );
   }
 
   if (cyclicTypes.length) {
-    log(`WARN: the following types are circular and will be ignored: ${JSON.stringify(cyclicTypes)}`);
+    log(
+      'WARN: the following types are circular and will be ignored: '
+      + `${JSON.stringify(cyclicTypes)}`,
+    );
   }
 
   const declarations = sortedTypes

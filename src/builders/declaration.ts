@@ -2,7 +2,9 @@ import {
   ApiBuilderArray,
   ApiBuilderEnum,
   ApiBuilderField,
+  ApiBuilderMap,
   ApiBuilderModel,
+  ApiBuilderPrimitiveType,
   ApiBuilderService,
   ApiBuilderType,
   ApiBuilderUnion,
@@ -11,14 +13,12 @@ import {
   isMapType,
   isModelType,
   isPrimitiveType,
-  ApiBuilderMap,
-  ApiBuilderPrimitiveType,
   Kind,
 } from 'apibuilder-js';
 import { builders as b, namedTypes } from 'ast-types';
 import { camelCase, upperFirst } from 'lodash';
-import { Context } from './types';
 import { checkIdentifier } from '../utilities/language';
+import { Context } from './types';
 
 function pascalCase(
   value: string,
@@ -55,35 +55,35 @@ function buildPrimitiveType(
   type: ApiBuilderPrimitiveType,
 ) {
   switch (type.shortName) {
-  case Kind.STRING:
-  case Kind.DATE_ISO8601:
-  case Kind.DATE_TIME_ISO8601:
-  case Kind.UUID:
-  case Kind.JSON:
-    return b.tsStringKeyword();
-  case Kind.BOOLEAN:
-    return b.tsBooleanKeyword();
-  case Kind.DECIMAL:
-  case Kind.DOUBLE:
-  case Kind.INTEGER:
-  case Kind.LONG:
-    return b.tsNumberKeyword();
-  case Kind.OBJECT:
-    return b.tsTypeLiteral([
-      b.tsIndexSignature(
-        [b.identifier.from({
-          name: 'key',
-          typeAnnotation: b.tsTypeAnnotation(
+    case Kind.STRING:
+    case Kind.DATE_ISO8601:
+    case Kind.DATE_TIME_ISO8601:
+    case Kind.UUID:
+    case Kind.JSON:
+      return b.tsStringKeyword();
+    case Kind.BOOLEAN:
+      return b.tsBooleanKeyword();
+    case Kind.DECIMAL:
+    case Kind.DOUBLE:
+    case Kind.INTEGER:
+    case Kind.LONG:
+      return b.tsNumberKeyword();
+    case Kind.OBJECT:
+      return b.tsTypeLiteral([
+        b.tsIndexSignature(
+          [b.identifier.from({
+            name: 'key',
+            typeAnnotation: b.tsTypeAnnotation(
+              b.tsStringKeyword(),
+            ),
+          })],
+          b.tsTypeAnnotation(
             b.tsStringKeyword(),
           ),
-        })],
-        b.tsTypeAnnotation(
-          b.tsStringKeyword(),
         ),
-      ),
-    ]);
-  default:
-    return buildUnknownType();
+      ]);
+    default:
+      return buildUnknownType();
   }
 }
 
@@ -104,7 +104,7 @@ function buildMapType(
         name: 'key',
         typeAnnotation: b.tsTypeAnnotation(b.tsStringKeyword()),
       }),
-    ], buildTypeAnnotation(map.ofType, context)),
+    ],                 buildTypeAnnotation(map.ofType, context)),
   ]);
 }
 
@@ -120,7 +120,7 @@ function buildEnumType(
 
 function buildModelType(
   model: ApiBuilderModel,
-  context: Context
+  context: Context,
 ): namedTypes.TSTypeLiteral {
   return b.tsTypeLiteral(
     model.fields.map(field => buildFieldPropertySignature(field, context)),
@@ -211,7 +211,7 @@ export function buildTypeQualifiedName(
  * Returns `TSTypeReference` for the specified type.
  */
 export function buildTypeReference(
-  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion
+  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
 ): namedTypes.TSTypeReference {
   return b.tsTypeReference(buildTypeQualifiedName(type));
 }
@@ -261,7 +261,7 @@ function buildFieldPropertySignature(
 }
 
 function buildEnumDeclaration(
-  enumeration: ApiBuilderEnum
+  enumeration: ApiBuilderEnum,
 ): namedTypes.TSTypeAliasDeclaration {
   return b.tsTypeAliasDeclaration(
     buildTypeIdentifier(enumeration),
@@ -293,7 +293,7 @@ function buildUnionDeclaration(
 
 function buildModuleIdentifiers(
   service: ApiBuilderService,
-  type: 'enums' | 'models' | 'unions'
+  type: 'enums' | 'models' | 'unions',
 ): namedTypes.Identifier[] {
   return service.namespace.split('.').map(safeIdentifier).concat([type]).map(b.identifier);
 }
@@ -304,13 +304,16 @@ function buildModuleDeclaration(
 ): namedTypes.TSModuleDeclaration {
   function recurse(
     left: namedTypes.Identifier[],
-    right: namedTypes.TSModuleDeclaration
+    right: namedTypes.TSModuleDeclaration,
   ): namedTypes.TSModuleDeclaration {
     if (!identifiers.length) return right;
     return recurse(left, b.tsModuleDeclaration(left.pop(), right));
   }
 
-  return recurse(identifiers, b.tsModuleDeclaration(identifiers.pop(), b.tsModuleBlock(declarations)));
+  return recurse(
+    identifiers,
+    b.tsModuleDeclaration(identifiers.pop(), b.tsModuleBlock(declarations)),
+  );
 }
 
 function buildEnumModuleDeclaration(
@@ -346,7 +349,7 @@ function buildUnionModuleDeclaration(
 }
 
 export function buildModuleDeclarations(
-  context: Context
+  context: Context,
 ): namedTypes.TSModuleDeclaration[] {
   const modules: namedTypes.TSModuleDeclaration[] = [];
   const services = context.importedServices.concat(context.rootService);

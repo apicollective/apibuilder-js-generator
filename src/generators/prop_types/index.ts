@@ -1,8 +1,8 @@
 import { ApiBuilderFile } from 'apibuilder-js';
-import { print } from 'recast';
 import debug from 'debug';
+import { print } from 'recast';
 
-import { Context, InvocationForm, buildContext } from '../../builders';
+import { buildContext, Context, InvocationForm } from '../../builders';
 import { buildFile } from './builders';
 import { buildTypeDeclarationFile } from './declarations';
 
@@ -32,7 +32,7 @@ function generateTypeDeclarations(
   context: Context,
 ): ApiBuilderFile {
   const { rootService } = context;
-  log('INFO: Building AST for type declaration file...')
+  log('INFO: Building AST for type declaration file...');
   const ast = buildTypeDeclarationFile(context);
   log('INFO: Transforming AST to code...');
   const code = print(ast, {

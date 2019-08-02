@@ -1,9 +1,9 @@
 import {
   ApiBuilderService,
   ApiBuilderType,
-  isPrimitiveType,
   isEnclosingType,
   isModelType,
+  isPrimitiveType,
   isUnionType,
 } from 'apibuilder-js';
 
@@ -15,6 +15,7 @@ type DependencyRecord = Record<string, Set<string>>;
 
 type Edge = [string, string];
 
+// tslint:disable-next-line: interface-name
 interface Node {
   id: string;
   afters: string[];
@@ -29,7 +30,7 @@ class Node implements Node {
 
 function buildDependencyList(
   type: ApiBuilderType,
-) {1
+) {
   const dependencies = new Set<string>([]);
 
   function add(dependency: ApiBuilderType) {
@@ -50,11 +51,14 @@ function buildDependencyList(
 }
 
 function buildDependencyRecord(types: TypeRecord) {
-  return Object.entries(types).reduce<DependencyRecord>((previousValue, [name, type]) => {
-    return Object.assign({}, previousValue, {
-      [name]: buildDependencyList(type),
-    });
-  }, {});
+  return Object.entries(types).reduce<DependencyRecord>(
+    (previousValue, [name, type]) => {
+      return Object.assign({}, previousValue, {
+        [name]: buildDependencyList(type),
+      });
+    },
+    {},
+  );
 }
 
 function buildTypeRecord(services: ApiBuilderService[]) {
@@ -72,7 +76,7 @@ function buildTypeRecord(services: ApiBuilderService[]) {
     });
 
     return previousValue;
-  }, {});
+  },                                 {});
 }
 
 function topologicalSort(dependencies: DependencyRecord) {
@@ -128,7 +132,6 @@ function topologicalSort(dependencies: DependencyRecord) {
   };
 }
 
-
 export function buildContext(
   invocationForm: InvocationForm,
 ): Context {
@@ -148,10 +151,12 @@ export function buildContext(
 
   return {
     cyclicTypes,
-    sortedTypes: sortedTypes.concat(orphanTypes),
-    typesByName,
-    unresolvedTypes,
-    rootService,
     importedServices,
+    rootService,
+    sortedTypes: sortedTypes.concat(orphanTypes),
+    // tslint:disable-next-line: object-shorthand-properties-first
+    typesByName,
+    // tslint:disable-next-line: object-shorthand-properties-first
+    unresolvedTypes,
   };
 }

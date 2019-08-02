@@ -1,9 +1,9 @@
 import { ApiBuilderFile } from 'apibuilder-js';
-import { print } from 'recast';
 import debug from 'debug';
+import { print } from 'recast';
 
+import { buildContext, InvocationForm } from '../../builders';
 import { buildFile } from './builders';
-import { InvocationForm, buildContext } from '../../builders';
 
 const log = debug('apibuilder:ts_declarations');
 

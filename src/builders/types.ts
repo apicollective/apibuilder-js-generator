@@ -1,11 +1,12 @@
 import {
-  ApiBuilderServiceConfig,
   ApiBuilderEnum,
   ApiBuilderModel,
-  ApiBuilderUnion,
   ApiBuilderService,
+  ApiBuilderServiceConfig,
+  ApiBuilderUnion,
 } from 'apibuilder-js';
 
+// tslint:disable-next-line: interface-name
 export interface InvocationForm {
   readonly service: ApiBuilderServiceConfig;
   readonly attributes: Record<string, string>;
@@ -15,6 +16,7 @@ export interface InvocationForm {
 
 export type TypeRecord = Record<string, (ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion)>;
 
+// tslint:disable-next-line: interface-name
 export interface Context {
   /**
    * This property holds types indexed by their fully qualified name.

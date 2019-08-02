@@ -1,6 +1,6 @@
 import { builders as b } from 'ast-types';
 import { camelCase } from 'lodash';
-import { Context, buildModuleDeclarations, buildTypeReference } from '../../builders';
+import { buildModuleDeclarations, buildTypeReference, Context } from '../../builders';
 import { safeIdentifier } from './builders';
 
 export function buildTypeDeclarationFile(context: Context) {
@@ -20,16 +20,16 @@ export function buildTypeDeclarationFile(context: Context) {
       return b.exportNamedDeclaration.from({
         // @ts-ignore
         declaration: {
-          type: 'VariableDeclaration',
-          kind: 'const',
-          declare: true,
           declarations: [
             b.variableDeclarator.from({
               id: b.identifier.from({
                 name: safeIdentifier(camelCase(type.shortName)),
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.tsQualifiedName(b.identifier('PropTypes'), b.identifier('Requireable')),
+                    typeName: b.tsQualifiedName(
+                      b.identifier('PropTypes'),
+                      b.identifier('Requireable'),
+                    ),
                     typeParameters: b.tsTypeParameterInstantiation.from({
                       params: [buildTypeReference(type)],
                     }),
@@ -38,6 +38,9 @@ export function buildTypeDeclarationFile(context: Context) {
               }),
             }),
           ],
+          declare: true,
+          kind: 'const',
+          type: 'VariableDeclaration',
         },
       });
     });
