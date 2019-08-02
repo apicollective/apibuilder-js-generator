@@ -7,7 +7,6 @@ import {
   ApiBuilderMap,
   ApiBuilderModel,
   ApiBuilderPrimitiveType,
-  ApiBuilderService,
   ApiBuilderType,
   ApiBuilderUnion,
   isArrayType,
@@ -15,7 +14,6 @@ import {
   isMapType,
   isModelType,
   isPrimitiveType,
-  isUnionType,
   Kind,
 } from 'apibuilder-js';
 
@@ -26,17 +24,15 @@ import {
 
 import {
   camelCase,
-  identity,
 } from 'lodash';
 
 import debug from 'debug';
 
-import { Context } from '../../builders';
+import { Context, buildModuleDeclarations } from '../../builders';
 import { checkIdentifier } from '../../utilities/language';
 
 const log = debug('apibuilder:ts_prop_types');
 
-const INDEX_IDENTIFIER = 'T';
 const PROP_TYPES_IDENTIFIER = 'PropTypes';
 
 type PropTypeExpression =
@@ -49,7 +45,7 @@ type PropTypeExpressionBuilder = (
   context: Context,
 ) => PropTypeExpression;
 
-function safeIdentifier(value: string) {
+export function safeIdentifier(value: string) {
   const feedback = checkIdentifier(value);
   return feedback.es3Warning
     ? `UNSAFE_${value}`
@@ -104,7 +100,7 @@ function withReference(
   }
 }
 
-function buildTypeIdentifier(
+export function buildTypeIdentifier(
   type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
 ): namedTypes.Identifier {
   const identifier = safeIdentifier(camelCase(type.shortName));
@@ -390,14 +386,18 @@ function buildPropTypeDeclaration(
   type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
   context: Context,
 ) {
-  return b.exportNamedDeclaration(
-    b.variableDeclaration('const', [
-      b.variableDeclarator(
-        buildTypeIdentifier(type),
-        buildPropTypeExpression(type, context),
-      ),
-    ]),
-  );
+  const variable = b.variableDeclaration('const', [
+    b.variableDeclarator(
+      buildTypeIdentifier(type),
+      buildPropTypeExpression(type, context),
+    ),
+  ]);
+
+  if (type.packageName.startsWith(context.rootService.namespace)) {
+    return b.exportNamedDeclaration(variable);
+  }
+
+  return variable;
 }
 
 export function buildFile(context: Context) {
@@ -430,8 +430,4 @@ export function buildFile(context: Context) {
   ]));
 
   return ast;
-}
-
-export function buildTypeDeclarationFile(context: Context) {
-
 }
