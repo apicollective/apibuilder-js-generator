@@ -1,6 +1,6 @@
 {
   "name": "apibuilder-javascript-generator",
-  "version": "0.0.75",
+  "version": "0.0.76",
   "description": "apibuilder code generators for JavaScript",
   "main": "index.js",
   "scripts": {
