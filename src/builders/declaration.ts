@@ -263,32 +263,32 @@ function buildFieldPropertySignature(
 function buildEnumDeclaration(
   enumeration: ApiBuilderEnum,
 ): namedTypes.TSTypeAliasDeclaration {
-  return b.tsTypeAliasDeclaration(
-    buildTypeIdentifier(enumeration),
-    buildEnumType(enumeration),
-  );
+  return b.tsTypeAliasDeclaration.from({
+    id: buildTypeIdentifier(enumeration),
+    typeAnnotation: buildEnumType(enumeration),
+  });
 }
 
 function buildModelDeclaration(
   model: ApiBuilderModel,
   context: Context,
 ): namedTypes.TSInterfaceDeclaration {
-  return b.tsInterfaceDeclaration(
-    buildTypeIdentifier(model),
-    b.tsInterfaceBody(
-      model.fields.map(field => buildFieldPropertySignature(field, context)),
-    ),
-  );
+  return b.tsInterfaceDeclaration.from({
+    body: b.tsInterfaceBody.from({
+      body: model.fields.map(field => buildFieldPropertySignature(field, context)),
+    }),
+    id: buildTypeIdentifier(model),
+  });
 }
 
 function buildUnionDeclaration(
   union: ApiBuilderUnion,
   context: Context,
 ): namedTypes.TSTypeAliasDeclaration {
-  return b.tsTypeAliasDeclaration(
-    buildTypeIdentifier(union),
-    buildUnionType(union, context),
-  );
+  return b.tsTypeAliasDeclaration.from({
+    id: buildTypeIdentifier(union),
+    typeAnnotation: buildUnionType(union, context),
+  });
 }
 
 function buildModuleIdentifiers(
@@ -300,19 +300,27 @@ function buildModuleIdentifiers(
 
 function buildModuleDeclaration(
   identifiers: namedTypes.Identifier[],
-  declarations: namedTypes.ExportNamedDeclaration[],
+  declarations: (namedTypes.TSInterfaceDeclaration | namedTypes.TSTypeAliasDeclaration)[],
 ): namedTypes.TSModuleDeclaration {
   function recurse(
     left: namedTypes.Identifier[],
     right: namedTypes.TSModuleDeclaration,
   ): namedTypes.TSModuleDeclaration {
     if (!identifiers.length) return right;
-    return recurse(left, b.tsModuleDeclaration(left.pop(), right));
+    return recurse(left, b.tsModuleDeclaration.from({
+      body: right,
+      declare: true,
+      id: left.pop(),
+    }));
   }
 
   return recurse(
     identifiers,
-    b.tsModuleDeclaration(identifiers.pop(), b.tsModuleBlock(declarations)),
+    b.tsModuleDeclaration.from({
+      body: b.tsModuleBlock(declarations),
+      declare: true,
+      id: identifiers.pop(),
+    }),
   );
 }
 
@@ -321,8 +329,7 @@ function buildEnumModuleDeclaration(
 ): namedTypes.TSModuleDeclaration {
   const identifiers = buildModuleIdentifiers(service, 'enums');
   const declarations = service.enums
-    .map(enumeration => buildEnumDeclaration(enumeration))
-    .map(declaration => b.exportNamedDeclaration(declaration));
+    .map(enumeration => buildEnumDeclaration(enumeration));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -332,8 +339,7 @@ function buildModelModuleDeclaration(
 ) {
   const identifiers = buildModuleIdentifiers(service, 'models');
   const declarations = service.models
-    .map(model => buildModelDeclaration(model, context))
-    .map(declaration => b.exportNamedDeclaration(declaration));
+    .map(model => buildModelDeclaration(model, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -343,8 +349,7 @@ function buildUnionModuleDeclaration(
 ) {
   const identifiers = buildModuleIdentifiers(service, 'unions');
   const declarations = service.unions
-    .map(union => buildUnionDeclaration(union, context))
-    .map(declaration => b.exportNamedDeclaration(declaration));
+    .map(union => buildUnionDeclaration(union, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
