@@ -24,6 +24,7 @@ import { checkIdentifier } from '../../utilities/language';
 
 const log = debug('apibuilder:ts_prop_types');
 
+const INDEX_IDENTIFIER = 'T';
 const PROP_TYPES_IDENTIFIER = 'PropTypes';
 
 type PropTypeExpression =
@@ -35,6 +36,19 @@ type PropTypeExpressionBuilder = (
   type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
   context: Context,
 ) => PropTypeExpression;
+
+function stringCompare(s1: string, s2: string) {
+  if (s1 > s2) return 1;
+  if (s1 < s2) return -1;
+  return 0;
+}
+
+function shortNameCompare(
+  t1: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+  t2: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+) {
+  return stringCompare(t1.shortName, t2.shortName);
+}
 
 export function safeIdentifier(value: string) {
   const feedback = checkIdentifier(value);
@@ -48,47 +62,6 @@ function buildSafePropertyKey(value: string) {
   return feedback.needsQuotes
     ? b.literal(value)
     : b.identifier(value);
-}
-
-/**
- * Higher order function used to automatically cache AST builder results
- */
-function withCache(builder: PropTypeExpressionBuilder): PropTypeExpressionBuilder {
-  const cache = {};
-  return function builderWithCache(
-    type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-    context: Context,
-  ): PropTypeExpression {
-    if (cache[type.fullName]) {
-      return cache[type.fullName];
-    }
-
-    const expression = builder(type, context);
-    cache[type.fullName] = expression;
-    return expression;
-  };
-}
-
-/**
- * Higher order function used to automatically return a reference for
- * generated prop type declarations.
- */
-function withReference(
-  builder: PropTypeExpressionBuilder,
-): PropTypeExpressionBuilder {
-  const referenceable = {};
-  return function buildWithReference(
-    type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-    context: Context,
-  ): PropTypeExpression {
-    if (referenceable[type.fullName]) {
-      return buildPropTypeReference(type, context);
-    }
-
-    const expression = builder(type, context);
-    referenceable[type.fullName] = true;
-    return expression;
-  };
 }
 
 export function buildTypeIdentifier(
@@ -167,9 +140,9 @@ function buildMapPropTypeExpression(
   );
 }
 
-const buildEnumPropTypeExpression = withReference(withCache((
+function buildEnumPropTypeExpression(
   enumeration: ApiBuilderEnum,
-): PropTypeExpression => {
+): PropTypeExpression {
   return b.callExpression(
     b.memberExpression(
       b.identifier(PROP_TYPES_IDENTIFIER),
@@ -179,12 +152,12 @@ const buildEnumPropTypeExpression = withReference(withCache((
       enumeration.values.map(value => b.literal(value.name)),
     )],
   );
-}));
+}
 
-const buildModelPropTypeExpression = withReference(withCache((
+function buildModelPropTypeExpression(
   model: ApiBuilderModel,
   context: Context,
-): PropTypeExpression => {
+): PropTypeExpression {
   return b.callExpression(
     b.memberExpression(
       b.identifier(PROP_TYPES_IDENTIFIER),
@@ -198,12 +171,12 @@ const buildModelPropTypeExpression = withReference(withCache((
       )),
     )],
   );
-}));
+}
 
-const buildUnionPropTypeExpression = withReference(withCache((
+function buildUnionPropTypeExpression(
   union: ApiBuilderUnion,
   context: Context,
-): PropTypeExpression => {
+): PropTypeExpression {
   return b.callExpression(
     b.memberExpression(
       b.identifier(PROP_TYPES_IDENTIFIER),
@@ -259,7 +232,7 @@ const buildUnionPropTypeExpression = withReference(withCache((
               b.property(
                 'init',
                 b.identifier('value'),
-                buildEnumPropTypeExpression(unionType.type, context),
+                buildPropTypeReference(unionType.type, context),
               ),
             ])],
           );
@@ -290,7 +263,7 @@ const buildUnionPropTypeExpression = withReference(withCache((
       }),
     )],
   );
-}));
+}
 
 function buildFieldPropTypeExpression(
   field: ApiBuilderField,
@@ -305,7 +278,7 @@ function buildFieldPropTypeExpression(
 function buildPropTypeReference(
   type: ApiBuilderType,
   context: Context,
-): namedTypes.MemberExpression | namedTypes.CallExpression | namedTypes.Identifier {
+): PropTypeExpression {
   const {
     cyclicTypes,
     unresolvedTypes,
@@ -343,7 +316,11 @@ function buildPropTypeReference(
     return buildAnyPropTypeExpression();
   }
 
-  return buildTypeIdentifier(type);
+  return b.memberExpression(
+    b.identifier(INDEX_IDENTIFIER),
+    b.literal(type.fullName),
+    true,
+  );
 }
 
 function buildPropTypeExpression(
@@ -363,7 +340,7 @@ function buildPropTypeExpression(
   }
 
   if (isEnumType(type)) {
-    return buildEnumPropTypeExpression(type, context);
+    return buildEnumPropTypeExpression(type);
   }
 
   if (isModelType(type)) {
@@ -373,22 +350,35 @@ function buildPropTypeExpression(
   return buildUnionPropTypeExpression(type, context);
 }
 
-function buildPropTypeDeclaration(
+function buildPropTypeStatement(
+  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
+  context: Context,
+): namedTypes.ExpressionStatement {
+  return b.expressionStatement(
+    b.assignmentExpression(
+      '=',
+      b.memberExpression(
+        b.identifier(INDEX_IDENTIFIER),
+        b.literal(type.fullName),
+        true,
+      ),
+      buildPropTypeExpression(type, context),
+    ),
+  );
+}
+
+function buildTypeExportNamedDeclaration(
   type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
   context: Context,
 ) {
   const variable = b.variableDeclaration('const', [
     b.variableDeclarator(
       buildTypeIdentifier(type),
-      buildPropTypeExpression(type, context),
+      buildPropTypeReference(type, context),
     ),
   ]);
 
-  if (type.packageName.startsWith(context.rootService.namespace)) {
-    return b.exportNamedDeclaration(variable);
-  }
-
-  return variable;
+  return b.exportNamedDeclaration(variable);
 }
 
 export function buildFile(context: Context) {
@@ -413,16 +403,32 @@ export function buildFile(context: Context) {
     );
   }
 
-  const declarations = sortedTypes
+  const statements = sortedTypes
     .filter(name => !unresolvedTypes.includes(name))
     .map(name => typesByName[name])
-    .map(type => buildPropTypeDeclaration(type, context));
+    .map(type => buildPropTypeStatement(type, context));
+
+  const declarations = [
+    ...context.rootService.enums,
+    ...context.rootService.models,
+    ...context.rootService.unions,
+  ]
+    .sort(shortNameCompare)
+    .map(type => buildTypeExportNamedDeclaration(type, context));
 
   const ast = b.file(b.program([
     b.importDeclaration(
       [b.importDefaultSpecifier(b.identifier(PROP_TYPES_IDENTIFIER))],
       b.literal('prop-types'),
     ),
+    b.variableDeclaration(
+      'const',
+      [b.variableDeclarator(
+        b.identifier(INDEX_IDENTIFIER),
+        b.objectExpression([]),
+      )],
+    ),
+    ...statements,
     ...declarations,
   ]));
 
