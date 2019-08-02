@@ -44,7 +44,6 @@
     "tslint-config-airbnb": "^5.9.2"
   },
   "dependencies": {
-    "@flowio/api-prop-types": "^1.2.32",
     "@loopback/openapi-v3-types": "^1.0.5",
     "apibuilder-js": "0.0.7",
     "ast-types": "^0.13.2",
