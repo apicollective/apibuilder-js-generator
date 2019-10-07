@@ -2,7 +2,7 @@ import { ApiBuilderService } from 'apibuilder-js';
 import { generateInfoObject } from '../../../../../src/generators/openapi/generators/openapi-info';
 import apidocApiJson = require('../../../../fixtures/schemas/apidoc-api.json');
 
-describe('generated info object should have correct properites', () => {
+describe('generated info object should have correct properties', () => {
   const service = new ApiBuilderService(apidocApiJson);
   const infoObject = generateInfoObject(service);
 
