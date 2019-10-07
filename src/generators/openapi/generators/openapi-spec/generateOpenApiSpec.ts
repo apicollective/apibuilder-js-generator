@@ -14,7 +14,7 @@ const generateOpenApiSpec = (service: ApiBuilderService): OpenAPIObject => {
   const info = generateInfoObject(service);
   const paths = generatePathsObject(service);
   const components = generateComponentsObject(service);
-  const servers = generateServersObject();
+  const servers = generateServersObject(service);
   return {
     components,
     info,

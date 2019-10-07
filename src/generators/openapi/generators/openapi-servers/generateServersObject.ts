@@ -1,10 +1,10 @@
 
 import { ServerObject } from '@loopback/openapi-v3-types';
 
-function generateServersObject(): ServerObject[] {
+function generateServersObject(service): ServerObject[] {
   return [
     {
-      url: 'https://api.flow.io',
+      url: service.baseUrl,
     },
   ];
 }
