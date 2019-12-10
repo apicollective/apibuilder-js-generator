@@ -12,8 +12,13 @@ function convertApiBuilderPrimitiveType(type: ApiBuilderPrimitiveType) {
     case Kind.DOUBLE: return { type: 'number', format: 'double' };
     case Kind.INTEGER: return { type: 'integer' };
     case Kind.JSON: return {
-      properties: {},
-      type: 'object',
+      anyOf: [
+        { type: 'boolean' },
+        { type: 'object' },
+        { type: 'number' },
+        { type: 'array' },
+        { type: 'string' },
+      ],
     };
     case Kind.LONG: return { type: 'integer', format: 'int64' };
     case Kind.OBJECT: return { type: 'object' };
