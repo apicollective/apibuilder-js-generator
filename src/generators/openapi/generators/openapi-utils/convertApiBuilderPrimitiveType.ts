@@ -16,6 +16,7 @@ function convertApiBuilderPrimitiveType(type: ApiBuilderPrimitiveType) {
         { type: 'boolean' },
         { type: 'object' },
         { type: 'number' },
+        { type: 'integer' },
         { type: 'array' },
         { type: 'string' },
       ],
