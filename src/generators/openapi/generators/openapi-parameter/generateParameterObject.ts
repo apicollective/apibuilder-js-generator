@@ -14,6 +14,7 @@ function generateParameterObject(
   parameterTypeValidator,
 ): ParameterObject {
   const {
+    defaultValue,
     description: apibuilderDescription,
     deprecation: apibuilderDeprecation,
     isRequired,
@@ -35,6 +36,7 @@ Apibuilder defined this parameter location as "Form" which is incompatible with 
 
   const parameterObj = {
     deprecated: Boolean(get(apibuilderDeprecation, 'description')),
+    example: defaultValue ? defaultValue : undefined,
     in: convertLocationToIn(location as ApiBuilderParameterLocation),
     required: isRequired,
     schema: convertApiBuilderType(type, parameterTypeValidator),
