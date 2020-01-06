@@ -52,7 +52,7 @@
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
     "ejs": "^2.6.1",
-    "express": "^4.16.3",
+    "express": "^4.17.1",
     "handlebars": "^4.5.3",
     "hbs": "^4.0.6",
     "invariant": "^2.2.4",
