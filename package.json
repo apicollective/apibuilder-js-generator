@@ -30,7 +30,7 @@
     "@types/lodash": "^4.14.149",
     "@types/node": "^10.5.2",
     "@types/prettier": "^1.16.4",
-    "@types/prop-types": "^15.7.1",
+    "@types/prop-types": "^15.7.3",
     "commander": "^2.15.1",
     "faker": "^4.1.0",
     "got": "^8.3.1",
