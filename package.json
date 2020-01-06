@@ -57,7 +57,7 @@
     "hbs": "^4.0.6",
     "invariant": "^2.2.4",
     "lodash": "^4.17.15",
-    "prettier": "^1.12.1",
+    "prettier": "^1.19.1",
     "recast": "^0.18.5",
     "typescript": "^3.3.3333"
   }
