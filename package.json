@@ -24,7 +24,7 @@
   "homepage": "https://github.com/flowcommerce/apibuilder-javascript-generator#readme",
   "devDependencies": {
     "@types/browserify": "^12.0.36",
-    "@types/debug": "^4.1.4",
+    "@types/debug": "^4.1.5",
     "@types/invariant": "^2.2.29",
     "@types/jest": "^24.0.11",
     "@types/lodash": "^4.14.149",
