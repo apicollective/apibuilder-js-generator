@@ -41,7 +41,7 @@
     "ts-jest": "^24.2.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.20.1",
-    "tslint-config-airbnb": "^5.9.2"
+    "tslint-config-airbnb": "^5.11.2"
   },
   "dependencies": {
     "@loopback/openapi-v3-types": "^1.0.5",
