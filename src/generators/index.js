@@ -79,7 +79,7 @@ const generators = {
     name: 'TypeScript Services',
     description: 'Universal SDK in TypeScript',
     attributes: [],
-    generator: tsSdk
+    generator: tsSdk,
   },
 
   jsdoc: {

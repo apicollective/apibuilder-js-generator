@@ -1768,7 +1768,7 @@ function buildCreateClientFunction(
       body: [
         b.returnStatement.from({
           argument: b.objectExpression.from({
-            properties: context.rootService.resources.map((_) => b.property.from({
+            properties: context.rootService.resources.map(_ => b.property.from({
               key: b.identifier(camelCase(_.plural)),
               kind: 'init',
               value: b.newExpression.from({
