@@ -1,4 +1,4 @@
-import { ApiBuilderFile, ApiBuilderService, ApiBuilderServiceConfig } from 'apibuilder-js';
+import { ApiBuilderFile, ApiBuilderInvocationFormConfig, ApiBuilderService } from 'apibuilder-js';
 import debug from 'debug';
 import { print } from 'recast';
 
@@ -6,15 +6,7 @@ import { buildFile } from './builders';
 
 const log = debug('apibuilder:ts_prop_types');
 
-// tslint:disable-next-line:interface-name
-export interface InvocationForm {
-  readonly service: ApiBuilderServiceConfig;
-  readonly attributes: { [key: string]: string };
-  readonly user_agent?: string;
-  readonly imported_services?: ApiBuilderServiceConfig[];
-}
-
-export function generate(form: InvocationForm): Promise<ApiBuilderFile[]> {
+export function generate(form: ApiBuilderInvocationFormConfig): Promise<ApiBuilderFile[]> {
   return new Promise((resolve) => {
 
     const service = new ApiBuilderService(form.service);

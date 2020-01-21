@@ -2,17 +2,8 @@ import {
   ApiBuilderEnum,
   ApiBuilderModel,
   ApiBuilderService,
-  ApiBuilderServiceConfig,
   ApiBuilderUnion,
 } from 'apibuilder-js';
-
-// tslint:disable-next-line: interface-name
-export interface InvocationForm {
-  readonly service: ApiBuilderServiceConfig;
-  readonly attributes: Record<string, string>;
-  readonly user_agent?: string;
-  readonly imported_services?: ApiBuilderServiceConfig[];
-}
 
 export type TypeRecord = Record<string, (ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion)>;
 

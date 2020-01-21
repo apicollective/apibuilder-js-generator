@@ -7,6 +7,7 @@ const nodeGraphQL = require('./node_graphql');
 const tsConstants = require('./ts_constants');
 const tsDeclarations = require('./ts_declarations');
 const tsPropTypes = require('./ts_prop_types');
+const tsSdk = require('./ts_sdk');
 const jsdoc = require('./jsdoc');
 const openapi = require('./openapi');
 
@@ -71,6 +72,14 @@ const generators = {
     description: 'Constant definitions using TypeScript',
     attributes: [],
     generator: tsConstants,
+  },
+
+  ts_sdk: {
+    key: 'ts_sdk',
+    name: 'TypeScript Services',
+    description: 'Universal SDK in TypeScript',
+    attributes: [],
+    generator: tsSdk,
   },
 
   jsdoc: {
