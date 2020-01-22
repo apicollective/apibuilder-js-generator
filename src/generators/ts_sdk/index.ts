@@ -37,6 +37,13 @@ function pascalCase(
   return upperFirst(camelCase(value));
 }
 
+function stripTrailingSlash(
+  value: string,
+): string {
+  if (value.endsWith('/')) return value.slice(0, -1);
+  return value;
+}
+
 function stringCompare(s1: string, s2: string) {
   if (s1 > s2) return 1;
   if (s1 < s2) return -1;
@@ -503,6 +510,7 @@ function buildHttpClientClass(
   context: Context,
 ): namedTypes.ClassDeclaration {
   const {
+    pathname,
     protocol,
     hostname,
   } = url.parse(context.rootService.baseUrl);
@@ -586,9 +594,16 @@ function buildHttpClientClass(
                             b.property.from({
                               key: b.identifier('pathname'),
                               kind: 'init',
-                              value: b.memberExpression.from({
+                              value: pathname == null ? b.memberExpression.from({
                                 object: b.identifier('request'),
                                 property: b.identifier('pathname'),
+                              }) : b.binaryExpression.from({
+                                left: b.stringLiteral(stripTrailingSlash(pathname)),
+                                operator: '+',
+                                right: b.memberExpression.from({
+                                  object: b.identifier('request'),
+                                  property: b.identifier('pathname'),
+                                }),
                               }),
                             }),
                             b.property.from({
