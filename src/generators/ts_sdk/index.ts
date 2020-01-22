@@ -1873,7 +1873,7 @@ function buildFile(
     b.importDeclaration.from({
       source: b.stringLiteral('url'),
       specifiers: [
-        b.importDefaultSpecifier.from({
+        b.importNamespaceSpecifier.from({
           id: b.identifier('url'),
         }),
       ],
