@@ -1252,7 +1252,13 @@ function buildParseHeadersFunction(): namedTypes.FunctionDeclaration {
                         left: b.memberExpression.from({
                           computed: true,
                           object: b.identifier('headers'),
-                          property: b.identifier('key'),
+                          property: b.callExpression.from({
+                            arguments: [],
+                            callee: b.memberExpression.from({
+                              object: b.identifier('key'),
+                              property: b.identifier('toLowerCase'),
+                            }),
+                          }),
                         }),
                         operator: '=',
                         right: b.identifier('value'),
