@@ -1897,12 +1897,24 @@ function buildFile(
     // buildJSONArrayType(),
     // buildJSONObjectInterface(),
     buildFetchFunctionType(),
-    buildHttpClientMethodType(),
-    buildHttpClientHeadersInterface(),
-    buildHttpClientQueryInterface(),
-    buildHttpClientRequestInterface(),
-    buildHttpClientResponseInterface(),
-    buildHttpClientOptionsInterface(),
+    buildExportNamedDeclaration(
+      buildHttpClientMethodType(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientHeadersInterface(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientQueryInterface(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientRequestInterface(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientResponseInterface(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientOptionsInterface(),
+    ),
     buildBaseErrorClass(),
     buildResponseErrorClass(),
     buildExportNamedDeclaration(
