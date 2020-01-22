@@ -631,6 +631,34 @@ function buildHttpClientClass(
                 ],
                 kind: 'const',
               }),
+              b.variableDeclaration.from({
+                declarations: [
+                  b.variableDeclarator.from({
+                    id: b.identifier('headers'),
+                    init: b.objectExpression.from({
+                      properties: [
+                        b.property.from({
+                          key: b.identifier('accept'),
+                          kind: 'init',
+                          value: b.stringLiteral('application/json'),
+                        }),
+                        b.property.from({
+                          key: b.stringLiteral('content-type'),
+                          kind: 'init',
+                          value: b.stringLiteral('application/json'),
+                        }),
+                        b.spreadProperty.from({
+                          argument: b.memberExpression.from({
+                            object: b.identifier('request'),
+                            property: b.identifier('headers'),
+                          }),
+                        }),
+                      ],
+                    }),
+                  }),
+                ],
+                kind: 'const',
+              }),
               b.returnStatement.from({
                 argument: b.callExpression.from({
                   arguments: [
@@ -777,10 +805,8 @@ function buildHttpClientClass(
                                 }),
                                 b.objectProperty.from({
                                   key: b.identifier('headers'),
-                                  value: b.memberExpression.from({
-                                    object: b.identifier('request'),
-                                    property: b.identifier('headers'),
-                                  }),
+                                  shorthand: true,
+                                  value: b.identifier('headers'),
                                 }),
                                 b.objectProperty.from({
                                   key: b.identifier('method'),
