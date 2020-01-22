@@ -538,7 +538,7 @@ function buildHttpClientClass(
                   }),
                   operator: '=',
                   right: b.conditionalExpression.from({
-                    alternate: b.identifier('isomorphicFetch'),
+                    alternate: b.identifier('fetch'),
                     consequent: b.memberExpression.from({
                       object: b.identifier('options'),
                       property: b.identifier('fetch'),
@@ -1870,14 +1870,6 @@ function buildFile(
   const { rootService } = context;
 
   const statements: StatementKind[] = [
-    b.importDeclaration.from({
-      source: b.stringLiteral('isomorphic-fetch'),
-      specifiers: [
-        b.importDefaultSpecifier.from({
-          id: b.identifier('isomorphicFetch'),
-        }),
-      ],
-    }),
     b.importDeclaration.from({
       source: b.stringLiteral('url'),
       specifiers: [
