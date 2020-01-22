@@ -1692,9 +1692,14 @@ function buildResourceClass(
       expressions: operation.path.split(/\/|\./).filter((_) => {
         return _.startsWith(':');
       }).map((_) => {
-        return b.memberExpression.from({
-          object: b.identifier('params'),
-          property: b.identifier(_.slice(1)),
+        return b.callExpression.from({
+          arguments: [
+            b.memberExpression.from({
+              object: b.identifier('params'),
+              property: b.identifier(_.slice(1)),
+            }),
+          ],
+          callee: b.identifier('encodeURIComponent'),
         });
       }),
       quasis: operation.path.split(/:[^./]+/).map((part, index, self) => {
