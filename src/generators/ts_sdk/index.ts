@@ -1587,6 +1587,16 @@ function buildOperationParameterProperties(
     }));
   }
 
+  properties.push(b.tsPropertySignature.from({
+    key: b.identifier('headers'),
+    optional: true,
+    typeAnnotation: b.tsTypeAnnotation.from({
+      typeAnnotation: b.tsTypeReference.from({
+        typeName: b.identifier('HttpClientHeaders'),
+      }),
+    }),
+  }));
+
   operation.parameters.forEach((parameter) => {
     const comments: namedTypes.CommentBlock[] = [];
 
@@ -1713,6 +1723,15 @@ function buildResourceClass(
     }
 
     requestProperties.push(b.property.from({
+      key: b.identifier('headers'),
+      kind: 'init',
+      value: b.memberExpression.from({
+        object: b.identifier('params'),
+        property: b.identifier('headers'),
+      }),
+    }));
+
+    requestProperties.push(b.property.from({
       key: b.identifier('method'),
       kind: 'init',
       value: b.stringLiteral(operation.method),
@@ -1752,12 +1771,6 @@ function buildResourceClass(
       ];
     }
 
-    const methodParameters: PatternKind[] = [];
-
-    if (hasBody || hasParameters) {
-      methodParameters.push(methodParameter);
-    }
-
     methods.push(b.classMethod.from({
       access: 'public',
       body: b.blockStatement.from({
@@ -1784,7 +1797,9 @@ function buildResourceClass(
         b.commentBlock(operation.description),
       ] : [],
       key: b.identifier(operation.nickname),
-      params: methodParameters,
+      params: [
+        methodParameter,
+      ],
       returnType: b.tsTypeAnnotation.from({
         typeAnnotation: b.tsTypeReference.from({
           typeName: b.identifier('Promise'),
