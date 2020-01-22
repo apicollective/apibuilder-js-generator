@@ -37,6 +37,13 @@ function pascalCase(
   return upperFirst(camelCase(value));
 }
 
+function stripTrailingSlash(
+  value: string,
+): string {
+  if (value.endsWith('/')) return value.slice(0, -1);
+  return value;
+}
+
 function stringCompare(s1: string, s2: string) {
   if (s1 > s2) return 1;
   if (s1 < s2) return -1;
@@ -503,6 +510,7 @@ function buildHttpClientClass(
   context: Context,
 ): namedTypes.ClassDeclaration {
   const {
+    pathname,
     protocol,
     hostname,
   } = url.parse(context.rootService.baseUrl);
@@ -586,9 +594,16 @@ function buildHttpClientClass(
                             b.property.from({
                               key: b.identifier('pathname'),
                               kind: 'init',
-                              value: b.memberExpression.from({
+                              value: pathname == null ? b.memberExpression.from({
                                 object: b.identifier('request'),
                                 property: b.identifier('pathname'),
+                              }) : b.binaryExpression.from({
+                                left: b.stringLiteral(stripTrailingSlash(pathname)),
+                                operator: '+',
+                                right: b.memberExpression.from({
+                                  object: b.identifier('request'),
+                                  property: b.identifier('pathname'),
+                                }),
                               }),
                             }),
                             b.property.from({
@@ -611,6 +626,34 @@ function buildHttpClientClass(
                         object: b.identifier('url'),
                         property: b.identifier('format'),
                       }),
+                    }),
+                  }),
+                ],
+                kind: 'const',
+              }),
+              b.variableDeclaration.from({
+                declarations: [
+                  b.variableDeclarator.from({
+                    id: b.identifier('headers'),
+                    init: b.objectExpression.from({
+                      properties: [
+                        b.property.from({
+                          key: b.identifier('accept'),
+                          kind: 'init',
+                          value: b.stringLiteral('application/json'),
+                        }),
+                        b.property.from({
+                          key: b.stringLiteral('content-type'),
+                          kind: 'init',
+                          value: b.stringLiteral('application/json'),
+                        }),
+                        b.spreadProperty.from({
+                          argument: b.memberExpression.from({
+                            object: b.identifier('request'),
+                            property: b.identifier('headers'),
+                          }),
+                        }),
+                      ],
                     }),
                   }),
                 ],
@@ -762,10 +805,8 @@ function buildHttpClientClass(
                                 }),
                                 b.objectProperty.from({
                                   key: b.identifier('headers'),
-                                  value: b.memberExpression.from({
-                                    object: b.identifier('request'),
-                                    property: b.identifier('headers'),
-                                  }),
+                                  shorthand: true,
+                                  value: b.identifier('headers'),
                                 }),
                                 b.objectProperty.from({
                                   key: b.identifier('method'),
@@ -1211,7 +1252,13 @@ function buildParseHeadersFunction(): namedTypes.FunctionDeclaration {
                         left: b.memberExpression.from({
                           computed: true,
                           object: b.identifier('headers'),
-                          property: b.identifier('key'),
+                          property: b.callExpression.from({
+                            arguments: [],
+                            callee: b.memberExpression.from({
+                              object: b.identifier('key'),
+                              property: b.identifier('toLowerCase'),
+                            }),
+                          }),
                         }),
                         operator: '=',
                         right: b.identifier('value'),
@@ -1540,6 +1587,16 @@ function buildOperationParameterProperties(
     }));
   }
 
+  properties.push(b.tsPropertySignature.from({
+    key: b.identifier('headers'),
+    optional: true,
+    typeAnnotation: b.tsTypeAnnotation.from({
+      typeAnnotation: b.tsTypeReference.from({
+        typeName: b.identifier('HttpClientHeaders'),
+      }),
+    }),
+  }));
+
   operation.parameters.forEach((parameter) => {
     const comments: namedTypes.CommentBlock[] = [];
 
@@ -1635,9 +1692,14 @@ function buildResourceClass(
       expressions: operation.path.split(/\/|\./).filter((_) => {
         return _.startsWith(':');
       }).map((_) => {
-        return b.memberExpression.from({
-          object: b.identifier('params'),
-          property: b.identifier(_.slice(1)),
+        return b.callExpression.from({
+          arguments: [
+            b.memberExpression.from({
+              object: b.identifier('params'),
+              property: b.identifier(_.slice(1)),
+            }),
+          ],
+          callee: b.identifier('encodeURIComponent'),
         });
       }),
       quasis: operation.path.split(/:[^./]+/).map((part, index, self) => {
@@ -1664,6 +1726,15 @@ function buildResourceClass(
         }),
       }));
     }
+
+    requestProperties.push(b.property.from({
+      key: b.identifier('headers'),
+      kind: 'init',
+      value: b.memberExpression.from({
+        object: b.identifier('params'),
+        property: b.identifier('headers'),
+      }),
+    }));
 
     requestProperties.push(b.property.from({
       key: b.identifier('method'),
@@ -1705,12 +1776,6 @@ function buildResourceClass(
       ];
     }
 
-    const methodParameters: PatternKind[] = [];
-
-    if (hasBody || hasParameters) {
-      methodParameters.push(methodParameter);
-    }
-
     methods.push(b.classMethod.from({
       access: 'public',
       body: b.blockStatement.from({
@@ -1737,7 +1802,9 @@ function buildResourceClass(
         b.commentBlock(operation.description),
       ] : [],
       key: b.identifier(operation.nickname),
-      params: methodParameters,
+      params: [
+        methodParameter,
+      ],
       returnType: b.tsTypeAnnotation.from({
         typeAnnotation: b.tsTypeReference.from({
           typeName: b.identifier('Promise'),
@@ -1835,12 +1902,24 @@ function buildFile(
     // buildJSONArrayType(),
     // buildJSONObjectInterface(),
     buildFetchFunctionType(),
-    buildHttpClientMethodType(),
-    buildHttpClientHeadersInterface(),
-    buildHttpClientQueryInterface(),
-    buildHttpClientRequestInterface(),
-    buildHttpClientResponseInterface(),
-    buildHttpClientOptionsInterface(),
+    buildExportNamedDeclaration(
+      buildHttpClientMethodType(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientHeadersInterface(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientQueryInterface(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientRequestInterface(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientResponseInterface(),
+    ),
+    buildExportNamedDeclaration(
+      buildHttpClientOptionsInterface(),
+    ),
     buildBaseErrorClass(),
     buildResponseErrorClass(),
     buildExportNamedDeclaration(
