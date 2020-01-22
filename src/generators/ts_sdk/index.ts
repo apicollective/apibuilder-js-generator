@@ -1042,7 +1042,7 @@ function buildIsResponseJsonFunction(): namedTypes.FunctionDeclaration {
               init: b.callExpression.from({
                 arguments: [
                   b.stringLiteral.from({
-                    value: 'Content-Length',
+                    value: 'Content-Type',
                   }),
                 ],
                 callee: b.memberExpression.from({
