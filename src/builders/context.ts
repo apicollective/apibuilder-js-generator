@@ -155,9 +155,7 @@ export function buildContext(
     importedServices,
     rootService,
     sortedTypes: sortedTypes.concat(orphanTypes),
-    // tslint:disable-next-line: object-shorthand-properties-first
     typesByName,
-    // tslint:disable-next-line: object-shorthand-properties-first
     unresolvedTypes,
   };
 }
