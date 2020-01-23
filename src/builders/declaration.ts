@@ -104,7 +104,8 @@ function buildMapType(
         name: 'key',
         typeAnnotation: b.tsTypeAnnotation(b.tsStringKeyword()),
       }),
-    ],                 buildTypeAnnotation(map.ofType, context)),
+    // tslint:disable-next-line: align
+    ], buildTypeAnnotation(map.ofType, context)),
   ]);
 }
 
@@ -260,7 +261,7 @@ function buildFieldPropertySignature(
   });
 }
 
-function buildEnumDeclaration(
+function buildEnumTypeAliasDeclaration(
   enumeration: ApiBuilderEnum,
 ): namedTypes.TSTypeAliasDeclaration {
   return b.tsTypeAliasDeclaration.from({
@@ -269,7 +270,7 @@ function buildEnumDeclaration(
   });
 }
 
-function buildModelDeclaration(
+function buildModelInterfaceDeclaration(
   model: ApiBuilderModel,
   context: Context,
 ): namedTypes.TSInterfaceDeclaration {
@@ -281,7 +282,7 @@ function buildModelDeclaration(
   });
 }
 
-function buildUnionDeclaration(
+function buildUnionTypeAliasDeclaration(
   union: ApiBuilderUnion,
   context: Context,
 ): namedTypes.TSTypeAliasDeclaration {
@@ -329,7 +330,7 @@ function buildEnumModuleDeclaration(
 ): namedTypes.TSModuleDeclaration {
   const identifiers = buildModuleIdentifiers(service, 'enums');
   const declarations = service.enums
-    .map(enumeration => buildEnumDeclaration(enumeration));
+    .map(enumeration => buildEnumTypeAliasDeclaration(enumeration));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -339,7 +340,7 @@ function buildModelModuleDeclaration(
 ) {
   const identifiers = buildModuleIdentifiers(service, 'models');
   const declarations = service.models
-    .map(model => buildModelDeclaration(model, context));
+    .map(model => buildModelInterfaceDeclaration(model, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -349,7 +350,7 @@ function buildUnionModuleDeclaration(
 ) {
   const identifiers = buildModuleIdentifiers(service, 'unions');
   const declarations = service.unions
-    .map(union => buildUnionDeclaration(union, context));
+    .map(union => buildUnionTypeAliasDeclaration(union, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 

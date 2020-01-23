@@ -1931,31 +1931,33 @@ function buildFile(
 export function generate(
   invocationForm: ApiBuilderInvocationFormConfig,
 ): Promise<ApiBuilderFile[]> {
-  const context = buildContext(invocationForm);
+  return new Promise((resolve) => {
+    const context = buildContext(invocationForm);
 
-  if (context.unresolvedTypes.length) {
-    log(`WARN: The following types could not be resolved and will be ignored ${JSON.stringify(context.unresolvedTypes)}`);
-  }
+    if (context.unresolvedTypes.length) {
+      log(`WARN: The following types could not be resolved and will be ignored ${JSON.stringify(context.unresolvedTypes)}`);
+    }
 
-  if (!context.rootService.resources.length) {
-    log(`WARN: No files will be generated since ${context.rootService.applicationKey} does not contain any resources`);
-  }
+    if (!context.rootService.resources.length) {
+      log(`WARN: No files will be generated since ${context.rootService.applicationKey} does not contain any resources`);
+    }
 
-  const ast = buildFile(context);
-  const basename = `${context.rootService.applicationKey}.ts`;
-  const dirname = context.rootService.namespace.split('.').join('/');
-  const { code } = print(ast, {
-    arrayBracketSpacing: true,
-    arrowParensAlways: true,
-    objectCurlySpacing: true,
-    quote: 'single',
-    reuseWhitespace: true,
-    tabWidth: 2,
-    trailingComma: true,
-    useTabs: false,
+    const ast = buildFile(context);
+    const basename = `${context.rootService.applicationKey}.ts`;
+    const dirname = context.rootService.namespace.split('.').join('/');
+    const { code } = print(ast, {
+      arrayBracketSpacing: true,
+      arrowParensAlways: true,
+      objectCurlySpacing: true,
+      quote: 'single',
+      reuseWhitespace: true,
+      tabWidth: 2,
+      trailingComma: true,
+      useTabs: false,
+    });
+
+    resolve([
+      new ApiBuilderFile(basename, dirname, code),
+    ]);
   });
-
-  return Promise.resolve([
-    new ApiBuilderFile(basename, dirname, code),
-  ]);
 }
