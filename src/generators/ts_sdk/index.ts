@@ -1827,6 +1827,25 @@ function buildResourceClass(
   });
 }
 
+function buildClientInstanceInterface(
+  context: Context,
+) {
+  return b.tsInterfaceDeclaration.from({
+    body: b.tsInterfaceBody.from({
+      body: context.rootService.resources.map(_ => b.tsPropertySignature.from({
+        key: b.identifier(camelCase(_.plural)),
+        optional: false,
+        typeAnnotation: b.tsTypeAnnotation.from({
+          typeAnnotation: b.tsTypeReference.from({
+            typeName: getResourceIdentifier(_),
+          }),
+        }),
+      })),
+    }),
+    id: b.identifier('ClientInstance'),
+  });
+}
+
 function buildCreateClientFunction(
   context: Context,
 ) {
@@ -1861,6 +1880,11 @@ function buildCreateClientFunction(
         }),
       }),
     ],
+    returnType: b.tsTypeAnnotation.from({
+      typeAnnotation: b.tsTypeReference.from({
+        typeName: b.identifier('ClientInstance'),
+      }),
+    }),
   });
 }
 
@@ -1903,6 +1927,7 @@ function buildFile(
     buildHttpClientClass(context),
     buildBaseResourceClass(),
     rootService.resources.map(_ => buildResourceClass(_)),
+    buildClientInstanceInterface(context),
     buildCreateClientFunction(context),
   ).map(_ => buildExportNamedDeclaration(_));
 
