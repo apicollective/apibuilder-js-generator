@@ -145,10 +145,7 @@ function buildUnionType(
         );
 
         if (isModelType(unionType.type)) {
-          return b.tsIntersectionType([
-            b.tsTypeLiteral([discriminator]),
-            buildType(unionType.type, context),
-          ]);
+          return buildType(unionType.type, context);
         }
 
         if (isEnumType(unionType.type)) {
@@ -274,9 +271,29 @@ function buildModelInterfaceDeclaration(
   model: ApiBuilderModel,
   context: Context,
 ): namedTypes.TSInterfaceDeclaration {
+  const { discriminator, discriminatorValue } = model;
+  const properties: namedTypes.TSPropertySignature[] = [];
+
+  if (discriminator != null && discriminatorValue != null) {
+    properties.push(b.tsPropertySignature.from({
+      key: b.stringLiteral(discriminator),
+      optional: false,
+      readonly: true,
+      typeAnnotation: b.tsTypeAnnotation.from({
+        typeAnnotation: b.tsLiteralType.from({
+          literal: b.stringLiteral(discriminatorValue),
+        }),
+      }),
+    }));
+  }
+
+  model.fields.forEach((field) => {
+    properties.push(buildFieldPropertySignature(field, context));
+  });
+
   return b.tsInterfaceDeclaration.from({
     body: b.tsInterfaceBody.from({
-      body: model.fields.map(field => buildFieldPropertySignature(field, context)),
+      body: properties,
     }),
     id: buildTypeIdentifier(model),
   });
