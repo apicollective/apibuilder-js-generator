@@ -1864,79 +1864,52 @@ function buildCreateClientFunction(
   });
 }
 
+function buildImportDeclarations() {
+  return b.importDeclaration.from({
+    source: b.stringLiteral('url'),
+    specifiers: [
+      b.importNamespaceSpecifier.from({
+        id: b.identifier('url'),
+      }),
+    ],
+  });
+}
+
 function buildFile(
   context: Context,
 ): namedTypes.File {
   const { rootService } = context;
 
-  const statements: StatementKind[] = [
-    b.importDeclaration.from({
-      source: b.stringLiteral('url'),
-      specifiers: [
-        b.importNamespaceSpecifier.from({
-          id: b.identifier('url'),
-        }),
-      ],
-    }),
-  ];
-
-  buildModuleDeclarations(context).forEach((_) => {
-    statements.push(_);
-  });
-
-  buildTypeDeclarations(context).forEach((_) => {
-    statements.push(buildExportNamedDeclaration(_));
-  });
-
-  statements.push(
+  const namedExports = [].concat(
+    buildTypeDeclarations(context),
     // buildJSONPrimitiveType(),
     // buildJSONValueType(),
     // buildJSONArrayType(),
     // buildJSONObjectInterface(),
     buildFetchFunctionType(),
-    buildExportNamedDeclaration(
-      buildHttpClientMethodType(),
-    ),
-    buildExportNamedDeclaration(
-      buildHttpClientHeadersInterface(),
-    ),
-    buildExportNamedDeclaration(
-      buildHttpClientQueryInterface(),
-    ),
-    buildExportNamedDeclaration(
-      buildHttpClientRequestInterface(),
-    ),
-    buildExportNamedDeclaration(
-      buildHttpClientResponseInterface(),
-    ),
-    buildExportNamedDeclaration(
-      buildHttpClientOptionsInterface(),
-    ),
+    buildHttpClientMethodType(),
+    buildHttpClientHeadersInterface(),
+    buildHttpClientQueryInterface(),
+    buildHttpClientRequestInterface(),
+    buildHttpClientResponseInterface(),
+    buildHttpClientOptionsInterface(),
     buildBaseErrorClass(),
     buildResponseErrorClass(),
-    buildExportNamedDeclaration(
-      buildIsResponseErrorFunction(),
-    ),
+    buildIsResponseErrorFunction(),
     buildIsResponseEmptyFunction(),
     buildIsResponseJsonFunction(),
     buildParseJsonFunction(),
     buildParseHeadersFunction(),
     buildHttpClientClass(context),
     buildBaseResourceClass(),
-  );
+    rootService.resources.map(_ => buildResourceClass(_)),
+    buildCreateClientFunction(context),
+  ).map(_ => buildExportNamedDeclaration(_));
 
-  rootService.resources.forEach((resource) => {
-    statements.push(
-      buildExportNamedDeclaration(
-        buildResourceClass(resource),
-      ),
-    );
-  });
-
-  statements.push(
-    buildExportNamedDeclaration(
-      buildCreateClientFunction(context),
-    ),
+  const statements: StatementKind[] = [].concat(
+    buildImportDeclarations(),
+    buildModuleDeclarations(context),
+    namedExports,
   );
 
   const comments: namedTypes.CommentBlock[] = [];
