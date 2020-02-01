@@ -1,4 +1,5 @@
 import {
+  ApiBuilderInvocationFormConfig,
   ApiBuilderService,
   ApiBuilderType,
   isEnclosingType,
@@ -9,7 +10,7 @@ import {
 
 import { identity } from 'lodash';
 
-import { Context, InvocationForm, TypeRecord } from './types';
+import { Context, TypeRecord } from './types';
 
 type DependencyRecord = Record<string, Set<string>>;
 
@@ -133,7 +134,7 @@ function topologicalSort(dependencies: DependencyRecord) {
 }
 
 export function buildContext(
-  invocationForm: InvocationForm,
+  invocationForm: ApiBuilderInvocationFormConfig,
 ): Context {
   const rootService = new ApiBuilderService(invocationForm.service);
   const importedServices = invocationForm.imported_services.map(_ => new ApiBuilderService(_));
@@ -154,9 +155,7 @@ export function buildContext(
     importedServices,
     rootService,
     sortedTypes: sortedTypes.concat(orphanTypes),
-    // tslint:disable-next-line: object-shorthand-properties-first
     typesByName,
-    // tslint:disable-next-line: object-shorthand-properties-first
     unresolvedTypes,
   };
 }

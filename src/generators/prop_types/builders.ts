@@ -158,18 +158,42 @@ function buildModelPropTypeExpression(
   model: ApiBuilderModel,
   context: Context,
 ): PropTypeExpression {
+  const { discriminator, discriminatorValue, fields } = model;
+  const properties: namedTypes.Property[] = [];
+
+  if (discriminator != null && discriminatorValue != null) {
+    properties.push(b.property(
+      'init',
+      buildSafePropertyKey(discriminator),
+      b.memberExpression(
+        b.callExpression(
+          b.memberExpression(
+            b.identifier(PROP_TYPES_IDENTIFIER),
+            b.identifier('oneOf'),
+          ),
+          [b.arrayExpression([
+            b.stringLiteral(discriminatorValue),
+          ])],
+        ),
+        b.identifier('isRequired'),
+      ),
+    ));
+  }
+
+  fields.forEach((field) => {
+    properties.push(b.property(
+      'init',
+      buildSafePropertyKey(field.name),
+      buildFieldPropTypeExpression(field, context),
+    ));
+  });
+
   return b.callExpression(
     b.memberExpression(
       b.identifier(PROP_TYPES_IDENTIFIER),
       b.identifier('exact'),
     ),
-    [b.objectExpression(
-      model.fields.map(field => b.property(
-        'init',
-        buildSafePropertyKey(field.name),
-        buildFieldPropTypeExpression(field, context),
-      )),
-    )],
+    [b.objectExpression(properties)],
   );
 }
 
@@ -202,23 +226,7 @@ function buildUnionPropTypeExpression(
         );
 
         if (isModelType(unionType.type)) {
-          return b.callExpression(
-            b.memberExpression(
-              b.identifier(PROP_TYPES_IDENTIFIER),
-              b.identifier('exact'),
-            ),
-            [b.objectExpression([
-              discriminator,
-              ...unionType.type.fields.map(field => b.property(
-                'init',
-                buildSafePropertyKey(field.name),
-                buildFieldPropTypeExpression(
-                  field,
-                  context,
-                ),
-              )),
-            ])],
-          );
+          return buildPropTypeReference(unionType.type, context);
         }
 
         if (isEnumType(unionType.type)) {

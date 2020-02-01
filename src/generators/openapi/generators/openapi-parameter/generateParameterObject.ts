@@ -26,7 +26,7 @@ function generateParameterObject(
   const parameterConversionWarning = `\
 Apibuilder defined this parameter location as "Form" which is incompatible with the OpenAPI spec.`;
 
-  const description = (location === ApiBuilderParameterLocation.Form)
+  const description = (location === 'Form')
     ? apibuilderDescription + parameterConversionWarning : apibuilderDescription;
 
   const shorthand = {

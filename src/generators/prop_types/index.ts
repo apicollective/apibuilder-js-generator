@@ -1,8 +1,8 @@
-import { ApiBuilderFile } from 'apibuilder-js';
+import { ApiBuilderFile, ApiBuilderInvocationFormConfig } from 'apibuilder-js';
 import debug from 'debug';
 import { print } from 'recast';
 
-import { buildContext, Context, InvocationForm } from '../../builders';
+import { buildContext, Context } from '../../builders';
 import { buildFile } from './builders';
 import { buildTypeDeclarationFile } from './declarations';
 
@@ -49,7 +49,7 @@ function generateTypeDeclarations(
 }
 
 export function generate(
-  invocationForm: InvocationForm,
+  invocationForm: ApiBuilderInvocationFormConfig,
 ): Promise<ApiBuilderFile[]> {
   return Promise.resolve().then(() => {
     log('INFO: Building context...');

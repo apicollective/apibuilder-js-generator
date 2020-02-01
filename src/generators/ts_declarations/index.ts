@@ -1,13 +1,13 @@
-import { ApiBuilderFile } from 'apibuilder-js';
+import { ApiBuilderFile, ApiBuilderInvocationFormConfig } from 'apibuilder-js';
 import debug from 'debug';
 import { print } from 'recast';
 
-import { buildContext, InvocationForm } from '../../builders';
+import { buildContext } from '../../builders';
 import { buildFile } from './builders';
 
 const log = debug('apibuilder:ts_declarations');
 
-export function generate(form: InvocationForm): Promise<ApiBuilderFile[]> {
+export function generate(form: ApiBuilderInvocationFormConfig): Promise<ApiBuilderFile[]> {
   return new Promise((resolve) => {
     log('INFO: Building context...');
     const context = buildContext(form);

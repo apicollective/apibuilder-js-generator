@@ -104,7 +104,8 @@ function buildMapType(
         name: 'key',
         typeAnnotation: b.tsTypeAnnotation(b.tsStringKeyword()),
       }),
-    ],                 buildTypeAnnotation(map.ofType, context)),
+    // tslint:disable-next-line: align
+    ], buildTypeAnnotation(map.ofType, context)),
   ]);
 }
 
@@ -144,10 +145,7 @@ function buildUnionType(
         );
 
         if (isModelType(unionType.type)) {
-          return b.tsIntersectionType([
-            b.tsTypeLiteral([discriminator]),
-            buildType(unionType.type, context),
-          ]);
+          return buildType(unionType.type, context);
         }
 
         if (isEnumType(unionType.type)) {
@@ -260,7 +258,7 @@ function buildFieldPropertySignature(
   });
 }
 
-function buildEnumDeclaration(
+function buildEnumTypeAliasDeclaration(
   enumeration: ApiBuilderEnum,
 ): namedTypes.TSTypeAliasDeclaration {
   return b.tsTypeAliasDeclaration.from({
@@ -269,19 +267,39 @@ function buildEnumDeclaration(
   });
 }
 
-function buildModelDeclaration(
+function buildModelInterfaceDeclaration(
   model: ApiBuilderModel,
   context: Context,
 ): namedTypes.TSInterfaceDeclaration {
+  const { discriminator, discriminatorValue } = model;
+  const properties: namedTypes.TSPropertySignature[] = [];
+
+  if (discriminator != null && discriminatorValue != null) {
+    properties.push(b.tsPropertySignature.from({
+      key: b.stringLiteral(discriminator),
+      optional: false,
+      readonly: true,
+      typeAnnotation: b.tsTypeAnnotation.from({
+        typeAnnotation: b.tsLiteralType.from({
+          literal: b.stringLiteral(discriminatorValue),
+        }),
+      }),
+    }));
+  }
+
+  model.fields.forEach((field) => {
+    properties.push(buildFieldPropertySignature(field, context));
+  });
+
   return b.tsInterfaceDeclaration.from({
     body: b.tsInterfaceBody.from({
-      body: model.fields.map(field => buildFieldPropertySignature(field, context)),
+      body: properties,
     }),
     id: buildTypeIdentifier(model),
   });
 }
 
-function buildUnionDeclaration(
+function buildUnionTypeAliasDeclaration(
   union: ApiBuilderUnion,
   context: Context,
 ): namedTypes.TSTypeAliasDeclaration {
@@ -329,7 +347,7 @@ function buildEnumModuleDeclaration(
 ): namedTypes.TSModuleDeclaration {
   const identifiers = buildModuleIdentifiers(service, 'enums');
   const declarations = service.enums
-    .map(enumeration => buildEnumDeclaration(enumeration));
+    .map(enumeration => buildEnumTypeAliasDeclaration(enumeration));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -339,7 +357,7 @@ function buildModelModuleDeclaration(
 ) {
   const identifiers = buildModuleIdentifiers(service, 'models');
   const declarations = service.models
-    .map(model => buildModelDeclaration(model, context));
+    .map(model => buildModelInterfaceDeclaration(model, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -349,7 +367,7 @@ function buildUnionModuleDeclaration(
 ) {
   const identifiers = buildModuleIdentifiers(service, 'unions');
   const declarations = service.unions
-    .map(union => buildUnionDeclaration(union, context));
+    .map(union => buildUnionTypeAliasDeclaration(union, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
