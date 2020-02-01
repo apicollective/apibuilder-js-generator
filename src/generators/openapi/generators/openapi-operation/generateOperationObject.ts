@@ -30,9 +30,9 @@ function generateOperationObject(
     return generateParameterObject(parameter, typeValidator);
   };
 
-  const generateRequestBodyObjectWithValidation = (body) => {
-    const requestBody = new ApiBuilderBody(body, service);
-    return generateRequestBodyObject(requestBody, typeValidator);
+  const generateRequestBodyObjectWithValidation = (body: ApiBuilderBody)
+  : RequestBodyObject => {
+    return generateRequestBodyObject(body, typeValidator);
   };
 
   return {
