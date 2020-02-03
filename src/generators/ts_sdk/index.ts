@@ -1659,7 +1659,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
   });
 }
 
-function buildIsResponseErrorFunction(): namedTypes.FunctionDeclaration {
+function buildIsHttpResponseErrorFunction(): namedTypes.FunctionDeclaration {
   return b.functionDeclaration.from({
     body: b.blockStatement.from({
       body: [
@@ -1683,7 +1683,7 @@ function buildIsResponseErrorFunction(): namedTypes.FunctionDeclaration {
         }),
       ],
     }),
-    id: b.identifier('isResponseError'),
+    id: b.identifier('isHttpResponseError'),
     params: [
       b.identifier.from({
         name: 'error',
@@ -2125,7 +2125,7 @@ function buildFile(
     buildHttpClientOptionsInterface(),
     // buildBaseErrorClass(),
     buildHttpResponseErrorClass(),
-    buildIsResponseErrorFunction(),
+    buildIsHttpResponseErrorFunction(),
     buildIsResponseEmptyFunction(),
     buildIsResponseJsonFunction(),
     buildParseJsonFunction(),
