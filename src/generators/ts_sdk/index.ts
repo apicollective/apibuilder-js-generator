@@ -443,15 +443,6 @@ function buildHttpClientResponseInterface(): namedTypes.TSInterfaceDeclaration {
           }),
         }),
         b.tsPropertySignature.from({
-          key: b.identifier('request'),
-          optional: false,
-          typeAnnotation: b.tsTypeAnnotation.from({
-            typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('HttpClientRequest'),
-            }),
-          }),
-        }),
-        b.tsPropertySignature.from({
           key: b.identifier('statusCode'),
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
@@ -695,6 +686,7 @@ function buildHttpClientClass(
                           b.throwStatement.from({
                             argument: b.newExpression.from({
                               arguments: [
+                                b.identifier('request'),
                                 b.identifier('response'),
                               ],
                               callee: b.identifier('ResponseError'),
@@ -734,11 +726,6 @@ function buildHttpClientClass(
                                                     ],
                                                     callee: b.identifier('parseHeaders'),
                                                   }),
-                                                }),
-                                                b.objectProperty.from({
-                                                  key: b.identifier('request'),
-                                                  shorthand: true,
-                                                  value: b.identifier('request'),
                                                 }),
                                                 b.objectProperty.from({
                                                   key: b.identifier('statusCode'),
@@ -1375,6 +1362,16 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
       body: [
         b.classProperty.from({
           access: 'public',
+          key: b.identifier('request'),
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsTypeReference.from({
+              typeName: b.identifier('HttpClientRequest'),
+            }),
+          }),
+          value: null,
+        }),
+        b.classProperty.from({
+          access: 'public',
           key: b.identifier('response'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
@@ -1422,6 +1419,16 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
                   expression: b.assignmentExpression.from({
                     left: b.memberExpression.from({
                       object: b.thisExpression(),
+                      property: b.identifier('request'),
+                    }),
+                    operator: '=',
+                    right: b.identifier('request'),
+                  }),
+                }),
+                b.expressionStatement.from({
+                  expression: b.assignmentExpression.from({
+                    left: b.memberExpression.from({
+                      object: b.thisExpression(),
                       property: b.identifier('response'),
                     }),
                     operator: '=',
@@ -1431,6 +1438,14 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
               ],
             }),
             params: [
+              b.identifier.from({
+                name: 'request',
+                typeAnnotation: b.tsTypeAnnotation.from({
+                  typeAnnotation: b.tsTypeReference.from({
+                    typeName: b.identifier('HttpClientRequest'),
+                  }),
+                }),
+              }),
               b.identifier.from({
                 name: 'response',
                 typeAnnotation: b.tsTypeAnnotation.from({
