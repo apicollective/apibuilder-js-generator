@@ -209,12 +209,14 @@ function buildFetchOptionsInterface(): namedTypes.TSInterfaceDeclaration {
       body: [
         b.tsPropertySignature.from({
           key: b.identifier('body'),
+          optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsStringKeyword(),
           }),
         }),
         b.tsPropertySignature.from({
           key: b.identifier('headers'),
+          optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
               typeName: b.identifier.from({
@@ -225,6 +227,7 @@ function buildFetchOptionsInterface(): namedTypes.TSInterfaceDeclaration {
         }),
         b.tsPropertySignature.from({
           key: b.identifier('method'),
+          optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
               typeName: b.identifier.from({
