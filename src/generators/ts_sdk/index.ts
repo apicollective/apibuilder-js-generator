@@ -32,13 +32,13 @@ import {
 const log = debug('apibuilder:ts_service');
 
 const IDENTIFIER_HTTP_CLIENT_CLASS = 'HttpClient';
-const IDENTIFIER_HTTP_HEADERS_INTERFACE = 'HttpHeaders';
-const IDENTIFIER_HTTP_METHOD_INTERFACE = 'HttpMethod';
-const IDENTIFIER_HTTP_QUERY_INTERFACE = 'HttpQuery';
-const IDENTIFIER_HTTP_REQUEST_INTERFACE = 'HttpRequest';
-const IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE = 'HttpRequestOptions';
+const IDENTIFIER_HTTP_HEADERS_INTERFACE = 'IHttpHeaders';
+const IDENTIFIER_HTTP_METHOD_INTERFACE = 'IHttpMethod';
+const IDENTIFIER_HTTP_QUERY_INTERFACE = 'IHttpQuery';
+const IDENTIFIER_HTTP_REQUEST_INTERFACE = 'IHttpRequest';
+const IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE = 'IHttpRequestOptions';
 const IDENTIFIER_HTTP_RESPONSE_ERROR_CLASS = 'HttpResponseError';
-const IDENTIFIER_HTTP_RESPONSE_INTERFACE = 'HttpResponse';
+const IDENTIFIER_HTTP_RESPONSE_INTERFACE = 'IHttpResponse';
 
 function pascalCase(
   value: string,
