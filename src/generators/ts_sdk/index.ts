@@ -31,6 +31,8 @@ import {
 
 const log = debug('apibuilder:ts_service');
 
+const IDENTIFIER_FETCH_FUNCTION = 'FetchFunction';
+const IDENTIFIER_FETCH_OPTIONS_INTERFACE = 'IFetchOptions';
 const IDENTIFIER_HTTP_CLIENT_CLASS = 'HttpClient';
 const IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE = 'IHttpClientOptions';
 const IDENTIFIER_HTTP_HEADERS_INTERFACE = 'IHttpHeaders';
@@ -201,9 +203,47 @@ function buildJSONObjectInterface(): namedTypes.TSInterfaceDeclaration {
   });
 }
 
+function buildFetchOptionsInterface(): namedTypes.TSInterfaceDeclaration {
+  return b.tsInterfaceDeclaration.from({
+    body: b.tsInterfaceBody.from({
+      body: [
+        b.tsPropertySignature.from({
+          key: b.identifier('body'),
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsStringKeyword(),
+          }),
+        }),
+        b.tsPropertySignature.from({
+          key: b.identifier('headers'),
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsTypeReference.from({
+              typeName: b.identifier.from({
+                name: IDENTIFIER_HTTP_HEADERS_INTERFACE,
+              }),
+            }),
+          }),
+        }),
+        b.tsPropertySignature.from({
+          key: b.identifier('method'),
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsTypeReference.from({
+              typeName: b.identifier.from({
+                name: IDENTIFIER_HTTP_METHOD_INTERFACE,
+              }),
+            }),
+          }),
+        }),
+      ],
+    }),
+    id: b.identifier.from({
+      name: IDENTIFIER_FETCH_OPTIONS_INTERFACE,
+    }),
+  });
+}
+
 function buildFetchFunctionType(): namedTypes.TSTypeAliasDeclaration {
   return b.tsTypeAliasDeclaration.from({
-    id: b.identifier('FetchFunction'),
+    id: b.identifier(IDENTIFIER_FETCH_FUNCTION),
     typeAnnotation: b.tsFunctionType.from({
       parameters: [
         b.identifier.from({
@@ -217,7 +257,9 @@ function buildFetchFunctionType(): namedTypes.TSTypeAliasDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('RequestInit'),
+              typeName: b.identifier.from({
+                name: IDENTIFIER_FETCH_OPTIONS_INTERFACE,
+              }),
             }),
           }),
         }),
@@ -560,7 +602,7 @@ function buildHttpClientOptionsInterface(): namedTypes.TSInterfaceDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('FetchFunction'),
+              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION),
             }),
           }),
         }),
@@ -589,7 +631,7 @@ function buildHttpClientClass(
           key: b.identifier('fetch'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('FetchFunction'),
+              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION),
             }),
           }),
           value: null,
@@ -2116,6 +2158,7 @@ function buildFile(
     // buildJSONValueType(),
     // buildJSONArrayType(),
     // buildJSONObjectInterface(),
+    buildFetchOptionsInterface(),
     buildFetchFunctionType(),
     buildHttpHeadersInterface(),
     buildHttpMethodType(),
