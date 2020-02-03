@@ -366,6 +366,15 @@ function buildHttpClientRequestInterface(): namedTypes.TSInterfaceDeclaration {
         }),
         b.tsPropertySignature.from({
           key: b.identifier.from({
+            name: 'endpoint',
+          }),
+          optional: false,
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsStringKeyword(),
+          }),
+        }),
+        b.tsPropertySignature.from({
+          key: b.identifier.from({
             name: 'headers',
           }),
           optional: true,
@@ -388,15 +397,6 @@ function buildHttpClientRequestInterface(): namedTypes.TSInterfaceDeclaration {
                 name: 'HttpClientMethod',
               }),
             }),
-          }),
-        }),
-        b.tsPropertySignature.from({
-          key: b.identifier.from({
-            name: 'pathname',
-          }),
-          optional: false,
-          typeAnnotation: b.tsTypeAnnotation.from({
-            typeAnnotation: b.tsStringKeyword(),
           }),
         }),
         b.tsPropertySignature.from({
@@ -596,13 +596,13 @@ function buildHttpClientClass(
                               kind: 'init',
                               value: pathname == null ? b.memberExpression.from({
                                 object: b.identifier('request'),
-                                property: b.identifier('pathname'),
+                                property: b.identifier('endpoint'),
                               }) : b.binaryExpression.from({
                                 left: b.stringLiteral(stripTrailingSlash(pathname)),
                                 operator: '+',
                                 right: b.memberExpression.from({
                                   object: b.identifier('request'),
-                                  property: b.identifier('pathname'),
+                                  property: b.identifier('endpoint'),
                                 }),
                               }),
                             }),
@@ -1728,6 +1728,12 @@ function buildResourceClass(
     }
 
     requestProperties.push(b.property.from({
+      key: b.identifier('endpoint'),
+      kind: 'init',
+      value: urlLiteral,
+    }));
+
+    requestProperties.push(b.property.from({
       key: b.identifier('headers'),
       kind: 'init',
       value: b.memberExpression.from({
@@ -1740,12 +1746,6 @@ function buildResourceClass(
       key: b.identifier('method'),
       kind: 'init',
       value: b.stringLiteral(operation.method),
-    }));
-
-    requestProperties.push(b.property.from({
-      key: b.identifier('pathname'),
-      kind: 'init',
-      value: urlLiteral,
     }));
 
     if (queryProperties.length) {
