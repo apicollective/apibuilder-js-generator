@@ -32,6 +32,7 @@ import {
 const log = debug('apibuilder:ts_service');
 
 const IDENTIFIER_HTTP_CLIENT_CLASS = 'HttpClient';
+const IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE = 'IHttpClientOptions';
 const IDENTIFIER_HTTP_HEADERS_INTERFACE = 'IHttpHeaders';
 const IDENTIFIER_HTTP_METHOD_INTERFACE = 'IHttpMethod';
 const IDENTIFIER_HTTP_QUERY_INTERFACE = 'IHttpQuery';
@@ -565,7 +566,7 @@ function buildHttpClientOptionsInterface(): namedTypes.TSInterfaceDeclaration {
         }),
       ],
     }),
-    id: b.identifier('HttpClientOptions'),
+    id: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
   });
 }
 
@@ -630,7 +631,7 @@ function buildHttpClientClass(
                 name: 'options',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier('HttpClientOptions'),
+                    typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
                   }),
                 }),
               }),
@@ -1484,7 +1485,7 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
                 name: 'options',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier('HttpClientOptions'),
+                    typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
                   }),
                 }),
               }),
@@ -2080,7 +2081,7 @@ function buildCreateClientFunction(
         optional: true,
         typeAnnotation: b.tsTypeAnnotation.from({
           typeAnnotation: b.tsTypeReference.from({
-            typeName: b.identifier('HttpClientOptions'),
+            typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
           }),
         }),
       }),
