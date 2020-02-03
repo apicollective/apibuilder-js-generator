@@ -31,6 +31,15 @@ import {
 
 const log = debug('apibuilder:ts_service');
 
+const IDENTIFIER_HTTP_CLIENT_CLASS = 'HttpClient';
+const IDENTIFIER_HTTP_HEADERS_INTERFACE = 'HttpHeaders';
+const IDENTIFIER_HTTP_METHOD_INTERFACE = 'HttpMethod';
+const IDENTIFIER_HTTP_QUERY_INTERFACE = 'HttpQuery';
+const IDENTIFIER_HTTP_REQUEST_INTERFACE = 'HttpRequest';
+const IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE = 'HttpRequestOptions';
+const IDENTIFIER_HTTP_RESPONSE_ERROR_CLASS = 'HttpResponseError';
+const IDENTIFIER_HTTP_RESPONSE_INTERFACE = 'HttpResponse';
+
 function pascalCase(
   value: string,
 ): string {
@@ -229,10 +238,10 @@ function buildFetchFunctionType(): namedTypes.TSTypeAliasDeclaration {
   });
 }
 
-function buildHttpClientMethodType(): namedTypes.TSTypeAliasDeclaration {
+function buildHttpMethodType(): namedTypes.TSTypeAliasDeclaration {
   return b.tsTypeAliasDeclaration.from({
     id: b.identifier.from({
-      name: 'HttpClientMethod',
+      name: IDENTIFIER_HTTP_METHOD_INTERFACE,
     }),
     typeAnnotation: b.tsUnionType.from({
       types: [
@@ -286,7 +295,7 @@ function buildHttpClientMethodType(): namedTypes.TSTypeAliasDeclaration {
   });
 }
 
-function buildHttpClientHeadersInterface(): namedTypes.TSInterfaceDeclaration {
+function buildHttpHeadersInterface(): namedTypes.TSInterfaceDeclaration {
   return b.tsInterfaceDeclaration.from({
     body: b.tsInterfaceBody.from({
       body: [
@@ -305,11 +314,11 @@ function buildHttpClientHeadersInterface(): namedTypes.TSInterfaceDeclaration {
         }),
       ],
     }),
-    id: b.identifier('HttpClientHeaders'),
+    id: b.identifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
   });
 }
 
-function buildHttpClientQueryInterface(): namedTypes.TSInterfaceDeclaration {
+function buildHttpQueryInterface(): namedTypes.TSInterfaceDeclaration {
   return b.tsInterfaceDeclaration.from({
     body: b.tsInterfaceBody.from({
       body: [
@@ -345,11 +354,69 @@ function buildHttpClientQueryInterface(): namedTypes.TSInterfaceDeclaration {
         }),
       ],
     }),
-    id: b.identifier('HttpClientQuery'),
+    id: b.identifier(IDENTIFIER_HTTP_QUERY_INTERFACE),
   });
 }
 
-function buildHttpClientRequestInterface(): namedTypes.TSInterfaceDeclaration {
+function buildHttpRequestInterface(): namedTypes.TSInterfaceDeclaration {
+  return b.tsInterfaceDeclaration.from({
+    body: b.tsInterfaceBody.from({
+      body: [
+        b.tsPropertySignature.from({
+          key: b.identifier.from({
+            name: 'body',
+          }),
+          optional: true,
+          typeAnnotation: b.tsTypeAnnotation.from({
+            // TODO: Use JSONValue when this issue is fixed:
+            // https://github.com/microsoft/TypeScript/issues/15300
+            typeAnnotation: b.tsAnyKeyword(),
+          }),
+        }),
+        b.tsPropertySignature.from({
+          key: b.identifier.from({
+            name: 'url',
+          }),
+          optional: false,
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsStringKeyword(),
+          }),
+        }),
+        b.tsPropertySignature.from({
+          key: b.identifier.from({
+            name: 'headers',
+          }),
+          optional: false,
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsTypeReference.from({
+              typeName: b.identifier.from({
+                name: IDENTIFIER_HTTP_HEADERS_INTERFACE,
+              }),
+            }),
+          }),
+        }),
+        b.tsPropertySignature.from({
+          key: b.identifier.from({
+            name: 'method',
+          }),
+          optional: false,
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsTypeReference.from({
+              typeName: b.identifier.from({
+                name: IDENTIFIER_HTTP_METHOD_INTERFACE,
+              }),
+            }),
+          }),
+        }),
+      ],
+    }),
+    id: b.identifier.from({
+      name: IDENTIFIER_HTTP_REQUEST_INTERFACE,
+    }),
+  });
+}
+
+function buildHttpRequestOptionsInterface(): namedTypes.TSInterfaceDeclaration {
   return b.tsInterfaceDeclaration.from({
     body: b.tsInterfaceBody.from({
       body: [
@@ -381,7 +448,7 @@ function buildHttpClientRequestInterface(): namedTypes.TSInterfaceDeclaration {
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
               typeName: b.identifier.from({
-                name: 'HttpClientHeaders',
+                name: IDENTIFIER_HTTP_HEADERS_INTERFACE,
               }),
             }),
           }),
@@ -390,11 +457,11 @@ function buildHttpClientRequestInterface(): namedTypes.TSInterfaceDeclaration {
           key: b.identifier.from({
             name: 'method',
           }),
-          optional: true,
+          optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
               typeName: b.identifier.from({
-                name: 'HttpClientMethod',
+                name: IDENTIFIER_HTTP_METHOD_INTERFACE,
               }),
             }),
           }),
@@ -404,19 +471,17 @@ function buildHttpClientRequestInterface(): namedTypes.TSInterfaceDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('HttpClientQuery'),
+              typeName: b.identifier(IDENTIFIER_HTTP_QUERY_INTERFACE),
             }),
           }),
         }),
       ],
     }),
-    id: b.identifier.from({
-      name: 'HttpClientRequest',
-    }),
+    id: b.identifier(IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE),
   });
 }
 
-function buildHttpClientResponseInterface(): namedTypes.TSInterfaceDeclaration {
+function buildHttpResponseInterface(): namedTypes.TSInterfaceDeclaration {
   return b.tsInterfaceDeclaration.from({
     body: b.tsInterfaceBody.from({
       body: [
@@ -437,13 +502,20 @@ function buildHttpClientResponseInterface(): namedTypes.TSInterfaceDeclaration {
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
               typeName: b.identifier.from({
-                name: 'HttpClientHeaders',
+                name: IDENTIFIER_HTTP_HEADERS_INTERFACE,
               }),
             }),
           }),
         }),
         b.tsPropertySignature.from({
-          key: b.identifier('statusCode'),
+          key: b.identifier('ok'),
+          optional: false,
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsBooleanKeyword(),
+          }),
+        }),
+        b.tsPropertySignature.from({
+          key: b.identifier('status'),
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsNumberKeyword(),
@@ -459,7 +531,7 @@ function buildHttpClientResponseInterface(): namedTypes.TSInterfaceDeclaration {
       ],
     }),
     id: b.identifier.from({
-      name: 'HttpClientResponse',
+      name: IDENTIFIER_HTTP_RESPONSE_INTERFACE,
     }),
     typeParameters: b.tsTypeParameterDeclaration.from({
       params: [
@@ -505,6 +577,9 @@ function buildHttpClientClass(
     protocol,
     hostname,
   } = url.parse(context.rootService.baseUrl);
+
+  const basePathName = stripTrailingSlash(pathname);
+
   return b.classDeclaration.from({
     body: b.classBody.from({
       body: [
@@ -572,7 +647,12 @@ function buildHttpClientClass(
               b.variableDeclaration.from({
                 declarations: [
                   b.variableDeclarator.from({
-                    id: b.identifier('location'),
+                    id: b.identifier.from({
+                      name: 'finalUrl',
+                      typeAnnotation: b.tsTypeAnnotation.from({
+                        typeAnnotation: b.tsStringKeyword(),
+                      }),
+                    }),
                     init: b.callExpression.from({
                       arguments: [
                         b.objectExpression.from({
@@ -585,14 +665,14 @@ function buildHttpClientClass(
                             b.property.from({
                               key: b.identifier('pathname'),
                               kind: 'init',
-                              value: pathname == null ? b.memberExpression.from({
-                                object: b.identifier('request'),
+                              value: !basePathName.length ? b.memberExpression.from({
+                                object: b.identifier('options'),
                                 property: b.identifier('endpoint'),
                               }) : b.binaryExpression.from({
-                                left: b.stringLiteral(stripTrailingSlash(pathname)),
+                                left: b.stringLiteral(basePathName),
                                 operator: '+',
                                 right: b.memberExpression.from({
-                                  object: b.identifier('request'),
+                                  object: b.identifier('options'),
                                   property: b.identifier('endpoint'),
                                 }),
                               }),
@@ -606,7 +686,7 @@ function buildHttpClientClass(
                               key: b.identifier('query'),
                               kind: 'init',
                               value: b.memberExpression.from({
-                                object: b.identifier('request'),
+                                object: b.identifier('options'),
                                 property: b.identifier('query'),
                               }),
                             }),
@@ -625,7 +705,14 @@ function buildHttpClientClass(
               b.variableDeclaration.from({
                 declarations: [
                   b.variableDeclarator.from({
-                    id: b.identifier('headers'),
+                    id: b.identifier.from({
+                      name: 'finalHeaders',
+                      typeAnnotation: b.tsTypeAnnotation.from({
+                        typeAnnotation: b.tsTypeReference.from({
+                          typeName: b.identifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
+                        }),
+                      }),
+                    }),
                     init: b.objectExpression.from({
                       properties: [
                         b.property.from({
@@ -640,9 +727,54 @@ function buildHttpClientClass(
                         }),
                         b.spreadProperty.from({
                           argument: b.memberExpression.from({
-                            object: b.identifier('request'),
+                            object: b.identifier('options'),
                             property: b.identifier('headers'),
                           }),
+                        }),
+                      ],
+                    }),
+                  }),
+                ],
+                kind: 'const',
+              }),
+              b.variableDeclaration.from({
+                declarations: [
+                  b.variableDeclarator.from({
+                    id: b.identifier.from({
+                      name: 'request',
+                      typeAnnotation: b.tsTypeAnnotation.from({
+                        typeAnnotation: b.tsTypeReference.from({
+                          typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
+                        }),
+                      }),
+                    }),
+                    init: b.objectExpression.from({
+                      properties: [
+                        b.property.from({
+                          key: b.identifier('body'),
+                          kind: 'init',
+                          value: b.memberExpression.from({
+                            object: b.identifier('options'),
+                            property: b.identifier('body'),
+                          }),
+                        }),
+                        b.property.from({
+                          key: b.identifier('headers'),
+                          kind: 'init',
+                          value: b.identifier('finalHeaders'),
+                        }),
+                        b.property.from({
+                          key: b.identifier('method'),
+                          kind: 'init',
+                          value: b.memberExpression.from({
+                            object: b.identifier('options'),
+                            property: b.identifier('method'),
+                          }),
+                        }),
+                        b.property.from({
+                          key: b.identifier('url'),
+                          kind: 'init',
+                          value: b.identifier('finalUrl'),
                         }),
                       ],
                     }),
@@ -657,39 +789,27 @@ function buildHttpClientClass(
                       body: b.blockStatement.from({
                         body: [
                           b.ifStatement.from({
-                            consequent: b.returnStatement.from({
+                            consequent: b.throwStatement.from({
+                              argument: b.newExpression.from({
+                                arguments: [
+                                  b.identifier('request'),
+                                  b.identifier('response'),
+                                ],
+                                callee: b.identifier(IDENTIFIER_HTTP_RESPONSE_ERROR_CLASS),
+                              }),
+                            }),
+                            test: b.unaryExpression.from({
                               argument: b.memberExpression.from({
                                 object: b.identifier('response'),
-                                property: b.identifier('body'),
+                                property: b.identifier('ok'),
                               }),
-                            }),
-                            test: b.logicalExpression.from({
-                              left: b.binaryExpression.from({
-                                left: b.memberExpression.from({
-                                  object: b.identifier('response'),
-                                  property: b.identifier('statusCode'),
-                                }),
-                                operator: '>=',
-                                right: b.numericLiteral(200),
-                              }),
-                              operator: '&&',
-                              right: b.binaryExpression.from({
-                                left: b.memberExpression.from({
-                                  object: b.identifier('response'),
-                                  property: b.identifier('statusCode'),
-                                }),
-                                operator: '<',
-                                right: b.numericLiteral(300),
-                              }),
+                              operator: '!',
                             }),
                           }),
-                          b.throwStatement.from({
-                            argument: b.newExpression.from({
-                              arguments: [
-                                b.identifier('request'),
-                                b.identifier('response'),
-                              ],
-                              callee: b.identifier('ResponseError'),
+                          b.returnStatement.from({
+                            argument: b.memberExpression.from({
+                              object: b.identifier('response'),
+                              property: b.identifier('body'),
                             }),
                           }),
                         ],
@@ -728,7 +848,14 @@ function buildHttpClientClass(
                                                   }),
                                                 }),
                                                 b.objectProperty.from({
-                                                  key: b.identifier('statusCode'),
+                                                  key: b.identifier('ok'),
+                                                  value: b.memberExpression.from({
+                                                    object: b.identifier('response'),
+                                                    property: b.identifier('ok'),
+                                                  }),
+                                                }),
+                                                b.objectProperty.from({
+                                                  key: b.identifier('status'),
                                                   value: b.memberExpression.from({
                                                     object: b.identifier('response'),
                                                     property: b.identifier('status'),
@@ -749,6 +876,18 @@ function buildHttpClientClass(
                                       params: [
                                         b.identifier('json'),
                                       ],
+                                      returnType: b.tsTypeAnnotation.from({
+                                        typeAnnotation: b.tsTypeReference.from({
+                                          typeName: b.identifier.from({
+                                            name: IDENTIFIER_HTTP_RESPONSE_INTERFACE,
+                                          }),
+                                          typeParameters: b.tsTypeParameterInstantiation.from({
+                                            params: [
+                                              b.tsAnyKeyword(),
+                                            ],
+                                          }),
+                                        }),
+                                      }),
                                     }),
                                   ],
                                   callee: b.memberExpression.from({
@@ -772,7 +911,10 @@ function buildHttpClientClass(
                       callee: b.memberExpression.from({
                         object: b.callExpression.from({
                           arguments: [
-                            b.identifier('location'),
+                            b.memberExpression.from({
+                              object: b.identifier('request'),
+                              property: b.identifier('url'),
+                            }),
                             b.objectExpression.from({
                               properties: [
                                 b.objectProperty.from({
@@ -792,8 +934,10 @@ function buildHttpClientClass(
                                 }),
                                 b.objectProperty.from({
                                   key: b.identifier('headers'),
-                                  shorthand: true,
-                                  value: b.identifier('headers'),
+                                  value: b.memberExpression.from({
+                                    object: b.identifier('request'),
+                                    property: b.identifier('headers'),
+                                  }),
                                 }),
                                 b.objectProperty.from({
                                   key: b.identifier('method'),
@@ -824,10 +968,10 @@ function buildHttpClientClass(
           kind: 'method',
           params: [
             b.identifier.from({
-              name: 'request',
+              name: 'options',
               typeAnnotation: b.tsTypeAnnotation.from({
                 typeAnnotation: b.tsTypeReference.from({
-                  typeName: b.identifier('HttpClientRequest'),
+                  typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE),
                 }),
               }),
             }),
@@ -845,7 +989,7 @@ function buildHttpClientClass(
         }),
       ],
     }),
-    id: b.identifier('HttpClient'),
+    id: b.identifier(IDENTIFIER_HTTP_CLIENT_CLASS),
   });
 }
 
@@ -1307,7 +1451,7 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
           key: b.identifier('client'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('HttpClient'),
+              typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_CLASS),
             }),
           }),
           value: null,
@@ -1326,7 +1470,7 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
                     arguments: [
                       b.identifier('options'),
                     ],
-                    callee: b.identifier('HttpClient'),
+                    callee: b.identifier(IDENTIFIER_HTTP_CLIENT_CLASS),
                   }),
                 }),
               }),
@@ -1356,7 +1500,7 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
   });
 }
 
-function buildResponseErrorClass(): namedTypes.ClassDeclaration {
+function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
   return b.classDeclaration.from({
     body: b.classBody.from({
       body: [
@@ -1365,7 +1509,7 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
           key: b.identifier('request'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('HttpClientRequest'),
+              typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
             }),
           }),
           value: null,
@@ -1375,7 +1519,7 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
           key: b.identifier('response'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('HttpClientResponse'),
+              typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE_INTERFACE),
               typeParameters: b.tsTypeParameterInstantiation.from({
                 params: [
                   b.tsAnyKeyword(),
@@ -1410,9 +1554,25 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
                 b.expressionStatement.from({
                   expression: b.callExpression.from({
                     arguments: [
-                      b.stringLiteral('Response is outside the 2xx status code range'),
+                      b.stringLiteral('Response is outside the success status range'),
                     ],
                     callee: b.super(),
+                  }),
+                }),
+                b.expressionStatement.from({
+                  expression: b.assignmentExpression.from({
+                    left: b.memberExpression.from({
+                      object: b.thisExpression(),
+                      property: b.identifier('name'),
+                    }),
+                    operator: '=',
+                    right: b.memberExpression.from({
+                      object: b.memberExpression.from({
+                        object: b.thisExpression(),
+                        property: b.identifier('constructor'),
+                      }),
+                      property: b.identifier('name'),
+                    }),
                   }),
                 }),
                 b.expressionStatement.from({
@@ -1435,6 +1595,36 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
                     right: b.identifier('response'),
                   }),
                 }),
+                b.ifStatement.from({
+                  consequent: b.blockStatement.from({
+                    body: [
+                      b.expressionStatement.from({
+                        expression: b.callExpression.from({
+                          arguments: [
+                            b.thisExpression(),
+                            b.memberExpression.from({
+                              object: b.thisExpression(),
+                              property: b.identifier('constructor'),
+                            }),
+                          ],
+                          callee: b.memberExpression.from({
+                            object: b.identifier('Error'),
+                            property: b.identifier('captureStackTrace'),
+                          }),
+                        }),
+                      }),
+                    ],
+                  }),
+                  test: b.callExpression.from({
+                    arguments: [
+                      b.stringLiteral('captureStackTrace'),
+                    ],
+                    callee: b.memberExpression.from({
+                      object: b.identifier('Error'),
+                      property: b.identifier('hasOwnProperty'),
+                    }),
+                  }),
+                }),
               ],
             }),
             params: [
@@ -1442,7 +1632,7 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
                 name: 'request',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier('HttpClientRequest'),
+                    typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
                   }),
                 }),
               }),
@@ -1450,7 +1640,7 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
                 name: 'response',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier('HttpClientResponse'),
+                    typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE_INTERFACE),
                     typeParameters: b.tsTypeParameterInstantiation.from({
                       params: [
                         b.tsAnyKeyword(),
@@ -1464,8 +1654,8 @@ function buildResponseErrorClass(): namedTypes.ClassDeclaration {
         }),
       ],
     }),
-    id: b.identifier('ResponseError'),
-    superClass: b.identifier('BaseError'),
+    id: b.identifier(IDENTIFIER_HTTP_RESPONSE_ERROR_CLASS),
+    superClass: b.identifier('Error'),
   });
 }
 
@@ -1507,7 +1697,7 @@ function buildIsResponseErrorFunction(): namedTypes.FunctionDeclaration {
         parameterName: b.identifier('error'),
         typeAnnotation: b.tsTypeAnnotation.from({
           typeAnnotation: b.tsTypeReference.from({
-            typeName: b.identifier('ResponseError'),
+            typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE_ERROR_CLASS),
           }),
         }),
       }),
@@ -1607,7 +1797,7 @@ function buildOperationParameterProperties(
     optional: true,
     typeAnnotation: b.tsTypeAnnotation.from({
       typeAnnotation: b.tsTypeReference.from({
-        typeName: b.identifier('HttpClientHeaders'),
+        typeName: b.identifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
       }),
     }),
   }));
@@ -1926,14 +2116,15 @@ function buildFile(
     // buildJSONArrayType(),
     // buildJSONObjectInterface(),
     buildFetchFunctionType(),
-    buildHttpClientMethodType(),
-    buildHttpClientHeadersInterface(),
-    buildHttpClientQueryInterface(),
-    buildHttpClientRequestInterface(),
-    buildHttpClientResponseInterface(),
+    buildHttpHeadersInterface(),
+    buildHttpMethodType(),
+    buildHttpQueryInterface(),
+    buildHttpRequestInterface(),
+    buildHttpRequestOptionsInterface(),
+    buildHttpResponseInterface(),
     buildHttpClientOptionsInterface(),
-    buildBaseErrorClass(),
-    buildResponseErrorClass(),
+    // buildBaseErrorClass(),
+    buildHttpResponseErrorClass(),
     buildIsResponseErrorFunction(),
     buildIsResponseEmptyFunction(),
     buildIsResponseJsonFunction(),
