@@ -77,6 +77,15 @@ function buildExportNamedDeclaration(
   });
 }
 
+function buildInternalTypeIdentifier(
+  name: string,
+): namedTypes.TSQualifiedName {
+  return b.tsQualifiedName.from({
+    left: b.identifier('internalTypes'),
+    right: b.identifier(name),
+  });
+}
+
 function buildTypeDeclarations(
   context: Context,
 ): namedTypes.TSTypeAliasDeclaration[] {
@@ -85,18 +94,6 @@ function buildTypeDeclarations(
   return types.sort(shortNameCompare).map(type =>
     b.tsTypeAliasDeclaration(buildTypeIdentifier(type), buildTypeReference(type)),
   );
-}
-
-function buildTypeModuleDeclaration(
-  context: Context,
-): namedTypes.TSModuleDeclaration {
-  const { rootService } = context;
-  return b.tsModuleDeclaration.from({
-    body: b.tsModuleBlock.from({
-      body: buildTypeDeclarations(context).map(buildExportNamedDeclaration),
-    }),
-    id: b.identifier(`${camelCase(rootService.applicationKey)}Types`),
-  });
 }
 
 function buildPrimitiveTypeReference(
@@ -231,9 +228,7 @@ function buildFetchOptionsInterface(): namedTypes.TSInterfaceDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: IDENTIFIER_HTTP_HEADERS_INTERFACE,
-              }),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
             }),
           }),
         }),
@@ -242,9 +237,7 @@ function buildFetchOptionsInterface(): namedTypes.TSInterfaceDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: IDENTIFIER_HTTP_METHOD_INTERFACE,
-              }),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_METHOD_INTERFACE),
             }),
           }),
         }),
@@ -272,9 +265,7 @@ function buildFetchFunctionType(): namedTypes.TSTypeAliasDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: IDENTIFIER_FETCH_OPTIONS_INTERFACE,
-              }),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_FETCH_OPTIONS_INTERFACE),
             }),
           }),
         }),
@@ -447,9 +438,7 @@ function buildHttpRequestInterface(): namedTypes.TSInterfaceDeclaration {
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: IDENTIFIER_HTTP_HEADERS_INTERFACE,
-              }),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
             }),
           }),
         }),
@@ -460,9 +449,7 @@ function buildHttpRequestInterface(): namedTypes.TSInterfaceDeclaration {
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: IDENTIFIER_HTTP_METHOD_INTERFACE,
-              }),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_METHOD_INTERFACE),
             }),
           }),
         }),
@@ -505,9 +492,7 @@ function buildHttpRequestOptionsInterface(): namedTypes.TSInterfaceDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: IDENTIFIER_HTTP_HEADERS_INTERFACE,
-              }),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
             }),
           }),
         }),
@@ -518,9 +503,7 @@ function buildHttpRequestOptionsInterface(): namedTypes.TSInterfaceDeclaration {
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: IDENTIFIER_HTTP_METHOD_INTERFACE,
-              }),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_METHOD_INTERFACE),
             }),
           }),
         }),
@@ -529,7 +512,7 @@ function buildHttpRequestOptionsInterface(): namedTypes.TSInterfaceDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_HTTP_QUERY_INTERFACE),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_QUERY_INTERFACE),
             }),
           }),
         }),
@@ -559,9 +542,7 @@ function buildHttpResponseInterface(): namedTypes.TSInterfaceDeclaration {
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: IDENTIFIER_HTTP_HEADERS_INTERFACE,
-              }),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
             }),
           }),
         }),
@@ -617,7 +598,7 @@ function buildHttpClientOptionsInterface(): namedTypes.TSInterfaceDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION_TYPE),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_FETCH_FUNCTION_TYPE),
             }),
           }),
         }),
@@ -646,7 +627,7 @@ function buildHttpClientClass(
           key: b.identifier('fetch'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION_TYPE),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_FETCH_FUNCTION_TYPE),
             }),
           }),
           value: null,
@@ -688,7 +669,7 @@ function buildHttpClientClass(
                 name: 'options',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
+                    typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
                   }),
                 }),
               }),
@@ -767,7 +748,7 @@ function buildHttpClientClass(
                       name: 'finalHeaders',
                       typeAnnotation: b.tsTypeAnnotation.from({
                         typeAnnotation: b.tsTypeReference.from({
-                          typeName: b.identifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
+                          typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
                         }),
                       }),
                     }),
@@ -802,7 +783,7 @@ function buildHttpClientClass(
                       name: 'request',
                       typeAnnotation: b.tsTypeAnnotation.from({
                         typeAnnotation: b.tsTypeReference.from({
-                          typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
+                          typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
                         }),
                       }),
                     }),
@@ -936,9 +917,9 @@ function buildHttpClientClass(
                                       ],
                                       returnType: b.tsTypeAnnotation.from({
                                         typeAnnotation: b.tsTypeReference.from({
-                                          typeName: b.identifier.from({
-                                            name: IDENTIFIER_HTTP_RESPONSE_INTERFACE,
-                                          }),
+                                          typeName: buildInternalTypeIdentifier(
+                                            IDENTIFIER_HTTP_RESPONSE_INTERFACE,
+                                          ),
                                           typeParameters: b.tsTypeParameterInstantiation.from({
                                             params: [
                                               b.tsAnyKeyword(),
@@ -1029,7 +1010,7 @@ function buildHttpClientClass(
               name: 'options',
               typeAnnotation: b.tsTypeAnnotation.from({
                 typeAnnotation: b.tsTypeReference.from({
-                  typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE),
+                  typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE),
                 }),
               }),
             }),
@@ -1552,7 +1533,7 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
                 name: 'options',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
+                    typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
                   }),
                 }),
               }),
@@ -1577,7 +1558,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
           key: b.identifier('request'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
             }),
           }),
           value: null,
@@ -1587,7 +1568,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
           key: b.identifier('response'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE_INTERFACE),
+              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_RESPONSE_INTERFACE),
               typeParameters: b.tsTypeParameterInstantiation.from({
                 params: [
                   b.tsAnyKeyword(),
@@ -1700,7 +1681,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
                 name: 'request',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
+                    typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_REQUEST_INTERFACE),
                   }),
                 }),
               }),
@@ -1708,7 +1689,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
                 name: 'response',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE_INTERFACE),
+                    typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_RESPONSE_INTERFACE),
                     typeParameters: b.tsTypeParameterInstantiation.from({
                       params: [
                         b.tsAnyKeyword(),
@@ -1865,7 +1846,7 @@ function buildOperationParameterProperties(
     optional: true,
     typeAnnotation: b.tsTypeAnnotation.from({
       typeAnnotation: b.tsTypeReference.from({
-        typeName: b.identifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
+        typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_HEADERS_INTERFACE),
       }),
     }),
   }));
@@ -1914,7 +1895,7 @@ function buildOperationParametersTypeLiteral(
 function getResourceIdentifier(
   resource: ApiBuilderResource,
 ): namedTypes.Identifier {
-  return b.identifier(pascalCase(resource.plural));
+  return b.identifier(`${pascalCase(resource.plural)}Resource`);
 }
 
 function buildResourceClass(
@@ -2146,7 +2127,7 @@ function buildCreateClientFunction(
         optional: true,
         typeAnnotation: b.tsTypeAnnotation.from({
           typeAnnotation: b.tsTypeReference.from({
-            typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
+            typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE),
           }),
         }),
       }),
@@ -2156,6 +2137,31 @@ function buildCreateClientFunction(
         typeName: b.identifier('ClientInstance'),
       }),
     }),
+  });
+}
+
+function buildInternalTypeDeclarations(): (
+  namedTypes.TSInterfaceDeclaration | namedTypes.TSTypeAliasDeclaration
+)[] {
+  return [
+    buildFetchOptionsInterface(),
+    buildFetchFunctionType(),
+    buildHttpHeadersInterface(),
+    buildHttpMethodType(),
+    buildHttpQueryInterface(),
+    buildHttpRequestInterface(),
+    buildHttpRequestOptionsInterface(),
+    buildHttpResponseInterface(),
+    buildHttpClientOptionsInterface(),
+  ];
+}
+
+function buildInternalModuleDeclaration(): namedTypes.TSModuleDeclaration {
+  return b.tsModuleDeclaration.from({
+    body: b.tsModuleBlock.from({
+      body: buildInternalTypeDeclarations().map(buildExportNamedDeclaration),
+    }),
+    id: b.identifier('internalTypes'),
   });
 }
 
@@ -2176,21 +2182,13 @@ function buildFile(
   const { rootService } = context;
 
   const namedExports = [].concat(
-    buildTypeModuleDeclaration(context),
+    buildTypeDeclarations(context),
     // buildJSONPrimitiveType(),
     // buildJSONValueType(),
     // buildJSONArrayType(),
     // buildJSONObjectInterface(),
-    buildFetchOptionsInterface(),
-    buildFetchFunctionType(),
-    buildHttpHeadersInterface(),
-    buildHttpMethodType(),
-    buildHttpQueryInterface(),
-    buildHttpRequestInterface(),
-    buildHttpRequestOptionsInterface(),
-    buildHttpResponseInterface(),
-    buildHttpClientOptionsInterface(),
     // buildBaseErrorClass(),
+    buildInternalModuleDeclaration(),
     buildHttpResponseErrorClass(),
     buildIsHttpResponseErrorFunction(),
     buildIsResponseEmptyFunction(),
