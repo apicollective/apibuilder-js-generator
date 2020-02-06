@@ -32,16 +32,16 @@ import {
 const log = debug('apibuilder:ts_service');
 
 const IDENTIFIER_FETCH_FUNCTION_TYPE = 'FetchFunction';
-const IDENTIFIER_FETCH_OPTIONS_INTERFACE = 'IFetchOptions';
+const IDENTIFIER_FETCH_OPTIONS_INTERFACE = 'FetchOptions';
 const IDENTIFIER_HTTP_CLIENT_CLASS = 'HttpClient';
-const IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE = 'IHttpClientOptions';
-const IDENTIFIER_HTTP_HEADERS_INTERFACE = 'IHttpHeaders';
-const IDENTIFIER_HTTP_METHOD_INTERFACE = 'IHttpMethod';
-const IDENTIFIER_HTTP_QUERY_INTERFACE = 'IHttpQuery';
-const IDENTIFIER_HTTP_REQUEST_INTERFACE = 'IHttpRequest';
-const IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE = 'IHttpRequestOptions';
+const IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE = 'HttpClientOptions';
+const IDENTIFIER_HTTP_HEADERS_INTERFACE = 'HttpHeaders';
+const IDENTIFIER_HTTP_METHOD_INTERFACE = 'HttpMethod';
+const IDENTIFIER_HTTP_QUERY_INTERFACE = 'HttpQuery';
+const IDENTIFIER_HTTP_REQUEST_INTERFACE = 'HttpRequest';
+const IDENTIFIER_HTTP_REQUEST_OPTIONS_INTERFACE = 'HttpRequestOptions';
 const IDENTIFIER_HTTP_RESPONSE_ERROR_CLASS = 'HttpResponseError';
-const IDENTIFIER_HTTP_RESPONSE_INTERFACE = 'IHttpResponse';
+const IDENTIFIER_HTTP_RESPONSE_INTERFACE = 'HttpResponse';
 
 function pascalCase(
   value: string,
@@ -85,6 +85,18 @@ function buildTypeDeclarations(
   return types.sort(shortNameCompare).map(type =>
     b.tsTypeAliasDeclaration(buildTypeIdentifier(type), buildTypeReference(type)),
   );
+}
+
+function buildTypeModuleDeclaration(
+  context: Context,
+): namedTypes.TSModuleDeclaration {
+  const { rootService } = context;
+  return b.tsModuleDeclaration.from({
+    body: b.tsModuleBlock.from({
+      body: buildTypeDeclarations(context).map(buildExportNamedDeclaration),
+    }),
+    id: b.identifier(`${camelCase(rootService.applicationKey)}Types`),
+  });
 }
 
 function buildPrimitiveTypeReference(
@@ -1892,9 +1904,7 @@ function buildOperationParametersTypeLiteral(
 function getResourceIdentifier(
   resource: ApiBuilderResource,
 ): namedTypes.Identifier {
-  let name: string = pascalCase(resource.plural);
-  name += 'Resource';
-  return b.identifier(name);
+  return b.identifier(pascalCase(resource.plural));
 }
 
 function buildResourceClass(
@@ -2156,7 +2166,7 @@ function buildFile(
   const { rootService } = context;
 
   const namedExports = [].concat(
-    buildTypeDeclarations(context),
+    buildTypeModuleDeclaration(context),
     // buildJSONPrimitiveType(),
     // buildJSONValueType(),
     // buildJSONArrayType(),
