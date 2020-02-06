@@ -31,7 +31,7 @@ import {
 
 const log = debug('apibuilder:ts_service');
 
-const IDENTIFIER_FETCH_FUNCTION = 'FetchFunction';
+const IDENTIFIER_FETCH_FUNCTION_TYPE = 'FetchFunction';
 const IDENTIFIER_FETCH_OPTIONS_INTERFACE = 'IFetchOptions';
 const IDENTIFIER_HTTP_CLIENT_CLASS = 'HttpClient';
 const IDENTIFIER_HTTP_CLIENT_OPTIONS_INTERFACE = 'IHttpClientOptions';
@@ -246,7 +246,7 @@ function buildFetchOptionsInterface(): namedTypes.TSInterfaceDeclaration {
 
 function buildFetchFunctionType(): namedTypes.TSTypeAliasDeclaration {
   return b.tsTypeAliasDeclaration.from({
-    id: b.identifier(IDENTIFIER_FETCH_FUNCTION),
+    id: b.identifier(IDENTIFIER_FETCH_FUNCTION_TYPE),
     typeAnnotation: b.tsFunctionType.from({
       parameters: [
         b.identifier.from({
@@ -605,7 +605,7 @@ function buildHttpClientOptionsInterface(): namedTypes.TSInterfaceDeclaration {
           optional: true,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION),
+              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION_TYPE),
             }),
           }),
         }),
@@ -634,7 +634,7 @@ function buildHttpClientClass(
           key: b.identifier('fetch'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION),
+              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION_TYPE),
             }),
           }),
           value: null,
