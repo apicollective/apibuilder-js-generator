@@ -629,6 +629,17 @@ function buildHttpResponse(): namedTypes.TSInterfaceDeclaration {
           }),
         }),
         b.tsPropertySignature.from({
+          key: b.identifier.from({
+            name: 'request',
+          }),
+          optional: false,
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsTypeReference.from({
+              typeName: b.identifier(IDENTIFIER_HTTP_REQUEST),
+            }),
+          }),
+        }),
+        b.tsPropertySignature.from({
           key: b.identifier('status'),
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
@@ -931,6 +942,11 @@ function buildHttpClientClass(
                                                 object: b.identifier('response'),
                                                 property: b.identifier('ok'),
                                               }),
+                                            }),
+                                            b.objectProperty.from({
+                                              key: b.identifier('request'),
+                                              shorthand: true,
+                                              value: b.identifier('requeset'),
                                             }),
                                             b.objectProperty.from({
                                               key: b.identifier('status'),
