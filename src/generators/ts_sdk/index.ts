@@ -101,17 +101,17 @@ const httpStatusCodes: Record<number, string> = {
   599: 'Network Connect Timeout Error',
 };
 
-const IDENTIFIER_FETCH_FUNCTION = 'FetchFunction';
-const IDENTIFIER_FETCH_OPTIONS = 'FetchOptions';
-const IDENTIFIER_HTTP_CLIENT = 'HttpClient';
-const IDENTIFIER_HTTP_CLIENT_OPTIONS = 'HttpClientOptions';
-const IDENTIFIER_HTTP_HEADERS = 'HttpHeaders';
-const IDENTIFIER_HTTP_METHOD = 'HttpMethod';
-const IDENTIFIER_HTTP_QUERY = 'HttpQuery';
-const IDENTIFIER_HTTP_REQUEST = 'HttpRequest';
-const IDENTIFIER_HTTP_REQUEST_OPTIONS = 'HttpRequestOptions';
-const IDENTIFIER_HTTP_RESPONSE_ERROR = 'HttpResponseError';
-const IDENTIFIER_HTTP_RESPONSE = 'HttpResponse';
+const IDENTIFIER_FETCH_FUNCTION = '$FetchFunction';
+const IDENTIFIER_FETCH_OPTIONS = '$FetchOptions';
+const IDENTIFIER_HTTP_CLIENT = '$HttpClient';
+const IDENTIFIER_HTTP_CLIENT_OPTIONS = '$HttpClientOptions';
+const IDENTIFIER_HTTP_HEADERS = '$HttpHeaders';
+const IDENTIFIER_HTTP_METHOD = '$HttpMethod';
+const IDENTIFIER_HTTP_QUERY = '$HttpQuery';
+const IDENTIFIER_HTTP_REQUEST = '$HttpRequest';
+const IDENTIFIER_HTTP_REQUEST_OPTIONS = '$HttpRequestOptions';
+const IDENTIFIER_HTTP_RESPONSE_ERROR = '$HttpResponseError';
+const IDENTIFIER_HTTP_RESPONSE = '$HttpResponse';
 
 // Name for namespace containing internal types.
 // Used to avoid naming collision with types generated
@@ -159,6 +159,12 @@ function buildInternalTypeIdentifier(
     left: b.identifier(IDENTIFIER_INTERNAL_NAMESPACE),
     right: b.identifier(name),
   });
+}
+
+function buildHttpResponseCodeIdentifier(statusCode: number | string) {
+  const statusText = httpStatusCodes[statusCode];
+  const name = statusText != null ? pascalCase(statusText) : statusCode;
+  return b.identifier(`$HttpResponse${name}`);
 }
 
 function buildTypeDeclarations(
@@ -714,7 +720,7 @@ function buildHttpClientClass(
           key: b.identifier('fetch'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: buildInternalTypeIdentifier(IDENTIFIER_FETCH_FUNCTION),
+              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION),
             }),
           }),
           value: null,
@@ -756,7 +762,7 @@ function buildHttpClientClass(
                 name: 'options',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
+                    typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
                   }),
                 }),
               }),
@@ -835,7 +841,7 @@ function buildHttpClientClass(
                       name: 'finalHeaders',
                       typeAnnotation: b.tsTypeAnnotation.from({
                         typeAnnotation: b.tsTypeReference.from({
-                          typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_HEADERS),
+                          typeName: b.identifier(IDENTIFIER_HTTP_HEADERS),
                         }),
                       }),
                     }),
@@ -870,7 +876,7 @@ function buildHttpClientClass(
                       name: 'request',
                       typeAnnotation: b.tsTypeAnnotation.from({
                         typeAnnotation: b.tsTypeReference.from({
-                          typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_REQUEST),
+                          typeName: b.identifier(IDENTIFIER_HTTP_REQUEST),
                         }),
                       }),
                     }),
@@ -1049,7 +1055,7 @@ function buildHttpClientClass(
               name: 'options',
               typeAnnotation: b.tsTypeAnnotation.from({
                 typeAnnotation: b.tsTypeReference.from({
-                  typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_REQUEST_OPTIONS),
+                  typeName: b.identifier(IDENTIFIER_HTTP_REQUEST_OPTIONS),
                 }),
               }),
             }),
@@ -1060,7 +1066,7 @@ function buildHttpClientClass(
               typeParameters: b.tsTypeParameterInstantiation.from({
                 params: [
                   b.tsTypeReference.from({
-                    typeName: buildInternalTypeIdentifier(
+                    typeName: b.identifier(
                       IDENTIFIER_HTTP_RESPONSE,
                     ),
                     typeParameters: b.tsTypeParameterInstantiation.from({
@@ -1582,7 +1588,7 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
                 name: 'options',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
+                    typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
                   }),
                 }),
               }),
@@ -1607,7 +1613,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
           key: b.identifier('request'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_REQUEST),
+              typeName: b.identifier(IDENTIFIER_HTTP_REQUEST),
             }),
           }),
           value: null,
@@ -1617,7 +1623,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
           key: b.identifier('response'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_RESPONSE),
+              typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE),
               typeParameters: b.tsTypeParameterInstantiation.from({
                 params: [
                   b.tsAnyKeyword(),
@@ -1730,7 +1736,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
                 name: 'request',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_REQUEST),
+                    typeName: b.identifier(IDENTIFIER_HTTP_REQUEST),
                   }),
                 }),
               }),
@@ -1738,7 +1744,7 @@ function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
                 name: 'response',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_RESPONSE),
+                    typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE),
                     typeParameters: b.tsTypeParameterInstantiation.from({
                       params: [
                         b.tsAnyKeyword(),
@@ -1895,7 +1901,7 @@ function buildOperationParameterProperties(
     optional: true,
     typeAnnotation: b.tsTypeAnnotation.from({
       typeAnnotation: b.tsTypeReference.from({
-        typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_HEADERS),
+        typeName: b.identifier(IDENTIFIER_HTTP_HEADERS),
       }),
     }),
   }));
@@ -2061,9 +2067,8 @@ function buildResourceClass(
 
     const responseTypes = b.tsUnionType.from({
       types: operation.responses.map((response) => {
-        const statusText = httpStatusCodes[response.code];
         return b.tsTypeReference.from({
-          typeName: buildInternalTypeIdentifier(pascalCase(statusText)),
+          typeName: buildHttpResponseCodeIdentifier(response.code),
           typeParameters: b.tsTypeParameterInstantiation.from({
             params: [
               buildTSTypeKind(response.type),
@@ -2178,7 +2183,7 @@ function buildCreateClientFunction(
         optional: true,
         typeAnnotation: b.tsTypeAnnotation.from({
           typeAnnotation: b.tsTypeReference.from({
-            typeName: buildInternalTypeIdentifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
+            typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
           }),
         }),
       }),
@@ -2202,8 +2207,8 @@ function buildInternalTypeDeclarations(): TSTypeDeclaration[] {
     buildHttpRequest(),
     buildHttpRequestOptions(),
     buildHttpResponse(),
-    buildHttpClientOptions(),
     buildHttpStatusCodes(),
+    buildHttpClientOptions(),
   );
 }
 
@@ -2230,7 +2235,7 @@ function buildImportDeclarations() {
 function buildHttpStatusCodes(): namedTypes.TSTypeAliasDeclaration[] {
   return Object.entries(httpStatusCodes).map(([statusCode, statusText]) => {
     return b.tsTypeAliasDeclaration.from({
-      id: b.identifier(pascalCase(statusText)),
+      id: buildHttpResponseCodeIdentifier(statusCode),
       typeAnnotation: b.tsTypeReference.from({
         typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE),
         typeParameters: b.tsTypeParameterInstantiation.from({
@@ -2267,7 +2272,7 @@ function buildFile(
     // buildJSONArrayType(),
     // buildJSONObjectInterface(),
     // buildBaseErrorClass(),
-    buildInternalTypes(),
+    buildInternalTypeDeclarations(),
     // buildHttpResponseErrorClass(),
     // buildIsHttpResponseErrorFunction(),
     buildIsResponseEmptyFunction(),
