@@ -189,7 +189,7 @@ function buildPrimitiveTypeReference(
     case Kind.LONG:
       return b.tsNumberKeyword();
     case Kind.UNIT:
-      return b.tsVoidKeyword();
+      return b.tsUndefinedKeyword();
     case Kind.OBJECT:
     default:
       return b.tsAnyKeyword();
@@ -2075,7 +2075,7 @@ function buildResourceClass(
 
     if (responseTypes.types.length === 0) {
       responseTypes.types = [
-        b.tsVoidKeyword(),
+        b.tsUndefinedKeyword(),
       ];
     }
 
