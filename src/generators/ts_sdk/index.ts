@@ -124,6 +124,14 @@ function pascalCase(
   return upperFirst(camelCase(value));
 }
 
+function isOk(statusCode: number | string) {
+  if (typeof statusCode === 'string') {
+    statusCode = parseInt(statusCode, 10);
+  }
+
+  return statusCode >= 200 && statusCode < 300;
+}
+
 function stripTrailingSlash(
   value: string,
 ): string {
@@ -612,7 +620,7 @@ function buildHttpResponse(): namedTypes.TSInterfaceDeclaration {
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('TBody'),
+              typeName: b.identifier('B'),
             }),
           }),
         }),
@@ -631,7 +639,9 @@ function buildHttpResponse(): namedTypes.TSInterfaceDeclaration {
           key: b.identifier('ok'),
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
-            typeAnnotation: b.tsBooleanKeyword(),
+            typeAnnotation: b.tsTypeReference.from({
+              typeName: b.identifier('O'),
+            }),
           }),
         }),
         b.tsPropertySignature.from({
@@ -650,7 +660,7 @@ function buildHttpResponse(): namedTypes.TSInterfaceDeclaration {
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier('TStatus'),
+              typeName: b.identifier('S'),
             }),
           }),
         }),
@@ -668,8 +678,18 @@ function buildHttpResponse(): namedTypes.TSInterfaceDeclaration {
     }),
     typeParameters: b.tsTypeParameterDeclaration.from({
       params: [
-        b.tsTypeParameter('TStatus', b.tsNumberKeyword()),
-        b.tsTypeParameter('TBody'),
+        b.tsTypeParameter.from({
+          default: b.tsAnyKeyword(),
+          name: 'B',
+        }),
+        b.tsTypeParameter.from({
+          default: b.tsNumberKeyword(),
+          name: 'S',
+        }),
+        b.tsTypeParameter.from({
+          default: b.tsBooleanKeyword(),
+          name: 'O',
+        }),
       ],
     }),
   });
@@ -2240,20 +2260,25 @@ function buildHttpStatusCodes(): namedTypes.TSTypeAliasDeclaration[] {
         typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE),
         typeParameters: b.tsTypeParameterInstantiation.from({
           params: [
+            b.tsTypeReference.from({
+              typeName: b.identifier('T'),
+            }),
             b.tsLiteralType.from({
               literal: b.numericLiteral.from({
                 value: Number.parseInt(statusCode, 10),
               }),
             }),
-            b.tsTypeReference.from({
-              typeName: b.identifier('TBody'),
+            b.tsLiteralType.from({
+              literal: b.booleanLiteral.from({
+                value: isOk(statusCode),
+              }),
             }),
           ],
         }),
       }),
       typeParameters: b.tsTypeParameterDeclaration.from({
         params: [
-          b.tsTypeParameter('TBody'),
+          b.tsTypeParameter('T'),
         ],
       }),
     });
