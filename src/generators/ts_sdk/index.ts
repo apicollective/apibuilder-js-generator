@@ -1101,6 +1101,7 @@ function buildHttpClientClass(
                       params: [
                         b.tsAnyKeyword(),
                         b.tsAnyKeyword(),
+                        b.tsAnyKeyword(),
                       ],
                     }),
                   }),
@@ -2297,6 +2298,26 @@ function buildStripQueryFunction(): namedTypes.FunctionDeclaration {
   return b.functionDeclaration.from({
     body: b.blockStatement.from({
       body: [
+        b.variableDeclaration.from({
+          declarations: [
+            b.variableDeclarator.from({
+              id: b.identifier.from({
+                name: 'initialValue',
+                typeAnnotation: b.tsTypeAnnotation.from({
+                  typeAnnotation: b.tsTypeReference.from({
+                    typeName: b.identifier.from({
+                      name: IDENTIFIER_HTTP_QUERY,
+                    }),
+                  }),
+                }),
+              }),
+              init: b.objectExpression.from({
+                properties: [],
+              }),
+            }),
+          ],
+          kind: 'const',
+        }),
         b.returnStatement.from({
           argument: b.callExpression.from({
             arguments: [
@@ -2364,8 +2385,8 @@ function buildStripQueryFunction(): namedTypes.FunctionDeclaration {
                   }),
                 ],
               }),
-              b.objectExpression.from({
-                properties: [],
+              b.identifier.from({
+                name: 'initialValue',
               }),
             ],
             callee: b.memberExpression.from({
