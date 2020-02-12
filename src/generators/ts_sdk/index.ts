@@ -112,6 +112,7 @@ const IDENTIFIER_HTTP_REQUEST = '$HttpRequest';
 const IDENTIFIER_HTTP_REQUEST_OPTIONS = '$HttpRequestOptions';
 const IDENTIFIER_HTTP_RESPONSE_ERROR = '$HttpResponseError';
 const IDENTIFIER_HTTP_RESPONSE = '$HttpResponse';
+const IDENTIFIER_STRIP_QUERY = 'stripQuery';
 
 // Name for namespace containing internal types.
 // Used to avoid naming collision with types generated
@@ -837,9 +838,16 @@ function buildHttpClientClass(
                             b.property.from({
                               key: b.identifier('query'),
                               kind: 'init',
-                              value: b.memberExpression.from({
-                                object: b.identifier('options'),
-                                property: b.identifier('query'),
+                              value: b.callExpression.from({
+                                arguments: [
+                                  b.memberExpression.from({
+                                    object: b.identifier('options'),
+                                    property: b.identifier('query'),
+                                  }),
+                                ],
+                                callee: b.identifier.from({
+                                  name: IDENTIFIER_STRIP_QUERY,
+                                }),
                               }),
                             }),
                           ],
@@ -2285,6 +2293,135 @@ function buildHttpStatusCodes(): namedTypes.TSTypeAliasDeclaration[] {
   });
 }
 
+function buildStripQueryFunction(): namedTypes.FunctionDeclaration {
+  return b.functionDeclaration.from({
+    body: b.blockStatement.from({
+      body: [
+        b.returnStatement.from({
+          argument: b.callExpression.from({
+            arguments: [
+              b.arrowFunctionExpression.from({
+                body: b.blockStatement.from({
+                  body: [
+                    b.variableDeclaration.from({
+                      declarations: [
+                        b.variableDeclarator.from({
+                          id: b.identifier.from({
+                            name: 'value',
+                          }),
+                          init: b.memberExpression.from({
+                            computed: true,
+                            object: b.identifier.from({
+                              name: 'query',
+                            }),
+                            property: b.identifier.from({
+                              name: 'key',
+                            }),
+                          }),
+                        }),
+                      ],
+                      kind: 'const',
+                    }),
+                    b.ifStatement.from({
+                      consequent: b.expressionStatement.from({
+                        expression: b.assignmentExpression.from({
+                          left: b.memberExpression.from({
+                            computed: true,
+                            object: b.identifier.from({
+                              name: 'previousValue',
+                            }),
+                            property: b.identifier.from({
+                              name: 'key',
+                            }),
+                          }),
+                          operator: '=',
+                          right: b.identifier.from({
+                            name: 'value',
+                          }),
+                        }),
+                      }),
+                      test: b.binaryExpression.from({
+                        left: b.identifier.from({
+                          name: 'value',
+                        }),
+                        operator: '!=',
+                        right: b.nullLiteral(),
+                      }),
+                    }),
+                    b.returnStatement.from({
+                      argument: b.identifier.from({
+                        name: 'previousValue',
+                      }),
+                    }),
+                  ],
+                }),
+                params: [
+                  b.identifier.from({
+                    name: 'previousValue',
+                  }),
+                  b.identifier.from({
+                    name: 'key',
+                  }),
+                ],
+              }),
+              b.objectExpression.from({
+                properties: [],
+              }),
+            ],
+            callee: b.memberExpression.from({
+              object: b.callExpression.from({
+                arguments: [
+                  b.identifier.from({
+                    name: 'query',
+                  }),
+                ],
+                callee: b.memberExpression.from({
+                  object: b.identifier.from({
+                    name: 'Object',
+                  }),
+                  property: b.identifier.from({
+                    name: 'keys',
+                  }),
+                }),
+              }),
+              property: b.identifier.from({
+                name: 'reduce',
+              }),
+            }),
+          }),
+        }),
+      ],
+    }),
+    id: b.identifier.from({
+      name: IDENTIFIER_STRIP_QUERY,
+    }),
+    params: [
+      b.assignmentPattern.from({
+        left: b.identifier.from({
+          name: 'query',
+          typeAnnotation: b.tsTypeAnnotation.from({
+            typeAnnotation: b.tsTypeReference.from({
+              typeName: b.identifier.from({
+                name: IDENTIFIER_HTTP_QUERY,
+              }),
+            }),
+          }),
+        }),
+        right: b.objectExpression.from({
+          properties: [],
+        }),
+      }),
+    ],
+    returnType: b.tsTypeAnnotation.from({
+      typeAnnotation: b.tsTypeReference.from({
+        typeName: b.identifier.from({
+          name: IDENTIFIER_HTTP_QUERY,
+        }),
+      }),
+    }),
+  });
+}
+
 function buildFile(
   context: Context,
 ): namedTypes.File {
@@ -2304,6 +2441,7 @@ function buildFile(
     buildIsResponseJsonFunction(),
     buildParseJsonFunction(),
     buildParseHeadersFunction(),
+    buildStripQueryFunction(),
     buildHttpClientClass(context),
     buildBaseResourceClass(),
     rootService.resources.map(_ => buildResourceClass(_)),
