@@ -173,7 +173,7 @@ function buildInternalTypeIdentifier(
 function buildHttpResponseCodeIdentifier(statusCode: number | string) {
   const statusText = httpStatusCodes[statusCode];
   const name = statusText != null ? pascalCase(statusText) : statusCode;
-  return b.identifier(`$HttpResponse${name}`);
+  return b.identifier(`$Http${name}`);
 }
 
 function buildTypeDeclarations(
