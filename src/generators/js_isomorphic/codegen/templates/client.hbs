@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import querystring from 'querystring';
 
-let fetch;
+let defaultFetch;
 let base64Encode;
 
 /**
@@ -11,11 +11,11 @@ let base64Encode;
  * implementation for btoa or fetch is not available.
  */
 if (process.browser) {
-  fetch = window.fetch;
+  defaultFetch = window.fetch;
   base64Encode = window.btoa;
 } else {
   base64Encode = value => new Buffer(value).toString('base64');
-  fetch = require('node-fetch'); // eslint-disable-line global-require
+  defaultFetch = require('node-fetch'); // eslint-disable-line global-require
 }
 
 export default class Client extends EventEmitter {
@@ -69,10 +69,20 @@ export default class Client extends EventEmitter {
 
   constructor(opts = {}) {
     super();
-    this.serviceName = opts.serviceName;
-    this.auth = opts.auth;
-    this.host = opts.host;
-    this.headers = opts.headers || {};
+
+    const {
+      serviceName,
+      auth,
+      host,
+      headers = {},
+      fetch = defaultFetch,
+    } = opts;
+
+    this.serviceName = serviceName;
+    this.auth = auth;
+    this.host = host;
+    this.headers = headers;
+    this.fetch = fetch
 
     // Convert auth if provided in constructor
     if (this.auth) {
@@ -131,7 +141,7 @@ export default class Client extends EventEmitter {
 
     this.logRequest({ ...options, url });
 
-    return fetch(finalUrl, options)
+    return this.fetch(finalUrl, options)
     .then((response) => {
       const endTimeMs = new Date().getTime();
       const roundTripMs = endTimeMs - startTimeMs;
