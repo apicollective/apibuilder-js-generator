@@ -126,11 +126,8 @@ function pascalCase(
 }
 
 function isOk(statusCode: number | string) {
-  if (typeof statusCode === 'string') {
-    statusCode = parseInt(statusCode, 10);
-  }
-
-  return statusCode >= 200 && statusCode < 300;
+  const status = typeof statusCode === 'string' ? parseInt(statusCode, 10) : statusCode;
+  return status >= 200 && status < 300;
 }
 
 function stripTrailingSlash(
