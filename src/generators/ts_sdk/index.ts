@@ -1944,7 +1944,7 @@ function buildOperationParameterProperties(
     properties.push(b.tsPropertySignature.from({
       comments,
       key: b.identifier(parameter.name),
-      optional: !parameter.isRequired,
+      optional: !parameter.isRequired || parameter.defaultValue != null,
       typeAnnotation: b.tsTypeAnnotation.from({
         typeAnnotation: buildTSTypeKind(parameter.type),
       }),
