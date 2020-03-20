@@ -11,7 +11,7 @@ let base64Encode;
  * implementation for btoa or fetch is not available.
  */
 if (process.browser) {
-  defaultFetch = window.fetch;
+  defaultFetch = window.fetch.bind(window);
   base64Encode = window.btoa;
 } else {
   base64Encode = value => new Buffer(value).toString('base64');
