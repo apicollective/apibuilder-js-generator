@@ -105,16 +105,16 @@ function buildArrayType(
 function buildMapType(
   map: ApiBuilderMap,
   context: Context,
-): namedTypes.TSTypeLiteral {
-  return b.tsTypeLiteral([
-    b.tsIndexSignature([
-      b.identifier.from({
-        name: 'key',
-        typeAnnotation: b.tsTypeAnnotation(b.tsStringKeyword()),
-      }),
-    // tslint:disable-next-line: align
-    ], buildTypeAnnotation(map.ofType, context)),
-  ]);
+): namedTypes.TSTypeReference {
+  return b.tsTypeReference.from({
+    typeName: b.identifier('Record'),
+    typeParameters: b.tsTypeParameterInstantiation.from({
+      params: [
+        b.tsStringKeyword(),
+        buildType(map.ofType, context),
+      ],
+    }),
+  });
 }
 
 function buildEnumType(
