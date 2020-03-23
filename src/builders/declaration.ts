@@ -47,8 +47,16 @@ function buildQualifiedName(
   return recurse(identifiers, identifiers.pop());
 }
 
-function buildUnknownType(): namedTypes.TSUnknownKeyword {
-  return b.tsUnknownKeyword();
+function buildUnknownType(type: ApiBuilderType): namedTypes.TSUnknownKeyword {
+  return b.tsUnknownKeyword.from({
+    comments: [
+      b.commentBlock.from({
+        leading: false,
+        trailing: true,
+        value: type.toString(),
+      }),
+    ],
+  });
 }
 
 function buildPrimitiveType(
@@ -83,7 +91,7 @@ function buildPrimitiveType(
         ),
       ]);
     default:
-      return buildUnknownType();
+      return buildUnknownType(type);
   }
 }
 
@@ -170,7 +178,7 @@ function buildUnionType(
 
         // The provided union type refers to an invalid type.
         // An union type may only refer to an enum, model, or primitive type.
-        return buildUnknownType();
+        return buildUnknownType(unionType.type);
       }),
     ),
   );
@@ -231,7 +239,7 @@ function buildType(
   }
 
   if (context.unresolvedTypes.includes(type.fullName)) {
-    return buildUnknownType();
+    return buildUnknownType(type);
   }
 
   return buildTypeReference(type);
