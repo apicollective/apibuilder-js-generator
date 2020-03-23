@@ -67,7 +67,6 @@ function buildPrimitiveType(
     case Kind.DATE_ISO8601:
     case Kind.DATE_TIME_ISO8601:
     case Kind.UUID:
-    case Kind.JSON:
       return b.tsStringKeyword();
     case Kind.BOOLEAN:
       return b.tsBooleanKeyword();
@@ -76,20 +75,24 @@ function buildPrimitiveType(
     case Kind.INTEGER:
     case Kind.LONG:
       return b.tsNumberKeyword();
+    case Kind.JSON:
+      return b.tsAnyKeyword.from({
+        comments: [b.commentBlock.from({
+          leading: false,
+          trailing: true,
+          value: 'json',
+        })],
+      });
     case Kind.OBJECT:
-      return b.tsTypeLiteral([
-        b.tsIndexSignature(
-          [b.identifier.from({
-            name: 'key',
-            typeAnnotation: b.tsTypeAnnotation(
-              b.tsStringKeyword(),
-            ),
-          })],
-          b.tsTypeAnnotation(
-            b.tsStringKeyword(),
-          ),
-        ),
-      ]);
+      return b.tsAnyKeyword.from({
+        comments: [b.commentBlock.from({
+          leading: false,
+          trailing: true,
+          value: 'object',
+        })],
+      });
+    case Kind.UNIT:
+      return b.tsUndefinedKeyword();
     default:
       return buildUnknownType(type);
   }
