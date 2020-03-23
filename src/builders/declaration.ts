@@ -225,7 +225,7 @@ export function buildTypeReference(
   return b.tsTypeReference(buildTypeQualifiedName(type));
 }
 
-function buildType(
+export function buildType(
   type: ApiBuilderType,
   context: Context,
 ) {
@@ -248,7 +248,7 @@ function buildType(
   return buildTypeReference(type);
 }
 
-function buildTypeAnnotation(
+export function buildTypeAnnotation(
   type: ApiBuilderType,
   context: Context,
 ): namedTypes.TSTypeAnnotation {

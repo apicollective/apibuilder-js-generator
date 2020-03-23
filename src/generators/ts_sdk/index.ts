@@ -23,6 +23,8 @@ import url from 'url';
 import {
   buildContext,
   buildModuleDeclarations,
+  buildType,
+  buildTypeAnnotation,
   buildTypeIdentifier,
   buildTypeQualifiedName,
   buildTypeReference,
@@ -1879,6 +1881,7 @@ function getOperationQueryInterfaceName(
 
 function buildOperationQueryInterface(
   operation: ApiBuilderOperation,
+  context: Context,
 ): namedTypes.TSInterfaceDeclaration {
   const properties: namedTypes.TSPropertySignature[] = [];
 
@@ -1888,9 +1891,7 @@ function buildOperationQueryInterface(
     properties.push(b.tsPropertySignature.from({
       key: b.identifier(parameter.name),
       optional: !parameter.isRequired,
-      typeAnnotation: b.tsTypeAnnotation.from({
-        typeAnnotation: buildTSTypeKind(parameter.type),
-      }),
+      typeAnnotation: buildTypeAnnotation(parameter.type, context),
     }));
   });
 
@@ -1904,6 +1905,7 @@ function buildOperationQueryInterface(
 
 function buildOperationParameterProperties(
   operation: ApiBuilderOperation,
+  context: Context,
 ): namedTypes.TSPropertySignature[] {
   const properties: namedTypes.TSPropertySignature[] = [];
 
@@ -1916,9 +1918,7 @@ function buildOperationParameterProperties(
       ] : null,
       key: b.identifier('body'),
       optional: false,
-      typeAnnotation: b.tsTypeAnnotation.from({
-        typeAnnotation: buildTSTypeKind(operation.body.type),
-      }),
+      typeAnnotation: buildTypeAnnotation(operation.body.type, context),
     }));
   }
 
@@ -1945,9 +1945,7 @@ function buildOperationParameterProperties(
       comments,
       key: b.identifier(parameter.name),
       optional: !parameter.isRequired || parameter.defaultValue != null,
-      typeAnnotation: b.tsTypeAnnotation.from({
-        typeAnnotation: buildTSTypeKind(parameter.type),
-      }),
+      typeAnnotation: buildTypeAnnotation(parameter.type, context),
     }));
   });
 
@@ -1956,10 +1954,11 @@ function buildOperationParameterProperties(
 
 function buildOperationParametersInterface(
   operation: ApiBuilderOperation,
+  context: Context,
 ): namedTypes.TSInterfaceDeclaration {
   return b.tsInterfaceDeclaration.from({
     body: b.tsInterfaceBody.from({
-      body: buildOperationParameterProperties(operation),
+      body: buildOperationParameterProperties(operation, context),
     }),
     id: b.identifier(getOperationParametersInterfaceName(operation)),
   });
@@ -1967,9 +1966,10 @@ function buildOperationParametersInterface(
 
 function buildOperationParametersTypeLiteral(
   operation: ApiBuilderOperation,
+  context: Context,
 ): namedTypes.TSTypeLiteral {
   return b.tsTypeLiteral.from({
-    members: buildOperationParameterProperties(operation),
+    members: buildOperationParameterProperties(operation, context),
   });
 }
 
@@ -1981,6 +1981,7 @@ function getResourceIdentifier(
 
 function buildResourceClass(
   resource: ApiBuilderResource,
+  context: Context,
 ): namedTypes.ClassDeclaration {
   const methods: namedTypes.ClassMethod[] = [];
 
@@ -2008,7 +2009,7 @@ function buildResourceClass(
     let methodParameter: PatternKind = b.identifier.from({
       name: 'params',
       typeAnnotation: b.tsTypeAnnotation.from({
-        typeAnnotation: buildOperationParametersTypeLiteral(operation),
+        typeAnnotation: buildOperationParametersTypeLiteral(operation, context),
       }),
     });
 
@@ -2097,7 +2098,7 @@ function buildResourceClass(
           typeName: buildHttpResponseCodeIdentifier(response.code),
           typeParameters: b.tsTypeParameterInstantiation.from({
             params: [
-              buildTSTypeKind(response.type),
+              buildType(response.type, context),
             ],
           }),
         });
@@ -2462,7 +2463,7 @@ function buildFile(
     buildStripQueryFunction(),
     buildHttpClientClass(context),
     buildBaseResourceClass(),
-    rootService.resources.map(_ => buildResourceClass(_)),
+    rootService.resources.map(_ => buildResourceClass(_, context)),
     buildClientInstanceInterface(context),
     buildCreateClientFunction(context),
   ).map(_ => buildExportNamedDeclaration(_));
