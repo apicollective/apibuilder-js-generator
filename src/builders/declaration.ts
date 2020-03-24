@@ -387,6 +387,7 @@ export function buildModuleDeclarations(
 ): namedTypes.TSModuleDeclaration[] {
   const modules: namedTypes.TSModuleDeclaration[] = [];
   const services = context.importedServices.concat(context.rootService);
+
   services.forEach((service) => {
     if (service.enums.length) {
       modules.push(buildEnumModuleDeclaration(service));
