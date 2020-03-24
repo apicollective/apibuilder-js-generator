@@ -4,8 +4,9 @@
   "description": "apibuilder code generators for JavaScript",
   "main": "index.js",
   "scripts": {
-    "dev:start": "DEBUG=apibuilder:* nodemon",
     "build": "tsc && rsync -a --include '*/' --include '*.hbs' --include '*.ejs' --exclude '*' src/ dist",
+    "dev:start": "nodemon ./src/server/index.ts",
+    "dev:debug": "nodemon --inspect ./src/server/index.ts",
     "lint": "tslint --project tsconfig.json 'src/**/*.{ts,js}'",
     "pretest": "npm run lint",
     "test": "jest --maxWorkers=4",

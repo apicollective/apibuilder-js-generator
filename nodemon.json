@@ -1,7 +1,13 @@
 {
-    "exec": "ts-node ./src/server/index.js",
-    "ext": "js,ejs,ts",
-    "watch": [
-      "src"
-    ]
-  }
+  "restartable": "rs",
+  "verbose": true,
+  "execMap": {
+    "ts": "node --require ts-node/register"
+  },
+  "watch": ["src/"],
+  "env": {
+    "DEBUG": "apibuilder:*",
+    "NODE_ENV": "development"
+  },
+  "ext": "ejs,js,json,ts"
+}
