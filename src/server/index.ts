@@ -1,18 +1,19 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const log = require('debug')('apibuilder:generator');
+import bodyParser from 'body-parser';
+import debug from 'debug';
+import express from 'express';
+import drop from 'lodash/drop';
+import find from 'lodash/find';
+import get from 'lodash/get';
+import keys from 'lodash/keys';
+import map from 'lodash/map';
+import omit from 'lodash/omit';
+import size from 'lodash/size';
+import take from 'lodash/take';
+import values from 'lodash/values';
 
-const drop = require('lodash/drop');
-const find = require('lodash/find');
-const get = require('lodash/get');
-const keys = require('lodash/keys');
-const map = require('lodash/map');
-const omit = require('lodash/omit');
-const size = require('lodash/size');
-const take = require('lodash/take');
-const values = require('lodash/values');
+import generators from '../generators';
 
-const generators = require('../generators');
+const log = debug('apibuilder:generator');
 
 const app = express();
 app.use(bodyParser.json({ limit: '5mb' }));
@@ -84,8 +85,8 @@ app.post('/invocations/:key', (req, res) => {
   return generator.generate(invocationForm).then((files) => {
     log(`INFO: Completed code generation for ${invocationKey} (${size(files)} Files)`);
     res.send({
-      source: '',
       files,
+      source: '',
     });
   }).catch((error) => {
     log(`ERROR: Could not generate code for ${invocationKey}: ${error.message}`);
