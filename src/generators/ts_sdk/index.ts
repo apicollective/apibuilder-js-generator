@@ -708,7 +708,7 @@ function buildHttpClientOptions(): namedTypes.TSInterfaceDeclaration {
         }),
         b.tsPropertySignature.from({
           key: b.identifier('fetch'),
-          optional: true,
+          optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
               typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION),
@@ -737,10 +737,10 @@ function buildHttpClientClass(
       body: [
         b.classProperty.from({
           access: 'private',
-          key: b.identifier('fetch'),
+          key: b.identifier('options'),
           typeAnnotation: b.tsTypeAnnotation.from({
             typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_FETCH_FUNCTION),
+              typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
             }),
           }),
           value: null,
@@ -752,24 +752,10 @@ function buildHttpClientClass(
                 expression: b.assignmentExpression.from({
                   left: b.memberExpression.from({
                     object: b.thisExpression(),
-                    property: b.identifier('fetch'),
+                    property: b.identifier('options'),
                   }),
                   operator: '=',
-                  right: b.conditionalExpression.from({
-                    alternate: b.identifier('fetch'),
-                    consequent: b.memberExpression.from({
-                      object: b.identifier('options'),
-                      property: b.identifier('fetch'),
-                    }),
-                    test: b.binaryExpression.from({
-                      left: b.memberExpression.from({
-                        object: b.identifier('options'),
-                        property: b.identifier('fetch'),
-                      }),
-                      operator: '!=',
-                      right: b.nullLiteral(),
-                    }),
-                  }),
+                  right: b.identifier('options'),
                 }),
               }),
             ],
@@ -777,17 +763,12 @@ function buildHttpClientClass(
           key: b.identifier('constructor'),
           kind: 'constructor',
           params: [
-            b.assignmentPattern.from({
-              left: b.identifier.from({
-                name: 'options',
-                typeAnnotation: b.tsTypeAnnotation.from({
-                  typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
-                  }),
+            b.identifier.from({
+              name: 'options',
+              typeAnnotation: b.tsTypeAnnotation.from({
+                typeAnnotation: b.tsTypeReference.from({
+                  typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
                 }),
-              }),
-              right: b.objectExpression.from({
-                properties: [],
               }),
             }),
           ],
@@ -1065,7 +1046,10 @@ function buildHttpClientClass(
                         }),
                       ],
                       callee: b.memberExpression.from({
-                        object: b.thisExpression(),
+                        object: b.memberExpression.from({
+                          object: b.thisExpression(),
+                          property: b.identifier('options'),
+                        }),
                         property: b.identifier('fetch'),
                       }),
                     }),
@@ -1611,17 +1595,12 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
           key: b.identifier('constructor'),
           kind: 'constructor',
           params: [
-            b.assignmentPattern.from({
-              left: b.identifier.from({
-                name: 'options',
-                typeAnnotation: b.tsTypeAnnotation.from({
-                  typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
-                  }),
+            b.identifier.from({
+              name: 'options',
+              typeAnnotation: b.tsTypeAnnotation.from({
+                typeAnnotation: b.tsTypeReference.from({
+                  typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
                 }),
-              }),
-              right: b.objectExpression.from({
-                properties: [],
               }),
             }),
           ],
