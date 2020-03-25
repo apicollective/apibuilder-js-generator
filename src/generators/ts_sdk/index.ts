@@ -700,13 +700,6 @@ function buildHttpClientOptions(): namedTypes.TSInterfaceDeclaration {
     body: b.tsInterfaceBody.from({
       body: [
         b.tsPropertySignature.from({
-          key: b.identifier('baseUrl'),
-          optional: true,
-          typeAnnotation: b.tsTypeAnnotation.from({
-            typeAnnotation: b.tsStringKeyword(),
-          }),
-        }),
-        b.tsPropertySignature.from({
           key: b.identifier('fetch'),
           optional: false,
           typeAnnotation: b.tsTypeAnnotation.from({
