@@ -2179,7 +2179,7 @@ function buildCreateClientFunction(
     params: [
       b.identifier.from({
         name: 'options',
-        optional: true,
+        optional: false,
         typeAnnotation: b.tsTypeAnnotation.from({
           typeAnnotation: b.tsTypeReference.from({
             typeName: b.identifier(IDENTIFIER_HTTP_CLIENT_OPTIONS),
