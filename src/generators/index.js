@@ -6,6 +6,7 @@ const propTypes = require('./prop_types');
 const nodeGraphQL = require('./node_graphql');
 const tsConstants = require('./ts_constants');
 const tsDeclarations = require('./ts_declarations');
+const tsDeclarationsV2 = require('./ts_declarations_v2');
 const tsPropTypes = require('./ts_prop_types');
 const tsSdk = require('./ts_sdk');
 const jsdoc = require('./jsdoc');
@@ -104,6 +105,14 @@ const generators = {
     description: 'TypeScript declaration file covering enums, models and unions from Apibuilder',
     attributes: [],
     generator: tsDeclarations,
+  },
+
+  ts_declarations_v2: {
+    key: 'ts_declarations_v2',
+    name: 'TypeScript declaration file',
+    description: 'Generates TypeScript declaration files with type information from API Builder services',
+    attributes: [],
+    generator: tsDeclarationsV2,
   },
 };
 

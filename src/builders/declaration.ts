@@ -382,24 +382,33 @@ function buildUnionModuleDeclaration(
   return buildModuleDeclaration(identifiers, declarations);
 }
 
-export function buildModuleDeclarations(
+export function buildModuleDeclarationsFromService(
+  service: ApiBuilderService,
   context: Context,
 ): namedTypes.TSModuleDeclaration[] {
   const modules: namedTypes.TSModuleDeclaration[] = [];
-  const services = context.importedServices.concat(context.rootService);
 
-  services.forEach((service) => {
-    if (service.enums.length) {
-      modules.push(buildEnumModuleDeclaration(service));
-    }
+  if (service.enums.length) {
+    modules.push(buildEnumModuleDeclaration(service));
+  }
 
-    if (service.models.length) {
-      modules.push(buildModelModuleDeclaration(service, context));
-    }
+  if (service.models.length) {
+    modules.push(buildModelModuleDeclaration(service, context));
+  }
 
-    if (service.unions.length) {
-      modules.push(buildUnionModuleDeclaration(service, context));
-    }
-  });
+  if (service.unions.length) {
+    modules.push(buildUnionModuleDeclaration(service, context));
+  }
+
   return modules;
+}
+
+export function buildModuleDeclarations(
+  context: Context,
+): namedTypes.TSModuleDeclaration[] {
+  const services = context.importedServices.concat(context.rootService);
+  return services.reduce<namedTypes.TSModuleDeclaration[]>(
+    (modules, service) => modules.concat(buildModuleDeclarationsFromService(service, context)),
+    [],
+  );
 }
