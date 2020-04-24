@@ -16,7 +16,8 @@ import generators from '../generators';
 const log = debug('apibuilder:generator');
 
 const app = express();
-app.use(bodyParser.json({ limit: '5mb' }));
+
+app.use(bodyParser.json({ limit: '10mb' }));
 
 const port = process.env.APPLICATION_PORT || 7050;
 
