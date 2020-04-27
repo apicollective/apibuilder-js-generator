@@ -42,8 +42,8 @@ export function generate(
       .concat(context.rootService)
       .forEach((service) => {
         const ast = buildFile(service, context);
-        const basename = `${service.applicationKey}.d.ts`;
-        const dirname = service.namespace.split('.').join('/');
+        const basename = `${service.namespace}.${service.applicationKey}.d.ts`;
+        const dirname = '';
         const { code } = print(ast, {
           quote: 'single',
           tabWidth: 2,
