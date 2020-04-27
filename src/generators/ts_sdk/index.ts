@@ -1,13 +1,10 @@
 import {
-  ApiBuilderEnum,
   ApiBuilderFile,
   ApiBuilderInvocationFormConfig,
-  ApiBuilderModel,
   ApiBuilderOperation,
   ApiBuilderPrimitiveType,
   ApiBuilderResource,
   ApiBuilderType,
-  ApiBuilderUnion,
   isArrayType,
   isMapType,
   isPrimitiveType,
@@ -16,7 +13,7 @@ import {
 import { builders as b, namedTypes } from 'ast-types';
 import { DeclarationKind, PatternKind, StatementKind, TSTypeKind } from 'ast-types/gen/kinds';
 import debug from 'debug';
-import { camelCase, upperFirst } from 'lodash';
+import { camelCase } from 'lodash';
 import { print } from 'recast';
 import url from 'url';
 
@@ -30,6 +27,10 @@ import {
   buildTypeReference,
   Context,
 } from '../../builders';
+import pascalCase from '../../utilities/pascalCase';
+import shortNameCompare from '../../utilities/shortNameCompare';
+import stringCompare from '../../utilities/stringCompare';
+import stripTrailingSlash from '../../utilities/stripTrailingSlash';
 
 type TSTypeDeclaration = namedTypes.TSInterfaceDeclaration | namedTypes.TSTypeAliasDeclaration;
 
@@ -121,35 +122,9 @@ const IDENTIFIER_STRIP_QUERY = 'stripQuery';
 // from API builder specifications.
 const IDENTIFIER_INTERNAL_NAMESPACE = 'internalTypes';
 
-function pascalCase(
-  value: string,
-): string {
-  return upperFirst(camelCase(value));
-}
-
 function isOk(statusCode: number | string) {
   const status = typeof statusCode === 'string' ? parseInt(statusCode, 10) : statusCode;
   return status >= 200 && status < 300;
-}
-
-function stripTrailingSlash(
-  value: string,
-): string {
-  if (value.endsWith('/')) return value.slice(0, -1);
-  return value;
-}
-
-function stringCompare(s1: string, s2: string) {
-  if (s1 > s2) return 1;
-  if (s1 < s2) return -1;
-  return 0;
-}
-
-function shortNameCompare(
-  t1: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-  t2: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-): number {
-  return stringCompare(t1.shortName, t2.shortName);
 }
 
 function buildExportNamedDeclaration(
