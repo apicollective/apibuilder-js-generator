@@ -13,7 +13,7 @@ import {
 import { builders as b, namedTypes } from 'ast-types';
 import { DeclarationKind, PatternKind, StatementKind, TSTypeKind } from 'ast-types/gen/kinds';
 import debug from 'debug';
-import { camelCase } from 'lodash';
+import { camelCase, flatMap } from 'lodash';
 import { print } from 'recast';
 import url from 'url';
 
@@ -1929,6 +1929,52 @@ function buildOperationParametersInterfaceDeclarations(
   });
 }
 
+function buildOperationResponseTypeAliasIdentifier(
+  operation: ApiBuilderOperation,
+): namedTypes.Identifier {
+  return b.identifier.from({
+    name: pascalCase(`${operation.resource.plural} ${operation.nickname} response`),
+  });
+}
+
+function buildOperationResponseTypeAliasDeclaration(
+  operation: ApiBuilderOperation,
+  context: Context,
+): namedTypes.TSTypeAliasDeclaration {
+  const responseTypes = b.tsUnionType.from({
+    types: operation.responses.map((response) => {
+      return b.tsTypeReference.from({
+        typeName: buildHttpResponseCodeIdentifier(response.code),
+        typeParameters: b.tsTypeParameterInstantiation.from({
+          params: [
+            buildType(response.type, context),
+          ],
+        }),
+      });
+    }),
+  });
+
+  if (responseTypes.types.length === 0) {
+    responseTypes.types = [
+      b.tsUndefinedKeyword(),
+    ];
+  }
+
+  return b.tsTypeAliasDeclaration.from({
+    id: buildOperationResponseTypeAliasIdentifier(operation),
+    typeAnnotation: responseTypes,
+  });
+}
+
+function buildOperationResponseTypeAliasDeclarations(
+  resource: ApiBuilderResource,
+  context: Context,
+): namedTypes.TSTypeAliasDeclaration[] {
+  return resource.operations.map((operation) => {
+    return buildOperationResponseTypeAliasDeclaration(operation, context);
+  });
+}
+
 function buildOperationParametersTypeLiteral(
   operation: ApiBuilderOperation,
   context: Context,
@@ -2112,7 +2158,9 @@ function buildResourceClassMethods(
           typeName: b.identifier('Promise'),
           typeParameters: b.tsTypeParameterInstantiation.from({
             params: [
-              responseTypes,
+              b.tsTypeReference.from({
+                typeName: buildOperationResponseTypeAliasIdentifier(operation),
+              }),
             ],
           }),
         }),
@@ -2439,13 +2487,15 @@ function buildFile(
     buildStripQueryFunction(),
     buildHttpClientClass(context),
     buildBaseResourceClass(),
-    rootService.resources.reduce<DeclarationKind[]>(
-      (declarations, resource) => (declarations.concat(
-        buildOperationParametersInterfaceDeclarations(resource, context),
-        buildResourceClass(resource, context),
-      )),
-      [],
-    ),
+    flatMap(rootService.resources, (resource): DeclarationKind[] => {
+      return buildOperationParametersInterfaceDeclarations(resource, context);
+    }),
+    flatMap(rootService.resources, (resource): DeclarationKind[] => {
+      return buildOperationResponseTypeAliasDeclarations(resource, context);
+    }),
+    rootService.resources.map((resource) => {
+      return buildResourceClass(resource, context);
+    }),
     buildClientInstanceInterface(context),
     buildCreateClientFunction(context),
   ).map((declaration) => {
