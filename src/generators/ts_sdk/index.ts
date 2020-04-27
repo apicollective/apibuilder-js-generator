@@ -1900,7 +1900,15 @@ function buildOperationParameterProperties(
   return properties;
 }
 
-function buildOperationParametersInterface(
+function buildOperationParameterInterfaceIdentifier(
+  operation: ApiBuilderOperation,
+): namedTypes.Identifier {
+  return b.identifier.from({
+    name: pascalCase(`${operation.resource.plural} ${operation.nickname} parameters`),
+  });
+}
+
+function buildOperationParametersInterfaceDeclaration(
   operation: ApiBuilderOperation,
   context: Context,
 ): namedTypes.TSInterfaceDeclaration {
@@ -1908,7 +1916,16 @@ function buildOperationParametersInterface(
     body: b.tsInterfaceBody.from({
       body: buildOperationParameterProperties(operation, context),
     }),
-    id: b.identifier(getOperationParametersInterfaceName(operation)),
+    id: buildOperationParameterInterfaceIdentifier(operation),
+  });
+}
+
+function buildOperationParametersInterfaceDeclarations(
+  resource: ApiBuilderResource,
+  context: Context,
+): namedTypes.TSInterfaceDeclaration[] {
+  return resource.operations.map((operation) => {
+    return buildOperationParametersInterfaceDeclaration(operation, context);
   });
 }
 
@@ -1927,10 +1944,10 @@ function getResourceIdentifier(
   return b.identifier(`${pascalCase(resource.plural)}Resource`);
 }
 
-function buildResourceClass(
+function buildResourceClassMethods(
   resource: ApiBuilderResource,
   context: Context,
-): namedTypes.ClassDeclaration {
+): namedTypes.ClassMethod[] {
   const methods: namedTypes.ClassMethod[] = [];
 
   resource.operations.forEach((operation) => {
@@ -1957,7 +1974,9 @@ function buildResourceClass(
     let methodParameter: PatternKind = b.identifier.from({
       name: 'params',
       typeAnnotation: b.tsTypeAnnotation.from({
-        typeAnnotation: buildOperationParametersTypeLiteral(operation, context),
+        typeAnnotation: b.tsTypeReference.from({
+          typeName: buildOperationParameterInterfaceIdentifier(operation),
+        }),
       }),
     });
 
@@ -2101,6 +2120,15 @@ function buildResourceClass(
     }));
   });
 
+  return methods;
+}
+
+export function buildResourceClass(
+  resource: ApiBuilderResource,
+  context: Context,
+): namedTypes.ClassDeclaration {
+  const methods = buildResourceClassMethods(resource, context);
+
   return b.classDeclaration.from({
     body: b.classBody.from({
       body: methods,
@@ -2171,7 +2199,7 @@ function buildCreateClientFunction(
   });
 }
 
-function buildInternalTypeDeclarations(): TSTypeDeclaration[] {
+export function buildInternalTypeDeclarations(): TSTypeDeclaration[] {
   const initial: TSTypeDeclaration[] = [];
   return initial.concat(
     buildFetchOptions(),
@@ -2240,7 +2268,7 @@ function buildHttpStatusCodes(): namedTypes.TSTypeAliasDeclaration[] {
   });
 }
 
-function buildStripQueryFunction(): namedTypes.FunctionDeclaration {
+export function buildStripQueryFunction(): namedTypes.FunctionDeclaration {
   return b.functionDeclaration.from({
     body: b.blockStatement.from({
       body: [
@@ -2394,7 +2422,7 @@ function buildFile(
 ): namedTypes.File {
   const { rootService } = context;
 
-  const namedExports = [].concat(
+  const namedExports = ([] as DeclarationKind[]).concat(
     buildTypeDeclarations(context),
     // buildJSONPrimitiveType(),
     // buildJSONValueType(),
@@ -2411,12 +2439,20 @@ function buildFile(
     buildStripQueryFunction(),
     buildHttpClientClass(context),
     buildBaseResourceClass(),
-    rootService.resources.map(_ => buildResourceClass(_, context)),
+    rootService.resources.reduce<DeclarationKind[]>(
+      (declarations, resource) => (declarations.concat(
+        buildOperationParametersInterfaceDeclarations(resource, context),
+        buildResourceClass(resource, context),
+      )),
+      [],
+    ),
     buildClientInstanceInterface(context),
     buildCreateClientFunction(context),
-  ).map(_ => buildExportNamedDeclaration(_));
+  ).map((declaration) => {
+    return buildExportNamedDeclaration(declaration);
+  });
 
-  const statements: StatementKind[] = [].concat(
+  const statements = ([] as StatementKind[]).concat(
     buildImportDeclarations(),
     buildModuleDeclarations(context),
     namedExports,
