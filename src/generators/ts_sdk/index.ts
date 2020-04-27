@@ -116,6 +116,7 @@ const IDENTIFIER_HTTP_REQUEST_OPTIONS = '$HttpRequestOptions';
 const IDENTIFIER_HTTP_RESPONSE_ERROR = '$HttpResponseError';
 const IDENTIFIER_HTTP_RESPONSE = '$HttpResponse';
 const IDENTIFIER_STRIP_QUERY = 'stripQuery';
+const IDENTIFIER_RESOURCE_CLASS = '$Resource';
 
 // Name for namespace containing internal types.
 // Used to avoid naming collision with types generated
@@ -1575,7 +1576,7 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
         }),
       ],
     }),
-    id: b.identifier('BaseResource'),
+    id: b.identifier(IDENTIFIER_RESOURCE_CLASS),
   });
 }
 
@@ -2105,7 +2106,7 @@ function buildResourceClass(
       body: methods,
     }),
     id: getResourceIdentifier(resource),
-    superClass: b.identifier('BaseResource'),
+    superClass: b.identifier(IDENTIFIER_RESOURCE_CLASS),
   });
 }
 
