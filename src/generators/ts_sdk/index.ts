@@ -929,7 +929,7 @@ function buildHttpClientClass(
                                             b.objectProperty.from({
                                               key: b.identifier('request'),
                                               shorthand: true,
-                                              value: b.identifier('requeset'),
+                                              value: b.identifier('request'),
                                             }),
                                             b.objectProperty.from({
                                               key: b.identifier('status'),
