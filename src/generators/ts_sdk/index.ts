@@ -1457,80 +1457,43 @@ function buildParseHeadersFunction(): namedTypes.FunctionDeclaration {
           ],
           kind: 'const',
         }),
-        b.forOfStatement.from({
-          body: b.blockStatement.from({
-            body: [
-              b.variableDeclaration.from({
-                declarations: [
-                  b.variableDeclarator.from({
-                    id: b.arrayPattern.from({
-                      elements: [
-                        b.identifier.from({
-                          name: 'key',
+        b.expressionStatement.from({
+          expression: b.callExpression.from({
+            arguments: [
+              b.arrowFunctionExpression.from({
+                body: b.blockStatement.from({
+                  body: [
+                    b.expressionStatement.from({
+                      expression: b.assignmentExpression.from({
+                        left: b.memberExpression.from({
+                          computed: true,
+                          object: b.identifier('headers'),
+                          property: b.callExpression.from({
+                            arguments: [],
+                            callee: b.memberExpression.from({
+                              object: b.identifier('key'),
+                              property: b.identifier('toLowerCase'),
+                            }),
+                          }),
                         }),
-                        b.identifier.from({
-                          name: 'value',
-                        }),
-                      ],
-                    }),
-                    init: b.identifier.from({
-                      name: 'entry',
-                    }),
-                  }),
-                ],
-                kind: 'const',
-              }),
-              b.expressionStatement.from({
-                expression: b.assignmentExpression.from({
-                  left: b.memberExpression.from({
-                    computed: true,
-                    object: b.identifier.from({
-                      name: 'headers',
-                    }),
-                    property: b.callExpression.from({
-                      arguments: [],
-                      callee: b.memberExpression.from({
-                        object: b.identifier.from({
-                          name: 'key',
-                        }),
-                        property: b.identifier.from({
-                          name: 'toLowerCase',
-                        }),
+                        operator: '=',
+                        right: b.identifier('value'),
                       }),
                     }),
-                  }),
-                  operator: '=',
-                  right: b.identifier.from({
-                    name: 'value',
-                  }),
+                  ],
                 }),
+                params: [
+                  b.identifier('value'),
+                  b.identifier('key'),
+                ],
               }),
             ],
-          }),
-          left: b.variableDeclaration.from({
-            declarations: [
-              b.variableDeclarator.from({
-                id: b.identifier.from({
-                  name: 'entry',
-                }),
-              }),
-            ],
-            kind: 'const',
-          }),
-          right: b.callExpression.from({
-            arguments: [],
             callee: b.memberExpression.from({
               object: b.memberExpression.from({
-                object: b.identifier.from({
-                  name: 'response',
-                }),
-                property: b.identifier.from({
-                  name: 'headers',
-                }),
+                object: b.identifier('response'),
+                property: b.identifier('headers'),
               }),
-              property: b.identifier.from({
-                name: 'entries',
-              }),
+              property: b.identifier('forEach'),
             }),
           }),
         }),
