@@ -38,7 +38,6 @@ export function buildTypeDeclarationFile(context: Context) {
               }),
             }),
           ],
-          declare: true,
           kind: 'const',
           type: 'VariableDeclaration',
         },
