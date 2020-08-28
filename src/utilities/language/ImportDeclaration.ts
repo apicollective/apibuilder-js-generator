@@ -1,4 +1,4 @@
-export type ImportDeclarationConfig = {
+export interface IImportDeclarationConfig {
   defaultExport?: string;
   namedExports: string[];
   moduleName: string;
@@ -12,7 +12,7 @@ export default class ImportDeclaration {
   /**
    * Creates an import declaration.
    */
-  constructor(config: ImportDeclarationConfig) {
+  constructor(config: IImportDeclarationConfig) {
     const { defaultExport, namedExports, moduleName } = config;
 
     this.defaultExport = defaultExport;
@@ -20,17 +20,15 @@ export default class ImportDeclaration {
     this.moduleName = moduleName;
   }
 
-  toString() {
-    const { defaultExport, namedExports, moduleName } = this;
-
+  public toString() {
     let str;
 
-    if (defaultExport) {
-      str = `const ${defaultExport} = require('${moduleName}');`;
-    } else if (namedExports && namedExports.length) {
-      str = `const { ${namedExports.join(', ')} } = require('${moduleName}');`;
+    if (this.defaultExport) {
+      str = `const ${this.defaultExport} = require('${this.moduleName}');`;
+    } else if (this.namedExports && this.namedExports.length) {
+      str = `const { ${this.namedExports.join(', ')} } = require('${this.moduleName}');`;
     } else {
-      str = `require('${moduleName}');`;
+      str = `require('${this.moduleName}');`;
     }
 
     return str;
