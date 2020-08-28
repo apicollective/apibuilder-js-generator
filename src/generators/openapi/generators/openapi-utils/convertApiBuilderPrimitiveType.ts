@@ -1,9 +1,10 @@
+import { SchemaObject } from '@loopback/openapi-v3-types';
 import {
   ApiBuilderPrimitiveType,
   Kind,
  } from 'apibuilder-js';
 
-function convertApiBuilderPrimitiveType(type: ApiBuilderPrimitiveType) {
+function convertApiBuilderPrimitiveType(type: ApiBuilderPrimitiveType): SchemaObject {
   switch (type.baseTypeName) {
     case Kind.BOOLEAN: return { type: 'boolean' };
     case Kind.DATE_ISO8601: return { type: 'string', format: 'date' };

@@ -8,10 +8,12 @@ import {
   convertApiBuilderType,
   convertLocationToIn,
 } from '../openapi-utils';
+import { IsImportedChecker } from '../openapi-utils/isTypeImported';
 
 function generateParameterObject(
   apibuilderParameter: ApiBuilderParameter,
   parameterTypeValidator,
+  isImported: IsImportedChecker,
 ): ParameterObject {
   const {
     defaultValue,
@@ -39,7 +41,7 @@ Apibuilder defined this parameter location as "Form" which is incompatible with 
     example: defaultValue ? defaultValue : undefined,
     in: convertLocationToIn(location as ApiBuilderParameterLocation),
     required: isRequired,
-    schema: convertApiBuilderType(type, parameterTypeValidator),
+    schema: convertApiBuilderType(type, parameterTypeValidator, isImported),
     ...shorthand,
   };
 
