@@ -5,6 +5,7 @@ import {
   generateSchemaModels,
 } from '../../../../../src/generators/openapi/generators/openapi-schemas';
 import apidocApiJson = require('../../../../fixtures/schemas/apidoc-api.json');
+import { isTypeImported } from '../../../../../src/generators/openapi/generators/openapi-utils';
 
 describe('generate schema models', () => {
   const service = new ApiBuilderService(apidocApiJson);

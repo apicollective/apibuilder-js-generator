@@ -5,6 +5,7 @@ export type IsImportedChecker =
 
 export default function isTypeImported(service: ApiBuilderService): IsImportedChecker {
   return (type: ApiBuilderModel | ApiBuilderUnion | ApiBuilderEnum) => {
-    return type.packageName !== service.namespace;
+    const lastDot = type.packageName.lastIndexOf('.');
+    return type.packageName.substring(0, lastDot) !== service.namespace;
   };
 }
