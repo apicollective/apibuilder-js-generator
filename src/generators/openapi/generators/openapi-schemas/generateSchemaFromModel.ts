@@ -6,10 +6,17 @@ import {
 import {
   generateSchemaPropertiesFromModelFields,
 } from '../openapi-schemas';
+import { IsImportedChecker } from '../openapi-utils/isTypeImported';
 
-function generateSchemaFromModel(model: ApiBuilderModel, modelValidator) {
+function generateSchemaFromModel(
+  model: ApiBuilderModel,
+  modelValidator,
+  isImported: IsImportedChecker,
+) {
   const required = map(filter(model.fields, ['required', true]), req => req.name);
-  const properties = generateSchemaPropertiesFromModelFields(model.fields, modelValidator);
+  const properties = generateSchemaPropertiesFromModelFields(model.fields,
+                                                             modelValidator,
+                                                             isImported);
 
   return {
     [model.shortName]: {

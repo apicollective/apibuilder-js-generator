@@ -10,6 +10,7 @@ import {
 import { generateParameterObject } from '../openapi-parameter';
 import { generateRequestBodyObject } from '../openapi-request-body';
 import { generateResponsesObject } from '../openapi-responses';
+import { isTypeImported } from '../openapi-utils';
 
 function generateOperationObject(
   apibuilderOperation: ApiBuilderOperation,
@@ -27,12 +28,12 @@ function generateOperationObject(
   };
 
   const generateParameterObjectWithValidation = (parameter) => {
-    return generateParameterObject(parameter, typeValidator);
+    return generateParameterObject(parameter, typeValidator, isTypeImported(service));
   };
 
   const generateRequestBodyObjectWithValidation = (body: ApiBuilderBody)
   : RequestBodyObject => {
-    return generateRequestBodyObject(body, typeValidator);
+    return generateRequestBodyObject(body, typeValidator, isTypeImported(service));
   };
 
   return {
