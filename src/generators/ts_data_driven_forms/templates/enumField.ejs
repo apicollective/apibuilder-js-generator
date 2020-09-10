@@ -1,6 +1,6 @@
 {
   label: '<%= helpers.makeLabel(field.name) %>',
-  name: '<%= field.name %>',
+  name: '<%= prefix + field.name %>',
   component: ComponentTypes.SELECT,
   options: [
   <% field.type.values.forEach(function(value) { %>{ label: '<%= helpers.makeLabel(value.name) %>', value: '<%= value.name %>' },<% }); %>

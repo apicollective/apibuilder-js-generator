@@ -1,6 +1,10 @@
 export const <%= helpers.pascalCase(model.shortName) %> = {
   name: '<%= model.shortName %>',
-  fields: [<% model.fields.forEach(function(field) { if (helpers.getFieldType(field.type)) { %><%- include(helpers.getFieldType(field.type), { field: field, helpers: helpers }); %><% }}); %>
+  fields: [<% model.fields.forEach(function(field) { if (helpers.getFieldType(field.type)) { %><%- include(helpers.getFieldType(field.type), {
+    field: field,
+    helpers: helpers,
+    prefix: ''
+  }); %><% }}); %>
   ],
 } as Schema;
 

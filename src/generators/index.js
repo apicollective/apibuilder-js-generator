@@ -9,6 +9,7 @@ const tsDeclarations = require('./ts_declarations');
 const tsDeclarationsV2 = require('./ts_declarations_v2');
 const tsPropTypes = require('./ts_prop_types');
 const tsSdk = require('./ts_sdk');
+const tsDataDrivenForms = require('./ts_data_driven_forms');
 const jsdoc = require('./jsdoc');
 const openapi = require('./openapi');
 
