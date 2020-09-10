@@ -114,6 +114,14 @@ const generators = {
     attributes: [],
     generator: tsDeclarationsV2,
   },
+
+  ts_data_driven_forms: {
+    key: 'ts_data_driven_forms',
+    name: 'Data Driven Forms Schemas',
+    description: 'Generates Typescript Schema files for use with data driven forms, see https://data-driven-forms.org/',
+    attributes: [],
+    generator: tsDataDrivenForms,
+  },
 };
 
 module.exports = generators;

@@ -1,0 +1,6 @@
+{
+  label: '<%= helpers.makeLabel(field.name) %>',
+  name: '<%= field.name %>',
+  component: ComponentTypes.SUB_FORM,
+  fields: [<% field.type.fields.forEach(function(modelField) { %><%- include(helpers.getFieldType(modelField.type), { field: modelField, helpers: helpers }); %><%}); %>],
+},

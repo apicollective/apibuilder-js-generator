@@ -1,0 +1,10 @@
+{
+  label: '<%= helpers.makeLabel(field.name) %>',
+  name: '<%= field.name %>',<% if(helpers.getDataType(field.type.ofType || field.type)) { %> 
+  dataType: <%= helpers.getDataType(field.type.ofType || field.type) %>,<% } %>
+  component: <%= helpers.getComponentType(field.type.ofType || field.type) %>,<% if(helpers.getType(field.type.ofType || field.type)) { %>
+  type: '<%= helpers.getType(field.type.ofType || field.type) %>',<% } %><% if(field.isRequired) { %>
+  validate: [
+    { type: ValidatorTypes.REQUIRED },
+  ],<% } %>
+},

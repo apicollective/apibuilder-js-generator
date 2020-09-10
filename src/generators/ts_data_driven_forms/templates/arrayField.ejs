@@ -1,0 +1,17 @@
+{
+  <% if (helpers.getFieldType(field.type.ofType) === 'enumField') { %>
+    label: '<%= helpers.makeLabel(field.name) %>: Array of enum type not supported',
+    name: '<%= field.name %>',
+    component: ComponentTypes.PLAIN_TEXT,
+  <% } else { %>
+    label: '<%= helpers.makeLabel(field.name) %>',
+    name: '<%= field.name %>',
+    component: ComponentTypes.FIELD_ARRAY,
+    <% if(field.type.ofType.fields && field.type.ofType.fields.length) { %>fields: [
+      <% field.type.ofType.fields.forEach(function(arrayField) { %><%- include(helpers.getFieldType(arrayField.type), { field: arrayField, helpers: helpers }); %><%}); %>
+    ]<% } else { %>fields: [{component: '<%= helpers.getComponentType(field.type.ofType) %>'}]<% } %>,
+    <% if(field.isRequired) { %>validate: [
+      { type: ValidatorTypes.REQUIRED },
+    ],<% } %>
+  <% } %>
+},
