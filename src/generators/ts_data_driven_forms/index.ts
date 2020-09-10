@@ -1,6 +1,6 @@
 import ejs from "ejs";
 import { ApiBuilderFile, ApiBuilderInvocationFormConfig, ApiBuilderService, ApiBuilderModel, ApiBuilderType, isEnumType, isModelType, isArrayType, isMapType, isUnionType, ApiBuilderOperation } from "apibuilder-js";
-import { capitalize, endsWith } from "lodash";
+import { capitalize, kebabCase } from "lodash";
 import pascalCase from "../../utilities/pascalCase"
 
 import fs = require('fs');
@@ -144,6 +144,6 @@ export function generate(
       useTabs: true,
     });
 
-    resolve([new ApiBuilderFile(`${service.name}.ts`, 'data_driven_forms', codeFile)]);
+    resolve([new ApiBuilderFile(`${kebabCase(service.name.toLowerCase())}.ts`, 'data_driven_forms', codeFile)]);
   });
 }
