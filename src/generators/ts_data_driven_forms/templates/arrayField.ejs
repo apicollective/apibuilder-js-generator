@@ -1,19 +1,21 @@
 {
-  <% if (helpers.getFieldType(field.type.ofType) === 'enumField') { %>
-    label: '<%= helpers.makeLabel(field.name) %>: Array of enum type not supported',
-    name: '<%= prefix + field.name %>',
-    component: ComponentTypes.PLAIN_TEXT,
-  <% } else { %>
-    label: '<%= helpers.makeLabel(field.name) %>',
-    name: '<%= prefix + field.name %>',
-    component: ComponentTypes.FIELD_ARRAY,
-    <% if(field.type.ofType.fields && field.type.ofType.fields.length) { %>fields: [
+  label: '<%= helpers.makeLabel(field.name) %>',
+  name: '<%= prefix + field.name %>',
+  <% if(helpers.getFieldType(field.type.ofType) === 'enumField') { %> component: ComponentTypes.SELECT,
+    isMulti: true,
+    options: [
+    <% field.type.ofType.values.forEach(function(value) { %>{ label: '<%= helpers.makeLabel(value.name) %>', value: '<%= value.name %>' },<% }); %>
+    ]<% } else { %>component: ComponentTypes.FIELD_ARRAY,
+    <% if(helpers.getFieldType(field.type.ofType) === 'modelField') { %>fields: [
       <% field.type.ofType.fields.forEach(function(arrayField) { %><%- include(helpers.getFieldType(arrayField.type), {
         field: arrayField,
         helpers: helpers,
         prefix: ''
       }); %><%}); %>
-    ]<% } else { %>fields: [{component: '<%= helpers.getComponentType(field.type.ofType) %>'}]<% } %>,
+    ]<% } else if(helpers.getFieldType(field.type.ofType) === 'primitiveField') { %>fields: [{component: '<%= helpers.getComponentType(field.type.ofType) %>'}]<% } else { %>fields: [{
+      label: '<%= helpers.makeLabel(field.type.ofType.name) %>: Type <%= field.type %> not supported',
+      component: ComponentTypes.PLAIN_TEXT,
+    }]<% } %>,
     <% if(field.isRequired) { %>validate: [
       { type: ValidatorTypes.REQUIRED },
     ],<% } %>
