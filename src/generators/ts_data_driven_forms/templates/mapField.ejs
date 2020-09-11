@@ -1,5 +1,13 @@
-{
-  label: '<%= helpers.makeLabel(field.name) %>: Map type not supported',
+<% if (helpers.getFieldType(field.type.ofType) === 'primitiveField') { %>{
+  label: '<%= helpers.makeLabel(field.name) %>',
+  name: '<%= prefix + field.name %>',
+  component: 'map',
+  mapType: '<%= field.type.ofType %>',
+  <% if(field.isRequired) { %>validate: [
+    { type: ValidatorTypes.REQUIRED },
+  ],<% } %>
+},<% } else { %>{
+  label: '<%= helpers.makeLabel(field.name) %>: Map of type <%= field.type.ofType %> not supported',
   name: '<%= prefix + field.name %>',
   component: ComponentTypes.PLAIN_TEXT,
-},
+},<% } %>

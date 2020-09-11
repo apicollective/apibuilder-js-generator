@@ -4,5 +4,8 @@
   component: ComponentTypes.SELECT,
   options: [
   <% field.type.values.forEach(function(value) { %>{ label: '<%= helpers.makeLabel(value.name) %>', value: '<%= value.name %>' },<% }); %>
-  ]
+  ],
+  <% if(field.isRequired) { %>validate: [
+    { type: ValidatorTypes.REQUIRED },
+  ],<% } %>
 },

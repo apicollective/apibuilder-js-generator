@@ -6,5 +6,8 @@
     field: modelField,
     helpers: helpers,
     prefix: prefix + field.name + '.'
-  }); %><%}); %>],
+  }); %><%}); %>],<% if(field.isRequired) { %>
+  validate: [
+    { type: ValidatorTypes.REQUIRED },
+  ],<% } %>
 },

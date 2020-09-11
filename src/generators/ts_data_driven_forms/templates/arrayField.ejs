@@ -12,7 +12,22 @@
         helpers: helpers,
         prefix: ''
       }); %><%}); %>
-    ]<% } else if(helpers.getFieldType(field.type.ofType) === 'primitiveField') { %>fields: [{component: '<%= helpers.getComponentType(field.type.ofType) %>'}]<% } else { %>fields: [{
+    ]<% } else if(helpers.getFieldType(field.type.ofType) === 'unionField') { %>fields: [{
+      component: 'union-select',
+      unions: [<% field.type.ofType.types.forEach(function(unionType) { %>
+        {
+          discriminator: '<%= unionType.discriminatorValue %>',<% if(helpers.getFieldType(unionType.type) === 'modelField') { %>
+          fields: [<% unionType.type.fields.forEach(function(modelField) { %><%- include(helpers.getFieldType(modelField.type), {
+            field: modelField,
+            helpers: helpers,
+            prefix: ''
+          }); %><%}); %>]
+        <% } else { %>fields: [{
+          label: 'Type <%= unionType.type %> not supported',
+          component: ComponentTypes.PLAIN_TEXT,
+        }]<% } %>,
+      },<% }); %>],
+    }]<% } else if(helpers.getFieldType(field.type.ofType) === 'primitiveField') { %>fields: [{component: '<%= helpers.getComponentType(field.type.ofType) %>'}]<% } else { %>fields: [{
       label: '<%= helpers.makeLabel(field.type.ofType.name) %>: Type <%= field.type %> not supported',
       component: ComponentTypes.PLAIN_TEXT,
     }]<% } %>,
