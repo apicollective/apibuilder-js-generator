@@ -1,7 +1,18 @@
-import ejs from "ejs";
-import { ApiBuilderFile, ApiBuilderInvocationFormConfig, ApiBuilderService, ApiBuilderModel, ApiBuilderType, isEnumType, isModelType, isArrayType, isMapType, isUnionType, ApiBuilderOperation } from "apibuilder-js";
-import { capitalize, kebabCase } from "lodash";
-import pascalCase from "../../utilities/pascalCase"
+import {
+  ApiBuilderFile,
+  ApiBuilderInvocationFormConfig,
+  ApiBuilderModel,
+  ApiBuilderService,
+  ApiBuilderType,
+  isArrayType,
+  isEnumType,
+  isMapType,
+  isModelType,
+  isUnionType,
+} from 'apibuilder-js';
+import ejs from 'ejs';
+import { capitalize, kebabCase } from 'lodash';
+import pascalCase from '../../utilities/pascalCase';
 
 import fs = require('fs');
 import path = require('path');
@@ -14,41 +25,54 @@ import Schema from '@data-driven-forms/react-form-renderer/dist/cjs/schema';
 
 `];
 
-const PrimitiveFieldTypes = ['decimal', 'double', 'integer', 'long', 'string', 'boolean', 'json', 'object', 'date-time-iso8601', 'date-iso8601', 'unit', 'uuid'];
+const primitiveFieldTypes = [
+  'decimal',
+  'double',
+  'integer',
+  'long',
+  'string',
+  'boolean',
+  'json',
+  'object',
+  'date-time-iso8601',
+  'date-iso8601',
+  'unit',
+  'uuid',
+];
 
-const ComponentTypeMap = {
-  'decimal': 'ComponentTypes.TEXT_FIELD',
-  'double': 'ComponentTypes.TEXT_FIELD',
-  'integer': 'ComponentTypes.TEXT_FIELD',
-  'long': 'ComponentTypes.TEXT_FIELD',
-  'string': 'ComponentTypes.TEXT_FIELD',
-  'boolean': 'ComponentTypes.SWITCH',
-  'json': 'ComponentTypes.TEXT_FIELD',
-  'object': 'ComponentTypes.TEXT_FIELD',
-  'date-time-iso8601': 'ComponentTypes.TEXT_FIELD',
+const componentTypeMap = {
+  boolean: 'ComponentTypes.SWITCH',
   'date-iso8601': 'ComponentTypes.DATE_PICKER',
-  'unit': 'ComponentTypes.TEXT_FIELD',
-  'uuid': 'ComponentTypes.TEXT_FIELD',
+  'date-time-iso8601': 'ComponentTypes.TEXT_FIELD',
+  decimal: 'ComponentTypes.TEXT_FIELD',
+  double: 'ComponentTypes.TEXT_FIELD',
+  integer: 'ComponentTypes.TEXT_FIELD',
+  json: 'ComponentTypes.TEXT_FIELD',
+  long: 'ComponentTypes.TEXT_FIELD',
+  object: 'ComponentTypes.TEXT_FIELD',
+  string: 'ComponentTypes.TEXT_FIELD',
+  unit: 'ComponentTypes.TEXT_FIELD',
+  uuid: 'ComponentTypes.TEXT_FIELD',
 };
 
-const DataTypeMap = {
-  'boolean': 'DataTypes.BOOLEAN',
-  'decimal': 'DataTypes.NUMBER',
-  'double': 'DataTypes.FLOAT',
-  'integer': 'DataTypes.INTEGER',
-  'long': 'DataTypes.INTEGER',
+const dataTypeMap = {
+  boolean: 'DataTypes.BOOLEAN',
+  decimal: 'DataTypes.NUMBER',
+  double: 'DataTypes.FLOAT',
+  integer: 'DataTypes.INTEGER',
+  long: 'DataTypes.INTEGER',
 };
 
-const TypeMap = {
-  'boolean': 'boolean',
-  'double': 'number',
-  'decimal': 'number',
-  'integer': 'number',
-  'long': 'number',
+const typeMap = {
+  boolean: 'boolean',
+  decimal: 'number',
+  double: 'number',
+  integer: 'number',
+  long: 'number',
 };
 
 function getFieldType(type: ApiBuilderType): string {
-  if (PrimitiveFieldTypes.indexOf(type.toString()) > -1) {
+  if (primitiveFieldTypes.indexOf(type.toString()) > -1) {
     return 'primitiveField';
   }
 
@@ -76,15 +100,15 @@ function getFieldType(type: ApiBuilderType): string {
 }
 
 function getComponentType(type: string): string {
-  return ComponentTypeMap[type];
+  return componentTypeMap[type];
 }
 
 function getDataType(type: string): string {
-  return DataTypeMap[type];
+  return dataTypeMap[type];
 }
 
 function getType(type: string): string {
-  return TypeMap[type];
+  return typeMap[type];
 }
 
 function makeLabel(value: string): string {
@@ -92,12 +116,12 @@ function makeLabel(value: string): string {
 }
 
 const helpers = {
-  getFieldType,
   getComponentType,
   getDataType,
+  getFieldType,
   getType,
+  makeLabel,
   pascalCase,
-  makeLabel
 };
 
 function generateSchema(model: ApiBuilderModel) {
@@ -114,10 +138,12 @@ function generateSchemas(service: ApiBuilderService): string[] {
 
   service.resources.forEach((resource) => {
     resource.operations.forEach((operation) => {
-      const model = operation.body && operation.body.type && isModelType(operation.body.type) ? operation.body.type : undefined;
+      const model = operation.body
+        && operation.body.type
+        && isModelType(operation.body.type) ? operation.body.type : undefined;
 
       if (model && (operation.method === 'PUT' || operation.method === 'POST')
-        && models.findIndex((m) => m.shortName === model.shortName) < 0) {
+        && models.findIndex(m => m.shortName === model.shortName) < 0) {
         models.push(model);
       }
     });
@@ -136,14 +162,16 @@ export function generate(
   return new Promise((resolve) => {
     const service = new ApiBuilderService(invocationForm.service);
     const schemas = generateSchemas(service);
+    const fileName = `${kebabCase(service.name.toLowerCase())}.ts`;
 
     const codeFile = prettier.format(fileHeader.concat(schemas).join(''), {
+      parser: 'typescript',
       printWidth: 120,
       singleQuote: true,
-      parser: 'typescript',
-      useTabs: true,
     });
 
-    resolve([new ApiBuilderFile(`${kebabCase(service.name.toLowerCase())}.ts`, 'data_driven_forms', codeFile)]);
+    resolve([
+      new ApiBuilderFile(fileName, 'data_driven_forms', codeFile),
+    ]);
   });
 }
