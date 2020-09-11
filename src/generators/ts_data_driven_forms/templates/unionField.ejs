@@ -1,5 +1,26 @@
 {
-  label: '<%= helpers.makeLabel(field.name) %>: Union type not supported',
-  name: '<%= prefix + field.name %>',
-  component: ComponentTypes.PLAIN_TEXT,
+  label: 'Select <%= helpers.makeLabel(field.name) %> Type',
+  name: '<%= prefix + field.name + '.discriminator' %>',
+  component: ComponentTypes.SELECT,
+  options: [
+    <% field.type.types.forEach(function(value) { %>{ label: '<%= helpers.makeLabel(value.type.shortName) %>', value: '<%= value.type.shortName %>' },<% }); %>
+  ]
 },
+<% field.type.types.forEach(function(unionField) { %>{
+  label: '<%= helpers.makeLabel(field.name) %>',
+  name: '<%= prefix + field.name %>',
+  component: ComponentTypes.SUB_FORM,
+  condition: {
+    when: '<%= prefix + field.name + '.discriminator' %>',
+    is: '<%= unionField.type.shortName %>'
+  },
+  <% if(helpers.getFieldType(unionField.type) === 'modelField') { %>fields: [
+    <% unionField.type.fields.forEach(function(modelField) { %><%- include(helpers.getFieldType(modelField.type), {
+    field: modelField,
+    helpers: helpers,
+    prefix: prefix + field.name + '.'
+  }); %><%}); %>]<% } else { %>fields: [{
+    label: '<%= helpers.makeLabel(field.type.ofType.name) %>: Type <%= field.type %> not supported',
+    component: ComponentTypes.PLAIN_TEXT,
+  }]<% } %>,
+},<% }); %>
