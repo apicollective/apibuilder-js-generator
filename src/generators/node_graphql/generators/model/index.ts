@@ -13,7 +13,7 @@ import { renderTemplate } from '../../../../utilities/template';
 import { destinationPathFromType } from '../../utilities/destinationPath';
 import { getFullType, isReference } from '../../utilities/reference';
 
-import ImportDeclaration = require('../../../../utilities/language/ImportDeclaration');
+import ImportDeclaration from '../../../../utilities/language/ImportDeclaration';
 import GraphQLObjectType = require('../../utilities/GraphQLObjectType');
 import toCustomScalarType = require('../../utilities/toCustomScalarType');
 import toGraphQLScalarType = require('../../utilities/toGraphQLScalarType');
