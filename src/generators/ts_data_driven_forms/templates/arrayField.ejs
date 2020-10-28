@@ -27,7 +27,7 @@
           component: ComponentTypes.PLAIN_TEXT,
         }]<% } %>,
       },<% }); %>],
-    }]<% } else if(helpers.getFieldType(field.type.ofType) === 'primitiveField') { %>fields: [{component: '<%= helpers.getComponentType(field.type.ofType) %>'}]<% } else { %>fields: [{
+    }]<% } else if(helpers.getFieldType(field.type.ofType) === 'primitiveField') { %>fields: [{component: <%= helpers.getComponentType(field.type.ofType) %>}]<% } else { %>fields: [{
       label: '<%= helpers.makeLabel(field.type.ofType.name) %>: Type <%= field.type %> not supported',
       component: ComponentTypes.PLAIN_TEXT,
     }]<% } %>,
