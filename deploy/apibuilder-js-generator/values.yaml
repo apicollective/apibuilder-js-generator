@@ -28,7 +28,7 @@ ingress:
   enabled: true
   gateways:
     - key: apibuilder-js-generator-flow-io
-      tld: api.flow.io
+      tld: flow.io
       hosts:
         - apibuilder-js-generator.flow.io
     - key: apibuilder-js-generator-flow-pub
