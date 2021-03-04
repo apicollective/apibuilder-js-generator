@@ -9,6 +9,7 @@ const tsDeclarations = require('./ts_declarations');
 const tsDeclarationsV2 = require('./ts_declarations_v2');
 const tsPropTypes = require('./ts_prop_types');
 const tsSdk = require('./ts_sdk');
+const tsSdkv2 = require('./ts_sdk_v2');
 const jsdoc = require('./jsdoc');
 const openapi = require('./openapi');
 
@@ -81,6 +82,14 @@ const generators = {
     description: 'Universal SDK in TypeScript',
     attributes: [],
     generator: tsSdk,
+  },
+
+  ts_sdk_v2: {
+    key: 'ts_sdk_v2',
+    name: 'TypeScript Services',
+    description: 'Universal SDK in TypeScript without Flow Type declarations',
+    attributes: [],
+    generator: tsSdkv2,
   },
 
   jsdoc: {
