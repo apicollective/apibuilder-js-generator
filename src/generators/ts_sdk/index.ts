@@ -1189,35 +1189,48 @@ function buildIsResponseEmptyFunction(): namedTypes.FunctionDeclaration {
         b.returnStatement.from({
           argument: b.logicalExpression.from({
             left: b.binaryExpression.from({
-              left: b.identifier.from({
-                name: 'contentLength',
-              }),
-              operator: '!=',
-              right: b.nullLiteral(),
-            }),
-            operator: '&&',
-            right: b.binaryExpression.from({
-              left: b.callExpression.from({
-                arguments: [
-                  b.identifier.from({
-                    name: 'contentLength',
-                  }),
-                  b.numericLiteral.from({
-                    value: 10,
-                  }),
-                ],
-                callee: b.memberExpression.from({
-                  object: b.identifier.from({
-                    name: 'Number',
-                  }),
-                  property: b.identifier.from({
-                    name: 'parseInt',
-                  }),
-                }),
+              left: b.memberExpression.from({
+                object: b.identifier('response'),
+                property: b.identifier('status'),
               }),
               operator: '===',
               right: b.numericLiteral.from({
-                value: 0,
+                value: 204,
+              }),
+            }),
+            operator: '||',
+            right: b.logicalExpression.from({
+              left: b.binaryExpression.from({
+                left: b.identifier.from({
+                  name: 'contentLength',
+                }),
+                operator: '!=',
+                right: b.nullLiteral(),
+              }),
+              operator: '&&',
+              right: b.binaryExpression.from({
+                left: b.callExpression.from({
+                  arguments: [
+                    b.identifier.from({
+                      name: 'contentLength',
+                    }),
+                    b.numericLiteral.from({
+                      value: 10,
+                    }),
+                  ],
+                  callee: b.memberExpression.from({
+                    object: b.identifier.from({
+                      name: 'Number',
+                    }),
+                    property: b.identifier.from({
+                      name: 'parseInt',
+                    }),
+                  }),
+                }),
+                operator: '===',
+                right: b.numericLiteral.from({
+                  value: 0,
+                }),
               }),
             }),
           }),
