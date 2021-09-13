@@ -1,3 +1,4 @@
+import 'dd-trace/init';
 import bodyParser from 'body-parser';
 import debug from 'debug';
 import express from 'express';
