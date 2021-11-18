@@ -16,11 +16,14 @@ import {
   buildModuleDeclarationsFromService,
   Context,
 } from '../../builders';
+import getTags from '../../utilities/getTags';
 
 function buildFile(
   service: ApiBuilderService,
   context: Context,
 ): namedTypes.File {
+  // TODO: How do we avoid building a file when types are
+  // not generated (i.e. allow/block listed)
   return b.file.from({
     program: b.program.from({
       body: buildModuleDeclarationsFromService(service, context),
@@ -33,7 +36,23 @@ export function generate(
 ): Promise<ApiBuilderFile[]> {
   return new Promise((resolve) => {
     const files: ApiBuilderFile[] = [];
-    const context = buildContext(invocationForm);
+
+    const allowTags = invocationForm.attributes.reduce<string[]>((_, attribute) => {
+      console.log(attribute);
+      if (attribute.name === 'allow_tags')
+        _.push(...attribute.value.split(','));
+      return _;
+    }, []);
+
+    console.log({ allowTags });
+
+    const context = buildContext(invocationForm, {
+      isTypeAllowed(type) {
+        if (!allowTags.length) return true;
+        const tags = getTags(type);
+        return allowTags.some((_) => tags.includes(_));
+      }
+    });
 
     // Create a declaration file for each service to avoid duplicate
     // declaration errors when generating multiple services that depend

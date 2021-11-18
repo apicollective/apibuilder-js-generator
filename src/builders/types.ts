@@ -7,8 +7,14 @@ import {
 
 export type TypeRecord = Record<string, (ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion)>;
 
+export type DependencyRecord = Record<string, Set<string>>;
+
 // tslint:disable-next-line: interface-name
 export interface Context {
+  /**
+   * Types that can be generated.
+   */
+  allowTypes: Set<string>;
   /**
    * This property holds types indexed by their fully qualified name.
    */

@@ -355,10 +355,12 @@ function buildModuleDeclaration(
 
 function buildEnumModuleDeclaration(
   service: ApiBuilderService,
+  context: Context,
 ): namedTypes.TSModuleDeclaration {
   const identifiers = buildModuleIdentifiers(service, 'enums');
   const declarations = service.enums
-    .map(enumeration => buildEnumTypeAliasDeclaration(enumeration));
+    .filter((_) => context.allowTypes.has(_.fullName))
+    .map(_ => buildEnumTypeAliasDeclaration(_));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -368,7 +370,8 @@ function buildModelModuleDeclaration(
 ) {
   const identifiers = buildModuleIdentifiers(service, 'models');
   const declarations = service.models
-    .map(model => buildModelInterfaceDeclaration(model, context));
+    .filter((_) => context.allowTypes.has(_.fullName))
+    .map((_) => buildModelInterfaceDeclaration(_, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -378,7 +381,8 @@ function buildUnionModuleDeclaration(
 ) {
   const identifiers = buildModuleIdentifiers(service, 'unions');
   const declarations = service.unions
-    .map(union => buildUnionTypeAliasDeclaration(union, context));
+    .filter((_) => context.allowTypes.has(_.fullName))
+    .map((_) => buildUnionTypeAliasDeclaration(_, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
@@ -389,7 +393,7 @@ export function buildModuleDeclarationsFromService(
   const modules: namedTypes.TSModuleDeclaration[] = [];
 
   if (service.enums.length) {
-    modules.push(buildEnumModuleDeclaration(service));
+    modules.push(buildEnumModuleDeclaration(service, context));
   }
 
   if (service.models.length) {

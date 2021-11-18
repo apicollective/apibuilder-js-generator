@@ -1,9 +1,11 @@
 import {
+  ApiBuilderEnum,
   ApiBuilderInvocationFormConfig,
+  ApiBuilderModel,
   ApiBuilderService,
   ApiBuilderType,
+  ApiBuilderUnion,
   isEnclosingType,
-  isEnumType,
   isModelType,
   isPrimitiveType,
   isUnionType,
@@ -11,9 +13,7 @@ import {
 
 import { identity } from 'lodash';
 
-import { Context, TypeRecord } from './types';
-
-type DependencyRecord = Record<string, Set<string>>;
+import { Context, DependencyRecord, TypeRecord } from './types';
 
 type Edge = [string, string];
 
@@ -21,6 +21,10 @@ type Edge = [string, string];
 interface Node {
   id: string;
   afters: string[];
+}
+
+interface ContextBuilderOptions {
+  isTypeAllowed(type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion): boolean;
 }
 
 class Node implements Node {
@@ -189,17 +193,23 @@ function topologicalSort(dependencies: DependencyRecord) {
 
 export function buildContext(
   invocationForm: ApiBuilderInvocationFormConfig,
+  options: Partial<ContextBuilderOptions> = {},
 ): Context {
+  const defaultIsTypeAllowed = () => true;
+  const {
+    isTypeAllowed = defaultIsTypeAllowed,
+  } = options;
   const rootService = new ApiBuilderService(invocationForm.service);
   const importedServices = invocationForm.imported_services.map(_ => new ApiBuilderService(_));
   const allServices = [rootService].concat(importedServices);
   const typesByName = buildTypeRecord(allServices);
-  const dependencies = buildDependencyRecord(allServices);
-  const { cyclicTypes, sortedTypes } = topologicalSort(dependencies);
+  const dependencyRecord = buildDependencyRecord(allServices);
+
+  const { cyclicTypes, sortedTypes } = topologicalSort(dependencyRecord);
 
   // Types not included in the topological graph because they are independent.
   // These types can be added at any position in the ordered list.
-  const orphanTypes = Object.keys(dependencies).filter(key => !sortedTypes.includes(key));
+  const orphanTypes = Object.keys(dependencyRecord).filter(key => !sortedTypes.includes(key));
 
   const allSortedTypes = sortedTypes.concat(orphanTypes);
 
@@ -208,7 +218,41 @@ export function buildContext(
     return typesByName[key] == null;
   });
 
-  return {
+
+  const addTypeWithDependencies = (
+    collection: Set<string>,
+    typeName: string,
+    predicate?: (typeName: string) => boolean,
+  ) => {
+    collection.add(typeName);
+    const dependencies = dependencyRecord[typeName];
+    if (dependencies != null) {
+      dependencies.forEach((dependency) => {
+        if (typeof predicate !== 'function' || predicate(dependency)) {
+          addTypeWithDependencies(collection, dependency, predicate);
+        }
+      });
+    }
+    return collection;
+  };
+
+  // Types to be generated.
+  const allowTypes = allServices.reduce<Set<string>>((_, service) => {
+    [
+      ...service.enums,
+      ...service.models,
+      ...service.unions,
+    ].forEach((type) => {
+      if (isTypeAllowed(type)) {
+        addTypeWithDependencies(_, type.fullName);
+      }
+    });
+
+    return _;
+  }, new Set());
+
+  const context: Context = {
+    allowTypes,
     cyclicTypes,
     importedServices,
     rootService,
@@ -216,4 +260,6 @@ export function buildContext(
     typesByName,
     unresolvedTypes,
   };
+
+  return context;
 }
