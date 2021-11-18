@@ -224,15 +224,26 @@ export function buildContext(
     typeName: string,
     predicate?: (typeName: string) => boolean,
   ) => {
-    collection.add(typeName);
-    const dependencies = dependencyRecord[typeName];
-    if (dependencies != null) {
-      dependencies.forEach((dependency) => {
-        if (typeof predicate !== 'function' || predicate(dependency)) {
-          addTypeWithDependencies(collection, dependency, predicate);
+    const visited: Record<string, boolean> = {};
+
+    function recurse(typeName) {
+      // To avoid infinite recursion due to cyclic types
+      if (!visited[typeName]) {
+        visited[typeName] = true;
+        collection.add(typeName);
+        const dependencies = dependencyRecord[typeName];
+        if (dependencies != null) {
+          dependencies.forEach((dependency) => {
+            if (typeof predicate !== 'function' || predicate(dependency)) {
+              recurse(dependency);
+            }
+          });
         }
-      });
+      }
     }
+
+    recurse(typeName);
+
     return collection;
   };
 
