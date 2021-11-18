@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@loopback/openapi-v3-types": "^1.2.1",
-    "apibuilder-js": "0.0.13",
+    "apibuilder-js": "0.0.15",
     "ast-types": "^0.13.4",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
