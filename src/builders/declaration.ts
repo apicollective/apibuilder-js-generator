@@ -330,7 +330,11 @@ function buildModuleIdentifiers(
 function buildModuleDeclaration(
   identifiers: namedTypes.Identifier[],
   declarations: (namedTypes.TSInterfaceDeclaration | namedTypes.TSTypeAliasDeclaration)[],
-): namedTypes.TSModuleDeclaration {
+): namedTypes.TSModuleDeclaration | undefined {
+  if (!declarations.length) {
+    return undefined;
+  }
+
   function recurse(
     left: namedTypes.Identifier[],
     right: namedTypes.TSModuleDeclaration,
@@ -356,7 +360,7 @@ function buildModuleDeclaration(
 function buildEnumModuleDeclaration(
   service: ApiBuilderService,
   context: Context,
-): namedTypes.TSModuleDeclaration {
+): namedTypes.TSModuleDeclaration | undefined {
   const identifiers = buildModuleIdentifiers(service, 'enums');
   const declarations = service.enums
     .filter((_) => context.allowTypes.has(_.fullName))
@@ -367,7 +371,7 @@ function buildEnumModuleDeclaration(
 function buildModelModuleDeclaration(
   service: ApiBuilderService,
   context: Context,
-) {
+): namedTypes.TSModuleDeclaration | undefined {
   const identifiers = buildModuleIdentifiers(service, 'models');
   const declarations = service.models
     .filter((_) => context.allowTypes.has(_.fullName))
@@ -378,7 +382,7 @@ function buildModelModuleDeclaration(
 function buildUnionModuleDeclaration(
   service: ApiBuilderService,
   context: Context,
-) {
+): namedTypes.TSModuleDeclaration | undefined {
   const identifiers = buildModuleIdentifiers(service, 'unions');
   const declarations = service.unions
     .filter((_) => context.allowTypes.has(_.fullName))
@@ -393,15 +397,24 @@ export function buildModuleDeclarationsFromService(
   const modules: namedTypes.TSModuleDeclaration[] = [];
 
   if (service.enums.length) {
-    modules.push(buildEnumModuleDeclaration(service, context));
+    const module = buildEnumModuleDeclaration(service, context);
+    if (module != null) {
+      modules.push(module);
+    }
   }
 
   if (service.models.length) {
-    modules.push(buildModelModuleDeclaration(service, context));
+    const module = buildModelModuleDeclaration(service, context);
+    if (module != null) {
+      modules.push(module);
+    }
   }
 
   if (service.unions.length) {
-    modules.push(buildUnionModuleDeclaration(service, context));
+    const module = buildUnionModuleDeclaration(service, context);
+    if (module != null) {
+      modules.push(module);
+    }
   }
 
   return modules;

@@ -22,8 +22,6 @@ function buildFile(
   service: ApiBuilderService,
   context: Context,
 ): namedTypes.File {
-  // TODO: How do we avoid building a file when types are
-  // not generated (i.e. allow/block listed)
   return b.file.from({
     program: b.program.from({
       body: buildModuleDeclarationsFromService(service, context),
@@ -35,16 +33,11 @@ export function generate(
   invocationForm: ApiBuilderInvocationFormConfig,
 ): Promise<ApiBuilderFile[]> {
   return new Promise((resolve) => {
-    const files: ApiBuilderFile[] = [];
-
     const allowTags = invocationForm.attributes.reduce<string[]>((_, attribute) => {
-      console.log(attribute);
       if (attribute.name === 'allow_tags')
         _.push(...attribute.value.split(','));
       return _;
     }, []);
-
-    console.log({ allowTags });
 
     const context = buildContext(invocationForm, {
       isTypeAllowed(type) {
@@ -57,21 +50,21 @@ export function generate(
     // Create a declaration file for each service to avoid duplicate
     // declaration errors when generating multiple services that depend
     // on the same imported services.
-    context.importedServices
+    const files = context.importedServices
       .concat(context.rootService)
-      .forEach((service) => {
-        const ast = buildFile(service, context);
+      .reduce<ApiBuilderFile[]>((_, service) => {
+        const file = buildFile(service, context);
         const basename = `${service.namespace}.${service.applicationKey}.d.ts`;
         const dirname = '';
-        const { code } = print(ast, {
+        const { code } = print(file, {
           quote: 'single',
           tabWidth: 2,
           trailingComma: true,
           useTabs: false,
         });
-        const file = new ApiBuilderFile(basename, dirname, code);
-        files.push(file);
-      });
+        if (code.length) _.push(new ApiBuilderFile(basename, dirname, code));
+        return _;
+      }, []);
 
     resolve(files);
   });
