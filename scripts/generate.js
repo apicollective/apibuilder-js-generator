@@ -28,11 +28,15 @@ async function postInvocationForm(invocationForm, options = {}) {
     body: invocationForm,
   });
 
-  response.body.files.forEach((file) => {
-    const destinationPath = path.resolve(program.output, file.dir, file.name);
+  response.body.files.forEach(({
+    dir = '.',
+    name,
+    contents,
+  }) => {
+    const destinationPath = path.resolve(program.output, dir, name);
     log(`Writing to "${path.relative(process.cwd(), destinationPath)}"`);
     mkdirp.sync(path.dirname(destinationPath));
-    fs.writeFileSync(destinationPath, file.contents);
+    fs.writeFileSync(destinationPath, contents);
   });
 }
 
