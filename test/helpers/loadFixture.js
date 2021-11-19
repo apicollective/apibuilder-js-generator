@@ -29,3 +29,10 @@ function loadFixture(...args) {
 }
 
 exports.loadFixture = loadFixture;
+
+function loadJSONFixture(...args) {
+  const fixture = loadFixture(...args);
+  return JSON.parse(fixture);
+}
+
+exports.loadJSONFixture = loadJSONFixture;

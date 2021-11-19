@@ -5,7 +5,7 @@ const camelCase = require('lodash/camelCase');
 const map = require('lodash/map');
 const filter = require('lodash/filter');
 
-const { capitalizeFirstLetter } = require('./utils');
+const { capitalizeFirstLetter, slug } = require('./utils');
 
 const UTILS_TEMPLATE_LOCATION = path.resolve(__dirname, './templates/utils.hbs');
 const CLIENT_TEMPLATE_LOCATION = path.resolve(__dirname, './templates/client.hbs');
@@ -63,14 +63,14 @@ function getFunctionName(operation, resourcePath) {
       .filter(p => p.startsWith(':'))
       .map((part, idx) => {
         const prefix = (idx === 0) ? 'By' : 'And';
-        return prefix + capitalizeFirstLetter(part.slice(1));
+        return prefix + capitalizeFirstLetter(camelCase(slug(part.slice(1))));
       });
 
     const staticParts = parts
       .filter(p => !p.startsWith(':'))
       .map((part, idx) => {
         const prefix = (idx === 0) ? '' : 'And';
-        return prefix + capitalizeFirstLetter(part);
+        return prefix + capitalizeFirstLetter(camelCase(slug(part)));
       });
 
     const sortedParts = staticParts.concat(variableParts);
