@@ -59,6 +59,7 @@ exports.generate = function generate(invocationForm) {
     prettier: {
       singleQuote: true,
       trailingComma: 'es5',
+      parser: 'babel',
     },
   });
   const file = new ApiBuilderFile(basename, dirname, contents);
