@@ -37,13 +37,13 @@ function generateOperationObject(
   };
 
   return {
-    description: apibuilderOperation.description,
+    ...apibuilderOperation.description && { description: apibuilderOperation.description },
     operationId: generateOperationId(apibuilderOperation.path, apibuilderOperation.method),
     parameters: map(apibuilderOperation.parameters, generateParameterObjectWithValidation),
     ...apibuilderOperation.body && {
       requestBody: generateRequestBodyObjectWithValidation(apibuilderOperation.body),
     },
-    responses: generateResponsesObject(apibuilderOperation.responses),
+    responses: generateResponsesObject(apibuilderOperation.responses, typeValidator, isTypeImported(service)),
     tags: [apibuilderOperation.resource.typeName],
   };
 }
