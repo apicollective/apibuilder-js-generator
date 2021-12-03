@@ -16,12 +16,12 @@ function generateResponseObject(
 
   return {
     ...(description || type) && { description: String(description || type) },
-    headers: generateHeadersObject(headers),
     content: {
-      "application/json": {
-        schema: convertApiBuilderType(type, validator, isImported)
-      }
+      'application/json': {
+        schema: convertApiBuilderType(type, validator, isImported),
+      },
     },
+    headers: generateHeadersObject(headers),
   };
 }
 

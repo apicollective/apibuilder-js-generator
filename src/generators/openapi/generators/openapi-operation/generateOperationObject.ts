@@ -43,7 +43,9 @@ function generateOperationObject(
     ...apibuilderOperation.body && {
       requestBody: generateRequestBodyObjectWithValidation(apibuilderOperation.body),
     },
-    responses: generateResponsesObject(apibuilderOperation.responses, typeValidator, isTypeImported(service)),
+    responses: generateResponsesObject(apibuilderOperation.responses,
+                                       typeValidator,
+                                       isTypeImported(service)),
     tags: [apibuilderOperation.resource.typeName],
   };
 }
