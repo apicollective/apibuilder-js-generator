@@ -4,7 +4,7 @@ import { get } from 'lodash';
 function generateInfoObject(service): InfoObject {
   return {
     contact: get(service, 'info.contact', {}),
-    description: service.description,
+    ...service.description && { description: service.description },
     license: get(service, 'info.license', {}),
     termsOfService: '',
     title: service.name,

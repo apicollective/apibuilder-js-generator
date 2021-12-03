@@ -20,7 +20,7 @@ function generateSchemaFromModel(
 
   return {
     [model.shortName]: {
-      description: model.description,
+      ...model.description && { description: model.description },
       ...model.fields.length && { properties },
       ...required.length && { required },
       ...model.isDeprecated && { deprecated: model.isDeprecated },

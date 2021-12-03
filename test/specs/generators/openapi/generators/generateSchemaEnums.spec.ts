@@ -22,6 +22,7 @@ describe('generate schema enums', () => {
 describe('generate schema enum', () => {
   const dayOfWeekEnum = {
     day_of_week: {
+      description: 'Possible values: sunday,monday,tuesday,wednesday,thursday,friday,saturday.',
       enum: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
       type: 'string',
     },
@@ -48,8 +49,11 @@ describe('generate schema enum', () => {
 
   test('should add a description prop if present', () => {
     const service = new ApiBuilderService(serviceJson);
-    const description = { description: 'An enum for days of the week' };
-    const descriptiveDayOfWeekJson = Object.assign({}, description, enumJson);
+    const description = 'An enum for days of the week.';
+    const descriptiveDayOfWeekJson = {
+      ...enumJson,
+      description
+    };
     const descriptiveDayOfWeek = ApiBuilderEnum.fromConfig(
       descriptiveDayOfWeekJson,
       service,
@@ -57,7 +61,10 @@ describe('generate schema enum', () => {
     );
     const schemaEnum = generateSchemaFromEnum(descriptiveDayOfWeek);
     const expected = {
-      day_of_week: Object.assign({}, description, dayOfWeekEnum.day_of_week),
+      day_of_week: {
+        ...dayOfWeekEnum.day_of_week,
+        description: `${description} Possible values: sunday,monday,tuesday,wednesday,thursday,friday,saturday.`,
+      },
     };
 
     expect(schemaEnum).toEqual(expected);

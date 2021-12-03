@@ -12660,7 +12660,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"application_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"name\\": {
             \\"type\\": \\"string\\"
@@ -12678,7 +12677,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"application_metadata\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
@@ -12731,7 +12729,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"attribute_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"name\\": {
             \\"type\\": \\"string\\"
@@ -12743,7 +12740,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"attribute_summary\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
@@ -12773,7 +12769,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"attribute_value_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"value\\": {
             \\"type\\": \\"string\\"
@@ -12794,7 +12789,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"batch_download_application_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"application_key\\": {
             \\"type\\": \\"string\\"
@@ -12806,7 +12800,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"batch_download_applications\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"applications\\": {
             \\"items\\": {
@@ -12818,7 +12811,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"batch_download_applications_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"applications\\": {
             \\"items\\": {
@@ -12897,7 +12889,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"code_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"attributes\\": {
             \\"items\\": {},
@@ -12949,7 +12940,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"error\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"code\\": {
             \\"type\\": \\"string\\"
@@ -12961,7 +12951,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"generator_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"service_guid\\": {
             \\"type\\": \\"string\\",
@@ -12986,7 +12975,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"generator_service_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"uri\\": {
             \\"type\\": \\"string\\"
@@ -13064,7 +13052,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"move_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"org_key\\": {
             \\"type\\": \\"string\\"
@@ -13102,7 +13089,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"organization_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"name\\": {
             \\"type\\": \\"string\\"
@@ -13138,7 +13124,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"original_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"type\\": {
             \\"$ref\\": \\"#/components/schemas/original_type\\"
@@ -13204,7 +13189,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"subscription_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"organization_key\\": {
             \\"type\\": \\"string\\"
@@ -13240,7 +13224,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"token_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"user_guid\\": {
             \\"type\\": \\"string\\",
@@ -13273,7 +13256,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"user_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"email\\": {
             \\"type\\": \\"string\\"
@@ -13304,7 +13286,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"user_update_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"email\\": {
             \\"type\\": \\"string\\"
@@ -13354,7 +13335,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"version_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"original_form\\": {
             \\"$ref\\": \\"#/components/schemas/original_form\\"
@@ -13386,7 +13366,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"watch_form\\": {
-        \\"description\\": null,
         \\"properties\\": {
           \\"user_guid\\": {
             \\"type\\": \\"string\\",
@@ -13402,6 +13381,7 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"object\\"
       },
       \\"app_sort_by\\": {
+        \\"description\\": \\"Possible values: name,created_at,updated_at,visibility.\\",
         \\"enum\\": [
           \\"name\\",
           \\"created_at\\",
@@ -13411,6 +13391,7 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"string\\"
       },
       \\"original_type\\": {
+        \\"description\\": \\"Possible values: api_json,avro_idl,service_json,swagger.\\",
         \\"enum\\": [
           \\"api_json\\",
           \\"avro_idl\\",
@@ -13420,7 +13401,7 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"string\\"
       },
       \\"publication\\": {
-        \\"description\\": \\"A publication represents something that a user can subscribe to. An example would be subscribing to an email alert whenever a new version of an application is created.\\",
+        \\"description\\": \\"A publication represents something that a user can subscribe to. An example would be subscribing to an email alert whenever a new version of an application is created. Possible values: membership_requests.create,memberships.create,applications.create,versions.create,versions.material_change.\\",
         \\"enum\\": [
           \\"membership_requests.create\\",
           \\"memberships.create\\",
@@ -13431,6 +13412,7 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"string\\"
       },
       \\"sort_order\\": {
+        \\"description\\": \\"Possible values: asc,desc.\\",
         \\"enum\\": [
           \\"asc\\",
           \\"desc\\"
@@ -13438,7 +13420,7 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"type\\": \\"string\\"
       },
       \\"visibility\\": {
-        \\"description\\": \\"Controls who is able to view this version\\",
+        \\"description\\": \\"Controls who is able to view this version. Possible values: user,organization,public.\\",
         \\"enum\\": [
           \\"user\\",
           \\"organization\\",
@@ -13496,7 +13478,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -13506,7 +13487,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           },
           {
@@ -13537,14 +13517,40 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.application_metadata_version]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/application_metadata_version\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -13565,7 +13571,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -13575,21 +13580,43 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"string\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"string\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -13685,7 +13712,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"$ref\\": \\"#/components/schemas/app_sort_by\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"sort_by\\"
           },
           {
@@ -13695,13 +13721,22 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"$ref\\": \\"#/components/schemas/sort_order\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"order\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.application]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/application\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -13720,7 +13755,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           }
         ],
@@ -13736,10 +13770,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.application\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/application\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -13760,7 +13811,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -13770,7 +13820,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           }
         ],
@@ -13786,10 +13835,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.application\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/application\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -13808,7 +13874,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -13818,21 +13883,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -13892,6 +13980,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.version]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/version\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -13912,7 +14010,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -13922,7 +14019,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           }
         ],
@@ -13938,10 +14034,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.application\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/application\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14004,6 +14117,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.attribute]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/attribute\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14027,14 +14150,39 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"201\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.attribute\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/attribute\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14055,17 +14203,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"name\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.attribute\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/attribute\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14084,21 +14246,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"name\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14109,7 +14294,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/authentications/session/:id\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--authentications-session-id\\",
         \\"parameters\\": [
           {
@@ -14119,17 +14303,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"id\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.authentication\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/authentication\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14150,7 +14348,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           }
         ],
@@ -14166,10 +14363,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"201\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.batch_download_applications\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/batch_download_applications\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14180,7 +14394,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/changes\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--changes\\",
         \\"parameters\\": [
           {
@@ -14261,6 +14474,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.change]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/change\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14281,7 +14504,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -14291,7 +14513,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           },
           {
@@ -14301,7 +14522,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"version\\"
           }
         ],
@@ -14317,10 +14537,25 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.generator.v0.models.invocation_form\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {}
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14378,10 +14613,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.code\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/code\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"If the target, version, and/or generator are invalid.\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14446,10 +14698,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.code\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/code\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"If the target, version, and/or generator are invalid.\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14470,7 +14739,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           }
         ],
@@ -14486,10 +14754,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.domain\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/domain\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14510,7 +14795,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -14520,21 +14804,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"name\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14560,10 +14867,28 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14585,7 +14910,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           },
           {
@@ -14595,7 +14919,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"uri\\"
           },
           {
@@ -14605,7 +14928,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"generator_key\\"
           },
           {
@@ -14636,6 +14958,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.generator_service]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/generator_service\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14644,7 +14976,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         ]
       },
       \\"post\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"post--generator_services\\",
         \\"parameters\\": [],
         \\"requestBody\\": {
@@ -14659,10 +14990,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.generator_service\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/generator_service\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14673,7 +15021,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/generator_services/:guid\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--generator_services-guid\\",
         \\"parameters\\": [
           {
@@ -14684,17 +15031,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.generator_service\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/generator_service\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14714,21 +15075,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14822,6 +15206,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.generator_with_service]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/generator_with_service\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14832,7 +15226,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/generators/:key\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--generators-key\\",
         \\"parameters\\": [
           {
@@ -14842,17 +15235,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"key\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.generator_with_service\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/generator_with_service\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14863,12 +15270,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/_internal_/healthcheck\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--_internal_-healthcheck\\",
         \\"parameters\\": [],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.generator.v0.models.healthcheck\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {}
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14879,12 +15290,14 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/_internal_/migrate\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--_internal_-migrate\\",
         \\"parameters\\": [],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"map[string]\\",
+            \\"content\\": {
+              \\"application/json\\": {}
+            },
             \\"headers\\": {}
           }
         },
@@ -14895,7 +15308,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/items\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--items\\",
         \\"parameters\\": [
           {
@@ -14936,6 +15348,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.item]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/item\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14946,7 +15368,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/items/:guid\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--items-guid\\",
         \\"parameters\\": [
           {
@@ -14957,17 +15378,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.item\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/item\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -14989,7 +15424,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"org_guid\\"
           },
           {
@@ -14999,7 +15433,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"org_key\\"
           },
           {
@@ -15010,7 +15443,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"user_guid\\"
           },
           {
@@ -15020,7 +15452,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"role\\"
           },
           {
@@ -15051,6 +15482,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.membership]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/membership\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15061,7 +15502,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/memberships/:guid\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--memberships-guid\\",
         \\"parameters\\": [
           {
@@ -15072,17 +15512,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.membership\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/membership\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15091,7 +15545,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         ]
       },
       \\"delete\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"delete--memberships-guid\\",
         \\"parameters\\": [
           {
@@ -15102,21 +15555,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15138,7 +15614,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"org_guid\\"
           },
           {
@@ -15148,7 +15623,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"org_key\\"
           },
           {
@@ -15159,7 +15633,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"user_guid\\"
           },
           {
@@ -15169,7 +15642,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"role\\"
           },
           {
@@ -15200,6 +15672,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.membership_request]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/membership_request\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15247,10 +15729,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.membership_request\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/membership_request\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15272,17 +15771,34 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15304,17 +15820,34 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15408,6 +15941,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.organization]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/organization\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15431,10 +15974,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.organization\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/organization\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15455,17 +16015,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"key\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.organization\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/organization\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15484,7 +16058,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"key\\"
           }
         ],
@@ -15500,10 +16073,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.organization\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/organization\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15522,21 +16112,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"key\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15557,7 +16170,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"key\\"
           },
           {
@@ -15598,6 +16210,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.attribute_value]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/attribute_value\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15618,7 +16240,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"key\\"
           },
           {
@@ -15628,17 +16249,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"name\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.attribute_value\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/attribute_value\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15657,7 +16292,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"key\\"
           },
           {
@@ -15667,7 +16301,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"name\\"
           }
         ],
@@ -15683,18 +16316,50 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.attribute_value\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/attribute_value\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"201\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.attribute_value\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/attribute_value\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15713,7 +16378,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"key\\"
           },
           {
@@ -15723,21 +16387,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"name\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15763,10 +16450,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.authentication\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/authentication\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15792,10 +16496,28 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15879,6 +16601,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.subscription]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/subscription\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15902,10 +16634,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"201\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.subscription\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/subscription\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15927,17 +16676,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.subscription\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/subscription\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15946,7 +16709,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         ]
       },
       \\"delete\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"delete--subscriptions-guid\\",
         \\"parameters\\": [
           {
@@ -15957,21 +16719,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -15982,7 +16767,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/tokens/users/:user_guid\\": {
       \\"get\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"get--tokens-users-user_guid\\",
         \\"parameters\\": [
           {
@@ -15993,7 +16777,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"user_guid\\"
           },
           {
@@ -16004,7 +16787,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           },
           {
@@ -16035,6 +16817,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.token]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/token\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16056,17 +16848,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.cleartext_token\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/cleartext_token\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16092,10 +16898,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"201\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.token\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/token\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16106,7 +16929,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/tokens/:guid\\": {
       \\"delete\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"delete--tokens-guid\\",
         \\"parameters\\": [
           {
@@ -16117,21 +16939,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16190,6 +17035,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.user]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/user\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16213,10 +17068,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.user\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/user\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16238,17 +17110,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.user\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/user\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16268,7 +17154,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
@@ -16284,10 +17169,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.user\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/user\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16325,10 +17227,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.authentication\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/authentication\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16356,10 +17275,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.authentication\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/authentication\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16370,7 +17306,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
     },
     \\"/validations\\": {
       \\"post\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"post--validations\\",
         \\"parameters\\": [],
         \\"requestBody\\": {
@@ -16385,6 +17320,13 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.validation\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/validation\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16405,7 +17347,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -16415,7 +17356,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           },
           {
@@ -16432,10 +17372,25 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.version\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/version\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16454,7 +17409,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -16464,7 +17418,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           },
           {
@@ -16474,7 +17427,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"version\\"
           }
         ],
@@ -16490,10 +17442,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.version\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/version\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16512,7 +17481,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -16522,7 +17490,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           },
           {
@@ -16532,21 +17499,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"version\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16567,7 +17557,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -16577,7 +17566,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"version\\"
           }
         ],
@@ -16593,10 +17581,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.version\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/version\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16617,7 +17622,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"orgKey\\"
           },
           {
@@ -16627,7 +17631,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"applicationKey\\"
           },
           {
@@ -16674,10 +17677,25 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"object\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"object\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16761,6 +17779,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.watch]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/watch\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16784,10 +17812,27 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"responses\\": {
           \\"201\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.watch\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/watch\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"409\\": {
             \\"description\\": \\"[io.apibuilder.api.v0.models.error]\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"items\\": {
+                    \\"$ref\\": \\"#/components/schemas/error\\"
+                  },
+                  \\"type\\": \\"array\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16809,17 +17854,31 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"io.apibuilder.api.v0.models.watch\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"$ref\\": \\"#/components/schemas/watch\\"
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16828,7 +17887,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         ]
       },
       \\"delete\\": {
-        \\"description\\": null,
         \\"operationId\\": \\"delete--watches-guid\\",
         \\"parameters\\": [
           {
@@ -16839,21 +17897,44 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
               \\"type\\": \\"string\\",
               \\"format\\": \\"uuid\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"guid\\"
           }
         ],
         \\"responses\\": {
           \\"204\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"401\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           },
           \\"404\\": {
             \\"description\\": \\"unit\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"integer\\",
+                  \\"nullable\\": true
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },
@@ -16885,7 +17966,6 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"organization_key\\"
           },
           {
@@ -16895,13 +17975,19 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"schema\\": {
               \\"type\\": \\"string\\"
             },
-            \\"description\\": null,
             \\"name\\": \\"application_key\\"
           }
         ],
         \\"responses\\": {
           \\"200\\": {
             \\"description\\": \\"boolean\\",
+            \\"content\\": {
+              \\"application/json\\": {
+                \\"schema\\": {
+                  \\"type\\": \\"boolean\\"
+                }
+              }
+            },
             \\"headers\\": {}
           }
         },

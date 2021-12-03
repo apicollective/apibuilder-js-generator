@@ -31,18 +31,14 @@ Apibuilder defined this parameter location as "Form" which is incompatible with 
   const description = (location === 'Form')
     ? apibuilderDescription + parameterConversionWarning : apibuilderDescription;
 
-  const shorthand = {
-    description,
-    name,
-  };
-
   const parameterObj = {
     deprecated: Boolean(get(apibuilderDeprecation, 'description')),
     example: defaultValue ? defaultValue : undefined,
     in: convertLocationToIn(location as ApiBuilderParameterLocation),
     required: isRequired,
     schema: convertApiBuilderType(type, parameterTypeValidator, isImported),
-    ...shorthand,
+    ...description && { description },
+    name,
   };
 
   return parameterObj;
