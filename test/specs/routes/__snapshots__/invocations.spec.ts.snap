@@ -12657,6 +12657,15 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"organization\\",
+          \\"name\\",
+          \\"key\\",
+          \\"visibility\\",
+          \\"last_updated_at\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"application_form\\": {
@@ -12674,6 +12683,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"$ref\\": \\"#/components/schemas/visibility\\"
           }
         },
+        \\"required\\": [
+          \\"name\\",
+          \\"visibility\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"application_metadata\\": {
@@ -12686,6 +12699,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"key\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"application_metadata_version\\": {
@@ -12695,6 +12712,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"version\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"application_summary\\": {
@@ -12709,6 +12729,11 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"organization\\",
+          \\"key\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"attribute\\": {
@@ -12726,6 +12751,11 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"name\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"attribute_form\\": {
@@ -12737,6 +12767,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"name\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"attribute_summary\\": {
@@ -12749,6 +12782,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"name\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"attribute_value\\": {
@@ -12766,6 +12803,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"attribute\\",
+          \\"value\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"attribute_value_form\\": {
@@ -12774,6 +12817,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"value\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"authentication\\": {
@@ -12786,6 +12832,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"$ref\\": \\"#/components/schemas/session\\"
           }
         },
+        \\"required\\": [
+          \\"user\\",
+          \\"session\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"batch_download_application_form\\": {
@@ -12797,6 +12847,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"application_key\\",
+          \\"version\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"batch_download_applications\\": {
@@ -12808,6 +12862,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"array\\"
           }
         },
+        \\"required\\": [
+          \\"applications\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"batch_download_applications_form\\": {
@@ -12819,6 +12876,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"array\\"
           }
         },
+        \\"required\\": [
+          \\"applications\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"change\\": {
@@ -12848,6 +12908,17 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"organization\\",
+          \\"application\\",
+          \\"from_version\\",
+          \\"to_version\\",
+          \\"diff\\",
+          \\"changed_at\\",
+          \\"changed_by\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"change_version\\": {
@@ -12861,6 +12932,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"version\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"cleartext_token\\": {
@@ -12870,6 +12945,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"token\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"code\\": {
@@ -12886,6 +12964,11 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"array\\"
           }
         },
+        \\"required\\": [
+          \\"generator\\",
+          \\"source\\",
+          \\"files\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"code_form\\": {
@@ -12895,6 +12978,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"array\\"
           }
         },
+        \\"required\\": [
+          \\"attributes\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"diff_breaking\\": {
@@ -12907,6 +12993,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"boolean\\"
           }
         },
+        \\"required\\": [
+          \\"description\\",
+          \\"is_material\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"diff_non_breaking\\": {
@@ -12919,6 +13009,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"boolean\\"
           }
         },
+        \\"required\\": [
+          \\"description\\",
+          \\"is_material\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"domain\\": {
@@ -12928,6 +13022,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"name\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"email_verification_confirmation_form\\": {
@@ -12937,6 +13034,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"token\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"error\\": {
@@ -12948,6 +13048,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"code\\",
+          \\"message\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"generator_form\\": {
@@ -12958,6 +13062,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"generator\\": {}
         },
+        \\"required\\": [
+          \\"service_guid\\",
+          \\"generator\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"generator_service\\": {
@@ -12972,6 +13080,11 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"uri\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"generator_service_form\\": {
@@ -12980,6 +13093,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"uri\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"generator_with_service\\": {
@@ -12990,6 +13106,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"generator\\": {}
         },
+        \\"required\\": [
+          \\"service\\",
+          \\"generator\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"item\\": {
@@ -13009,6 +13129,11 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"detail\\",
+          \\"label\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"membership\\": {
@@ -13029,6 +13154,13 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"user\\",
+          \\"organization\\",
+          \\"role\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"membership_request\\": {
@@ -13049,6 +13181,13 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"user\\",
+          \\"organization\\",
+          \\"role\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"move_form\\": {
@@ -13057,6 +13196,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"org_key\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"organization\\": {
@@ -13086,6 +13228,15 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"key\\",
+          \\"name\\",
+          \\"namespace\\",
+          \\"visibility\\",
+          \\"domains\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"organization_form\\": {
@@ -13109,6 +13260,11 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"array\\"
           }
         },
+        \\"required\\": [
+          \\"name\\",
+          \\"namespace\\",
+          \\"visibility\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"original\\": {
@@ -13121,6 +13277,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"type\\",
+          \\"data\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"original_form\\": {
@@ -13132,6 +13292,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"data\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"password_reset\\": {
@@ -13144,6 +13307,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"token\\",
+          \\"password\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"password_reset_request\\": {
@@ -13153,6 +13320,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"email\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"session\\": {
@@ -13166,6 +13336,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"format\\": \\"date-time\\"
           }
         },
+        \\"required\\": [
+          \\"id\\",
+          \\"expires_at\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"subscription\\": {
@@ -13186,6 +13360,13 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"organization\\",
+          \\"user\\",
+          \\"publication\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"subscription_form\\": {
@@ -13201,6 +13382,11 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"$ref\\": \\"#/components/schemas/publication\\"
           }
         },
+        \\"required\\": [
+          \\"organization_key\\",
+          \\"user_guid\\",
+          \\"publication\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"token\\": {
@@ -13221,6 +13407,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"user\\",
+          \\"masked_token\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"token_form\\": {
@@ -13233,6 +13425,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"user_guid\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"user\\": {
@@ -13253,6 +13448,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"email\\",
+          \\"nickname\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"user_form\\": {
@@ -13270,6 +13471,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"email\\",
+          \\"password\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"user_summary\\": {
@@ -13283,6 +13488,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"nickname\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"user_update_form\\": {
@@ -13297,6 +13506,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"email\\",
+          \\"nickname\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"validation\\": {
@@ -13312,6 +13525,10 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"array\\"
           }
         },
+        \\"required\\": [
+          \\"valid\\",
+          \\"errors\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"version\\": {
@@ -13332,6 +13549,14 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           \\"service\\": {},
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"organization\\",
+          \\"application\\",
+          \\"version\\",
+          \\"service\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"version_form\\": {
@@ -13343,6 +13568,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"$ref\\": \\"#/components/schemas/visibility\\"
           }
         },
+        \\"required\\": [
+          \\"original_form\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"watch\\": {
@@ -13363,6 +13591,13 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"audit\\": {}
         },
+        \\"required\\": [
+          \\"guid\\",
+          \\"user\\",
+          \\"organization\\",
+          \\"application\\",
+          \\"audit\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"watch_form\\": {
@@ -13378,6 +13613,11 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           }
         },
+        \\"required\\": [
+          \\"user_guid\\",
+          \\"organization_key\\",
+          \\"application_key\\"
+        ],
         \\"type\\": \\"object\\"
       },
       \\"app_sort_by\\": {

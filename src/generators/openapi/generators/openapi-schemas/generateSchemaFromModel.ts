@@ -1,9 +1,5 @@
 import { ApiBuilderModel } from 'apibuilder-js';
 import {
-  filter,
-  map,
-} from 'lodash';
-import {
   generateSchemaPropertiesFromModelFields,
 } from '../openapi-schemas';
 import { IsImportedChecker } from '../openapi-utils/isTypeImported';
@@ -13,7 +9,7 @@ function generateSchemaFromModel(
   modelValidator,
   isImported: IsImportedChecker,
 ) {
-  const required = map(filter(model.fields, ['required', true]), req => req.name);
+  const required = model.fields.filter(f => f.isRequired).map(req => req.name);
   const properties = generateSchemaPropertiesFromModelFields(model.fields,
                                                              modelValidator,
                                                              isImported);
