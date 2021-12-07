@@ -9,7 +9,7 @@ function generateSchemaFromModel(
   modelValidator,
   isImported: IsImportedChecker,
 ) {
-  const required = model.fields.filter(f => f.isRequired).map(req => req.name)
+  const required = model.fields.filter(f => f.isRequired).map(req => req.name);
   const properties = generateSchemaPropertiesFromModelFields(model.fields,
                                                              modelValidator,
                                                              isImported);
