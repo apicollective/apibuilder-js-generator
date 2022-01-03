@@ -1,7 +1,6 @@
 import { SchemaObject } from '@loopback/openapi-v3-types';
-import { ApiBuilderField, ApiBuilderType, isArrayType, isPrimitiveType, Kind } from 'apibuilder-js';
+import { ApiBuilderField, isArrayType, isPrimitiveType, Kind } from 'apibuilder-js';
 import { reduce } from 'lodash';
-import { type } from 'os';
 import { convertApiBuilderType } from '../openapi-utils';
 import { IsImportedChecker } from '../openapi-utils/isTypeImported';
 
