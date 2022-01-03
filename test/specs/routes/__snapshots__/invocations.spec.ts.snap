@@ -12636,24 +12636,29 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this application.\\"
           },
           \\"organization\\": {},
           \\"name\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The unique name for this application.\\"
           },
           \\"key\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Used as a unique key in the URL path. Key is automatically derived from the application name.\\"
           },
           \\"visibility\\": {
-            \\"$ref\\": \\"#/components/schemas/visibility\\"
+            \\"$ref\\": \\"#/components/schemas/visibility\\",
+            \\"description\\": \\"Controls who is able to view this application\\"
           },
           \\"description\\": {
             \\"type\\": \\"string\\"
           },
           \\"last_updated_at\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"date-time\\"
+            \\"format\\": \\"date-time\\",
+            \\"description\\": \\"The updated_at of this application or created_at of it's latest version\\"
           },
           \\"audit\\": {}
         },
@@ -12674,7 +12679,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           },
           \\"key\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Defaults to a key generated from the application name\\"
           },
           \\"description\\": {
             \\"type\\": \\"string\\"
@@ -12693,10 +12699,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this application.\\"
           },
           \\"key\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Used as a unique key in the URL path. Key is automatically derived from the application name.\\"
           }
         },
         \\"required\\": [
@@ -12709,7 +12717,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Describes the versions associated with a given application\\",
         \\"properties\\": {
           \\"version\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"example\\": \\"0.2.5\\"
           }
         },
         \\"required\\": [
@@ -12741,13 +12750,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this attribute.\\"
           },
           \\"name\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The name of the attribute. Globally unique and an 'identifier' (lower case, url safe, etc.)\\"
           },
           \\"description\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Optional description - a good description here will indicate which code generators it applies to and what effect it will have on those code generators.\\"
           },
           \\"audit\\": {}
         },
@@ -12776,10 +12788,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this attribute.\\"
           },
           \\"name\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The name of the attribute. Globally unique and an 'identifier' (lower case, url safe, etc.)\\"
           }
         },
         \\"required\\": [
@@ -12793,7 +12807,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this attribute value.\\"
           },
           \\"attribute\\": {
             \\"$ref\\": \\"#/components/schemas/attribute_summary\\"
@@ -12844,7 +12859,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           },
           \\"version\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"default\\": \\"latest\\"
           }
         },
         \\"required\\": [
@@ -12901,10 +12917,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           },
           \\"changed_at\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"date-time\\"
+            \\"format\\": \\"date-time\\",
+            \\"description\\": \\"Records the timestamp of when the actual change occurred (vs. when we created the changed record)\\"
           },
           \\"changed_by\\": {
-            \\"$ref\\": \\"#/components/schemas/user_summary\\"
+            \\"$ref\\": \\"#/components/schemas/user_summary\\",
+            \\"description\\": \\"Records who made the actual change\\"
           },
           \\"audit\\": {}
         },
@@ -12942,7 +12960,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Separate resource used only for the few actions that require the full token.\\",
         \\"properties\\": {
           \\"token\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The actual token. Guaranteed to be globally unique.\\"
           }
         },
         \\"required\\": [
@@ -12957,11 +12976,15 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"$ref\\": \\"#/components/schemas/generator_with_service\\"
           },
           \\"source\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The actual source code.\\",
+            \\"deprecated\\": true
           },
           \\"files\\": {
             \\"items\\": {},
-            \\"type\\": \\"array\\"
+            \\"type\\": \\"array\\",
+            \\"description\\": \\"A collection of source files\\",
+            \\"default\\": \\"[]\\"
           }
         },
         \\"required\\": [
@@ -12987,10 +13010,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Represents a single breaking diff of an application version. A breaking diff indicates that it is possible for an existing client to now experience an error or invalid data due to the diff.\\",
         \\"properties\\": {
           \\"description\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"example\\": \\"model removed: user\\"
           },
           \\"is_material\\": {
-            \\"type\\": \\"boolean\\"
+            \\"type\\": \\"boolean\\",
+            \\"example\\": \\"True if this is a material change (eg something important). False otherwise. This is used to drive the publication 'versions.material_change'\\"
           }
         },
         \\"required\\": [
@@ -13003,10 +13028,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Represents a single NON breaking diff of an application version.\\",
         \\"properties\\": {
           \\"description\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"example\\": \\"model: user optional field 'name' added\\"
           },
           \\"is_material\\": {
-            \\"type\\": \\"boolean\\"
+            \\"type\\": \\"boolean\\",
+            \\"example\\": \\"True if this is a material change (eg something important). False otherwise. This is used to drive the publication 'versions.material_change'\\"
           }
         },
         \\"required\\": [
@@ -13019,7 +13046,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Represents a single domain name (e.g. www.apibuilder.io). When a new user registers and confirms their email, we automatically associate that user with a member of the organization associated with their domain. For example, if you confirm your account with an email address of example@somedomain.com, we will automatically create a membership request on your behalf to join the organization with domain somedomain.com.\\",
         \\"properties\\": {
           \\"name\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The domain name\\",
+            \\"example\\": \\"www.apibuilder.io\\"
           }
         },
         \\"required\\": [
@@ -13042,10 +13071,12 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
       \\"error\\": {
         \\"properties\\": {
           \\"code\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Machine readable code for this specific error message\\"
           },
           \\"message\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Description of the error\\"
           }
         },
         \\"required\\": [
@@ -13117,7 +13148,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Unique identifer for this item. By using a UUID, you can combine with the type to figure out the URI for the resource\\"
           },
           \\"detail\\": {
             \\"$ref\\": \\"#/components/schemas/item_detail\\"
@@ -13141,7 +13173,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this membership.\\"
           },
           \\"user\\": {
             \\"$ref\\": \\"#/components/schemas/user\\"
@@ -13150,7 +13183,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"$ref\\": \\"#/components/schemas/organization\\"
           },
           \\"role\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The role this user plays for this organization. Typically member or admin.\\",
+            \\"example\\": \\"member\\"
           },
           \\"audit\\": {}
         },
@@ -13168,7 +13203,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this membership request.\\"
           },
           \\"user\\": {
             \\"$ref\\": \\"#/components/schemas/user\\"
@@ -13177,7 +13213,9 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"$ref\\": \\"#/components/schemas/organization\\"
           },
           \\"role\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The requested role for membership to this organization. Typically member or admin.\\",
+            \\"example\\": \\"member\\"
           },
           \\"audit\\": {}
         },
@@ -13193,7 +13231,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
       \\"move_form\\": {
         \\"properties\\": {
           \\"org_key\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The key of the organization to which we are moving this item\\"
           }
         },
         \\"required\\": [
@@ -13206,16 +13245,21 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this organization.\\"
           },
           \\"key\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Used as a unique key in the URL path. Key is automatically derived from the organization name.\\"
           },
           \\"name\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The name of this organization.\\"
           },
           \\"namespace\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Global namespace for this organization.\\",
+            \\"example\\": \\"io.apicollective\\"
           },
           \\"visibility\\": {
             \\"$ref\\": \\"#/components/schemas/visibility\\"
@@ -13224,7 +13268,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"items\\": {
               \\"$ref\\": \\"#/components/schemas/domain\\"
             },
-            \\"type\\": \\"array\\"
+            \\"type\\": \\"array\\",
+            \\"default\\": \\"[]\\"
           },
           \\"audit\\": {}
         },
@@ -13245,19 +13290,25 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           },
           \\"key\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Defaults to a url friendy version of the name\\"
           },
           \\"namespace\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Global namespace for this organization.\\",
+            \\"example\\": \\"io.apicollective\\"
           },
           \\"visibility\\": {
-            \\"$ref\\": \\"#/components/schemas/visibility\\"
+            \\"$ref\\": \\"#/components/schemas/visibility\\",
+            \\"description\\": \\"Public organizations will be listed in apibuilder directory. Organizations with visibility organization will only be visible to members of that org.\\",
+            \\"default\\": \\"organization\\"
           },
           \\"domains\\": {
             \\"items\\": {
               \\"type\\": \\"string\\"
             },
-            \\"type\\": \\"array\\"
+            \\"type\\": \\"array\\",
+            \\"example\\": \\"apibuilder.io\\"
           }
         },
         \\"required\\": [
@@ -13286,7 +13337,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
       \\"original_form\\": {
         \\"properties\\": {
           \\"type\\": {
-            \\"$ref\\": \\"#/components/schemas/original_type\\"
+            \\"$ref\\": \\"#/components/schemas/original_type\\",
+            \\"description\\": \\"If not specified, we set the type by inspecting the data\\"
           },
           \\"data\\": {
             \\"type\\": \\"string\\"
@@ -13301,7 +13353,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Allows a user to change their password with authentication from a token.\\",
         \\"properties\\": {
           \\"token\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Unique one time use token to change a password\\"
           },
           \\"password\\": {
             \\"type\\": \\"string\\"
@@ -13317,7 +13370,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Create a password reset request - e.g. an email containing a one time URL to change a password\\",
         \\"properties\\": {
           \\"email\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The email address for which we generate the password reset.\\"
           }
         },
         \\"required\\": [
@@ -13329,7 +13383,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Represents a user sessions (e.g. user logged into site)\\",
         \\"properties\\": {
           \\"id\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Cryptographically secure session id\\"
           },
           \\"expires_at\\": {
             \\"type\\": \\"string\\",
@@ -13347,7 +13402,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this subscription record\\"
           },
           \\"organization\\": {
             \\"$ref\\": \\"#/components/schemas/organization\\"
@@ -13394,16 +13450,20 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this token.\\"
           },
           \\"user\\": {
-            \\"$ref\\": \\"#/components/schemas/user\\"
+            \\"$ref\\": \\"#/components/schemas/user\\",
+            \\"description\\": \\"The user to which this token belongs.\\"
           },
           \\"masked_token\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The masked from of the token.\\"
           },
           \\"description\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"optional description to help the user manage the token.\\"
           },
           \\"audit\\": {}
         },
@@ -13419,7 +13479,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"user_guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"The user for which we are creating the token.\\"
           },
           \\"description\\": {
             \\"type\\": \\"string\\"
@@ -13435,13 +13496,15 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this user.\\"
           },
           \\"email\\": {
             \\"type\\": \\"string\\"
           },
           \\"nickname\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Public unique identifier for this user.\\"
           },
           \\"name\\": {
             \\"type\\": \\"string\\"
@@ -13465,7 +13528,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"type\\": \\"string\\"
           },
           \\"nickname\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"Defaults to a unique identifier based on email address\\"
           },
           \\"name\\": {
             \\"type\\": \\"string\\"
@@ -13516,13 +13580,16 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"description\\": \\"Used only to validate json files - used as a resource where http status code defines success\\",
         \\"properties\\": {
           \\"valid\\": {
-            \\"type\\": \\"boolean\\"
+            \\"type\\": \\"boolean\\",
+            \\"description\\": \\"If true, the json schema is valid. If false, there is at least one validation error.\\"
           },
           \\"errors\\": {
             \\"items\\": {
               \\"type\\": \\"string\\"
             },
-            \\"type\\": \\"array\\"
+            \\"type\\": \\"array\\",
+            \\"description\\": \\"Contains any validation errors that result from parsing the json document. If empty, the document is valid.\\",
+            \\"default\\": \\"[]\\"
           }
         },
         \\"required\\": [
@@ -13536,17 +13603,23 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this version.\\"
           },
           \\"organization\\": {},
           \\"application\\": {},
           \\"version\\": {
-            \\"type\\": \\"string\\"
+            \\"type\\": \\"string\\",
+            \\"description\\": \\"The tag for this version. Can be anything, but if semver style version number is used, we automatically correctly sort by version number to find latest. Otherwise latest version is considered to be the most recently created.\\",
+            \\"example\\": \\"1.0.0\\"
           },
           \\"original\\": {
-            \\"$ref\\": \\"#/components/schemas/original\\"
+            \\"$ref\\": \\"#/components/schemas/original\\",
+            \\"description\\": \\"The original uploaded file describing this version, if available\\"
           },
-          \\"service\\": {},
+          \\"service\\": {
+            \\"description\\": \\"spec/spec.json description of this API\\"
+          },
           \\"audit\\": {}
         },
         \\"required\\": [
@@ -13565,7 +13638,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
             \\"$ref\\": \\"#/components/schemas/original_form\\"
           },
           \\"visibility\\": {
-            \\"$ref\\": \\"#/components/schemas/visibility\\"
+            \\"$ref\\": \\"#/components/schemas/visibility\\",
+            \\"description\\": \\"If provided, updates the visibility for all versions of this application\\"
           }
         },
         \\"required\\": [
@@ -13578,7 +13652,8 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
         \\"properties\\": {
           \\"guid\\": {
             \\"type\\": \\"string\\",
-            \\"format\\": \\"uuid\\"
+            \\"format\\": \\"uuid\\",
+            \\"description\\": \\"Internal unique identifier for this watch\\"
           },
           \\"user\\": {
             \\"$ref\\": \\"#/components/schemas/user\\"
