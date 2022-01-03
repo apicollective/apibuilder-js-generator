@@ -9,27 +9,30 @@ function getMinAndMax(field: ApiBuilderField): SchemaObject {
     if (field.type.baseTypeName === Kind.DECIMAL
       || field.type.baseTypeName === Kind.DOUBLE
       || field.type.baseTypeName === Kind.INTEGER
-      || field.type.baseTypeName === Kind.LONG)
+      || field.type.baseTypeName === Kind.LONG) {
       return {
         ...field.minimum && { minimum: field.minimum },
         ...field.maximum && { maximum: field.maximum },
-      }
+      };
+    }
 
     if (field.type.baseTypeName === Kind.STRING
-      || field.type.baseTypeName === Kind.UUID)
+      || field.type.baseTypeName === Kind.UUID) {
       return {
         ...field.minimum && { minLength: field.minimum },
         ...field.maximum && { maxLength: field.maximum },
-      }
+      };
+    }
   }
 
-  if (isArrayType(field.type))
+  if (isArrayType(field.type)) {
     return {
       ...field.minimum && { minItems: field.minimum },
       ...field.maximum && { maxItems: field.maximum },
-    }
+    };
+  }
 
-  return {}
+  return {};
 }
 
 function generateSchemaPropertiesFromModelFields(
@@ -47,7 +50,7 @@ function generateSchemaPropertiesFromModelFields(
         ...value.isDeprecated && { deprecated: true },
         ...value.example && { example: value.example },
         ...getMinAndMax(value),
-      }
+      };
       return acc;
     },
     {} as {[key: string]: SchemaObject},
