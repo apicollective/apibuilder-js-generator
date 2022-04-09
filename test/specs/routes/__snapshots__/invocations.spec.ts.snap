@@ -21056,6 +21056,745 @@ declare namespace io.apibuilder.spec.v0.unions {
 }"
 `;
 
+exports[`POST /invocations/:key ts_mocks: apibuilder-api.ts 1`] = `
+"import faker from '@faker-js/faker';
+
+const helpers = {
+  arrayOf: <T>(f: () => T) => {
+    const length = 3;
+
+    return Array.from({
+      length,
+    }, f);
+  },
+
+  objectOf: <T>(f: () => T) => {
+    const keys = ['foo', 'bar', 'qux'];
+
+    return keys.reduce((object, key) => {
+      object[key] = f();
+      return object;
+    }, {});
+  },
+};
+
+const factories = {
+  boolean: () => faker.datatype.boolean(),
+  date_iso_8601: () => faker.datatype.datetime().toISOString().slice(0, 10),
+  date_time_iso_8601: () => faker.datatype.datetime().toISOString(),
+  decimal: () => faker.datatype.float(),
+  double: () => faker.datatype.float(),
+  integer: () => faker.datatype.number(),
+  json: () => faker.datatype.json(),
+  long: () => faker.datatype.number(),
+  object: () => faker.datatype.json(),
+  string: () => faker.datatype.string(),
+  unit: () => undefined,
+  uuid: () => faker.datatype.uuid(),
+  'io.apibuilder.api.v0.enums.app_sort_by': (): io.apibuilder.api.v0.enums.AppSortBy => faker.random.arrayElement(['name', 'created_at', 'updated_at', 'visibility']),
+  'io.apibuilder.api.v0.enums.original_type': (): io.apibuilder.api.v0.enums.OriginalType => faker.random.arrayElement(['api_json', 'avro_idl', 'service_json', 'swagger']),
+
+  'io.apibuilder.api.v0.enums.publication': (): io.apibuilder.api.v0.enums.Publication => faker.random.arrayElement([
+    'membership_requests.create',
+    'memberships.create',
+    'applications.create',
+    'versions.create',
+    'versions.material_change',
+  ]),
+
+  'io.apibuilder.api.v0.enums.sort_order': (): io.apibuilder.api.v0.enums.SortOrder => faker.random.arrayElement(['asc', 'desc']),
+  'io.apibuilder.api.v0.enums.visibility': (): io.apibuilder.api.v0.enums.Visibility => faker.random.arrayElement(['user', 'organization', 'public']),
+
+  'io.apibuilder.api.v0.models.application': (): io.apibuilder.api.v0.models.Application => ({
+    guid: factories.uuid(),
+    organization: factories['io.apibuilder.common.v0.models.reference'](),
+    name: factories.string(),
+    key: factories.string(),
+    visibility: factories['io.apibuilder.api.v0.enums.visibility'](),
+    description: factories.string(),
+    last_updated_at: factories.date_time_iso_8601(),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.application_form': (): io.apibuilder.api.v0.models.ApplicationForm => ({
+    name: factories.string(),
+    key: factories.string(),
+    description: factories.string(),
+    visibility: factories['io.apibuilder.api.v0.enums.visibility'](),
+  }),
+
+  'io.apibuilder.api.v0.models.application_metadata': (): io.apibuilder.api.v0.models.ApplicationMetadata => ({
+    guid: factories.uuid(),
+    key: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.application_metadata_version': (): io.apibuilder.api.v0.models.ApplicationMetadataVersion => ({
+    version: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.application_summary': (): io.apibuilder.api.v0.models.ApplicationSummary => ({
+    type: 'application_summary',
+    guid: factories.uuid(),
+    organization: factories['io.apibuilder.common.v0.models.reference'](),
+    key: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.attribute': (): io.apibuilder.api.v0.models.Attribute => ({
+    guid: factories.uuid(),
+    name: factories.string(),
+    description: factories.string(),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.attribute_form': (): io.apibuilder.api.v0.models.AttributeForm => ({
+    name: factories.string(),
+    description: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.attribute_summary': (): io.apibuilder.api.v0.models.AttributeSummary => ({
+    guid: factories.uuid(),
+    name: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.attribute_value': (): io.apibuilder.api.v0.models.AttributeValue => ({
+    guid: factories.uuid(),
+    attribute: factories['io.apibuilder.api.v0.models.attribute_summary'](),
+    value: factories.string(),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.attribute_value_form': (): io.apibuilder.api.v0.models.AttributeValueForm => ({
+    value: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.authentication': (): io.apibuilder.api.v0.models.Authentication => ({
+    user: factories['io.apibuilder.api.v0.models.user'](),
+    session: factories['io.apibuilder.api.v0.models.session'](),
+  }),
+
+  'io.apibuilder.api.v0.models.batch_download_application_form': (): io.apibuilder.api.v0.models.BatchDownloadApplicationForm => ({
+    application_key: factories.string(),
+    version: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.batch_download_applications': (): io.apibuilder.api.v0.models.BatchDownloadApplications => ({
+    applications: helpers.arrayOf(() => factories['io.apibuilder.api.v0.models.version']()),
+  }),
+
+  'io.apibuilder.api.v0.models.batch_download_applications_form': (): io.apibuilder.api.v0.models.BatchDownloadApplicationsForm => ({
+    applications: helpers.arrayOf(
+      () => factories['io.apibuilder.api.v0.models.batch_download_application_form'](),
+    ),
+  }),
+
+  'io.apibuilder.api.v0.models.change': (): io.apibuilder.api.v0.models.Change => ({
+    guid: factories.uuid(),
+    organization: factories['io.apibuilder.common.v0.models.reference'](),
+    application: factories['io.apibuilder.common.v0.models.reference'](),
+    from_version: factories['io.apibuilder.api.v0.models.change_version'](),
+    to_version: factories['io.apibuilder.api.v0.models.change_version'](),
+    diff: factories['io.apibuilder.api.v0.unions.diff'](),
+    changed_at: factories.date_time_iso_8601(),
+    changed_by: factories['io.apibuilder.api.v0.models.user_summary'](),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.change_version': (): io.apibuilder.api.v0.models.ChangeVersion => ({
+    guid: factories.uuid(),
+    version: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.cleartext_token': (): io.apibuilder.api.v0.models.CleartextToken => ({
+    token: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.code': (): io.apibuilder.api.v0.models.Code => ({
+    generator: factories['io.apibuilder.api.v0.models.generator_with_service'](),
+    source: factories.string(),
+    files: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.models.file']()),
+  }),
+
+  'io.apibuilder.api.v0.models.code_form': (): io.apibuilder.api.v0.models.CodeForm => ({
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.api.v0.models.diff_breaking': (): io.apibuilder.api.v0.models.DiffBreaking => ({
+    type: 'diff_breaking',
+    description: factories.string(),
+    is_material: factories.boolean(),
+  }),
+
+  'io.apibuilder.api.v0.models.diff_non_breaking': (): io.apibuilder.api.v0.models.DiffNonBreaking => ({
+    type: 'diff_non_breaking',
+    description: factories.string(),
+    is_material: factories.boolean(),
+  }),
+
+  'io.apibuilder.api.v0.models.domain': (): io.apibuilder.api.v0.models.Domain => ({
+    name: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.email_verification_confirmation_form': (): io.apibuilder.api.v0.models.EmailVerificationConfirmationForm => ({
+    token: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.error': (): io.apibuilder.api.v0.models.Error => ({
+    code: factories.string(),
+    message: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.generator_form': (): io.apibuilder.api.v0.models.GeneratorForm => ({
+    service_guid: factories.uuid(),
+    generator: factories['io.apibuilder.generator.v0.models.generator'](),
+  }),
+
+  'io.apibuilder.api.v0.models.generator_service': (): io.apibuilder.api.v0.models.GeneratorService => ({
+    guid: factories.uuid(),
+    uri: factories.string(),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.generator_service_form': (): io.apibuilder.api.v0.models.GeneratorServiceForm => ({
+    uri: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.generator_with_service': (): io.apibuilder.api.v0.models.GeneratorWithService => ({
+    service: factories['io.apibuilder.api.v0.models.generator_service'](),
+    generator: factories['io.apibuilder.generator.v0.models.generator'](),
+  }),
+
+  'io.apibuilder.api.v0.models.item': (): io.apibuilder.api.v0.models.Item => ({
+    guid: factories.uuid(),
+    detail: factories['io.apibuilder.api.v0.unions.item_detail'](),
+    label: factories.string(),
+    description: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.membership': (): io.apibuilder.api.v0.models.Membership => ({
+    guid: factories.uuid(),
+    user: factories['io.apibuilder.api.v0.models.user'](),
+    organization: factories['io.apibuilder.api.v0.models.organization'](),
+    role: factories.string(),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.membership_request': (): io.apibuilder.api.v0.models.MembershipRequest => ({
+    guid: factories.uuid(),
+    user: factories['io.apibuilder.api.v0.models.user'](),
+    organization: factories['io.apibuilder.api.v0.models.organization'](),
+    role: factories.string(),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.move_form': (): io.apibuilder.api.v0.models.MoveForm => ({
+    org_key: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.organization': (): io.apibuilder.api.v0.models.Organization => ({
+    guid: factories.uuid(),
+    key: factories.string(),
+    name: factories.string(),
+    namespace: factories.string(),
+    visibility: factories['io.apibuilder.api.v0.enums.visibility'](),
+    domains: helpers.arrayOf(() => factories['io.apibuilder.api.v0.models.domain']()),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.organization_form': (): io.apibuilder.api.v0.models.OrganizationForm => ({
+    name: factories.string(),
+    key: factories.string(),
+    namespace: factories.string(),
+    visibility: factories['io.apibuilder.api.v0.enums.visibility'](),
+    domains: helpers.arrayOf(() => factories.string()),
+  }),
+
+  'io.apibuilder.api.v0.models.original': (): io.apibuilder.api.v0.models.Original => ({
+    type: factories['io.apibuilder.api.v0.enums.original_type'](),
+    data: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.original_form': (): io.apibuilder.api.v0.models.OriginalForm => ({
+    type: factories['io.apibuilder.api.v0.enums.original_type'](),
+    data: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.password_reset': (): io.apibuilder.api.v0.models.PasswordReset => ({
+    token: factories.string(),
+    password: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.password_reset_request': (): io.apibuilder.api.v0.models.PasswordResetRequest => ({
+    email: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.session': (): io.apibuilder.api.v0.models.Session => ({
+    id: factories.string(),
+    expires_at: factories.date_time_iso_8601(),
+  }),
+
+  'io.apibuilder.api.v0.models.subscription': (): io.apibuilder.api.v0.models.Subscription => ({
+    guid: factories.uuid(),
+    organization: factories['io.apibuilder.api.v0.models.organization'](),
+    user: factories['io.apibuilder.api.v0.models.user'](),
+    publication: factories['io.apibuilder.api.v0.enums.publication'](),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.subscription_form': (): io.apibuilder.api.v0.models.SubscriptionForm => ({
+    organization_key: factories.string(),
+    user_guid: factories.uuid(),
+    publication: factories['io.apibuilder.api.v0.enums.publication'](),
+  }),
+
+  'io.apibuilder.api.v0.models.token': (): io.apibuilder.api.v0.models.Token => ({
+    guid: factories.uuid(),
+    user: factories['io.apibuilder.api.v0.models.user'](),
+    masked_token: factories.string(),
+    description: factories.string(),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.token_form': (): io.apibuilder.api.v0.models.TokenForm => ({
+    user_guid: factories.uuid(),
+    description: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.user': (): io.apibuilder.api.v0.models.User => ({
+    guid: factories.uuid(),
+    email: factories.string(),
+    nickname: factories.string(),
+    name: factories.string(),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.user_form': (): io.apibuilder.api.v0.models.UserForm => ({
+    email: factories.string(),
+    password: factories.string(),
+    nickname: factories.string(),
+    name: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.user_summary': (): io.apibuilder.api.v0.models.UserSummary => ({
+    guid: factories.uuid(),
+    nickname: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.user_update_form': (): io.apibuilder.api.v0.models.UserUpdateForm => ({
+    email: factories.string(),
+    nickname: factories.string(),
+    name: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.models.validation': (): io.apibuilder.api.v0.models.Validation => ({
+    valid: factories.boolean(),
+    errors: helpers.arrayOf(() => factories.string()),
+  }),
+
+  'io.apibuilder.api.v0.models.version': (): io.apibuilder.api.v0.models.Version => ({
+    guid: factories.uuid(),
+    organization: factories['io.apibuilder.common.v0.models.reference'](),
+    application: factories['io.apibuilder.common.v0.models.reference'](),
+    version: factories.string(),
+    original: factories['io.apibuilder.api.v0.models.original'](),
+    service: factories['io.apibuilder.spec.v0.models.service'](),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.version_form': (): io.apibuilder.api.v0.models.VersionForm => ({
+    original_form: factories['io.apibuilder.api.v0.models.original_form'](),
+    visibility: factories['io.apibuilder.api.v0.enums.visibility'](),
+  }),
+
+  'io.apibuilder.api.v0.models.watch': (): io.apibuilder.api.v0.models.Watch => ({
+    guid: factories.uuid(),
+    user: factories['io.apibuilder.api.v0.models.user'](),
+    organization: factories['io.apibuilder.api.v0.models.organization'](),
+    application: factories['io.apibuilder.api.v0.models.application'](),
+    audit: factories['io.apibuilder.common.v0.models.audit'](),
+  }),
+
+  'io.apibuilder.api.v0.models.watch_form': (): io.apibuilder.api.v0.models.WatchForm => ({
+    user_guid: factories.uuid(),
+    organization_key: factories.string(),
+    application_key: factories.string(),
+  }),
+
+  'io.apibuilder.api.v0.unions.diff': (): io.apibuilder.api.v0.unions.Diff => {
+    const f = faker.random.arrayElement([
+      () => factories['io.apibuilder.api.v0.models.diff_breaking'](),
+      () => factories['io.apibuilder.api.v0.models.diff_non_breaking'](),
+    ]);
+
+    return f();
+  },
+
+  'io.apibuilder.api.v0.unions.item_detail': (): io.apibuilder.api.v0.unions.ItemDetail => {
+    const f = faker.random.arrayElement([() => factories['io.apibuilder.api.v0.models.application_summary']()]);
+    return f();
+  },
+
+  'io.apibuilder.common.v0.models.audit': (): io.apibuilder.common.v0.models.Audit => ({
+    created_at: factories.date_time_iso_8601(),
+    created_by: factories['io.apibuilder.common.v0.models.reference_guid'](),
+    updated_at: factories.date_time_iso_8601(),
+    updated_by: factories['io.apibuilder.common.v0.models.reference_guid'](),
+  }),
+
+  'io.apibuilder.common.v0.models.healthcheck': (): io.apibuilder.common.v0.models.Healthcheck => ({
+    status: factories.string(),
+  }),
+
+  'io.apibuilder.common.v0.models.reference': (): io.apibuilder.common.v0.models.Reference => ({
+    guid: factories.uuid(),
+    key: factories.string(),
+  }),
+
+  'io.apibuilder.common.v0.models.reference_guid': (): io.apibuilder.common.v0.models.ReferenceGuid => ({
+    guid: factories.uuid(),
+  }),
+
+  'io.apibuilder.generator.v0.enums.file_flag': (): io.apibuilder.generator.v0.enums.FileFlag => faker.random.arrayElement(['scaffolding']),
+
+  'io.apibuilder.generator.v0.models.attribute': (): io.apibuilder.generator.v0.models.Attribute => ({
+    name: factories.string(),
+    value: factories.string(),
+  }),
+
+  'io.apibuilder.generator.v0.models.error': (): io.apibuilder.generator.v0.models.Error => ({
+    code: factories.string(),
+    message: factories.string(),
+  }),
+
+  'io.apibuilder.generator.v0.models.file': (): io.apibuilder.generator.v0.models.File => ({
+    name: factories.string(),
+    dir: factories.string(),
+    contents: factories.string(),
+    flags: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.enums.file_flag']()),
+  }),
+
+  'io.apibuilder.generator.v0.models.generator': (): io.apibuilder.generator.v0.models.Generator => ({
+    key: factories.string(),
+    name: factories.string(),
+    language: factories.string(),
+    description: factories.string(),
+    attributes: helpers.arrayOf(() => factories.string()),
+  }),
+
+  'io.apibuilder.generator.v0.models.healthcheck': (): io.apibuilder.generator.v0.models.Healthcheck => ({
+    status: factories.string(),
+  }),
+
+  'io.apibuilder.generator.v0.models.invocation': (): io.apibuilder.generator.v0.models.Invocation => ({
+    source: factories.string(),
+    files: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.models.file']()),
+  }),
+
+  'io.apibuilder.generator.v0.models.invocation_form': (): io.apibuilder.generator.v0.models.InvocationForm => ({
+    service: factories['io.apibuilder.spec.v0.models.service'](),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.models.attribute']()),
+    user_agent: factories.string(),
+    imported_services: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.service']()),
+  }),
+
+  'io.apibuilder.spec.v0.enums.method': (): io.apibuilder.spec.v0.enums.Method => faker.random.arrayElement([
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'HEAD',
+    'CONNECT',
+    'OPTIONS',
+    'TRACE',
+  ]),
+
+  'io.apibuilder.spec.v0.enums.parameter_location': (): io.apibuilder.spec.v0.enums.ParameterLocation => faker.random.arrayElement(['Path', 'Query', 'Form', 'Header']),
+  'io.apibuilder.spec.v0.enums.response_code_option': (): io.apibuilder.spec.v0.enums.ResponseCodeOption => faker.random.arrayElement(['Default']),
+
+  'io.apibuilder.spec.v0.models.annotation': (): io.apibuilder.spec.v0.models.Annotation => ({
+    name: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+  }),
+
+  'io.apibuilder.spec.v0.models.apidoc': (): io.apibuilder.spec.v0.models.Apidoc => ({
+    version: factories.string(),
+  }),
+
+  'io.apibuilder.spec.v0.models.application': (): io.apibuilder.spec.v0.models.Application => ({
+    key: factories.string(),
+  }),
+
+  'io.apibuilder.spec.v0.models.attribute': (): io.apibuilder.spec.v0.models.Attribute => ({
+    name: factories.string(),
+    value: factories.object(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+  }),
+
+  'io.apibuilder.spec.v0.models.body': (): io.apibuilder.spec.v0.models.Body => ({
+    type: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.contact': (): io.apibuilder.spec.v0.models.Contact => ({
+    name: factories.string(),
+    url: factories.string(),
+    email: factories.string(),
+  }),
+
+  'io.apibuilder.spec.v0.models.deprecation': (): io.apibuilder.spec.v0.models.Deprecation => ({
+    description: factories.string(),
+  }),
+
+  'io.apibuilder.spec.v0.models.enum': (): io.apibuilder.spec.v0.models.Enum => ({
+    name: factories.string(),
+    plural: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    values: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.enum_value']()),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.enum_value': (): io.apibuilder.spec.v0.models.EnumValue => ({
+    name: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    value: factories.string(),
+  }),
+
+  'io.apibuilder.spec.v0.models.field': (): io.apibuilder.spec.v0.models.Field => ({
+    name: factories.string(),
+    type: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    'default': factories.string(),
+    required: factories.boolean(),
+    minimum: factories.long(),
+    maximum: factories.long(),
+    example: factories.string(),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    annotations: helpers.arrayOf(() => factories.string()),
+  }),
+
+  'io.apibuilder.spec.v0.models.header': (): io.apibuilder.spec.v0.models.Header => ({
+    name: factories.string(),
+    type: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    required: factories.boolean(),
+    'default': factories.string(),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.import': (): io.apibuilder.spec.v0.models.Import => ({
+    uri: factories.string(),
+    namespace: factories.string(),
+    organization: factories['io.apibuilder.spec.v0.models.organization'](),
+    application: factories['io.apibuilder.spec.v0.models.application'](),
+    version: factories.string(),
+    enums: helpers.arrayOf(() => factories.string()),
+    interfaces: helpers.arrayOf(() => factories.string()),
+    unions: helpers.arrayOf(() => factories.string()),
+    models: helpers.arrayOf(() => factories.string()),
+    annotations: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.annotation']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.info': (): io.apibuilder.spec.v0.models.Info => ({
+    license: factories['io.apibuilder.spec.v0.models.license'](),
+    contact: factories['io.apibuilder.spec.v0.models.contact'](),
+  }),
+
+  'io.apibuilder.spec.v0.models.interface': (): io.apibuilder.spec.v0.models.Interface => ({
+    name: factories.string(),
+    plural: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    fields: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.field']()),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.license': (): io.apibuilder.spec.v0.models.License => ({
+    name: factories.string(),
+    url: factories.string(),
+  }),
+
+  'io.apibuilder.spec.v0.models.model': (): io.apibuilder.spec.v0.models.Model => ({
+    name: factories.string(),
+    plural: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    fields: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.field']()),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    interfaces: helpers.arrayOf(() => factories.string()),
+  }),
+
+  'io.apibuilder.spec.v0.models.operation': (): io.apibuilder.spec.v0.models.Operation => ({
+    method: factories['io.apibuilder.spec.v0.enums.method'](),
+    path: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    body: factories['io.apibuilder.spec.v0.models.body'](),
+    parameters: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.parameter']()),
+    responses: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.response']()),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.organization': (): io.apibuilder.spec.v0.models.Organization => ({
+    key: factories.string(),
+  }),
+
+  'io.apibuilder.spec.v0.models.parameter': (): io.apibuilder.spec.v0.models.Parameter => ({
+    name: factories.string(),
+    type: factories.string(),
+    location: factories['io.apibuilder.spec.v0.enums.parameter_location'](),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    required: factories.boolean(),
+    'default': factories.string(),
+    minimum: factories.long(),
+    maximum: factories.long(),
+    example: factories.string(),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.resource': (): io.apibuilder.spec.v0.models.Resource => ({
+    type: factories.string(),
+    plural: factories.string(),
+    path: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    operations: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.operation']()),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.response': (): io.apibuilder.spec.v0.models.Response => ({
+    code: factories['io.apibuilder.spec.v0.unions.response_code'](),
+    type: factories.string(),
+    headers: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.header']()),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.service': (): io.apibuilder.spec.v0.models.Service => ({
+    apidoc: factories['io.apibuilder.spec.v0.models.apidoc'](),
+    name: factories.string(),
+    organization: factories['io.apibuilder.spec.v0.models.organization'](),
+    application: factories['io.apibuilder.spec.v0.models.application'](),
+    namespace: factories.string(),
+    version: factories.string(),
+    base_url: factories.string(),
+    description: factories.string(),
+    info: factories['io.apibuilder.spec.v0.models.info'](),
+    headers: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.header']()),
+    imports: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.import']()),
+    enums: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.enum']()),
+    interfaces: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.interface']()),
+    unions: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.union']()),
+    models: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.model']()),
+    resources: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.resource']()),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    annotations: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.annotation']()),
+  }),
+
+  'io.apibuilder.spec.v0.models.union': (): io.apibuilder.spec.v0.models.Union => ({
+    name: factories.string(),
+    plural: factories.string(),
+    discriminator: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    types: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.union_type']()),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    interfaces: helpers.arrayOf(() => factories.string()),
+  }),
+
+  'io.apibuilder.spec.v0.models.union_type': (): io.apibuilder.spec.v0.models.UnionType => ({
+    type: factories.string(),
+    description: factories.string(),
+    deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
+    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    'default': factories.boolean(),
+    discriminator_value: factories.string(),
+  }),
+
+  'io.apibuilder.spec.v0.unions.response_code': (): io.apibuilder.spec.v0.unions.ResponseCode => {
+    const f = faker.random.arrayElement([() => ({
+      discriminator: 'integer' as const,
+      value: factories.integer(),
+    }), () => ({
+      discriminator: 'response_code_option' as const,
+      value: factories['io.apibuilder.spec.v0.enums.response_code_option'](),
+    })]);
+
+    return f();
+  },
+};
+
+export const makeAppSortBy = () => factories['io.apibuilder.api.v0.enums.app_sort_by']();
+export const makeOriginalType = () => factories['io.apibuilder.api.v0.enums.original_type']();
+export const makePublication = () => factories['io.apibuilder.api.v0.enums.publication']();
+export const makeSortOrder = () => factories['io.apibuilder.api.v0.enums.sort_order']();
+export const makeVisibility = () => factories['io.apibuilder.api.v0.enums.visibility']();
+export const makeApplication = () => factories['io.apibuilder.api.v0.models.application']();
+export const makeApplicationForm = () => factories['io.apibuilder.api.v0.models.application_form']();
+export const makeApplicationMetadata = () => factories['io.apibuilder.api.v0.models.application_metadata']();
+export const makeApplicationMetadataVersion = () => factories['io.apibuilder.api.v0.models.application_metadata_version']();
+export const makeApplicationSummary = () => factories['io.apibuilder.api.v0.models.application_summary']();
+export const makeAttribute = () => factories['io.apibuilder.api.v0.models.attribute']();
+export const makeAttributeForm = () => factories['io.apibuilder.api.v0.models.attribute_form']();
+export const makeAttributeSummary = () => factories['io.apibuilder.api.v0.models.attribute_summary']();
+export const makeAttributeValue = () => factories['io.apibuilder.api.v0.models.attribute_value']();
+export const makeAttributeValueForm = () => factories['io.apibuilder.api.v0.models.attribute_value_form']();
+export const makeAuthentication = () => factories['io.apibuilder.api.v0.models.authentication']();
+export const makeBatchDownloadApplicationForm = () => factories['io.apibuilder.api.v0.models.batch_download_application_form']();
+export const makeBatchDownloadApplications = () => factories['io.apibuilder.api.v0.models.batch_download_applications']();
+export const makeBatchDownloadApplicationsForm = () => factories['io.apibuilder.api.v0.models.batch_download_applications_form']();
+export const makeChange = () => factories['io.apibuilder.api.v0.models.change']();
+export const makeChangeVersion = () => factories['io.apibuilder.api.v0.models.change_version']();
+export const makeCleartextToken = () => factories['io.apibuilder.api.v0.models.cleartext_token']();
+export const makeCode = () => factories['io.apibuilder.api.v0.models.code']();
+export const makeCodeForm = () => factories['io.apibuilder.api.v0.models.code_form']();
+export const makeDiffBreaking = () => factories['io.apibuilder.api.v0.models.diff_breaking']();
+export const makeDiffNonBreaking = () => factories['io.apibuilder.api.v0.models.diff_non_breaking']();
+export const makeDomain = () => factories['io.apibuilder.api.v0.models.domain']();
+export const makeEmailVerificationConfirmationForm = () => factories['io.apibuilder.api.v0.models.email_verification_confirmation_form']();
+export const makeError = () => factories['io.apibuilder.api.v0.models.error']();
+export const makeGeneratorForm = () => factories['io.apibuilder.api.v0.models.generator_form']();
+export const makeGeneratorService = () => factories['io.apibuilder.api.v0.models.generator_service']();
+export const makeGeneratorServiceForm = () => factories['io.apibuilder.api.v0.models.generator_service_form']();
+export const makeGeneratorWithService = () => factories['io.apibuilder.api.v0.models.generator_with_service']();
+export const makeItem = () => factories['io.apibuilder.api.v0.models.item']();
+export const makeMembership = () => factories['io.apibuilder.api.v0.models.membership']();
+export const makeMembershipRequest = () => factories['io.apibuilder.api.v0.models.membership_request']();
+export const makeMoveForm = () => factories['io.apibuilder.api.v0.models.move_form']();
+export const makeOrganization = () => factories['io.apibuilder.api.v0.models.organization']();
+export const makeOrganizationForm = () => factories['io.apibuilder.api.v0.models.organization_form']();
+export const makeOriginal = () => factories['io.apibuilder.api.v0.models.original']();
+export const makeOriginalForm = () => factories['io.apibuilder.api.v0.models.original_form']();
+export const makePasswordReset = () => factories['io.apibuilder.api.v0.models.password_reset']();
+export const makePasswordResetRequest = () => factories['io.apibuilder.api.v0.models.password_reset_request']();
+export const makeSession = () => factories['io.apibuilder.api.v0.models.session']();
+export const makeSubscription = () => factories['io.apibuilder.api.v0.models.subscription']();
+export const makeSubscriptionForm = () => factories['io.apibuilder.api.v0.models.subscription_form']();
+export const makeToken = () => factories['io.apibuilder.api.v0.models.token']();
+export const makeTokenForm = () => factories['io.apibuilder.api.v0.models.token_form']();
+export const makeUser = () => factories['io.apibuilder.api.v0.models.user']();
+export const makeUserForm = () => factories['io.apibuilder.api.v0.models.user_form']();
+export const makeUserSummary = () => factories['io.apibuilder.api.v0.models.user_summary']();
+export const makeUserUpdateForm = () => factories['io.apibuilder.api.v0.models.user_update_form']();
+export const makeValidation = () => factories['io.apibuilder.api.v0.models.validation']();
+export const makeVersion = () => factories['io.apibuilder.api.v0.models.version']();
+export const makeVersionForm = () => factories['io.apibuilder.api.v0.models.version_form']();
+export const makeWatch = () => factories['io.apibuilder.api.v0.models.watch']();
+export const makeWatchForm = () => factories['io.apibuilder.api.v0.models.watch_form']();
+export const makeDiff = () => factories['io.apibuilder.api.v0.unions.diff']();
+export const makeItemDetail = () => factories['io.apibuilder.api.v0.unions.item_detail']();"
+`;
+
 exports[`POST /invocations/:key ts_prop_types: io/apibuilder/api/v0/apibuilder-api.ts 1`] = `
 "import propTypes from 'prop-types';
 

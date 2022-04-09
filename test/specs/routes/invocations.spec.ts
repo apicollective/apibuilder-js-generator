@@ -16,6 +16,7 @@ const generatorKeys = [
   'ts_constants',
   'ts_declarations_v2',
   'ts_declarations',
+  'ts_mocks',
   'ts_prop_types',
   'ts_sdk_v2',
   'ts_sdk',
