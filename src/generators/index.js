@@ -10,6 +10,7 @@ const tsDeclarationsV2 = require('./ts_declarations_v2');
 const tsPropTypes = require('./ts_prop_types');
 const tsSdk = require('./ts_sdk');
 const tsSdkv2 = require('./ts_sdk_v2');
+const tsMocks = require('./ts_mocks');
 const jsdoc = require('./jsdoc');
 const openapi = require('./openapi');
 
@@ -122,6 +123,14 @@ const generators = {
     description: 'Generates TypeScript declaration files with type information from API Builder services',
     attributes: [],
     generator: tsDeclarationsV2,
+  },
+
+  ts_mocks: {
+    key: 'ts_mocks',
+    name: 'TypeScript mock data generator',
+    description: 'Mock data generator written in TypeScript',
+    attributes: [],
+    generator: tsMocks,
   },
 };
 
