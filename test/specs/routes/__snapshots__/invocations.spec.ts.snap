@@ -21059,23 +21059,21 @@ declare namespace io.apibuilder.spec.v0.unions {
 exports[`POST /invocations/:key ts_mocks: apibuilder-api.ts 1`] = `
 "import faker from '@faker-js/faker';
 
-const helpers = {
-  arrayOf: <T>(f: () => T) => {
-    const length = 3;
+const arrayOf = <T>(f: () => T) => {
+  const length = 3;
 
-    return Array.from({
-      length,
-    }, f);
-  },
+  return Array.from({
+    length,
+  }, f);
+};
 
-  objectOf: <T>(f: () => T) => {
-    const keys = ['foo', 'bar', 'qux'];
+const objectOf = <T>(f: () => T) => {
+  const keys = ['foo', 'bar', 'qux'];
 
-    return keys.reduce((object, key) => {
-      object[key] = f();
-      return object;
-    }, {});
-  },
+  return keys.reduce((object, key) => {
+    object[key] = f();
+    return object;
+  }, {});
 };
 
 const factories = {
@@ -21178,11 +21176,11 @@ const factories = {
   }),
 
   'io.apibuilder.api.v0.models.batch_download_applications': (): io.apibuilder.api.v0.models.BatchDownloadApplications => ({
-    applications: helpers.arrayOf(() => factories['io.apibuilder.api.v0.models.version']()),
+    applications: arrayOf(() => factories['io.apibuilder.api.v0.models.version']()),
   }),
 
   'io.apibuilder.api.v0.models.batch_download_applications_form': (): io.apibuilder.api.v0.models.BatchDownloadApplicationsForm => ({
-    applications: helpers.arrayOf(
+    applications: arrayOf(
       () => factories['io.apibuilder.api.v0.models.batch_download_application_form'](),
     ),
   }),
@@ -21211,11 +21209,11 @@ const factories = {
   'io.apibuilder.api.v0.models.code': (): io.apibuilder.api.v0.models.Code => ({
     generator: factories['io.apibuilder.api.v0.models.generator_with_service'](),
     source: factories.string(),
-    files: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.models.file']()),
+    files: arrayOf(() => factories['io.apibuilder.generator.v0.models.file']()),
   }),
 
   'io.apibuilder.api.v0.models.code_form': (): io.apibuilder.api.v0.models.CodeForm => ({
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.models.attribute']()),
+    attributes: arrayOf(() => factories['io.apibuilder.generator.v0.models.attribute']()),
   }),
 
   'io.apibuilder.api.v0.models.diff_breaking': (): io.apibuilder.api.v0.models.DiffBreaking => ({
@@ -21296,7 +21294,7 @@ const factories = {
     name: factories.string(),
     namespace: factories.string(),
     visibility: factories['io.apibuilder.api.v0.enums.visibility'](),
-    domains: helpers.arrayOf(() => factories['io.apibuilder.api.v0.models.domain']()),
+    domains: arrayOf(() => factories['io.apibuilder.api.v0.models.domain']()),
     audit: factories['io.apibuilder.common.v0.models.audit'](),
   }),
 
@@ -21305,7 +21303,7 @@ const factories = {
     key: factories.string(),
     namespace: factories.string(),
     visibility: factories['io.apibuilder.api.v0.enums.visibility'](),
-    domains: helpers.arrayOf(() => factories.string()),
+    domains: arrayOf(() => factories.string()),
   }),
 
   'io.apibuilder.api.v0.models.original': (): io.apibuilder.api.v0.models.Original => ({
@@ -21387,7 +21385,7 @@ const factories = {
 
   'io.apibuilder.api.v0.models.validation': (): io.apibuilder.api.v0.models.Validation => ({
     valid: factories.boolean(),
-    errors: helpers.arrayOf(() => factories.string()),
+    errors: arrayOf(() => factories.string()),
   }),
 
   'io.apibuilder.api.v0.models.version': (): io.apibuilder.api.v0.models.Version => ({
@@ -21469,7 +21467,7 @@ const factories = {
     name: factories.string(),
     dir: factories.string(),
     contents: factories.string(),
-    flags: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.enums.file_flag']()),
+    flags: arrayOf(() => factories['io.apibuilder.generator.v0.enums.file_flag']()),
   }),
 
   'io.apibuilder.generator.v0.models.generator': (): io.apibuilder.generator.v0.models.Generator => ({
@@ -21477,7 +21475,7 @@ const factories = {
     name: factories.string(),
     language: factories.string(),
     description: factories.string(),
-    attributes: helpers.arrayOf(() => factories.string()),
+    attributes: arrayOf(() => factories.string()),
   }),
 
   'io.apibuilder.generator.v0.models.healthcheck': (): io.apibuilder.generator.v0.models.Healthcheck => ({
@@ -21486,14 +21484,14 @@ const factories = {
 
   'io.apibuilder.generator.v0.models.invocation': (): io.apibuilder.generator.v0.models.Invocation => ({
     source: factories.string(),
-    files: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.models.file']()),
+    files: arrayOf(() => factories['io.apibuilder.generator.v0.models.file']()),
   }),
 
   'io.apibuilder.generator.v0.models.invocation_form': (): io.apibuilder.generator.v0.models.InvocationForm => ({
     service: factories['io.apibuilder.spec.v0.models.service'](),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.generator.v0.models.attribute']()),
+    attributes: arrayOf(() => factories['io.apibuilder.generator.v0.models.attribute']()),
     user_agent: factories.string(),
-    imported_services: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.service']()),
+    imported_services: arrayOf(() => factories['io.apibuilder.spec.v0.models.service']()),
   }),
 
   'io.apibuilder.spec.v0.enums.method': (): io.apibuilder.spec.v0.enums.Method => faker.random.arrayElement([
@@ -21536,7 +21534,7 @@ const factories = {
     type: factories.string(),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
   }),
 
   'io.apibuilder.spec.v0.models.contact': (): io.apibuilder.spec.v0.models.Contact => ({
@@ -21554,15 +21552,15 @@ const factories = {
     plural: factories.string(),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    values: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.enum_value']()),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    values: arrayOf(() => factories['io.apibuilder.spec.v0.models.enum_value']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
   }),
 
   'io.apibuilder.spec.v0.models.enum_value': (): io.apibuilder.spec.v0.models.EnumValue => ({
     name: factories.string(),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
     value: factories.string(),
   }),
 
@@ -21576,8 +21574,8 @@ const factories = {
     minimum: factories.long(),
     maximum: factories.long(),
     example: factories.string(),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
-    annotations: helpers.arrayOf(() => factories.string()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    annotations: arrayOf(() => factories.string()),
   }),
 
   'io.apibuilder.spec.v0.models.header': (): io.apibuilder.spec.v0.models.Header => ({
@@ -21587,7 +21585,7 @@ const factories = {
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
     required: factories.boolean(),
     'default': factories.string(),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
   }),
 
   'io.apibuilder.spec.v0.models.import': (): io.apibuilder.spec.v0.models.Import => ({
@@ -21596,11 +21594,11 @@ const factories = {
     organization: factories['io.apibuilder.spec.v0.models.organization'](),
     application: factories['io.apibuilder.spec.v0.models.application'](),
     version: factories.string(),
-    enums: helpers.arrayOf(() => factories.string()),
-    interfaces: helpers.arrayOf(() => factories.string()),
-    unions: helpers.arrayOf(() => factories.string()),
-    models: helpers.arrayOf(() => factories.string()),
-    annotations: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.annotation']()),
+    enums: arrayOf(() => factories.string()),
+    interfaces: arrayOf(() => factories.string()),
+    unions: arrayOf(() => factories.string()),
+    models: arrayOf(() => factories.string()),
+    annotations: arrayOf(() => factories['io.apibuilder.spec.v0.models.annotation']()),
   }),
 
   'io.apibuilder.spec.v0.models.info': (): io.apibuilder.spec.v0.models.Info => ({
@@ -21613,8 +21611,8 @@ const factories = {
     plural: factories.string(),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    fields: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.field']()),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    fields: arrayOf(() => factories['io.apibuilder.spec.v0.models.field']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
   }),
 
   'io.apibuilder.spec.v0.models.license': (): io.apibuilder.spec.v0.models.License => ({
@@ -21627,9 +21625,9 @@ const factories = {
     plural: factories.string(),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    fields: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.field']()),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
-    interfaces: helpers.arrayOf(() => factories.string()),
+    fields: arrayOf(() => factories['io.apibuilder.spec.v0.models.field']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    interfaces: arrayOf(() => factories.string()),
   }),
 
   'io.apibuilder.spec.v0.models.operation': (): io.apibuilder.spec.v0.models.Operation => ({
@@ -21638,9 +21636,9 @@ const factories = {
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
     body: factories['io.apibuilder.spec.v0.models.body'](),
-    parameters: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.parameter']()),
-    responses: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.response']()),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    parameters: arrayOf(() => factories['io.apibuilder.spec.v0.models.parameter']()),
+    responses: arrayOf(() => factories['io.apibuilder.spec.v0.models.response']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
   }),
 
   'io.apibuilder.spec.v0.models.organization': (): io.apibuilder.spec.v0.models.Organization => ({
@@ -21658,7 +21656,7 @@ const factories = {
     minimum: factories.long(),
     maximum: factories.long(),
     example: factories.string(),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
   }),
 
   'io.apibuilder.spec.v0.models.resource': (): io.apibuilder.spec.v0.models.Resource => ({
@@ -21667,17 +21665,17 @@ const factories = {
     path: factories.string(),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    operations: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.operation']()),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    operations: arrayOf(() => factories['io.apibuilder.spec.v0.models.operation']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
   }),
 
   'io.apibuilder.spec.v0.models.response': (): io.apibuilder.spec.v0.models.Response => ({
     code: factories['io.apibuilder.spec.v0.unions.response_code'](),
     type: factories.string(),
-    headers: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.header']()),
+    headers: arrayOf(() => factories['io.apibuilder.spec.v0.models.header']()),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
   }),
 
   'io.apibuilder.spec.v0.models.service': (): io.apibuilder.spec.v0.models.Service => ({
@@ -21690,15 +21688,15 @@ const factories = {
     base_url: factories.string(),
     description: factories.string(),
     info: factories['io.apibuilder.spec.v0.models.info'](),
-    headers: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.header']()),
-    imports: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.import']()),
-    enums: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.enum']()),
-    interfaces: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.interface']()),
-    unions: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.union']()),
-    models: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.model']()),
-    resources: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.resource']()),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
-    annotations: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.annotation']()),
+    headers: arrayOf(() => factories['io.apibuilder.spec.v0.models.header']()),
+    imports: arrayOf(() => factories['io.apibuilder.spec.v0.models.import']()),
+    enums: arrayOf(() => factories['io.apibuilder.spec.v0.models.enum']()),
+    interfaces: arrayOf(() => factories['io.apibuilder.spec.v0.models.interface']()),
+    unions: arrayOf(() => factories['io.apibuilder.spec.v0.models.union']()),
+    models: arrayOf(() => factories['io.apibuilder.spec.v0.models.model']()),
+    resources: arrayOf(() => factories['io.apibuilder.spec.v0.models.resource']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    annotations: arrayOf(() => factories['io.apibuilder.spec.v0.models.annotation']()),
   }),
 
   'io.apibuilder.spec.v0.models.union': (): io.apibuilder.spec.v0.models.Union => ({
@@ -21707,16 +21705,16 @@ const factories = {
     discriminator: factories.string(),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    types: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.union_type']()),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
-    interfaces: helpers.arrayOf(() => factories.string()),
+    types: arrayOf(() => factories['io.apibuilder.spec.v0.models.union_type']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    interfaces: arrayOf(() => factories.string()),
   }),
 
   'io.apibuilder.spec.v0.models.union_type': (): io.apibuilder.spec.v0.models.UnionType => ({
     type: factories.string(),
     description: factories.string(),
     deprecation: factories['io.apibuilder.spec.v0.models.deprecation'](),
-    attributes: helpers.arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
+    attributes: arrayOf(() => factories['io.apibuilder.spec.v0.models.attribute']()),
     'default': factories.boolean(),
     discriminator_value: factories.string(),
   }),

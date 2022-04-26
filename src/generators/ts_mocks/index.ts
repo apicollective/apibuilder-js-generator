@@ -27,22 +27,16 @@ function buildPropertyKey(value: string) {
   return feedback.needsQuotes ? b.stringLiteral(value) : b.identifier(value);
 }
 
-function buildObjectOfHelperCallExpression(type: ApiBuilderMap) {
+function buildObjectOfCallExpression(type: ApiBuilderMap) {
   return b.callExpression(
-    b.memberExpression(
-      b.identifier('helpers'),
-      b.identifier('objectOf'),
-    ),
+    b.identifier('objectOf'),
     [b.arrowFunctionExpression([], buildFactoryCallExpression(type.ofType))],
   );
 }
 
-function buildArrayOfHelperCallExpression(type: ApiBuilderArray) {
+function buildArrayOfCallExpression(type: ApiBuilderArray) {
   return b.callExpression(
-    b.memberExpression(
-      b.identifier('helpers'),
-      b.identifier('arrayOf'),
-    ),
+    b.identifier('arrayOf'),
     [b.arrowFunctionExpression([], buildFactoryCallExpression(type.ofType))],
   );
 }
@@ -80,11 +74,11 @@ function buildFactoryCallMemberExpression(
 
 function buildFactoryCallExpression(type: ApiBuilderType) {
   if (isMapType(type)) {
-    return buildObjectOfHelperCallExpression(type);
+    return buildObjectOfCallExpression(type);
   }
 
   if (isArrayType(type)) {
-    return buildArrayOfHelperCallExpression(type);
+    return buildArrayOfCallExpression(type);
   }
 
   return b.callExpression(
@@ -97,7 +91,7 @@ function buildFakerFactory(object: string, property: string) {
   return b.arrowFunctionExpression([], buildFakerCallExpression(object, property));
 }
 
-function buildArrayOfHelper() {
+function buildArrayOfArrowFunction() {
   return b.arrowFunctionExpression.from({
     body: b.blockStatement([
       b.variableDeclaration('const', [
@@ -187,7 +181,7 @@ function buildNumberFactory() {
   return buildFakerFactory('datatype', 'number');
 }
 
-function buildObjectOfHelper() {
+function buildObjectOfArrowFunction() {
   return b.arrowFunctionExpression.from({
     body: b.blockStatement([
       b.variableDeclaration('const', [
@@ -361,15 +355,15 @@ function buildFactory(
   return buildPlaceholderFactory();
 }
 
-function buildHelpersObject() {
+function buildArrayOfVariableDeclaration() {
   return b.variableDeclaration('const', [
-    b.variableDeclarator(
-      b.identifier('helpers'),
-      b.objectExpression([
-        b.objectProperty(b.identifier('arrayOf'), buildArrayOfHelper()),
-        b.objectProperty(b.identifier('objectOf'), buildObjectOfHelper()),
-      ]),
-    ),
+    b.variableDeclarator(b.identifier('arrayOf'), buildArrayOfArrowFunction()),
+  ]);
+}
+
+function buildObjectOfVariableDeclaration() {
+  return b.variableDeclaration('const', [
+    b.variableDeclarator(b.identifier('objectOf'), buildObjectOfArrowFunction()),
   ]);
 }
 
@@ -426,10 +420,12 @@ function buildFile(context: Context): namedTypes.File {
   return b.file.from({
     program: b.program.from({
       body: [
-        b.importDeclaration([
-          b.importDefaultSpecifier(b.identifier('faker')),
-        ],                  b.stringLiteral('@faker-js/faker')),
-        buildHelpersObject(),
+        b.importDeclaration(
+          [b.importDefaultSpecifier(b.identifier('faker'))],
+          b.stringLiteral('@faker-js/faker'),
+        ),
+        buildArrayOfVariableDeclaration(),
+        buildObjectOfVariableDeclaration(),
         buildFactoriesObject(context),
         ...context.rootService.enums.map(buildExternalFactory),
         ...context.rootService.models.map(buildExternalFactory),
