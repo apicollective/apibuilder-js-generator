@@ -195,12 +195,8 @@ function buildObjectOfArrowFunction() {
         ),
       ]),
       b.returnStatement(
-        b.callExpression(
-          b.memberExpression(
-            b.identifier('keys'),
-            b.identifier('reduce'),
-          ),
-          [
+        b.callExpression.from({
+          arguments: [
             b.arrowFunctionExpression(
               [b.identifier('object'), b.identifier('key')],
               b.blockStatement([
@@ -220,7 +216,17 @@ function buildObjectOfArrowFunction() {
             ),
             b.objectExpression([]),
           ],
-        ),
+          callee: b.memberExpression(b.identifier('keys'), b.identifier('reduce')),
+          typeArguments: b.typeParameterInstantiation([
+            b.genericTypeAnnotation(
+              b.identifier('Record'),
+              b.typeParameterInstantiation([
+                b.stringTypeAnnotation(),
+                b.genericTypeAnnotation(b.identifier('T'), null),
+              ]),
+            ),
+          ]),
+        }),
       ),
     ]),
     params: [

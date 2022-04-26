@@ -21070,7 +21070,7 @@ const arrayOf = <T>(f: () => T) => {
 const objectOf = <T>(f: () => T) => {
   const keys = ['foo', 'bar', 'qux'];
 
-  return keys.reduce((object, key) => {
+  return keys.reduce<Record<string, T>>((object, key) => {
     object[key] = f();
     return object;
   }, {});
