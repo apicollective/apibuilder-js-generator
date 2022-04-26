@@ -21733,10 +21733,6 @@ const factories = {
 };
 
 export const makeAppSortBy = () => factories['io.apibuilder.api.v0.enums.app_sort_by']();
-export const makeOriginalType = () => factories['io.apibuilder.api.v0.enums.original_type']();
-export const makePublication = () => factories['io.apibuilder.api.v0.enums.publication']();
-export const makeSortOrder = () => factories['io.apibuilder.api.v0.enums.sort_order']();
-export const makeVisibility = () => factories['io.apibuilder.api.v0.enums.visibility']();
 export const makeApplication = () => factories['io.apibuilder.api.v0.models.application']();
 export const makeApplicationForm = () => factories['io.apibuilder.api.v0.models.application_form']();
 export const makeApplicationMetadata = () => factories['io.apibuilder.api.v0.models.application_metadata']();
@@ -21756,6 +21752,7 @@ export const makeChangeVersion = () => factories['io.apibuilder.api.v0.models.ch
 export const makeCleartextToken = () => factories['io.apibuilder.api.v0.models.cleartext_token']();
 export const makeCode = () => factories['io.apibuilder.api.v0.models.code']();
 export const makeCodeForm = () => factories['io.apibuilder.api.v0.models.code_form']();
+export const makeDiff = () => factories['io.apibuilder.api.v0.unions.diff']();
 export const makeDiffBreaking = () => factories['io.apibuilder.api.v0.models.diff_breaking']();
 export const makeDiffNonBreaking = () => factories['io.apibuilder.api.v0.models.diff_non_breaking']();
 export const makeDomain = () => factories['io.apibuilder.api.v0.models.domain']();
@@ -21766,6 +21763,7 @@ export const makeGeneratorService = () => factories['io.apibuilder.api.v0.models
 export const makeGeneratorServiceForm = () => factories['io.apibuilder.api.v0.models.generator_service_form']();
 export const makeGeneratorWithService = () => factories['io.apibuilder.api.v0.models.generator_with_service']();
 export const makeItem = () => factories['io.apibuilder.api.v0.models.item']();
+export const makeItemDetail = () => factories['io.apibuilder.api.v0.unions.item_detail']();
 export const makeMembership = () => factories['io.apibuilder.api.v0.models.membership']();
 export const makeMembershipRequest = () => factories['io.apibuilder.api.v0.models.membership_request']();
 export const makeMoveForm = () => factories['io.apibuilder.api.v0.models.move_form']();
@@ -21773,9 +21771,12 @@ export const makeOrganization = () => factories['io.apibuilder.api.v0.models.org
 export const makeOrganizationForm = () => factories['io.apibuilder.api.v0.models.organization_form']();
 export const makeOriginal = () => factories['io.apibuilder.api.v0.models.original']();
 export const makeOriginalForm = () => factories['io.apibuilder.api.v0.models.original_form']();
+export const makeOriginalType = () => factories['io.apibuilder.api.v0.enums.original_type']();
 export const makePasswordReset = () => factories['io.apibuilder.api.v0.models.password_reset']();
 export const makePasswordResetRequest = () => factories['io.apibuilder.api.v0.models.password_reset_request']();
+export const makePublication = () => factories['io.apibuilder.api.v0.enums.publication']();
 export const makeSession = () => factories['io.apibuilder.api.v0.models.session']();
+export const makeSortOrder = () => factories['io.apibuilder.api.v0.enums.sort_order']();
 export const makeSubscription = () => factories['io.apibuilder.api.v0.models.subscription']();
 export const makeSubscriptionForm = () => factories['io.apibuilder.api.v0.models.subscription_form']();
 export const makeToken = () => factories['io.apibuilder.api.v0.models.token']();
@@ -21787,10 +21788,9 @@ export const makeUserUpdateForm = () => factories['io.apibuilder.api.v0.models.u
 export const makeValidation = () => factories['io.apibuilder.api.v0.models.validation']();
 export const makeVersion = () => factories['io.apibuilder.api.v0.models.version']();
 export const makeVersionForm = () => factories['io.apibuilder.api.v0.models.version_form']();
+export const makeVisibility = () => factories['io.apibuilder.api.v0.enums.visibility']();
 export const makeWatch = () => factories['io.apibuilder.api.v0.models.watch']();
-export const makeWatchForm = () => factories['io.apibuilder.api.v0.models.watch_form']();
-export const makeDiff = () => factories['io.apibuilder.api.v0.unions.diff']();
-export const makeItemDetail = () => factories['io.apibuilder.api.v0.unions.item_detail']();"
+export const makeWatchForm = () => factories['io.apibuilder.api.v0.models.watch_form']();"
 `;
 
 exports[`POST /invocations/:key ts_prop_types: io/apibuilder/api/v0/apibuilder-api.ts 1`] = `

@@ -21,6 +21,7 @@ import snakeCase from 'lodash/snakeCase';
 import { print } from 'recast';
 import { buildContext, buildTypeAnnotation, Context } from '../../builders';
 import { checkIdentifier } from '../../utilities/language';
+import shortNameCompare from '../../utilities/shortNameCompare';
 
 function buildPropertyKey(value: string) {
   const feedback = checkIdentifier(value);
@@ -423,6 +424,12 @@ function buildExternalFactory(
 }
 
 function buildFile(context: Context): namedTypes.File {
+  const aliases = [
+    ...context.rootService.enums,
+    ...context.rootService.models,
+    ...context.rootService.unions,
+  ].sort(shortNameCompare).map(buildExternalFactory);
+
   return b.file.from({
     program: b.program.from({
       body: [
@@ -433,9 +440,7 @@ function buildFile(context: Context): namedTypes.File {
         buildArrayOfVariableDeclaration(),
         buildObjectOfVariableDeclaration(),
         buildFactoriesObject(context),
-        ...context.rootService.enums.map(buildExternalFactory),
-        ...context.rootService.models.map(buildExternalFactory),
-        ...context.rootService.unions.map(buildExternalFactory),
+        ...aliases,
       ],
     }),
   });
