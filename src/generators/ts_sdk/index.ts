@@ -696,10 +696,58 @@ function buildHttpClientClass(
   const {
     pathname,
     protocol,
+    port,
     hostname,
   } = url.parse(context.rootService.baseUrl);
 
   const basePathName = stripTrailingSlash(pathname);
+
+  const urlFormatOptions = [
+    b.property.from({
+      key: b.identifier('hostname'),
+      kind: 'init',
+      value: b.stringLiteral(hostname),
+    }),
+    b.property.from({
+      key: b.identifier('pathname'),
+      kind: 'init',
+      value: !basePathName.length ? b.memberExpression.from({
+        object: b.identifier('options'),
+        property: b.identifier('endpoint'),
+      }) : b.binaryExpression.from({
+        left: b.stringLiteral(basePathName),
+        operator: '+',
+        right: b.memberExpression.from({
+          object: b.identifier('options'),
+          property: b.identifier('endpoint'),
+        }),
+      }),
+    }),
+    b.property.from({
+      key: b.identifier('protocol'),
+      kind: 'init',
+      value: b.stringLiteral(protocol),
+    }),
+    b.property.from({
+      key: b.identifier('query'),
+      kind: 'init',
+      value: b.callExpression.from({
+        arguments: [
+          b.memberExpression.from({
+            object: b.identifier('options'),
+            property: b.identifier('query'),
+          }),
+        ],
+        callee: b.identifier.from({
+          name: IDENTIFIER_STRIP_QUERY,
+        }),
+      }),
+    }),
+  ];
+
+  if (port != null) {
+    urlFormatOptions.push(b.property('init', b.identifier('port'), b.stringLiteral(port)));
+  }
 
   return b.classDeclaration.from({
     body: b.classBody.from({
@@ -758,48 +806,7 @@ function buildHttpClientClass(
                     init: b.callExpression.from({
                       arguments: [
                         b.objectExpression.from({
-                          properties: [
-                            b.property.from({
-                              key: b.identifier('hostname'),
-                              kind: 'init',
-                              value: b.stringLiteral(hostname),
-                            }),
-                            b.property.from({
-                              key: b.identifier('pathname'),
-                              kind: 'init',
-                              value: !basePathName.length ? b.memberExpression.from({
-                                object: b.identifier('options'),
-                                property: b.identifier('endpoint'),
-                              }) : b.binaryExpression.from({
-                                left: b.stringLiteral(basePathName),
-                                operator: '+',
-                                right: b.memberExpression.from({
-                                  object: b.identifier('options'),
-                                  property: b.identifier('endpoint'),
-                                }),
-                              }),
-                            }),
-                            b.property.from({
-                              key: b.identifier('protocol'),
-                              kind: 'init',
-                              value: b.stringLiteral(protocol),
-                            }),
-                            b.property.from({
-                              key: b.identifier('query'),
-                              kind: 'init',
-                              value: b.callExpression.from({
-                                arguments: [
-                                  b.memberExpression.from({
-                                    object: b.identifier('options'),
-                                    property: b.identifier('query'),
-                                  }),
-                                ],
-                                callee: b.identifier.from({
-                                  name: IDENTIFIER_STRIP_QUERY,
-                                }),
-                              }),
-                            }),
-                          ],
+                          properties: urlFormatOptions,
                         }),
                       ],
                       callee: b.memberExpression.from({
