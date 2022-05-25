@@ -746,7 +746,7 @@ function buildHttpClientClass(
   ];
 
   if (port != null) {
-    urlFormatOptions.push(b.property('init', b.identifier('port'), b.stringLiteral(port)))
+    urlFormatOptions.push(b.property('init', b.identifier('port'), b.stringLiteral(port)));
   }
 
   return b.classDeclaration.from({
