@@ -273,7 +273,7 @@ function buildPlaceholderFactory() {
 }
 
 function buildEnumFactory(type: ApiBuilderEnum, context: Context) {
-  const elements = type.values.map(value => b.stringLiteral(value.name));
+  const elements = type.values.map(value => b.stringLiteral(value.value));
   return b.arrowFunctionExpression.from({
     body: b.callExpression(
       b.memberExpression(
