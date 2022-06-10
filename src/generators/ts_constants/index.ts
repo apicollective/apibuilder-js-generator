@@ -18,7 +18,7 @@ function buildFile(
             enumeration.values.map((value) => {
               return builders.tsEnumMember(
                 builders.identifier(value.nickname),
-                builders.stringLiteral(value.name),
+                builders.stringLiteral(value.value),
               );
             }),
           ),

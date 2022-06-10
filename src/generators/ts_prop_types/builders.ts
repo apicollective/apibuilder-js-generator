@@ -441,7 +441,7 @@ const buildEnumPropTypeExpression = withResolution(withCache((
       b.identifier('oneOf'),
     ),
     [b.arrayExpression(
-      enumeration.values.map(value => b.literal(value.name)),
+      enumeration.values.map(value => b.literal(value.value)),
     )],
   );
 }));

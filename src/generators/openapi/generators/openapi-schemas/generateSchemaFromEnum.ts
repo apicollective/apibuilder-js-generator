@@ -2,7 +2,7 @@ import { ApiBuilderEnum } from 'apibuilder-js';
 import { map } from 'lodash';
 
 function generateSchemaFromEnum(enm: ApiBuilderEnum) {
-  const enumValues = map(enm.values, value => value.name);
+  const enumValues = map(enm.values, value => value.value);
 
   let description: string;
   if (enm.description && enm.description.endsWith('.')) {
