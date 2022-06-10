@@ -125,7 +125,7 @@ function buildEnumType(
 ): namedTypes.TSUnionType {
   return b.tsUnionType(
     enumeration.values.map(value => b.tsLiteralType(
-      b.stringLiteral(value.name),
+      b.stringLiteral(value.value),
     )),
   );
 }
