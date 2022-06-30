@@ -29,7 +29,7 @@ async function postInvocationForm(invocationForm, options = {}) {
   });
 
   response.body.files.forEach((file) => {
-    const destinationPath = path.resolve(program.output, file.dir, file.name);
+    const destinationPath = path.resolve(program.output, file.dir || '.', file.name);
     log(`Writing to "${path.relative(process.cwd(), destinationPath)}"`);
     mkdirp.sync(path.dirname(destinationPath));
     fs.writeFileSync(destinationPath, file.contents);
