@@ -1,15 +1,12 @@
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: "apibuilder-js-generator"
+fullnameOverride: "apibuilder-js-generator"
 
-service:
-  port: 7050
-  metricsEndpoint:
-    enabled: false
+team: foundation
 
 iamRole: arn:aws:iam::479720515435:role/ecsInstanceRole
 image:
   repository: flowcommerce/apibuilder-js-generator
-  pullPolicy: IfNotPresent
+
 resources:
   limits:
     memory: "4Gi"
@@ -18,23 +15,21 @@ resources:
     memory: "4Gi"
     cpu: .05
 
-nodeSelector: {}
-affinity: {}
-tolerations: {}
-
-ingress:
+istioIngress:
   enabled: true
   gateways:
     - key: apibuilder-js-generator-flow-io
       tld: flow.io
+      dns: true
       hosts:
         - apibuilder-js-generator.flow.io
     - key: apibuilder-js-generator-flow-pub
       tld: flo.pub
+      dns: true
       hosts:
         - apibuilder-js-generator.flo.pub
 
-services:
+istioService:
   live:
     hosts:
       - apibuilder-js-generator
@@ -53,7 +48,9 @@ deployments:
     minReplicas: 2
     maxReplicas: 2
     maxUnavailable: 1
-    disruptionBudgetEnabled: true
-    targetCPUUtilizationPercentage: 80
-    version: #from commandline
-    strategy: RollingUpdate
+
+rolloutResource:
+  enabled: false
+
+canary:
+  enabled: false
