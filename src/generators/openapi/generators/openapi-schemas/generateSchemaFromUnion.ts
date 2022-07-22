@@ -9,12 +9,28 @@ function generateSchemaFromUnion(
   typeValidation,
   isImported: IsImportedChecker,
 ): SchemaObject {
-  const types = map(union.types, t => t.type);
-  const unionTypes = map(types, t => convertApiBuilderType(t, typeValidation, isImported));
+  const unionTypes = union.types.map((t) => {
+    const model = convertApiBuilderType(t.type, typeValidation, isImported)
+    return (union.discriminator && t.discriminatorValue)
+      ? {
+        ...model,
+        properties: {
+          [union.discriminator]: {
+            enum: [t.discriminatorValue],
+          },
+        },
+      }
+      : model
+  })
   return {
     [union.name]: {
       ...union.description && { description:  union.description },
       oneOf: unionTypes,
+      ...union.discriminator && {
+        discriminator: {
+          propertyName: union.discriminator,
+        },
+      },
     },
   };
 }
