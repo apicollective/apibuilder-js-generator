@@ -13752,7 +13752,14 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           {
             \\"$ref\\": \\"#/components/schemas/diff_non_breaking\\"
           }
-        ]
+        ],
+        \\"discriminator\\": {
+          \\"mapping\\": {
+            \\"diff_breaking\\": \\"#/components/schemas/diff_breaking\\",
+            \\"diff_non_breaking\\": \\"#/components/schemas/diff_non_breaking\\"
+          },
+          \\"propertyName\\": \\"type\\"
+        }
       },
       \\"item_detail\\": {
         \\"description\\": \\"Identifies the specific type of item that was indexed by search\\",
@@ -13760,7 +13767,13 @@ exports[`POST /invocations/:key openapi: openapi.json 1`] = `
           {
             \\"$ref\\": \\"#/components/schemas/application_summary\\"
           }
-        ]
+        ],
+        \\"discriminator\\": {
+          \\"mapping\\": {
+            \\"application_summary\\": \\"#/components/schemas/application_summary\\"
+          },
+          \\"propertyName\\": \\"type\\"
+        }
       }
     }
   },
