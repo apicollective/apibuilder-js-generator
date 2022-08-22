@@ -11,11 +11,13 @@ function generateSchemaFromUnion(
 ): SchemaObject {
   const data: [SchemaObject, string][] = union.types.map((t) => {
     const type = convertApiBuilderType(t.type, typeValidation, isImported);
-    return [type, t.discriminatorValue]
-  })
+    return [type, t.discriminatorValue];
+  });
 
-  const unionTypes = data.map(x => x[0])
-  const mappings = fromPairs(data.map(([type, discriminatorValue]) => [discriminatorValue, type.$ref]));
+  const unionTypes = data.map(x => x[0]);
+  const mappings = fromPairs(
+    data.map(([type, discriminatorValue]) => [discriminatorValue, type.$ref]),
+  );
 
   return {
     [union.name]: {
@@ -23,8 +25,8 @@ function generateSchemaFromUnion(
       oneOf: unionTypes,
       ...union.discriminator && {
         discriminator: {
-          propertyName: union.discriminator,
           mapping: mappings,
+          propertyName: union.discriminator,
         },
       },
     },
