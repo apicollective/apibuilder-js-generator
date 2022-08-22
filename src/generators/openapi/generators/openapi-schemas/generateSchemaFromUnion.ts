@@ -1,6 +1,6 @@
 import { SchemaObject } from '@loopback/openapi-v3-types';
 import { ApiBuilderUnion } from 'apibuilder-js';
-import { map } from 'lodash';
+import { fromPairs, map } from 'lodash';
 import { convertApiBuilderType } from '../openapi-utils';
 import { IsImportedChecker } from '../openapi-utils/isTypeImported';
 
@@ -9,19 +9,14 @@ function generateSchemaFromUnion(
   typeValidation,
   isImported: IsImportedChecker,
 ): SchemaObject {
-  const unionTypes = union.types.map((t) => {
-    const model = convertApiBuilderType(t.type, typeValidation, isImported);
-    return (union.discriminator && t.discriminatorValue)
-      ? {
-        ...model,
-        properties: {
-          [union.discriminator]: {
-            enum: [t.discriminatorValue],
-          },
-        },
-      }
-      : model;
-  });
+  const data: [SchemaObject, string][] = union.types.map((t) => {
+    const type = convertApiBuilderType(t.type, typeValidation, isImported);
+    return [type, t.discriminatorValue]
+  })
+
+  const unionTypes = data.map(x => x[0])
+  const mappings = fromPairs(data.map(([type, discriminatorValue]) => [discriminatorValue, type.$ref]));
+
   return {
     [union.name]: {
       ...union.description && { description:  union.description },
@@ -29,6 +24,7 @@ function generateSchemaFromUnion(
       ...union.discriminator && {
         discriminator: {
           propertyName: union.discriminator,
+          mapping: mappings,
         },
       },
     },
