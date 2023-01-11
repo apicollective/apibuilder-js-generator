@@ -277,7 +277,7 @@ function buildEnumFactory(type: ApiBuilderEnum, context: Context) {
   return b.arrowFunctionExpression.from({
     body: b.callExpression(
       b.memberExpression(
-        b.memberExpression(b.identifier('faker'), b.identifier('random')),
+        b.memberExpression(b.identifier('faker'), b.identifier('helpers')),
         b.identifier('arrayElement'),
       ),
       [b.arrayExpression(elements)],
@@ -336,7 +336,7 @@ function buildUnionFactory(
           b.identifier('f'),
           b.callExpression(
             b.memberExpression(
-              b.memberExpression(b.identifier('faker'), b.identifier('random')),
+              b.memberExpression(b.identifier('faker'), b.identifier('helpers')),
               b.identifier('arrayElement'),
             ),
             [b.arrayExpression(factories)],
