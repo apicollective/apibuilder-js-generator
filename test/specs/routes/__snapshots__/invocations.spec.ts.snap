@@ -21102,10 +21102,10 @@ const factories = {
   string: () => faker.datatype.string(),
   unit: () => undefined,
   uuid: () => faker.datatype.uuid(),
-  'io.apibuilder.api.v0.enums.app_sort_by': (): io.apibuilder.api.v0.enums.AppSortBy => faker.random.arrayElement(['name', 'created_at', 'updated_at', 'visibility']),
-  'io.apibuilder.api.v0.enums.original_type': (): io.apibuilder.api.v0.enums.OriginalType => faker.random.arrayElement(['api_json', 'avro_idl', 'service_json', 'swagger']),
+  'io.apibuilder.api.v0.enums.app_sort_by': (): io.apibuilder.api.v0.enums.AppSortBy => faker.helpers.arrayElement(['name', 'created_at', 'updated_at', 'visibility']),
+  'io.apibuilder.api.v0.enums.original_type': (): io.apibuilder.api.v0.enums.OriginalType => faker.helpers.arrayElement(['api_json', 'avro_idl', 'service_json', 'swagger']),
 
-  'io.apibuilder.api.v0.enums.publication': (): io.apibuilder.api.v0.enums.Publication => faker.random.arrayElement([
+  'io.apibuilder.api.v0.enums.publication': (): io.apibuilder.api.v0.enums.Publication => faker.helpers.arrayElement([
     'membership_requests.create',
     'memberships.create',
     'applications.create',
@@ -21113,8 +21113,8 @@ const factories = {
     'versions.material_change',
   ]),
 
-  'io.apibuilder.api.v0.enums.sort_order': (): io.apibuilder.api.v0.enums.SortOrder => faker.random.arrayElement(['asc', 'desc']),
-  'io.apibuilder.api.v0.enums.visibility': (): io.apibuilder.api.v0.enums.Visibility => faker.random.arrayElement(['user', 'organization', 'public']),
+  'io.apibuilder.api.v0.enums.sort_order': (): io.apibuilder.api.v0.enums.SortOrder => faker.helpers.arrayElement(['asc', 'desc']),
+  'io.apibuilder.api.v0.enums.visibility': (): io.apibuilder.api.v0.enums.Visibility => faker.helpers.arrayElement(['user', 'organization', 'public']),
 
   'io.apibuilder.api.v0.models.application': (): io.apibuilder.api.v0.models.Application => ({
     guid: factories.uuid(),
@@ -21431,7 +21431,7 @@ const factories = {
   }),
 
   'io.apibuilder.api.v0.unions.diff': (): io.apibuilder.api.v0.unions.Diff => {
-    const f = faker.random.arrayElement([
+    const f = faker.helpers.arrayElement([
       () => factories['io.apibuilder.api.v0.models.diff_breaking'](),
       () => factories['io.apibuilder.api.v0.models.diff_non_breaking'](),
     ]);
@@ -21440,7 +21440,7 @@ const factories = {
   },
 
   'io.apibuilder.api.v0.unions.item_detail': (): io.apibuilder.api.v0.unions.ItemDetail => {
-    const f = faker.random.arrayElement([() => factories['io.apibuilder.api.v0.models.application_summary']()]);
+    const f = faker.helpers.arrayElement([() => factories['io.apibuilder.api.v0.models.application_summary']()]);
     return f();
   },
 
@@ -21464,7 +21464,7 @@ const factories = {
     guid: factories.uuid(),
   }),
 
-  'io.apibuilder.generator.v0.enums.file_flag': (): io.apibuilder.generator.v0.enums.FileFlag => faker.random.arrayElement(['scaffolding']),
+  'io.apibuilder.generator.v0.enums.file_flag': (): io.apibuilder.generator.v0.enums.FileFlag => faker.helpers.arrayElement(['scaffolding']),
 
   'io.apibuilder.generator.v0.models.attribute': (): io.apibuilder.generator.v0.models.Attribute => ({
     name: factories.string(),
@@ -21507,7 +21507,7 @@ const factories = {
     imported_services: arrayOf(() => factories['io.apibuilder.spec.v0.models.service']()),
   }),
 
-  'io.apibuilder.spec.v0.enums.method': (): io.apibuilder.spec.v0.enums.Method => faker.random.arrayElement([
+  'io.apibuilder.spec.v0.enums.method': (): io.apibuilder.spec.v0.enums.Method => faker.helpers.arrayElement([
     'GET',
     'POST',
     'PUT',
@@ -21519,8 +21519,8 @@ const factories = {
     'TRACE',
   ]),
 
-  'io.apibuilder.spec.v0.enums.parameter_location': (): io.apibuilder.spec.v0.enums.ParameterLocation => faker.random.arrayElement(['Path', 'Query', 'Form', 'Header']),
-  'io.apibuilder.spec.v0.enums.response_code_option': (): io.apibuilder.spec.v0.enums.ResponseCodeOption => faker.random.arrayElement(['Default']),
+  'io.apibuilder.spec.v0.enums.parameter_location': (): io.apibuilder.spec.v0.enums.ParameterLocation => faker.helpers.arrayElement(['Path', 'Query', 'Form', 'Header']),
+  'io.apibuilder.spec.v0.enums.response_code_option': (): io.apibuilder.spec.v0.enums.ResponseCodeOption => faker.helpers.arrayElement(['Default']),
 
   'io.apibuilder.spec.v0.models.annotation': (): io.apibuilder.spec.v0.models.Annotation => ({
     name: factories.string(),
@@ -21733,7 +21733,7 @@ const factories = {
   }),
 
   'io.apibuilder.spec.v0.unions.response_code': (): io.apibuilder.spec.v0.unions.ResponseCode => {
-    const f = faker.random.arrayElement([() => ({
+    const f = faker.helpers.arrayElement([() => ({
       discriminator: 'integer' as const,
       value: factories.integer(),
     }), () => ({
