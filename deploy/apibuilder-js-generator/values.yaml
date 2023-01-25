@@ -23,25 +23,19 @@ istioIngress:
   gateways:
     - key: apibuilder-js-generator-flow-io
       tld: flow.io
+      selector: ingressgateway-flow-io
       dns: true
       hosts:
         - apibuilder-js-generator.flow.io
-    - key: apibuilder-js-generator-flow-pub
-      tld: flo.pub
-      dns: true
-      hosts:
-        - apibuilder-js-generator.flo.pub
 
 istioService:
   live:
     hosts:
       - apibuilder-js-generator
       - apibuilder-js-generator.flow.io
-      - apibuilder-js-generator.flo.pub
     gateways:
       - mesh
       - apibuilder-js-generator-flow-io
-      - apibuilder-js-generator-flow-pub
     stages:
       - deployment: live
         weight: 100
