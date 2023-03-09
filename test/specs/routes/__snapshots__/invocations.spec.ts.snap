@@ -25018,8 +25018,8 @@ export function createClient(options: $HttpClientOptions): ClientInstance {
 `;
 
 exports[`POST /invocations/:key ts_sdk_v2: io/apibuilder/api/v0/apibuilder-api.ts 1`] = `
-"/*tslint:disable interface-name object-shorthand-properties-first no-namespace max-classes-per-file max-line-length trailing-comma*/
-import * as url from 'url';
+"/* eslint-disable max-classes-per-file, max-len, no-param-reassign */
+import { stringify } from '@flowio/web-sdk';
 
 export interface $FetchOptions {
   body?: string;
@@ -25135,7 +25135,7 @@ export interface $HttpClientOptions {
 
 export function isResponseEmpty(response: Response): boolean {
   const contentLength = response.headers.get('Content-Length');
-  return response.status === 204 || contentLength != null && Number.parseInt(contentLength, 10) === 0;
+  return response.status === 204 || (contentLength != null && Number.parseInt(contentLength, 10) === 0);
 }
 
 export function isResponseJson(response: Response): boolean {
@@ -25157,8 +25157,8 @@ export function parseHeaders(response: Response): Record<string, string> {
   return headers;
 }
 
-export function stripQuery(query: $HttpQuery = {}): $HttpQuery {
-  const initialValue: $HttpQuery = {};
+export function stripQuery(query: $HttpQuery = {}): Record<string, any> {
+  const initialValue: Record<string, unknown> = {};
 
   return Object.keys(query).reduce((previousValue, key) => {
     const value = query[key];
@@ -25178,12 +25178,9 @@ export class $HttpClient {
   }
 
   public request(options: $HttpRequestOptions): Promise<$HttpResponse<any, any, any>> {
-    const finalUrl: string = url.format({
-      hostname: 'api.apibuilder.io',
-      pathname: options.endpoint,
-      protocol: 'https:',
-      query: stripQuery(options.query),
-    });
+    const finalUrl: URL = new URL('https://api.apibuilder.io');
+    finalUrl.pathname = options.endpoint;
+    finalUrl.search = stringify(stripQuery(options.query));
 
     const finalHeaders: $HttpHeaders = {
       accept: 'application/json',
@@ -25195,7 +25192,7 @@ export class $HttpClient {
       body: options.body,
       headers: finalHeaders,
       method: options.method,
-      url: finalUrl,
+      url: finalUrl.toString(),
     };
 
     return this.options.fetch(request.url, {

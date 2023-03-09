@@ -593,9 +593,7 @@ function buildHttpClientClass(
     hostname,
     port,
   } = new URL(context.rootService.baseUrl);
-
   const basePathName = stripTrailingSlash(pathname);
-
 
   return b.classDeclaration.from({
     body: b.classBody.from({
@@ -654,10 +652,10 @@ function buildHttpClientClass(
                       }),
                     }),
                     init: b.newExpression.from({
-                      callee: b.identifier('URL'),
                       arguments: [
                         b.stringLiteral(context.rootService.baseUrl),
                       ],
+                      callee: b.identifier('URL'),
                     }),
                   }),
                 ],
@@ -684,18 +682,18 @@ function buildHttpClientClass(
                   }),
                   operator: '=',
                   right: b.callExpression.from({
-                    callee: b.identifier('stringify'),
                     arguments: [
                       b.callExpression.from({
-                        callee: b.identifier('stripQuery'),
                         arguments: [
                           b.memberExpression.from({
                             object: b.identifier('options'),
                             property: b.identifier('query'),
                           }),
                         ],
+                        callee: b.identifier('stripQuery'),
                       }),
                     ],
+                    callee: b.identifier('stringify'),
                   }),
                 }),
               }),
@@ -772,11 +770,11 @@ function buildHttpClientClass(
                           key: b.identifier('url'),
                           kind: 'init',
                           value: b.callExpression.from({
+                            arguments: [],
                             callee: b.memberExpression.from({
                               object: b.identifier('finalUrl'),
                               property: b.identifier('toString'),
                             }),
-                            arguments: [],
                           }),
                         }),
                       ],
@@ -1128,7 +1126,7 @@ function buildIsResponseEmptyFunction(): namedTypes.FunctionDeclaration {
                   }),
                 }),
               }),
-            })
+            }),
           }),
         }),
       ],
