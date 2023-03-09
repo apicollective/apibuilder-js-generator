@@ -15,7 +15,6 @@ import { DeclarationKind, PatternKind, StatementKind, TSTypeKind } from 'ast-typ
 import debug from 'debug';
 import { camelCase, flatMap } from 'lodash';
 import { print } from 'recast';
-import url from 'url';
 
 import {
   buildContext,
@@ -593,57 +592,10 @@ function buildHttpClientClass(
     protocol,
     hostname,
     port,
-  } = url.parse(context.rootService.baseUrl);
+  } = new URL(context.rootService.baseUrl);
 
   const basePathName = stripTrailingSlash(pathname);
 
-  const urlFormatOptions = [
-    b.property.from({
-      key: b.identifier('hostname'),
-      kind: 'init',
-      value: b.stringLiteral(hostname),
-    }),
-    b.property.from({
-      key: b.identifier('pathname'),
-      kind: 'init',
-      value: !basePathName.length ? b.memberExpression.from({
-        object: b.identifier('options'),
-        property: b.identifier('endpoint'),
-      }) : b.binaryExpression.from({
-        left: b.stringLiteral(basePathName),
-        operator: '+',
-        right: b.memberExpression.from({
-          object: b.identifier('options'),
-          property: b.identifier('endpoint'),
-        }),
-      }),
-    }),
-    b.property.from({
-      key: b.identifier('protocol'),
-      kind: 'init',
-      value: b.stringLiteral(protocol),
-    }),
-
-    b.property.from({
-      key: b.identifier('query'),
-      kind: 'init',
-      value: b.callExpression.from({
-        arguments: [
-          b.memberExpression.from({
-            object: b.identifier('options'),
-            property: b.identifier('query'),
-          }),
-        ],
-        callee: b.identifier.from({
-          name: IDENTIFIER_STRIP_QUERY,
-        }),
-      }),
-    }),
-  ];
-
-  if (port != null) {
-    urlFormatOptions.push(b.property('init', b.identifier('port'), b.stringLiteral(port)));
-  }
 
   return b.classDeclaration.from({
     body: b.classBody.from({
@@ -696,23 +648,56 @@ function buildHttpClientClass(
                     id: b.identifier.from({
                       name: 'finalUrl',
                       typeAnnotation: b.tsTypeAnnotation.from({
-                        typeAnnotation: b.tsStringKeyword(),
+                        typeAnnotation: b.tsTypeReference.from({
+                          typeName: b.identifier('URL'),
+                        }),
                       }),
                     }),
-                    init: b.callExpression.from({
+                    init: b.newExpression.from({
+                      callee: b.identifier('URL'),
                       arguments: [
-                        b.objectExpression.from({
-                          properties: urlFormatOptions,
-                        }),
+                        b.stringLiteral(context.rootService.baseUrl),
                       ],
-                      callee: b.memberExpression.from({
-                        object: b.identifier('url'),
-                        property: b.identifier('format'),
-                      }),
                     }),
                   }),
                 ],
                 kind: 'const',
+              }),
+              b.expressionStatement.from({
+                expression: b.assignmentExpression.from({
+                  left: b.memberExpression.from({
+                    object: b.identifier('finalUrl'),
+                    property: b.identifier('pathname'),
+                  }),
+                  operator: '=',
+                  right: b.memberExpression.from({
+                    object: b.identifier('options'),
+                    property: b.identifier('endpoint'),
+                  }),
+                }),
+              }),
+              b.expressionStatement.from({
+                expression: b.assignmentExpression.from({
+                  left: b.memberExpression.from({
+                    object: b.identifier('finalUrl'),
+                    property: b.identifier('search'),
+                  }),
+                  operator: '=',
+                  right: b.callExpression.from({
+                    callee: b.identifier('stringify'),
+                    arguments: [
+                      b.callExpression.from({
+                        callee: b.identifier('stripQuery'),
+                        arguments: [
+                          b.memberExpression.from({
+                            object: b.identifier('options'),
+                            property: b.identifier('query'),
+                          }),
+                        ],
+                      }),
+                    ],
+                  }),
+                }),
               }),
               b.variableDeclaration.from({
                 declarations: [
@@ -786,7 +771,13 @@ function buildHttpClientClass(
                         b.property.from({
                           key: b.identifier('url'),
                           kind: 'init',
-                          value: b.identifier('finalUrl'),
+                          value: b.callExpression.from({
+                            callee: b.memberExpression.from({
+                              object: b.identifier('finalUrl'),
+                              property: b.identifier('toString'),
+                            }),
+                            arguments: [],
+                          }),
                         }),
                       ],
                     }),
@@ -1102,40 +1093,42 @@ function buildIsResponseEmptyFunction(): namedTypes.FunctionDeclaration {
               }),
             }),
             operator: '||',
-            right: b.logicalExpression.from({
-              left: b.binaryExpression.from({
-                left: b.identifier.from({
-                  name: 'contentLength',
+            right: b.parenthesizedExpression.from({
+              expression: b.logicalExpression.from({
+                left: b.binaryExpression.from({
+                  left: b.identifier.from({
+                    name: 'contentLength',
+                  }),
+                  operator: '!=',
+                  right: b.nullLiteral(),
                 }),
-                operator: '!=',
-                right: b.nullLiteral(),
-              }),
-              operator: '&&',
-              right: b.binaryExpression.from({
-                left: b.callExpression.from({
-                  arguments: [
-                    b.identifier.from({
-                      name: 'contentLength',
-                    }),
-                    b.numericLiteral.from({
-                      value: 10,
-                    }),
-                  ],
-                  callee: b.memberExpression.from({
-                    object: b.identifier.from({
-                      name: 'Number',
-                    }),
-                    property: b.identifier.from({
-                      name: 'parseInt',
+                operator: '&&',
+                right: b.binaryExpression.from({
+                  left: b.callExpression.from({
+                    arguments: [
+                      b.identifier.from({
+                        name: 'contentLength',
+                      }),
+                      b.numericLiteral.from({
+                        value: 10,
+                      }),
+                    ],
+                    callee: b.memberExpression.from({
+                      object: b.identifier.from({
+                        name: 'Number',
+                      }),
+                      property: b.identifier.from({
+                        name: 'parseInt',
+                      }),
                     }),
                   }),
-                }),
-                operator: '===',
-                right: b.numericLiteral.from({
-                  value: 0,
+                  operator: '===',
+                  right: b.numericLiteral.from({
+                    value: 0,
+                  }),
                 }),
               }),
-            }),
+            })
           }),
         }),
       ],
@@ -2190,16 +2183,14 @@ function buildInternalTypes(): namedTypes.TSModuleDeclaration {
 
 function buildImportDeclarations() {
   return b.importDeclaration.from({
-    source: b.stringLiteral('url'),
+    source: b.stringLiteral('@flowio/web-sdk'),
     specifiers: [
-      b.importNamespaceSpecifier.from({
-        id: b.identifier('url'),
+      b.importSpecifier.from({
+        imported: b.identifier('stringify'),
       }),
     ],
   });
-}
-
-function buildHttpStatusCodes(): namedTypes.TSTypeAliasDeclaration[] {
+}function buildHttpStatusCodes(): namedTypes.TSTypeAliasDeclaration[] {
   return Object.entries(httpStatusCodes).map(([statusCode, statusText]) => {
     return b.tsTypeAliasDeclaration.from({
       id: buildHttpResponseCodeIdentifier(statusCode),
@@ -2243,8 +2234,12 @@ export function buildStripQueryFunction(): namedTypes.FunctionDeclaration {
                 name: 'initialValue',
                 typeAnnotation: b.tsTypeAnnotation.from({
                   typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier.from({
-                      name: IDENTIFIER_HTTP_QUERY,
+                    typeName: b.identifier('Record'),
+                    typeParameters: b.tsTypeParameterInstantiation.from({
+                      params: [
+                        b.tsStringKeyword(),
+                        b.tsUnknownKeyword(),
+                      ],
                     }),
                   }),
                 }),
@@ -2373,8 +2368,12 @@ export function buildStripQueryFunction(): namedTypes.FunctionDeclaration {
     ],
     returnType: b.tsTypeAnnotation.from({
       typeAnnotation: b.tsTypeReference.from({
-        typeName: b.identifier.from({
-          name: IDENTIFIER_HTTP_QUERY,
+        typeName: b.identifier('Record'),
+        typeParameters: b.tsTypeParameterInstantiation.from({
+          params: [
+            b.tsStringKeyword(),
+            b.tsAnyKeyword(),
+          ],
         }),
       }),
     }),
@@ -2419,7 +2418,7 @@ function buildFile(
 
   if (process.env.NODE_ENV !== 'production') {
     comments.push(b.commentBlock.from({
-      value: 'tslint:disable interface-name object-shorthand-properties-first no-namespace max-classes-per-file max-line-length trailing-comma',
+      value: ' eslint-disable max-classes-per-file, max-len, no-param-reassign ',
     }));
   }
 
