@@ -1,22 +1,21 @@
 import { ResponsesObject } from '@loopback/openapi-v3-types';
 import { ApiBuilderResponse } from 'apibuilder-js';
 import { reduce } from 'lodash';
-import { generateResponseObject } from '../openapi-responses';
 import { IsImportedChecker } from '../openapi-utils/isTypeImported';
+import { generateResponseObject } from '.';
 
 function generateResponsesObject(
-  apibuilderOperationResponses,
+  apibuilderOperationResponses: ApiBuilderResponse[],
   typeValidator,
   isImported: IsImportedChecker,
 ): ResponsesObject {
   const responses = reduce(
     apibuilderOperationResponses,
     (acc, value) => {
-      const response = new ApiBuilderResponse(value.config, value.service);
-      const code = response.code;
-      const isDefault = response.isDefault;
+      const { code } = value;
+      const { isDefault } = value;
       const key = (isDefault) ? 'default' : code;
-      acc[key] = generateResponseObject(response, typeValidator, isImported);
+      acc[key] = generateResponseObject(value, typeValidator, isImported);
 
       return acc;
     },

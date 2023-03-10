@@ -1,18 +1,21 @@
+import { SchemaObject } from '@loopback/openapi-v3-types';
 import { ApiBuilderModel } from 'apibuilder-js';
+import { IsImportedChecker } from '../openapi-utils/isTypeImported';
 import {
   generateSchemaPropertiesFromModelFields,
-} from '../openapi-schemas';
-import { IsImportedChecker } from '../openapi-utils/isTypeImported';
+} from '.';
 
 function generateSchemaFromModel(
   model: ApiBuilderModel,
   modelValidator,
   isImported: IsImportedChecker,
-) {
-  const required = model.fields.filter(f => f.isRequired).map(req => req.name);
-  const properties = generateSchemaPropertiesFromModelFields(model.fields,
-                                                             modelValidator,
-                                                             isImported);
+): SchemaObject {
+  const required = model.fields.filter((f) => f.isRequired).map((req) => req.name);
+  const properties = generateSchemaPropertiesFromModelFields(
+    model.fields,
+    modelValidator,
+    isImported,
+  );
 
   return {
     [model.shortName]: {

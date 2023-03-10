@@ -1,16 +1,16 @@
 const { toCamelCase, capitalizeFirstLetter, slug } = require('./strings');
 
 function getPathParameters(operation) {
-  return operation.parameters.filter(param => param.location === 'Path');
+  return operation.parameters.filter((param) => param.location === 'Path');
 }
 
 function getFunctionParamsStr(operation) {
-  const params = getPathParameters(operation).map(p => toCamelCase(p.name));
+  const params = getPathParameters(operation).map((p) => toCamelCase(p.name));
   return params.concat(['options = {}']).join(', ');
 }
 
 function getJsArrayStr(values) {
-  return `[${values.map(v => `'${v.name}'`).join(', ')}],`;
+  return `[${values.map((v) => `'${v.name}'`).join(', ')}],`;
 }
 
 /**
@@ -26,13 +26,13 @@ function getFunctionName(operation, resourcePath) {
 
     const parts = pathWithOutPrefix.split('/');
     const variableParts = parts
-      .filter(p => p.startsWith(':'))
+      .filter((p) => p.startsWith(':'))
       .map((part, idx) => {
         const prefix = (idx === 0) ? 'By' : 'And';
         return prefix + capitalizeFirstLetter(toCamelCase(slug(part.slice(1))));
       });
     const staticParts = parts
-      .filter(p => !p.startsWith(':'))
+      .filter((p) => !p.startsWith(':'))
       .map((part, idx) => {
         const prefix = (idx === 0) ? '' : 'And';
         return prefix + capitalizeFirstLetter(toCamelCase(slug(part)));
@@ -55,7 +55,7 @@ function getEndpointUriStr(operation) {
       const pathParamMatch = part.match(/^:([\w-]+)(\.[\w.]*)?/);
       if (pathParamMatch !== null) {
         const subParts = [`/${START_LITERAL}${toCamelCase(pathParamMatch[1])}${END_LITERAL}`];
-        if (pathParamMatch.length > 2) {  // match has possible suffix (i.e. .json, .csv etc..)
+        if (pathParamMatch.length > 2) { // match has possible suffix (i.e. .json, .csv etc..)
           subParts.push(pathParamMatch[2]);
         }
         return subParts.join('');

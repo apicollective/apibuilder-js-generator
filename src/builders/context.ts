@@ -1,9 +1,9 @@
+/* eslint-disable import/prefer-default-export, no-param-reassign */
 import {
   ApiBuilderInvocationFormConfig,
   ApiBuilderService,
   ApiBuilderType,
   isEnclosingType,
-  isEnumType,
   isModelType,
   isPrimitiveType,
   isUnionType,
@@ -19,8 +19,8 @@ type Edge = [string, string];
 
 // tslint:disable-next-line: interface-name
 interface Node {
-  id: string;
   afters: string[];
+  id: string;
 }
 
 class Node implements Node {
@@ -32,13 +32,14 @@ class Node implements Node {
 
 function buildDependencyList(
   type: ApiBuilderType,
-) {
+): Set<string> {
   const dependencies = new Set<string>([]);
 
-  function add(dependency: ApiBuilderType) {
-    if (isPrimitiveType(dependency)) return;
+  function add(dependency: ApiBuilderType): void {
+    if (isPrimitiveType(dependency)) return undefined;
     if (isEnclosingType(dependency)) return add(dependency.ofType);
     dependencies.add(dependency.fullName);
+    return undefined;
   }
 
   if (isEnclosingType(type)) {
@@ -57,10 +58,10 @@ function buildDependencyRecord(
 ): DependencyRecord {
   const record: DependencyRecord = {};
 
-  const add = (type: ApiBuilderType) => {
+  const add = (type: ApiBuilderType): void => {
     // Primitive types have no dependencies
     if (isPrimitiveType(type)) {
-      return;
+      return undefined;
     }
 
     // Add dependencies for enclosed type
@@ -72,10 +73,11 @@ function buildDependencyRecord(
 
     // Avoid overwriting resolved types with unresolved types.
     if (dependencies != null && dependencies.size > 0) {
-      return;
+      return undefined;
     }
 
     record[type.fullName] = buildDependencyList(type);
+    return undefined;
   };
 
   services.forEach((service) => {
@@ -115,7 +117,7 @@ function buildDependencyRecord(
   return record;
 }
 
-function buildTypeRecord(services: ApiBuilderService[]) {
+function buildTypeRecord(services: ApiBuilderService[]): TypeRecord {
   return services.reduce<TypeRecord>((previousValue, service) => {
     service.enums.forEach((enumeration) => {
       previousValue[enumeration.fullName] = enumeration;
@@ -134,7 +136,9 @@ function buildTypeRecord(services: ApiBuilderService[]) {
   }, {});
 }
 
-function topologicalSort(dependencies: DependencyRecord) {
+function topologicalSort(
+  dependencies: DependencyRecord,
+): { cyclicTypes: string[], sortedTypes: string[] } {
   const edges: Edge[] = [];
   const nodes: Record<string, Node> = {};
   const sorted: string[] = [];
@@ -153,9 +157,9 @@ function topologicalSort(dependencies: DependencyRecord) {
     nodes[from].afters.push(to);
   });
 
-  function visit(key: string, ancestors: string[] = []) {
+  function visit(key: string, ancestors: string[] = []): void {
     const node = nodes[key];
-    const id = node.id;
+    const { id } = node;
 
     if (visited[key]) return;
 
@@ -191,7 +195,7 @@ export function buildContext(
   invocationForm: ApiBuilderInvocationFormConfig,
 ): Context {
   const rootService = new ApiBuilderService(invocationForm.service);
-  const importedServices = invocationForm.imported_services.map(_ => new ApiBuilderService(_));
+  const importedServices = invocationForm.imported_services.map((_) => new ApiBuilderService(_));
   const allServices = [rootService].concat(importedServices);
   const typesByName = buildTypeRecord(allServices);
   const dependencies = buildDependencyRecord(allServices);
@@ -199,14 +203,12 @@ export function buildContext(
 
   // Types not included in the topological graph because they are independent.
   // These types can be added at any position in the ordered list.
-  const orphanTypes = Object.keys(dependencies).filter(key => !sortedTypes.includes(key));
+  const orphanTypes = Object.keys(dependencies).filter((key) => !sortedTypes.includes(key));
 
   const allSortedTypes = sortedTypes.concat(orphanTypes);
 
   // Types not included in the invocation form.
-  const unresolvedTypes = allSortedTypes.filter((key) => {
-    return typesByName[key] == null;
-  });
+  const unresolvedTypes = allSortedTypes.filter((key) => typesByName[key] == null);
 
   return {
     cyclicTypes,

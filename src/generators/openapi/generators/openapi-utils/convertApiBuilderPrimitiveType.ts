@@ -2,7 +2,7 @@ import { SchemaObject } from '@loopback/openapi-v3-types';
 import {
   ApiBuilderPrimitiveType,
   Kind,
- } from 'apibuilder-js';
+} from 'apibuilder-js';
 
 function convertApiBuilderPrimitiveType(type: ApiBuilderPrimitiveType): SchemaObject {
   switch (type.baseTypeName) {
@@ -27,6 +27,7 @@ function convertApiBuilderPrimitiveType(type: ApiBuilderPrimitiveType): SchemaOb
     case Kind.STRING: return { type: 'string' };
     case Kind.UNIT: return { type: 'integer', nullable: true };
     case Kind.UUID: return { type: 'string', format: 'uuid' };
+    default: throw new Error(`Unknown primitive type ${type.baseTypeName}`);
   }
 }
 

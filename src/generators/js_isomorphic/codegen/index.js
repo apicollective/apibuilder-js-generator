@@ -30,8 +30,9 @@ function generate(service, opts = defaultOpts) {
     generateIndexFile(service),
   ];
 
-  const resourceFiles = service.resources.map(resource =>
-    generateResourceFile(resource, service.name, opts.clientImportPath));
+  const resourceFiles = service.resources.map(
+    (resource) => generateResourceFile(resource, service.name, opts.clientImportPath),
+  );
 
   const files = staticFiles.concat(resourceFiles);
 

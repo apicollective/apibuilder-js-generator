@@ -1,12 +1,14 @@
 export interface IImportDeclarationConfig {
   defaultExport?: string;
-  namedExports: string[];
   moduleName: string;
+  namedExports?: string[];
 }
 
 export default class ImportDeclaration {
   public defaultExport?: string;
+
   public namedExports: string[];
+
   public moduleName: string;
 
   /**
@@ -20,8 +22,8 @@ export default class ImportDeclaration {
     this.moduleName = moduleName;
   }
 
-  public toString() {
-    let str;
+  public toString(): string {
+    let str: string;
 
     if (this.defaultExport) {
       str = `const ${this.defaultExport} = require('${this.moduleName}');`;

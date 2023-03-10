@@ -1,9 +1,9 @@
-import { ApiBuilderService } from 'apibuilder-js';
+import { ApiBuilderService, type ApiBuilderServiceConfig } from 'apibuilder-js';
 import { generateInfoObject } from '../../../../../src/generators/openapi/generators/openapi-info';
 import apidocApiJson = require('../../../../fixtures/schemas/apidoc-api.json');
 
 describe('generated info object should have correct properties', () => {
-  const service = new ApiBuilderService(apidocApiJson);
+  const service = new ApiBuilderService(apidocApiJson as ApiBuilderServiceConfig);
   const infoObject = generateInfoObject(service);
 
   test('contact', () => {
@@ -22,7 +22,7 @@ describe('generated info object should have correct properties', () => {
     expect(infoObject.termsOfService).toBe('');
   });
 
-  test('title',  () => {
+  test('title', () => {
     expect(infoObject.title).toBe(service.name);
   });
 

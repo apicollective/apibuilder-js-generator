@@ -7,18 +7,18 @@ import {
   ApiBuilderType,
   ApiBuilderUnion,
 } from 'apibuilder-js';
+import { IsImportedChecker } from './isTypeImported';
 import {
   convertApiBuilderArray,
   convertApiBuilderPrimitiveType,
   convertApiBuilderTypeToReference,
-} from '../openapi-utils';
-import { IsImportedChecker } from './isTypeImported';
+} from '.';
 
 function convertApiBuilderType(
   type: ApiBuilderType,
   validate,
   isImported: IsImportedChecker,
-): SchemaObject {
+): SchemaObject | undefined {
   if (type instanceof ApiBuilderPrimitiveType) {
     return convertApiBuilderPrimitiveType(type);
   }
@@ -28,10 +28,9 @@ function convertApiBuilderType(
   }
 
   if (
-    type instanceof ApiBuilderModel ||
-    type instanceof ApiBuilderEnum ||
-    type instanceof ApiBuilderUnion) {
-
+    type instanceof ApiBuilderModel
+    || type instanceof ApiBuilderEnum
+    || type instanceof ApiBuilderUnion) {
     if (isImported(type)) {
       return {}; // any type
     }
@@ -39,9 +38,9 @@ function convertApiBuilderType(
     if (validate(type)) {
       return convertApiBuilderTypeToReference(type);
     }
-
-    throw new Error(`Apibuilder type ${type} not found`);
+    throw new Error(`Apibuilder type ${String(type)} not found`);
   }
+  return undefined;
 }
 
 export default convertApiBuilderType;

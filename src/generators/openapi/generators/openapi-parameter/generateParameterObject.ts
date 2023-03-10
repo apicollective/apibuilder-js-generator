@@ -1,7 +1,6 @@
 import { ParameterObject } from '@loopback/openapi-v3-types';
 import {
   ApiBuilderParameter,
-  ApiBuilderParameterLocation,
 } from 'apibuilder-js';
 import { get } from 'lodash';
 import {
@@ -25,16 +24,15 @@ function generateParameterObject(
     type,
   } = apibuilderParameter;
 
-  const parameterConversionWarning = `\
-Apibuilder defined this parameter location as "Form" which is incompatible with the OpenAPI spec.`;
+  const parameterConversionWarning = 'Apibuilder defined this parameter location as "Form" which is incompatible with the OpenAPI spec.';
 
   const description = (location === 'Form')
     ? apibuilderDescription + parameterConversionWarning : apibuilderDescription;
 
   const parameterObj = {
     deprecated: Boolean(get(apibuilderDeprecation, 'description')),
-    example: defaultValue ? defaultValue : undefined,
-    in: convertLocationToIn(location as ApiBuilderParameterLocation),
+    example: defaultValue || undefined,
+    in: convertLocationToIn(location),
     required: isRequired,
     schema: convertApiBuilderType(type, parameterTypeValidator, isImported),
     ...description && { description },

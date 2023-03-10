@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { builders as b, namedTypes } from 'ast-types';
 import debug from 'debug';
 import {
@@ -16,13 +17,14 @@ function buildExportNameDeclarations(
 ): namedTypes.ExportNamedDeclaration[] {
   const { rootService } = context;
 
-  const types = []
-    .concat(rootService.enums)
-    .concat(rootService.models)
-    .concat(rootService.unions);
+  const types = [
+    ...rootService.enums,
+    ...rootService.models,
+    ...rootService.unions,
+  ];
 
   return types.sort(shortNameCompare).map(
-    type => b.exportNamedDeclaration(
+    (type) => b.exportNamedDeclaration(
       b.tsTypeAliasDeclaration(buildTypeIdentifier(type), buildTypeReference(type)),
     ),
   );

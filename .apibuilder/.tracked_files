@@ -1,0 +1,5 @@
+---
+bryzek:
+  apidoc-spec:
+    ts_declarations_v2:
+    - generated/com.bryzek.apidoc.spec.v0.apidoc-spec.d.ts
