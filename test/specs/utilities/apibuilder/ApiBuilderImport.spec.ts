@@ -1,21 +1,21 @@
-const find = require('lodash/find');
+import find from 'lodash/find';
 
-const {
+import {
   ApiBuilderImport,
   ApiBuilderService,
   isEnumType,
   isModelType,
   isUnionType,
-} = require('../../../../src/utilities/apibuilder');
+} from '../../../../src/utilities/apibuilder';
 
-const schema = require('../../../fixtures/schemas/apidoc-api.json');
+import apidocApiJson from '../../../fixtures/schemas/apidoc-api.json';
 
-const service = new ApiBuilderService({ service: schema });
+const service = new ApiBuilderService({ service: apidocApiJson });
 
-const subject = new ApiBuilderImport(find(schema.imports, {
+const subject = new ApiBuilderImport(find(apidocApiJson.imports, {
   namespace: 'com.bryzek.apidoc.spec.v0',
   version: '0.11.94',
-}), service);
+}),                                  service);
 
 describe('ApiBuilderImport', () => {
   test('should have properties from schema', () => {
@@ -38,7 +38,8 @@ describe('ApiBuilderImport::findEnumByName', () => {
   });
 
   test('should return type matching fully qualified name', () => {
-    expect(isEnumType(subject.findEnumByName('com.bryzek.apidoc.spec.v0.enums.parameter_location'))).toBe(true);
+    expect(isEnumType(subject.findEnumByName('com.bryzek.apidoc.spec.v0.enums.parameter_location')))
+      .toBe(true);
   });
 });
 
@@ -48,7 +49,8 @@ describe('ApiBuilderImport::findModelByName', () => {
   });
 
   test('should return type matching fully qualified name', () => {
-    expect(isModelType(subject.findModelByName('com.bryzek.apidoc.spec.v0.models.operation'))).toBe(true);
+    expect(isModelType(subject.findModelByName('com.bryzek.apidoc.spec.v0.models.operation')))
+      .toBe(true);
   });
 });
 
@@ -58,6 +60,7 @@ describe('ApiBuilderImport::findUnionByName', () => {
   });
 
   test('should return type matching fully qualified name', () => {
-    expect(isUnionType(subject.findUnionByName('com.bryzek.apidoc.spec.v0.unions.response_code'))).toBe(true);
+    expect(isUnionType(subject.findUnionByName('com.bryzek.apidoc.spec.v0.unions.response_code')))
+      .toBe(true);
   });
 });

@@ -1,4 +1,4 @@
-const { astFromTypeName, typeNameFromAst } = require('../../../../src/utilities/apibuilder');
+import { astFromTypeName, typeNameFromAst } from '../../../../src/utilities/apibuilder';
 
 const baseType = 'com.bryzek.apidoc.common.v0.models.reference';
 

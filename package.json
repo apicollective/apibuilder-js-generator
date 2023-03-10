@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/browserify": "^12.0.36",
     "@types/debug": "^4.1.5",
+    "@types/faker": "^4.1.12",
     "@types/invariant": "^2.2.33",
     "@types/jest": "^24.9.1",
     "@types/lodash": "^4.14.160",

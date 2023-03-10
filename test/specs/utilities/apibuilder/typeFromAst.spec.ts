@@ -1,4 +1,4 @@
-const {
+import {
   ApiBuilderArray,
   ApiBuilderEnum,
   ApiBuilderMap,
@@ -8,11 +8,11 @@ const {
   ApiBuilderUnion,
   astFromTypeName,
   typeFromAst,
-} = require('../../../../src/utilities/apibuilder');
+} from '../../../../src/utilities/apibuilder';
 
-const schema = require('../../../fixtures/schemas/apidoc-api.json');
+import apidocApiJson from '../../../fixtures/schemas/apidoc-api.json';
 
-const service = new ApiBuilderService({ service: schema });
+const service = new ApiBuilderService({ service: apidocApiJson });
 
 describe('typeFromAst', () => {
   test('should return instance corresponding to "string" type', () => {
@@ -25,14 +25,14 @@ describe('typeFromAst', () => {
     const ast = astFromTypeName('map[string]');
     const instance = typeFromAst(ast, service);
     expect(instance).toBeInstanceOf(ApiBuilderMap);
-    expect(instance.ofType).toBeInstanceOf(ApiBuilderPrimitiveType);
+    expect((instance as ApiBuilderMap).ofType).toBeInstanceOf(ApiBuilderPrimitiveType);
   });
 
   test('should return instance corresponding to "[string]" type', () => {
     const ast = astFromTypeName('[string]');
     const instance = typeFromAst(ast, service);
     expect(instance).toBeInstanceOf(ApiBuilderArray);
-    expect(instance.ofType).toBeInstanceOf(ApiBuilderPrimitiveType);
+    expect((instance as ApiBuilderArray).ofType).toBeInstanceOf(ApiBuilderPrimitiveType);
   });
 
   test('should return instance corresponding to model type', () => {

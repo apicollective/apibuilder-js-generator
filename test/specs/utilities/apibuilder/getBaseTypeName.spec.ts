@@ -1,6 +1,6 @@
-const pickBy = require('lodash/pickBy');
-const values = require('lodash/values');
-const { Kind, getBaseTypeName, isPrimitiveTypeName } = require('../../../../src/utilities/apibuilder');
+import pickBy from 'lodash/pickBy';
+import values from 'lodash/values';
+import { getBaseTypeName, isPrimitiveTypeName, Kind } from '../../../../src/utilities/apibuilder';
 
 const primitiveTypes = values(pickBy(Kind, isPrimitiveTypeName));
 

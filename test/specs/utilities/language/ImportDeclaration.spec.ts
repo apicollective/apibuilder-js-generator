@@ -1,4 +1,4 @@
-const ImportDeclaration = require('../../../../src/utilities/language/ImportDeclaration');
+import ImportDeclaration from '../../../../src/utilities/language/ImportDeclaration';
 
 describe('ImportDeclaration', () => {
   test('should support default export declaration', () => {
@@ -11,8 +11,8 @@ describe('ImportDeclaration', () => {
 
   test('should support named exports declaration', () => {
     const instance = new ImportDeclaration({
-      namedExports: ['flatMap', 'forEach'],
       moduleName: 'lodash',
+      namedExports: ['flatMap', 'forEach'],
     });
     expect(instance.toString()).toBe("const { flatMap, forEach } = require('lodash');");
   });
