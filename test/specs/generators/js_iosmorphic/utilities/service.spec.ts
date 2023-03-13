@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-const { getEndpointUriStr } = require('../../../../../src/generators/js_isomorphic/codegen/util/service');
+import { getEndpointUriStr } from '../../../../../src/generators/js_isomorphic/codegen/util/service';
 
 describe('getEndpointUriStr', () => {
   test('should get expected basic endpoint', () => {

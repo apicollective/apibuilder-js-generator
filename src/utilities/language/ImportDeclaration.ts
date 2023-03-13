@@ -7,7 +7,7 @@ export interface IImportDeclarationConfig {
 export default class ImportDeclaration {
   public defaultExport?: string;
 
-  public namedExports: string[];
+  public namedExports?: string[];
 
   public moduleName: string;
 
