@@ -3,7 +3,6 @@ const nodeFiveEs5 = require('./node_5_es5');
 const nodeFiveEs6 = require('./node_5_es6');
 const jsIsomorphic = require('./js_isomorphic');
 const propTypes = require('./prop_types');
-const nodeGraphQL = require('./node_graphql');
 const tsConstants = require('./ts_constants');
 const tsDeclarations = require('./ts_declarations');
 const tsDeclarationsV2 = require('./ts_declarations_v2');
