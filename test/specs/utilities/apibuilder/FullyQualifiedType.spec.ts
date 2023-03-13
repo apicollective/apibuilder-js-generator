@@ -1,7 +1,11 @@
-const pickBy = require('lodash/pickBy');
-const values = require('lodash/values');
+import pickBy from 'lodash/pickBy';
+import values from 'lodash/values';
 
-const { FullyQualifiedType, Kind, isPrimitiveTypeName } = require('../../../../src/utilities/apibuilder');
+import {
+  FullyQualifiedType,
+  isPrimitiveTypeName,
+  Kind,
+} from '../../../../src/utilities/apibuilder';
 
 const primitiveTypes = values(pickBy(Kind, isPrimitiveTypeName));
 
@@ -135,11 +139,13 @@ describe('FullyQualifiedType::packageName', () => {
     expect(instance).toHaveProperty('packageName', 'com.bryzek.apidoc.common.v0.models');
   });
 
+  // tslint:disable-next-line: max-line-length
   test(`should be "com.bryzek.apidoc.common.v0.models" for instance of type "[${baseType}]"`, () => {
     const instance = new FullyQualifiedType(`[${baseType}]`);
     expect(instance).toHaveProperty('packageName', 'com.bryzek.apidoc.common.v0.models');
   });
 
+  // tslint:disable-next-line: max-line-length
   test(`should be "com.bryzek.apidoc.common.v0.models" for instance of type "map[${baseType}]"`, () => {
     const instance = new FullyQualifiedType(`map[${baseType}]`);
     expect(instance).toHaveProperty('packageName', 'com.bryzek.apidoc.common.v0.models');

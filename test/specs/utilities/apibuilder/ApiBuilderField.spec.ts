@@ -1,9 +1,9 @@
-const { ApiBuilderField, ApiBuilderService } = require('../../../../src/utilities/apibuilder');
-const schema = require('../../../fixtures/schemas/apidoc-api.json');
-const createMockField = require('../../../helpers/createMockField');
-const createMockDeprecation = require('../../../helpers/createMockDeprecation');
+import { ApiBuilderField, ApiBuilderService } from '../../../../src/utilities/apibuilder';
+import apidocApiJson from '../../../fixtures/schemas/apidoc-api.json';
+import createMockDeprecation from '../../../helpers/createMockDeprecation';
+import createMockField from '../../../helpers/createMockField';
 
-const service = new ApiBuilderService({ service: schema });
+const service = new ApiBuilderService({ service: apidocApiJson });
 describe('ApiBuilderField', () => {
   test('should have property with field name', () => {
     const config = createMockField({ type: 'visibility' });

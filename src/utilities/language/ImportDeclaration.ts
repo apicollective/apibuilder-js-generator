@@ -1,12 +1,12 @@
 export interface IImportDeclarationConfig {
   defaultExport?: string;
-  namedExports: string[];
+  namedExports?: string[];
   moduleName: string;
 }
 
 export default class ImportDeclaration {
   public defaultExport?: string;
-  public namedExports: string[];
+  public namedExports?: string[];
   public moduleName: string;
 
   /**

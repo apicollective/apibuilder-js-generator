@@ -1,21 +1,21 @@
-const find = require('lodash/find');
+import find from 'lodash/find';
 
-const { ApiBuilderEnum, ApiBuilderEnumValue, ApiBuilderService } = require('../../../../src/utilities/apibuilder');
-const createMockDeprecation = require('../../../helpers/createMockDeprecation');
-const createMockEnum = require('../../../helpers/createMockEnum');
-const schema = require('../../../fixtures/schemas/apidoc-api.json');
+import { ApiBuilderEnum, ApiBuilderEnumValue, ApiBuilderService } from '../../../../src/utilities/apibuilder';
+import apidocApiJson from '../../../fixtures/schemas/apidoc-api.json';
+import createMockDeprecation from '../../../helpers/createMockDeprecation';
+import createMockEnum from '../../../helpers/createMockEnum';
 
-const service = new ApiBuilderService({ service: schema });
+const service = new ApiBuilderService({ service: apidocApiJson });
 
 describe('ApiBuilderEnum', () => {
   test('should have static function to create enumeration from schema', () => {
-    const enumeration = find(schema.enums, { name: 'visibility' });
+    const enumeration = find(apidocApiJson.enums, { name: 'visibility' });
     const instance = ApiBuilderEnum.fromSchema(enumeration, service);
     expect(instance).toBeInstanceOf(ApiBuilderEnum);
   });
 
   test('should define enum type with values', () => {
-    const enumeration = find(schema.enums, { name: 'visibility' });
+    const enumeration = find(apidocApiJson.enums, { name: 'visibility' });
     const instance = ApiBuilderEnum.fromSchema(enumeration, service);
     instance.values.forEach((value) => {
       expect(value).toBeInstanceOf(ApiBuilderEnumValue);
@@ -29,7 +29,9 @@ describe('ApiBuilderEnum', () => {
   });
 
   test('should define other properties from enum schema', () => {
-    const enumeration = find(schema.enums, { name: 'visibility' });
+    const enumeration = find(
+      apidocApiJson.enums, { name: 'visibility' },
+    ) as unknown as ApiBuilderEnum;
     const instance = ApiBuilderEnum.fromSchema(enumeration, service);
     expect(instance).toHaveProperty('name', enumeration.name);
     expect(instance).toHaveProperty('plural', enumeration.plural);

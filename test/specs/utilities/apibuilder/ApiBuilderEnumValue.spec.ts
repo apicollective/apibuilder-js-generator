@@ -1,8 +1,8 @@
-const faker = require('faker');
+import faker from 'faker';
 
-const { ApiBuilderEnumValue } = require('../../../../src/utilities/apibuilder');
-const createMockDeprecation = require('../../../helpers/createMockDeprecation');
-const createMockEnumValue = require('../../../helpers/createMockEnumValue');
+import { ApiBuilderEnumValue } from '../../../../src/utilities/apibuilder';
+import createMockDeprecation from '../../../helpers/createMockDeprecation';
+import createMockEnumValue from '../../../helpers/createMockEnumValue';
 
 describe('ApiBuilderEnumValue', () => {
   test('should accept well defined enum value schema', () => {
