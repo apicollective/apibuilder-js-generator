@@ -1,17 +1,17 @@
-const nodeZeroTwelve = require('./0_12');
-const nodeFiveEs5 = require('./node_5_es5');
-const nodeFiveEs6 = require('./node_5_es6');
-const jsIsomorphic = require('./js_isomorphic');
-const propTypes = require('./prop_types');
-const tsConstants = require('./ts_constants');
-const tsDeclarations = require('./ts_declarations');
-const tsDeclarationsV2 = require('./ts_declarations_v2');
-const tsPropTypes = require('./ts_prop_types');
-const tsSdk = require('./ts_sdk');
-const tsSdkv2 = require('./ts_sdk_v2');
-const tsMocks = require('./ts_mocks');
-const jsdoc = require('./jsdoc');
-const openapi = require('./openapi');
+import nodeZeroTwelve from './0_12';
+import jsIsomorphic from './js_isomorphic';
+import jsdoc from './jsdoc';
+import nodeFiveEs5 from './node_5_es5';
+import nodeFiveEs6 from './node_5_es6';
+import openapi from './openapi';
+import propTypes from './prop_types';
+import tsConstants from './ts_constants';
+import tsDeclarations from './ts_declarations';
+import tsDeclarationsV2 from './ts_declarations_v2';
+import tsMocks from './ts_mocks';
+import tsPropTypes from './ts_prop_types';
+import tsSdk from './ts_sdk';
+import tsSdkv2 from './ts_sdk_v2';
 
 const generators = {
   node_0_12: {
@@ -133,4 +133,4 @@ const generators = {
   },
 };
 
-module.exports = generators;
+export default generators;

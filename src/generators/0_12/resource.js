@@ -43,7 +43,7 @@ function getJSDocType(apiDocType) {
 
 function getDeclaredResponses(operation) {
   return operation.responses
-    .filter(response => response.code && response.code.integer)
+    .filter((response) => response.code && response.code.integer)
     .map((response) => {
       const status = response.code.integer.value;
       return {
@@ -66,8 +66,19 @@ function getPathStringBuilder(pathRoot, operation) {
   const parts = fullPath.split('/')
     .map((part) => {
       if (part.indexOf(':') === 0) {
-        // tslint:disable-next-line:max-line-length
-        return PATH_DELIMETER + SINGLE_QUOTE + SPACE + PLUS + SPACE + camelCase(part.slice(1)) + SPACE + PLUS + SPACE + SINGLE_QUOTE;
+        // eslint-disable-next-line max-len
+        return [
+          PATH_DELIMETER,
+          SINGLE_QUOTE,
+          SPACE,
+          PLUS,
+          SPACE,
+          camelCase(part.slice(1)),
+          SPACE,
+          PLUS,
+          SPACE,
+          SINGLE_QUOTE,
+        ].join('');
       }
 
       return PATH_DELIMETER + part;
@@ -84,22 +95,22 @@ function requestCanHaveBody(method) {
 }
 
 function getQueryParameters(operation) {
-  return operation.parameters.filter(param => param.location === 'Query');
+  return operation.parameters.filter((param) => param.location === 'Query');
 }
 
 function getQueryParameterNames(operation) {
-  return getQueryParameters(operation).map(param => ({
+  return getQueryParameters(operation).map((param) => ({
     name: param.name,
     nameCamelCase: camelCase(param.name),
   }));
 }
 
 function getPathParameters(operation) {
-  return operation.parameters.filter(param => param.location === 'Path');
+  return operation.parameters.filter((param) => param.location === 'Path');
 }
 
 function getFunctionParametersJs(operation) {
-  const params = getPathParameters(operation).map(p => camelCase(p.name));
+  const params = getPathParameters(operation).map((p) => camelCase(p.name));
   const queryPrams = getQueryParameters(operation);
 
   if (queryPrams.length || requestCanHaveBody(operation.method)) {
@@ -124,10 +135,10 @@ function pathToCapitalCase(operation) {
     parts = operation.path.slice(1).split('/');
     parts = parts.slice(1); // drop the resource name prefix
 
-    pathParamTokens = parts.filter(part => part.indexOf(':') === 0);
-    otherPathTokens = parts.filter(part => part.indexOf(':') === -1);
+    pathParamTokens = parts.filter((part) => part.indexOf(':') === 0);
+    otherPathTokens = parts.filter((part) => part.indexOf(':') === -1);
 
-    otherPathTokens = otherPathTokens.map(token => capitalizeFirstLetter(camelCase(token)));
+    otherPathTokens = otherPathTokens.map((token) => capitalizeFirstLetter(camelCase(token)));
     pathParamTokens = pathParamTokens.map((token, index) => {
       const prefix = (index === 0) ? 'By' : 'And';
       return prefix + capitalizeFirstLetter(camelCase(token.slice(1)));
@@ -153,7 +164,7 @@ function getFunctionName(operation) {
 function getParameterData(operation) {
   const pathParams = getPathParameters(operation);
   const queryPrams = getQueryParameters(operation);
-  const paramData = pathParams.map(param => ({
+  const paramData = pathParams.map((param) => ({
     name: camelCase(param.name),
     type: '{string}',
   }));
@@ -207,7 +218,7 @@ function createResource(properties) {
   const resource = {
     name: properties.type,
     objectName: getResourceObjectName(properties.plural),
-    methods: operations.map(op => createOperation(properties.plural, op)),
+    methods: operations.map((op) => createOperation(properties.plural, op)),
   };
 
   return resource;

@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import {
   ApiBuilderFile,
   ApiBuilderInvocationFormConfig,
@@ -57,3 +58,7 @@ export function generate(
     resolve(files);
   });
 }
+
+export default {
+  generate,
+};

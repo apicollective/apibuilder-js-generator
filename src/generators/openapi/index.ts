@@ -1,10 +1,9 @@
-const createLogger = require('debug');
-const { ApiBuilderFile, ApiBuilderService } = require('apibuilder-js');
-const generateOpenApiSpec = require('./generators/openapi-spec/generateOpenApiSpec').default;
+import { ApiBuilderFile, ApiBuilderInvocationFormConfig, ApiBuilderService } from 'apibuilder-js';
+import generateOpenApiSpec from './generators/openapi-spec/generateOpenApiSpec';
 /* uncomment for debugging */
 // const debug = createLogger('apibuilder:openapi');
 
-function generate(invocationForm) {
+function generate(invocationForm: ApiBuilderInvocationFormConfig): Promise<ApiBuilderFile[]> {
   const service = new ApiBuilderService(invocationForm.service);
   const contentsData = generateOpenApiSpec(service);
   const contents = JSON.stringify(contentsData, null, 2);
@@ -13,4 +12,4 @@ function generate(invocationForm) {
   return Promise.resolve([file]);
 }
 
-module.exports = { generate };
+export default { generate };

@@ -1,21 +1,17 @@
+import url from 'url';
 import {
   ApiBuilderFile,
   ApiBuilderInvocationFormConfig,
   ApiBuilderOperation,
-  ApiBuilderPrimitiveType,
   ApiBuilderResource,
-  ApiBuilderType,
-  isArrayType,
-  isMapType,
-  isPrimitiveType,
-  Kind,
 } from 'apibuilder-js';
 import { builders as b, namedTypes } from 'ast-types';
-import { DeclarationKind, PatternKind, StatementKind, TSTypeKind } from 'ast-types/gen/kinds';
+import {
+  DeclarationKind, PatternKind, StatementKind,
+} from 'ast-types/gen/kinds';
 import debug from 'debug';
 import { camelCase, flatMap } from 'lodash';
 import { print } from 'recast';
-import url from 'url';
 
 import {
   buildContext,
@@ -23,7 +19,6 @@ import {
   buildType,
   buildTypeAnnotation,
   buildTypeIdentifier,
-  buildTypeQualifiedName,
   buildTypeReference,
   Context,
 } from '../../builders';
@@ -113,17 +108,11 @@ const IDENTIFIER_HTTP_METHOD = '$HttpMethod';
 const IDENTIFIER_HTTP_QUERY = '$HttpQuery';
 const IDENTIFIER_HTTP_REQUEST = '$HttpRequest';
 const IDENTIFIER_HTTP_REQUEST_OPTIONS = '$HttpRequestOptions';
-const IDENTIFIER_HTTP_RESPONSE_ERROR = '$HttpResponseError';
 const IDENTIFIER_HTTP_RESPONSE = '$HttpResponse';
 const IDENTIFIER_STRIP_QUERY = 'stripQuery';
 const IDENTIFIER_RESOURCE_CLASS = '$Resource';
 
-// Name for namespace containing internal types.
-// Used to avoid naming collision with types generated
-// from API builder specifications.
-const IDENTIFIER_INTERNAL_NAMESPACE = 'internalTypes';
-
-function isOk(statusCode: number | string) {
+function isOk(statusCode: number | string): boolean {
   const status = typeof statusCode === 'string' ? parseInt(statusCode, 10) : statusCode;
   return status >= 200 && status < 300;
 }
@@ -136,16 +125,9 @@ function buildExportNamedDeclaration(
   });
 }
 
-function buildInternalTypeIdentifier(
-  name: string,
-): namedTypes.TSQualifiedName {
-  return b.tsQualifiedName.from({
-    left: b.identifier(IDENTIFIER_INTERNAL_NAMESPACE),
-    right: b.identifier(name),
-  });
-}
-
-function buildHttpResponseCodeIdentifier(statusCode: number | string) {
+function buildHttpResponseCodeIdentifier(
+  statusCode: keyof typeof httpStatusCodes,
+): namedTypes.Identifier {
   const statusText = httpStatusCodes[statusCode];
   const name = statusText != null ? pascalCase(statusText) : statusCode;
   return b.identifier(`$Http${name}`);
@@ -155,126 +137,13 @@ function buildTypeDeclarations(
   context: Context,
 ): namedTypes.TSTypeAliasDeclaration[] {
   const { rootService } = context;
-  const types = [].concat(rootService.enums).concat(rootService.models).concat(rootService.unions);
-  return types.sort(shortNameCompare).map(type =>
-    b.tsTypeAliasDeclaration(buildTypeIdentifier(type), buildTypeReference(type)),
-  );
-}
-
-function buildPrimitiveTypeReference(
-  type: ApiBuilderPrimitiveType,
-) {
-  switch (type.shortName) {
-    case Kind.STRING:
-    case Kind.DATE_ISO8601:
-    case Kind.DATE_TIME_ISO8601:
-    case Kind.UUID:
-    case Kind.JSON:
-      return b.tsStringKeyword();
-    case Kind.BOOLEAN:
-      return b.tsBooleanKeyword();
-    case Kind.DECIMAL:
-    case Kind.DOUBLE:
-    case Kind.INTEGER:
-    case Kind.LONG:
-      return b.tsNumberKeyword();
-    case Kind.UNIT:
-      return b.tsUndefinedKeyword();
-    case Kind.OBJECT:
-    default:
-      return b.tsAnyKeyword();
-  }
-}
-
-function buildJSONPrimitiveType(): namedTypes.TSTypeAliasDeclaration {
-  return b.tsTypeAliasDeclaration.from({
-    id: b.identifier.from({
-      name: 'JSONPrimitive',
-    }),
-    typeAnnotation: b.tsUnionType.from({
-      types: [
-        b.tsStringKeyword(),
-        b.tsNumberKeyword(),
-        b.tsBooleanKeyword(),
-        b.tsNullKeyword(),
-      ],
-    }),
-  });
-}
-
-function buildJSONValueType(): namedTypes.TSTypeAliasDeclaration {
-  return b.tsTypeAliasDeclaration.from({
-    id: b.identifier.from({
-      name: 'JSONValue',
-    }),
-    typeAnnotation: b.tsUnionType.from({
-      types: [
-        b.tsTypeReference.from({
-          typeName: b.identifier.from({
-            name: 'JSONPrimitive',
-          }),
-        }),
-        b.tsTypeReference.from({
-          typeName: b.identifier.from({
-            name: 'JSONArray',
-          }),
-        }),
-        b.tsTypeReference.from({
-          typeName: b.identifier.from({
-            name: 'JSONObject',
-          }),
-        }),
-      ],
-    }),
-  });
-}
-
-function buildJSONArrayType(): namedTypes.TSTypeAliasDeclaration {
-  return b.tsTypeAliasDeclaration.from({
-    id: b.identifier.from({
-      name: 'JSONArray',
-    }),
-    typeAnnotation: b.tsArrayType.from({
-      elementType: b.tsTypeReference.from({
-        typeName: b.identifier.from({
-          name: 'JSONValue',
-        }),
-      }),
-    }),
-  });
-}
-
-function buildJSONObjectInterface(): namedTypes.TSInterfaceDeclaration {
-  return b.tsInterfaceDeclaration.from({
-    body: b.tsInterfaceBody.from({
-      body: [
-        b.tsIndexSignature.from({
-          parameters: [
-            b.identifier.from({
-              name: 'key',
-              typeAnnotation: b.tsTypeAnnotation.from({
-                typeAnnotation: b.tsTypeReference.from({
-                  typeName: b.identifier.from({
-                    name: 'string',
-                  }),
-                }),
-              }),
-            }),
-          ],
-          typeAnnotation: b.tsTypeAnnotation.from({
-            typeAnnotation:  b.tsTypeReference.from({
-              typeName: b.identifier.from({
-                name: 'JSONValue',
-              }),
-            }),
-          }),
-        }),
-      ],
-    }),
-    id: b.identifier.from({
-      name: 'JSONObject',
-    }),
-  });
+  const types = [
+    ...rootService.enums,
+    ...rootService.models,
+    ...rootService.unions,
+  ];
+  return types.sort(shortNameCompare)
+    .map((type) => b.tsTypeAliasDeclaration(buildTypeIdentifier(type), buildTypeReference(type)));
 }
 
 function buildFetchOptions(): namedTypes.TSInterfaceDeclaration {
@@ -1075,90 +944,6 @@ function buildHttpClientClass(
   });
 }
 
-function buildBaseErrorClass(): namedTypes.ClassDeclaration {
-  return b.classDeclaration.from({
-    body: b.classBody.from({
-      body: [
-        b.methodDefinition.from({
-          key: b.identifier('constructor'),
-          kind: 'constructor',
-          value: b.functionExpression.from({
-            body: b.blockStatement.from({
-              body: [
-                b.expressionStatement.from({
-                  expression: b.callExpression.from({
-                    arguments: [
-                      b.identifier('message'),
-                    ],
-                    callee: b.super(),
-                  }),
-                }),
-                b.expressionStatement.from({
-                  expression: b.assignmentExpression.from({
-                    left: b.memberExpression.from({
-                      object: b.thisExpression(),
-                      property: b.identifier('name'),
-                    }),
-                    operator: '=',
-                    right: b.memberExpression.from({
-                      object: b.memberExpression.from({
-                        object: b.thisExpression(),
-                        property: b.identifier('constructor'),
-                      }),
-                      property: b.identifier('name'),
-                    }),
-                  }),
-                }),
-                b.ifStatement.from({
-                  consequent: b.blockStatement.from({
-                    body: [
-                      b.expressionStatement.from({
-                        expression: b.callExpression.from({
-                          arguments: [
-                            b.thisExpression(),
-                            b.memberExpression.from({
-                              object: b.thisExpression(),
-                              property: b.identifier('constructor'),
-                            }),
-                          ],
-                          callee: b.memberExpression.from({
-                            object: b.identifier('Error'),
-                            property: b.identifier('captureStackTrace'),
-                          }),
-                        }),
-                      }),
-                    ],
-                  }),
-                  test: b.callExpression.from({
-                    arguments: [
-                      b.stringLiteral('captureStackTrace'),
-                    ],
-                    callee: b.memberExpression.from({
-                      object: b.identifier('Error'),
-                      property: b.identifier('hasOwnProperty'),
-                    }),
-                  }),
-                }),
-              ],
-            }),
-            params: [
-              b.identifier.from({
-                name: 'message',
-                optional: true,
-                typeAnnotation: b.tsTypeAnnotation.from({
-                  typeAnnotation: b.tsStringKeyword(),
-                }),
-              }),
-            ],
-          }),
-        }),
-      ],
-    }),
-    id: b.identifier('BaseError'),
-    superClass: b.identifier('Error'),
-  });
-}
-
 function buildIsResponseEmptyFunction(): namedTypes.FunctionDeclaration {
   return b.functionDeclaration.from({
     body: b.blockStatement.from({
@@ -1600,277 +1385,6 @@ function buildBaseResourceClass(): namedTypes.ClassDeclaration {
   });
 }
 
-function buildHttpResponseErrorClass(): namedTypes.ClassDeclaration {
-  return b.classDeclaration.from({
-    body: b.classBody.from({
-      body: [
-        b.classProperty.from({
-          access: 'public',
-          key: b.identifier('request'),
-          typeAnnotation: b.tsTypeAnnotation.from({
-            typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_HTTP_REQUEST),
-            }),
-          }),
-          value: null,
-        }),
-        b.classProperty.from({
-          access: 'public',
-          key: b.identifier('response'),
-          typeAnnotation: b.tsTypeAnnotation.from({
-            typeAnnotation: b.tsTypeReference.from({
-              typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE),
-              typeParameters: b.tsTypeParameterInstantiation.from({
-                params: [
-                  b.tsAnyKeyword(),
-                ],
-              }),
-            }),
-          }),
-          value: null,
-        }),
-        b.classProperty.from({
-          access: 'public',
-          key: b.identifier('type'),
-          typeAnnotation: b.tsTypeAnnotation.from({
-            typeAnnotation: b.tsUnionType.from({
-              types: [
-                b.tsLiteralType.from({
-                  literal: b.stringLiteral.from({
-                    value: 'response_error',
-                  }),
-                }),
-              ],
-            }),
-          }),
-          value: b.stringLiteral('response_error'),
-        }),
-        b.methodDefinition.from({
-          key: b.identifier('constructor'),
-          kind: 'constructor',
-          value: b.functionExpression.from({
-            body: b.blockStatement.from({
-              body: [
-                b.expressionStatement.from({
-                  expression: b.callExpression.from({
-                    arguments: [
-                      b.stringLiteral('Response is outside the success status range'),
-                    ],
-                    callee: b.super(),
-                  }),
-                }),
-                b.expressionStatement.from({
-                  expression: b.assignmentExpression.from({
-                    left: b.memberExpression.from({
-                      object: b.thisExpression(),
-                      property: b.identifier('name'),
-                    }),
-                    operator: '=',
-                    right: b.memberExpression.from({
-                      object: b.memberExpression.from({
-                        object: b.thisExpression(),
-                        property: b.identifier('constructor'),
-                      }),
-                      property: b.identifier('name'),
-                    }),
-                  }),
-                }),
-                b.expressionStatement.from({
-                  expression: b.assignmentExpression.from({
-                    left: b.memberExpression.from({
-                      object: b.thisExpression(),
-                      property: b.identifier('request'),
-                    }),
-                    operator: '=',
-                    right: b.identifier('request'),
-                  }),
-                }),
-                b.expressionStatement.from({
-                  expression: b.assignmentExpression.from({
-                    left: b.memberExpression.from({
-                      object: b.thisExpression(),
-                      property: b.identifier('response'),
-                    }),
-                    operator: '=',
-                    right: b.identifier('response'),
-                  }),
-                }),
-                b.ifStatement.from({
-                  consequent: b.blockStatement.from({
-                    body: [
-                      b.expressionStatement.from({
-                        expression: b.callExpression.from({
-                          arguments: [
-                            b.thisExpression(),
-                            b.memberExpression.from({
-                              object: b.thisExpression(),
-                              property: b.identifier('constructor'),
-                            }),
-                          ],
-                          callee: b.memberExpression.from({
-                            object: b.identifier('Error'),
-                            property: b.identifier('captureStackTrace'),
-                          }),
-                        }),
-                      }),
-                    ],
-                  }),
-                  test: b.callExpression.from({
-                    arguments: [
-                      b.stringLiteral('captureStackTrace'),
-                    ],
-                    callee: b.memberExpression.from({
-                      object: b.identifier('Error'),
-                      property: b.identifier('hasOwnProperty'),
-                    }),
-                  }),
-                }),
-              ],
-            }),
-            params: [
-              b.identifier.from({
-                name: 'request',
-                typeAnnotation: b.tsTypeAnnotation.from({
-                  typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier(IDENTIFIER_HTTP_REQUEST),
-                  }),
-                }),
-              }),
-              b.identifier.from({
-                name: 'response',
-                typeAnnotation: b.tsTypeAnnotation.from({
-                  typeAnnotation: b.tsTypeReference.from({
-                    typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE),
-                    typeParameters: b.tsTypeParameterInstantiation.from({
-                      params: [
-                        b.tsAnyKeyword(),
-                      ],
-                    }),
-                  }),
-                }),
-              }),
-            ],
-          }),
-        }),
-      ],
-    }),
-    id: b.identifier(IDENTIFIER_HTTP_RESPONSE_ERROR),
-    superClass: b.identifier('Error'),
-  });
-}
-
-function buildIsHttpResponseErrorFunction(): namedTypes.FunctionDeclaration {
-  return b.functionDeclaration.from({
-    body: b.blockStatement.from({
-      body: [
-        b.returnStatement.from({
-          argument: b.logicalExpression.from({
-            left: b.binaryExpression.from({
-              left: b.identifier('error'),
-              operator: '!=',
-              right: b.nullLiteral(),
-            }),
-            operator: '&&',
-            right: b.binaryExpression.from({
-              left: b.memberExpression.from({
-                object: b.identifier('error'),
-                property: b.identifier('type'),
-              }),
-              operator: '===',
-              right: b.stringLiteral('response_error'),
-            }),
-          }),
-        }),
-      ],
-    }),
-    id: b.identifier('isHttpResponseError'),
-    params: [
-      b.identifier.from({
-        name: 'error',
-        typeAnnotation: b.tsTypeAnnotation.from({
-          typeAnnotation: b.tsAnyKeyword(),
-        }),
-      }),
-    ],
-    returnType: b.tsTypeAnnotation.from({
-      typeAnnotation: b.tsTypePredicate.from({
-        parameterName: b.identifier('error'),
-        typeAnnotation: b.tsTypeAnnotation.from({
-          typeAnnotation: b.tsTypeReference.from({
-            typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE_ERROR),
-          }),
-        }),
-      }),
-    }),
-  });
-}
-
-function buildTSTypeKind(
-  type: ApiBuilderType,
-): TSTypeKind {
-  if (isPrimitiveType(type)) {
-    return buildPrimitiveTypeReference(type);
-  }
-
-  if (isMapType(type)) {
-    return b.tsTypeReference.from({
-      typeName: b.identifier('Record'),
-      typeParameters: b.tsTypeParameterInstantiation.from({
-        params: [
-          b.tsStringKeyword(),
-          buildTSTypeKind(type.ofType),
-        ],
-      }),
-    });
-  }
-
-  if (isArrayType(type)) {
-    return b.tsArrayType.from({
-      elementType: buildTSTypeKind(type.ofType),
-    });
-  }
-
-  return b.tsTypeReference.from({
-    typeName: buildTypeQualifiedName(type),
-  });
-}
-
-function getOperationParametersInterfaceName(
-  operation: ApiBuilderOperation,
-): string {
-  return `${pascalCase(operation.resource.plural)}${pascalCase(operation.nickname)}Parameters`;
-}
-
-function getOperationQueryInterfaceName(
-  operation: ApiBuilderOperation,
-): string {
-  return `${pascalCase(operation.resource.plural)}${pascalCase(operation.nickname)}Query`;
-}
-
-function buildOperationQueryInterface(
-  operation: ApiBuilderOperation,
-  context: Context,
-): namedTypes.TSInterfaceDeclaration {
-  const properties: namedTypes.TSPropertySignature[] = [];
-
-  operation.parameters.filter((parameter) => {
-    return parameter.location === 'Query';
-  }).forEach((parameter) => {
-    properties.push(b.tsPropertySignature.from({
-      key: b.identifier(parameter.name),
-      optional: !parameter.isRequired,
-      typeAnnotation: buildTypeAnnotation(parameter.type, context),
-    }));
-  });
-
-  return b.tsInterfaceDeclaration.from({
-    body: b.tsInterfaceBody.from({
-      body: properties,
-    }),
-    id: b.identifier(getOperationQueryInterfaceName(operation)),
-  });
-}
-
 function buildOperationParameterProperties(
   operation: ApiBuilderOperation,
   context: Context,
@@ -1944,9 +1458,8 @@ function buildOperationParametersInterfaceDeclarations(
   resource: ApiBuilderResource,
   context: Context,
 ): namedTypes.TSInterfaceDeclaration[] {
-  return resource.operations.map((operation) => {
-    return buildOperationParametersInterfaceDeclaration(operation, context);
-  });
+  return resource.operations
+    .map((operation) => buildOperationParametersInterfaceDeclaration(operation, context));
 }
 
 function buildOperationResponseTypeAliasIdentifier(
@@ -1962,16 +1475,14 @@ function buildOperationResponseTypeAliasDeclaration(
   context: Context,
 ): namedTypes.TSTypeAliasDeclaration {
   const responseTypes = b.tsUnionType.from({
-    types: operation.responses.map((response) => {
-      return b.tsTypeReference.from({
-        typeName: buildHttpResponseCodeIdentifier(response.code),
-        typeParameters: b.tsTypeParameterInstantiation.from({
-          params: [
-            buildType(response.type, context),
-          ],
-        }),
-      });
-    }),
+    types: operation.responses.map((response) => b.tsTypeReference.from({
+      typeName: buildHttpResponseCodeIdentifier(response.code),
+      typeParameters: b.tsTypeParameterInstantiation.from({
+        params: [
+          buildType(response.type, context),
+        ],
+      }),
+    })),
   });
 
   if (responseTypes.types.length === 0) {
@@ -1990,20 +1501,9 @@ function buildOperationResponseTypeAliasDeclarations(
   resource: ApiBuilderResource,
   context: Context,
 ): namedTypes.TSTypeAliasDeclaration[] {
-  return resource.operations.map((operation) => {
-    return buildOperationResponseTypeAliasDeclaration(operation, context);
-  });
+  return resource.operations
+    .map((operation) => buildOperationResponseTypeAliasDeclaration(operation, context));
 }
-
-function buildOperationParametersTypeLiteral(
-  operation: ApiBuilderOperation,
-  context: Context,
-): namedTypes.TSTypeLiteral {
-  return b.tsTypeLiteral.from({
-    members: buildOperationParameterProperties(operation, context),
-  });
-}
-
 function getResourceIdentifier(
   resource: ApiBuilderResource,
 ): namedTypes.Identifier {
@@ -2018,24 +1518,17 @@ function buildResourceClassMethods(
 
   resource.operations.forEach((operation) => {
     const hasBody = operation.body != null;
-    const hasParameters = operation.parameters.length > 0;
-    const hasPathParameters = operation.parameters.some(_ => _.location === 'Path');
-    const hasRequiredParameters = operation.parameters.some(_ => _.isRequired);
+    const hasPathParameters = operation.parameters.some((_) => _.location === 'Path');
+    const hasRequiredParameters = operation.parameters.some((_) => _.isRequired);
 
-    const queryProperties: namedTypes.Property[] = operation.parameters.filter((_) => {
-      return _.location === 'Query';
-    }).sort((paramA, paramB) => {
-      return stringCompare(paramA.name, paramB.name);
-    }).map((_) => {
-      return b.property.from({
-        key: b.identifier(_.name),
-        kind: 'init',
-        value: b.memberExpression.from({
-          object: b.identifier('params'),
-          property: b.identifier(_.name),
-        }),
-      });
-    });
+    const queryProperties: namedTypes.Property[] = operation.parameters.filter((_) => _.location === 'Query').sort((paramA, paramB) => stringCompare(paramA.name, paramB.name)).map((_) => b.property.from({
+      key: b.identifier(_.name),
+      kind: 'init',
+      value: b.memberExpression.from({
+        object: b.identifier('params'),
+        property: b.identifier(_.name),
+      }),
+    }));
 
     let methodParameter: PatternKind = b.identifier.from({
       name: 'params',
@@ -2056,19 +1549,15 @@ function buildResourceClassMethods(
       });
 
     const urlLiteral = hasPathParameters ? b.templateLiteral.from({
-      expressions: operation.path.split(/\/|\./).filter((_) => {
-        return _.startsWith(':');
-      }).map((_) => {
-        return b.callExpression.from({
-          arguments: [
-            b.memberExpression.from({
-              object: b.identifier('params'),
-              property: b.identifier(_.slice(1)),
-            }),
-          ],
-          callee: b.identifier('encodeURIComponent'),
-        });
-      }),
+      expressions: operation.path.split(/\/|\./).filter((_) => _.startsWith(':')).map((_) => b.callExpression.from({
+        arguments: [
+          b.memberExpression.from({
+            object: b.identifier('params'),
+            property: b.identifier(_.slice(1)),
+          }),
+        ],
+        callee: b.identifier('encodeURIComponent'),
+      })),
       quasis: operation.path.split(/:[^./]+/).map((part, index, self) => {
         const lastIndex = self.length - 1;
         return b.templateElement.from({
@@ -2126,16 +1615,14 @@ function buildResourceClassMethods(
     }
 
     const responseTypes = b.tsUnionType.from({
-      types: operation.responses.map((response) => {
-        return b.tsTypeReference.from({
-          typeName: buildHttpResponseCodeIdentifier(response.code),
-          typeParameters: b.tsTypeParameterInstantiation.from({
-            params: [
-              buildType(response.type, context),
-            ],
-          }),
-        });
-      }),
+      types: operation.responses.map((response) => b.tsTypeReference.from({
+        typeName: buildHttpResponseCodeIdentifier(response.code),
+        typeParameters: b.tsTypeParameterInstantiation.from({
+          params: [
+            buildType(response.type, context),
+          ],
+        }),
+      })),
     });
 
     if (responseTypes.types.length === 0) {
@@ -2208,10 +1695,10 @@ export function buildResourceClass(
 
 function buildClientInstanceInterface(
   context: Context,
-) {
+): namedTypes.TSInterfaceDeclaration {
   return b.tsInterfaceDeclaration.from({
     body: b.tsInterfaceBody.from({
-      body: context.rootService.resources.map(_ => b.tsPropertySignature.from({
+      body: context.rootService.resources.map((_) => b.tsPropertySignature.from({
         key: b.identifier(camelCase(_.plural)),
         optional: false,
         typeAnnotation: b.tsTypeAnnotation.from({
@@ -2227,13 +1714,13 @@ function buildClientInstanceInterface(
 
 function buildCreateClientFunction(
   context: Context,
-) {
+): namedTypes.FunctionDeclaration {
   return b.functionDeclaration.from({
     body: b.blockStatement.from({
       body: [
         b.returnStatement.from({
           argument: b.objectExpression.from({
-            properties: context.rootService.resources.map(_ => b.property.from({
+            properties: context.rootService.resources.map((_) => b.property.from({
               key: b.identifier(camelCase(_.plural)),
               kind: 'init',
               value: b.newExpression.from({
@@ -2267,32 +1754,7 @@ function buildCreateClientFunction(
   });
 }
 
-export function buildInternalTypeDeclarations(): TSTypeDeclaration[] {
-  const initial: TSTypeDeclaration[] = [];
-  return initial.concat(
-    buildFetchOptions(),
-    buildFetchFunction(),
-    buildHttpHeaders(),
-    buildHttpMethod(),
-    buildHttpQuery(),
-    buildHttpRequest(),
-    buildHttpRequestOptions(),
-    buildHttpResponse(),
-    buildHttpStatusCodes(),
-    buildHttpClientOptions(),
-  );
-}
-
-function buildInternalTypes(): namedTypes.TSModuleDeclaration {
-  return b.tsModuleDeclaration.from({
-    body: b.tsModuleBlock.from({
-      body: buildInternalTypeDeclarations().map(buildExportNamedDeclaration),
-    }),
-    id: b.identifier(IDENTIFIER_INTERNAL_NAMESPACE),
-  });
-}
-
-function buildImportDeclarations() {
+function buildImportDeclarations(): namedTypes.ImportDeclaration {
   return b.importDeclaration.from({
     source: b.stringLiteral('url'),
     specifiers: [
@@ -2304,9 +1766,9 @@ function buildImportDeclarations() {
 }
 
 function buildHttpStatusCodes(): namedTypes.TSTypeAliasDeclaration[] {
-  return Object.entries(httpStatusCodes).map(([statusCode, statusText]) => {
-    return b.tsTypeAliasDeclaration.from({
-      id: buildHttpResponseCodeIdentifier(statusCode),
+  return Object.entries(httpStatusCodes)
+    .map(([statusCode]) => b.tsTypeAliasDeclaration.from({
+      id: buildHttpResponseCodeIdentifier(Number(statusCode)),
       typeAnnotation: b.tsTypeReference.from({
         typeName: b.identifier(IDENTIFIER_HTTP_RESPONSE),
         typeParameters: b.tsTypeParameterInstantiation.from({
@@ -2332,8 +1794,23 @@ function buildHttpStatusCodes(): namedTypes.TSTypeAliasDeclaration[] {
           b.tsTypeParameter('T'),
         ],
       }),
-    });
-  });
+    }));
+}
+
+export function buildInternalTypeDeclarations(): TSTypeDeclaration[] {
+  const initial: TSTypeDeclaration[] = [];
+  return initial.concat(
+    buildFetchOptions(),
+    buildFetchFunction(),
+    buildHttpHeaders(),
+    buildHttpMethod(),
+    buildHttpQuery(),
+    buildHttpRequest(),
+    buildHttpRequestOptions(),
+    buildHttpResponse(),
+    buildHttpStatusCodes(),
+    buildHttpClientOptions(),
+  );
 }
 
 export function buildStripQueryFunction(): namedTypes.FunctionDeclaration {
@@ -2507,20 +1984,24 @@ function buildFile(
     buildStripQueryFunction(),
     buildHttpClientClass(context),
     buildBaseResourceClass(),
-    flatMap(rootService.resources, (resource): DeclarationKind[] => {
-      return buildOperationParametersInterfaceDeclarations(resource, context);
-    }),
-    flatMap(rootService.resources, (resource): DeclarationKind[] => {
-      return buildOperationResponseTypeAliasDeclarations(resource, context);
-    }),
-    rootService.resources.map((resource) => {
-      return buildResourceClass(resource, context);
-    }),
+    flatMap(
+      rootService.resources,
+      (resource): DeclarationKind[] => buildOperationParametersInterfaceDeclarations(
+        resource,
+        context,
+      ),
+    ),
+    flatMap(
+      rootService.resources,
+      (resource): DeclarationKind[] => buildOperationResponseTypeAliasDeclarations(
+        resource,
+        context,
+      ),
+    ),
+    rootService.resources.map((resource) => buildResourceClass(resource, context)),
     buildClientInstanceInterface(context),
     buildCreateClientFunction(context),
-  ).map((declaration) => {
-    return buildExportNamedDeclaration(declaration);
-  });
+  ).map((declaration) => buildExportNamedDeclaration(declaration));
 
   const statements = ([] as StatementKind[]).concat(
     buildImportDeclarations(),
@@ -2577,3 +2058,7 @@ export function generate(
     ]);
   });
 }
+
+export default {
+  generate,
+};

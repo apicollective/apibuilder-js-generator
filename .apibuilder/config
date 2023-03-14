@@ -1,0 +1,8 @@
+settings:
+  code.cleanup.generated.files: true
+code:
+  bryzek:
+    apidoc-spec:
+      version: latest
+      generators:
+        ts_declarations_v2: "generated"

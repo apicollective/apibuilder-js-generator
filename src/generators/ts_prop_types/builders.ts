@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable no-param-reassign */
 // tslint:disable:object-shorthand-properties-first
 
 import {
@@ -24,12 +26,11 @@ import {
   namedTypes,
 } from 'ast-types';
 
+import debug from 'debug';
 import {
   camelCase,
   identity,
 } from 'lodash';
-
-import debug from 'debug';
 
 import { checkIdentifier } from '../../utilities/language';
 
@@ -52,6 +53,16 @@ interface Context {
    */
   cache: Record<string, PropTypeExpression>;
   /**
+   * This property holds the fully qualified name for recursive types.
+   */
+  cyclicTypes: string[];
+  /**
+   * This property holds an ordered list of fully qualified name for types
+   * derived from the invocation form such that all dependencies come before
+   * the type in the ordering.
+   */
+  sortedTypes: GeneratableType[];
+  /**
    * This property holds an index of all generatable types derived from the
    * invocation form.
    */
@@ -62,22 +73,13 @@ interface Context {
    * missing their definition.
    */
   unresolvedTypes: string[];
-  /**
-   * This property holds the fully qualified name for recursive types.
-   */
-  cyclicTypes: string[];
-  /**
-   * This property holds an ordered list of fully qualified name for types
-   * derived from the invocation form such that all dependencies come before
-   * the type in the ordering.
-   */
-  sortedTypes: GeneratableType[];
 }
 
 type Edge = [string, string];
 
 class Node {
   public id: string;
+
   public afters: string[];
 
   constructor(id: string) {
@@ -89,16 +91,17 @@ class Node {
 function createDependencyList(type: ApiBuilderType): Set<string> {
   const dependencies = new Set<string>([]);
 
-  function addDependency(dependency: ApiBuilderType) {
-    if (isPrimitiveType(dependency)) return;
+  function addDependency(dependency: ApiBuilderType): void {
+    if (isPrimitiveType(dependency)) return undefined;
     if (isArrayType(dependency) || isMapType(dependency)) return addDependency(dependency.ofType);
     dependencies.add(dependency.toString());
+    return undefined;
   }
 
   if (isModelType(type)) {
-    type.fields.forEach(field => addDependency(field.type));
+    type.fields.forEach((field) => addDependency(field.type));
   } else if (isUnionType(type)) {
-    type.types.forEach(unionType => addDependency(unionType.type));
+    type.types.forEach((unionType) => addDependency(unionType.type));
   }
 
   return dependencies;
@@ -107,7 +110,7 @@ function createDependencyList(type: ApiBuilderType): Set<string> {
 function createEdges(
   dependencies: Record<string, Set<string>>,
 ): Edge[] {
-  const edges = [];
+  const edges: Edge[] = [];
   Object.keys(dependencies).forEach((dependent) => {
     dependencies[dependent].forEach((dependency) => {
       edges.push([dependency, dependent]);
@@ -116,7 +119,7 @@ function createEdges(
   return edges;
 }
 
-function topologicalSort(edges: Edge[]) {
+function topologicalSort(edges: Edge[]): { cyclicTypes: string[]; sortedTypes: string[] } {
   const nodes: Record<string, Node> = {};
   const sorted: string[] = [];
   const visited: Record<string, boolean> = {};
@@ -128,9 +131,9 @@ function topologicalSort(edges: Edge[]) {
     nodes[from].afters.push(to);
   });
 
-  function visit(key: string, ancestors: string[] = []) {
+  function visit(key: string, ancestors: string[] = []): void {
     const node = nodes[key];
-    const id = node.id;
+    const { id } = node;
 
     if (visited[key]) return;
 
@@ -165,20 +168,18 @@ export function createContext(
 ): Context {
   const typesByName: Record<string, GeneratableType> = services.reduce(
     (result, service) => {
-      service.enums.forEach(enumeration => result[enumeration.toString()] = enumeration);
-      service.models.forEach(model => result[model.toString()] = model);
-      service.unions.forEach(union => result[union.toString()] = union);
+      service.enums.forEach((enumeration) => { result[enumeration.toString()] = enumeration; });
+      service.models.forEach((model) => { result[model.toString()] = model; });
+      service.unions.forEach((union) => { result[union.toString()] = union; });
       return result;
     },
     {},
   );
 
   const dependencies = Object.entries(typesByName).reduce(
-    (previousValue, [key, value]) => {
-      return Object.assign(previousValue, {
-        [key]: createDependencyList(value),
-      });
-    },
+    (previousValue, [key, value]) => Object.assign(previousValue, {
+      [key]: createDependencyList(value),
+    }),
     {},
   );
 
@@ -190,22 +191,22 @@ export function createContext(
   // Types not included in the topological graph because they are independent
   // and can be added at any position in the ordered list.
   const orphanTypes = Object.keys(typesByName)
-    .filter(key => !sortedTypes.includes(key));
+    .filter((key) => !sortedTypes.includes(key));
 
   // Types not included in the invocation form.
-  const unresolvedTypes = sortedTypes.filter(key => typesByName[key] == null);
+  const unresolvedTypes = sortedTypes.filter((key) => typesByName[key] == null);
 
   return {
     cache: {},
     cyclicTypes,
-    sortedTypes: sortedTypes.concat(orphanTypes).map(key => typesByName[key]).filter(Boolean),
+    sortedTypes: sortedTypes.concat(orphanTypes).map((key) => typesByName[key]).filter(Boolean),
     // tslint:disable-next-line:object-shorthand-properties-first
     typesByName,
     unresolvedTypes,
   };
 }
 
-function stringCompare(s1: string, s2: string) {
+function stringCompare(s1: string, s2: string): number {
   if (s1 > s2) return 1;
   if (s1 < s2) return -1;
   return 0;
@@ -214,11 +215,11 @@ function stringCompare(s1: string, s2: string) {
 function shortNameCompare(
   t1: GeneratableType,
   t2: GeneratableType,
-) {
+): number {
   return stringCompare(t1.shortName, t2.shortName);
 }
 
-function safeIdentifier(value: string) {
+function safeIdentifier(value: string): string {
   const feedback = checkIdentifier(value);
   return feedback.es3Warning
     ? `UNSAFE_${value}`
@@ -239,7 +240,7 @@ function needsResolution(
   return type.types.length === 0;
 }
 
-function buildSafePropertyKey(value: string) {
+function buildSafePropertyKey(value: string): namedTypes.Literal | namedTypes.Identifier {
   const feedback = checkIdentifier(value);
   return feedback.needsQuotes
     ? b.literal(value)
@@ -264,6 +265,13 @@ function withCache(builder: PropTypeExpressionBuilder): PropTypeExpressionBuilde
   };
 }
 
+function buildAnyPropTypeExpression(): namedTypes.MemberExpression {
+  return b.memberExpression(
+    b.identifier('propTypes'),
+    b.identifier('any'),
+  );
+}
+
 /**
  * Higher order function used to automatically resolve incomplete types,
  * typically types from imported services. We need this to avoid creating
@@ -282,13 +290,6 @@ function withResolution(builder: PropTypeExpressionBuilder): PropTypeExpressionB
     const resolvedType = needsResolution(type) ? context.typesByName[type.fullName] : type;
     return builder(resolvedType, context);
   };
-}
-
-function buildAnyPropTypeExpression() {
-  return b.memberExpression(
-    b.identifier('propTypes'),
-    b.identifier('any'),
-  );
 }
 
 function buildNestedMemberExpression(
@@ -324,14 +325,14 @@ function buildTypeModuleDeclaration(
 ): namedTypes.TSModuleDeclaration {
   // ensure all types are within the same package name
   const packageNames = types
-    .map(type => type.packageName)
+    .map((type) => type.packageName)
     .filter((value, index, self) => self.indexOf(value) === index);
 
   if (packageNames.length > 1) {
-    throw new Error(`Cannot declare namespace for types in different packages: ${packageNames}`);
+    throw new Error(`Cannot declare namespace for types in different packages: ${String(packageNames)}`);
   }
 
-  const declarations = types.map(type => buildTypeExportNamedDeclaration(type, context));
+  const declarations = types.map((type) => buildTypeExportNamedDeclaration(type, context));
 
   const identifiers = packageNames
     .shift()
@@ -356,7 +357,7 @@ function buildTypeModuleDeclarations(
   if (!types.length) return declarations;
 
   const index = types
-    .map(type => type.packageName)
+    .map((type) => type.packageName)
     .findIndex((value, _, self) => self.indexOf(value) > 0);
 
   const deleteCount = index >= 0 ? index : types.length;
@@ -434,156 +435,127 @@ function buildMapPropTypeExpression(
 
 const buildEnumPropTypeExpression = withResolution(withCache((
   enumeration: ApiBuilderEnum,
-): PropTypeExpression => {
-  return b.callExpression(
-    b.memberExpression(
-      b.identifier('propTypes'),
-      b.identifier('oneOf'),
-    ),
-    [b.arrayExpression(
-      enumeration.values.map(value => b.literal(value.value)),
-    )],
-  );
-}));
+): PropTypeExpression => b.callExpression(
+  b.memberExpression(
+    b.identifier('propTypes'),
+    b.identifier('oneOf'),
+  ),
+  [b.arrayExpression(
+    enumeration.values.map((value) => b.literal(value.value)),
+  )],
+)));
 
 const buildModelPropTypeExpression = withResolution(withCache((
   model: ApiBuilderModel,
   context: Context,
-): PropTypeExpression => {
-  return b.callExpression(
-    b.memberExpression(
-      b.identifier('propTypes'),
-      b.identifier('exact'),
-    ),
-    [b.objectExpression(
-      model.fields.map(field => b.property(
-        'init',
-        buildSafePropertyKey(field.name),
-        buildFieldPropTypeExpression(field, context),
-      )),
-    )],
-  );
-}));
+): PropTypeExpression => b.callExpression(
+  b.memberExpression(
+    b.identifier('propTypes'),
+    b.identifier('exact'),
+  ),
+  [b.objectExpression(
+    model.fields.map((field) => b.property(
+      'init',
+      buildSafePropertyKey(field.name),
+      buildFieldPropTypeExpression(field, context),
+    )),
+  )],
+)));
 
 const buildUnionPropTypeExpression = withResolution(withCache((
   union: ApiBuilderUnion,
   context: Context,
-): PropTypeExpression => {
-  return b.callExpression(
-    b.memberExpression(
-      b.identifier('propTypes'),
-      b.identifier('oneOfType'),
-    ),
-    [b.arrayExpression(
-      union.types.map((unionType) => {
-        const discriminator = b.property(
-          'init',
-          buildSafePropertyKey(union.discriminator),
-          b.memberExpression(
-            b.callExpression(
-              b.memberExpression(
-                b.identifier('propTypes'),
-                b.identifier('oneOf'),
-              ),
-              [b.arrayExpression([
-                b.tsAsExpression(
+): PropTypeExpression => b.callExpression(
+  b.memberExpression(
+    b.identifier('propTypes'),
+    b.identifier('oneOfType'),
+  ),
+  [b.arrayExpression(
+    union.types.map((unionType) => {
+      const discriminator = b.property(
+        'init',
+        buildSafePropertyKey(union.discriminator),
+        b.memberExpression(
+          b.callExpression(
+            b.memberExpression(
+              b.identifier('propTypes'),
+              b.identifier('oneOf'),
+            ),
+            [b.arrayExpression([
+              b.tsAsExpression(
+                b.stringLiteral(unionType.discriminatorValue),
+                b.tsLiteralType(
                   b.stringLiteral(unionType.discriminatorValue),
-                  b.tsLiteralType(
-                    b.stringLiteral(unionType.discriminatorValue),
-                  ),
                 ),
-              ])],
-            ),
-            b.identifier('isRequired'),
+              ),
+            ])],
           ),
+          b.identifier('isRequired'),
+        ),
+      );
+
+      if (isModelType(unionType.type)) {
+        return b.callExpression(
+          b.memberExpression(
+            b.identifier('propTypes'),
+            b.identifier('exact'),
+          ),
+          [b.objectExpression([
+            discriminator,
+            ...unionType.type.fields.map((field) => b.property(
+              'init',
+              buildSafePropertyKey(field.name),
+              buildFieldPropTypeExpression(
+                field,
+                context,
+              ),
+            )),
+          ])],
         );
+      }
 
-        if (isModelType(unionType.type)) {
-          return b.callExpression(
-            b.memberExpression(
-              b.identifier('propTypes'),
-              b.identifier('exact'),
+      if (isEnumType(unionType.type)) {
+        return b.callExpression(
+          b.memberExpression(
+            b.identifier('propTypes'),
+            b.identifier('exact'),
+          ),
+          [b.objectExpression([
+            discriminator,
+            b.property(
+              'init',
+              b.identifier('value'),
+              buildEnumPropTypeExpression(unionType.type, context),
             ),
-            [b.objectExpression([
-              discriminator,
-              ...unionType.type.fields.map(field => b.property(
-                'init',
-                buildSafePropertyKey(field.name),
-                buildFieldPropTypeExpression(
-                  field,
-                  context,
-                ),
-              )),
-            ])],
-          );
-        }
+          ])],
+        );
+      }
 
-        if (isEnumType(unionType.type)) {
-          return b.callExpression(
-            b.memberExpression(
-              b.identifier('propTypes'),
-              b.identifier('exact'),
+      if (isPrimitiveType(unionType.type)) {
+        return b.callExpression(
+          b.memberExpression(
+            b.identifier('propTypes'),
+            b.identifier('exact'),
+          ),
+          [b.objectExpression([
+            discriminator,
+            b.property(
+              'init',
+              b.identifier('value'),
+              buildPrimitivePropTypeExpression(unionType.type),
             ),
-            [b.objectExpression([
-              discriminator,
-              b.property(
-                'init',
-                b.identifier('value'),
-                buildEnumPropTypeExpression(unionType.type, context),
-              ),
-            ])],
-          );
-        }
+          ])],
+        );
+      }
 
-        if (isPrimitiveType(unionType.type)) {
-          return b.callExpression(
-            b.memberExpression(
-              b.identifier('propTypes'),
-              b.identifier('exact'),
-            ),
-            [b.objectExpression([
-              discriminator,
-              b.property(
-                'init',
-                b.identifier('value'),
-                buildPrimitivePropTypeExpression(unionType.type),
-              ),
-            ])],
-          );
-        }
-
-        throw TypeError(
-          `The provided union type (${unionType.toString()}) refers to an ` +
-          'invalid type. An union type may only refer to an enum, model, or '
+      throw TypeError(
+        `The provided union type (${unionType.toString()}) refers to an `
+          + 'invalid type. An union type may only refer to an enum, model, or '
           + 'primitive type.',
-        );
-      }),
-    )],
-  );
-}));
-
-function buildFieldPropTypeExpression(
-  field: ApiBuilderField,
-  context: Context,
-) {
-  const expression = buildPropTypeReferenceExpression(field.type, context);
-  return field.isRequired
-    ? b.memberExpression(expression, b.identifier('isRequired'))
-    : expression;
-}
-
-function buildEnumVariableDeclaration(
-  enumeration: ApiBuilderEnum,
-  context: Context,
-): namedTypes.VariableDeclaration {
-  return b.variableDeclaration(
-    'const',
-    [b.variableDeclarator(
-      buildTypeIdentifier(enumeration),
-      buildEnumPropTypeExpression(enumeration, context),
-    )],
-  );
-}
+      );
+    }),
+  )],
+)));
 
 function buildModelVariableDeclaration(
   model: ApiBuilderModel,
@@ -688,6 +660,19 @@ function buildPropTypeExpression(
   return buildAnyPropTypeExpression();
 }
 
+function buildEnumVariableDeclaration(
+  enumeration: ApiBuilderEnum,
+  context: Context,
+): namedTypes.VariableDeclaration {
+  return b.variableDeclaration(
+    'const',
+    [b.variableDeclarator(
+      buildTypeIdentifier(enumeration),
+      buildEnumPropTypeExpression(enumeration, context),
+    )],
+  );
+}
+
 function buildTypeExportNamedDeclaration(
   type: GeneratableType,
   context: Context,
@@ -709,10 +694,20 @@ function buildTypeExportNamedDeclaration(
   );
 }
 
+function buildFieldPropTypeExpression(
+  field: ApiBuilderField,
+  context: Context,
+): namedTypes.MemberExpression | namedTypes.CallExpression {
+  const expression = buildPropTypeReferenceExpression(field.type, context);
+  return field.isRequired
+    ? b.memberExpression(expression, b.identifier('isRequired'))
+    : expression;
+}
+
 function buildTypeAliasExportNamedDeclaration(
   type: GeneratableType,
   context: Context,
-) {
+): namedTypes.ExportNamedDeclaration {
   return b.exportNamedDeclaration(
     b.variableDeclaration(
       'const',
@@ -727,7 +722,7 @@ function buildTypeAliasExportNamedDeclaration(
 export function buildFile(
   service: ApiBuilderService,
   importedServices: ApiBuilderService[] = [],
-) {
+): namedTypes.File {
   const allServices = importedServices.concat([service]);
   const context = createContext(allServices);
 
@@ -741,7 +736,8 @@ export function buildFile(
   if (context.cyclicTypes.length) {
     log(
       'WARN: the following types are cyclic and will be ignored: '
-      + `${JSON.stringify(context.cyclicTypes)}`);
+      + `${JSON.stringify(context.cyclicTypes)}`,
+    );
   }
 
   const declarations = buildTypeModuleDeclarations(context.sortedTypes, context);
@@ -750,7 +746,7 @@ export function buildFile(
     ...service.enums,
     ...service.models,
     ...service.unions,
-  ].sort(shortNameCompare).map(type => buildTypeAliasExportNamedDeclaration(type, context));
+  ].sort(shortNameCompare).map((type) => buildTypeAliasExportNamedDeclaration(type, context));
 
   const ast = b.file(b.program([
     b.importDeclaration(

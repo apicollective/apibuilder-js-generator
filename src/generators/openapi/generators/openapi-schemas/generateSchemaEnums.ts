@@ -1,9 +1,9 @@
+import { SchemaObject } from '@loopback/openapi-v3-types';
 import { ApiBuilderService } from 'apibuilder-js';
-import { map } from 'lodash';
-import { generateSchemaFromEnum } from '../openapi-schemas';
+import { generateSchemaFromEnum } from '.';
 
-function generateSchemaEnums(service: ApiBuilderService) {
-  return map(service.enums, enm => generateSchemaFromEnum(enm));
+function generateSchemaEnums(service: ApiBuilderService): SchemaObject[] {
+  return service.enums.map((enm) => generateSchemaFromEnum(enm));
 }
 
 export default generateSchemaEnums;

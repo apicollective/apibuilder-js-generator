@@ -7,6 +7,7 @@ function convertLocationToIn(location: ApiBuilderParameterLocation): ParameterLo
     case 'Query': return 'query';
     case 'Header': return 'header';
     case 'Form': return 'header';
+    default: throw new Error(`Unknown location: ${String(location)}`);
   }
 }
 

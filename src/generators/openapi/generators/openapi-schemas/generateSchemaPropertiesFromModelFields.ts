@@ -1,5 +1,7 @@
 import { SchemaObject } from '@loopback/openapi-v3-types';
-import { ApiBuilderField, isArrayType, isPrimitiveType, Kind } from 'apibuilder-js';
+import {
+  ApiBuilderField, isArrayType, isPrimitiveType, Kind,
+} from 'apibuilder-js';
 import { reduce } from 'lodash';
 import { convertApiBuilderType } from '../openapi-utils';
 import { IsImportedChecker } from '../openapi-utils/isTypeImported';
@@ -39,7 +41,7 @@ function generateSchemaPropertiesFromModelFields(
   fields: ApiBuilderField[],
   validate,
   isImported: IsImportedChecker,
-) {
+): Record<string, SchemaObject> {
   return reduce(
     fields,
     (acc, value) => {
@@ -53,7 +55,7 @@ function generateSchemaPropertiesFromModelFields(
       };
       return acc;
     },
-    {} as {[key: string]: SchemaObject},
+    {} as { [key: string]: SchemaObject },
   );
 }
 

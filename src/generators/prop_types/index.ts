@@ -15,12 +15,12 @@ function generatePropTypes(
   log('INFO: Building AST for prop type validators...');
   const ast = buildFile(context);
   log('INFO: Transforming AST to code...');
-  const code = print(ast, {
+  const { code } = print(ast, {
     quote: 'single',
     tabWidth: 2,
     trailingComma: true,
     useTabs: false,
-  }).code;
+  });
   const basename = `${rootService.applicationKey}.js`;
   const dirname = rootService.namespace.split('.').join('/');
   const file = new ApiBuilderFile(basename, dirname, code);
@@ -35,12 +35,12 @@ function generateTypeDeclarations(
   log('INFO: Building AST for type declaration file...');
   const ast = buildTypeDeclarationFile(context);
   log('INFO: Transforming AST to code...');
-  const code = print(ast, {
+  const { code } = print(ast, {
     quote: 'single',
     tabWidth: 2,
     trailingComma: true,
     useTabs: false,
-  }).code;
+  });
   const basename = `${rootService.applicationKey}.d.ts`;
   const dirname = rootService.namespace.split('.').join('/');
   const file = new ApiBuilderFile(basename, dirname, code);
@@ -62,3 +62,7 @@ export function generate(
     return files;
   });
 }
+
+export default {
+  generate,
+};

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import {
   ApiBuilderArray,
   ApiBuilderEnum,
@@ -16,6 +17,7 @@ import {
   Kind,
 } from 'apibuilder-js';
 import { builders as b, namedTypes } from 'ast-types';
+import * as K from 'ast-types/gen/kinds';
 import { camelCase, upperFirst } from 'lodash';
 import { checkIdentifier } from '../utilities/language';
 import { Context } from './types';
@@ -61,7 +63,7 @@ function buildUnknownType(type: ApiBuilderType): namedTypes.TSUnknownKeyword {
 
 function buildPrimitiveType(
   type: ApiBuilderPrimitiveType,
-) {
+): K.TSTypeKind {
   switch (type.shortName) {
     case Kind.STRING:
     case Kind.DATE_ISO8601:
@@ -124,18 +126,9 @@ function buildEnumType(
   enumeration: ApiBuilderEnum,
 ): namedTypes.TSUnionType {
   return b.tsUnionType(
-    enumeration.values.map(value => b.tsLiteralType(
+    enumeration.values.map((value) => b.tsLiteralType(
       b.stringLiteral(value.value),
     )),
-  );
-}
-
-function buildModelType(
-  model: ApiBuilderModel,
-  context: Context,
-): namedTypes.TSTypeLiteral {
-  return b.tsTypeLiteral(
-    model.fields.map(field => buildFieldPropertySignature(field, context)),
   );
 }
 
@@ -228,7 +221,7 @@ export function buildTypeReference(
 export function buildType(
   type: ApiBuilderType,
   context: Context,
-) {
+): K.TSTypeKind {
   if (isArrayType(type)) {
     return buildArrayType(type, context);
   }
@@ -260,7 +253,7 @@ export function buildTypeAnnotation(
 function buildFieldPropertySignature(
   field: ApiBuilderField,
   context: Context,
-) {
+): namedTypes.TSPropertySignature {
   return b.tsPropertySignature.from({
     key: b.stringLiteral(field.name),
     optional: !field.isRequired,
@@ -358,27 +351,27 @@ function buildEnumModuleDeclaration(
 ): namedTypes.TSModuleDeclaration {
   const identifiers = buildModuleIdentifiers(service, 'enums');
   const declarations = service.enums
-    .map(enumeration => buildEnumTypeAliasDeclaration(enumeration));
+    .map((enumeration) => buildEnumTypeAliasDeclaration(enumeration));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
 function buildModelModuleDeclaration(
   service: ApiBuilderService,
   context: Context,
-) {
+): namedTypes.TSModuleDeclaration {
   const identifiers = buildModuleIdentifiers(service, 'models');
   const declarations = service.models
-    .map(model => buildModelInterfaceDeclaration(model, context));
+    .map((model) => buildModelInterfaceDeclaration(model, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 
 function buildUnionModuleDeclaration(
   service: ApiBuilderService,
   context: Context,
-) {
+): namedTypes.TSModuleDeclaration {
   const identifiers = buildModuleIdentifiers(service, 'unions');
   const declarations = service.unions
-    .map(union => buildUnionTypeAliasDeclaration(union, context));
+    .map((union) => buildUnionTypeAliasDeclaration(union, context));
   return buildModuleDeclaration(identifiers, declarations);
 }
 

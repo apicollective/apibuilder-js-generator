@@ -1,7 +1,7 @@
 const faker = require('faker');
 const get = require('lodash/get');
 
-const { Kind } = require('../../src/utilities/apibuilder');
+const { Kind } = require('apibuilder-js');
 
 function createMockField(config) {
   return {

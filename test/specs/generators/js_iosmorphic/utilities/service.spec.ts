@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 import { getEndpointUriStr } from '../../../../../src/generators/js_isomorphic/codegen/util/service';
 
 describe('getEndpointUriStr', () => {
