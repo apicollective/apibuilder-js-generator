@@ -63,4 +63,4 @@ dist
 # todo files for organization and tracking (https://github.com/fabiospampinato/vscode-todo-plus)
 *.todo
 
-generated/
+user-generated/

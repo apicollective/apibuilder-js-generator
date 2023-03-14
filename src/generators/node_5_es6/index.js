@@ -29,12 +29,12 @@ function getGeneratorDescription() {
 
 /* private */
 function getPathParameters(operation) {
-  return filter(operation.parameters, param => param.location === 'Path');
+  return filter(operation.parameters, (param) => param.location === 'Path');
 }
 
 /* private */
 function getQueryParameters(operation) {
-  return filter(operation.parameters, param => param.location === 'Query');
+  return filter(operation.parameters, (param) => param.location === 'Query');
 }
 
 function requestCanHaveBody(method) {
@@ -43,7 +43,7 @@ function requestCanHaveBody(method) {
 }
 
 function getFunctionParamsStr(operation) {
-  const params = map(getPathParameters(operation), p => camelCase(p.name));
+  const params = map(getPathParameters(operation), (p) => camelCase(p.name));
   return params.concat(['options']).join(', ');
 }
 
@@ -60,14 +60,14 @@ function getFunctionName(operation, resourcePath) {
 
     const parts = pathWithOutPrefix.split('/');
     const variableParts = parts
-      .filter(p => p.startsWith(':'))
+      .filter((p) => p.startsWith(':'))
       .map((part, idx) => {
         const prefix = (idx === 0) ? 'By' : 'And';
         return prefix + capitalizeFirstLetter(camelCase(slug(part.slice(1))));
       });
 
     const staticParts = parts
-      .filter(p => !p.startsWith(':'))
+      .filter((p) => !p.startsWith(':'))
       .map((part, idx) => {
         const prefix = (idx === 0) ? '' : 'And';
         return prefix + capitalizeFirstLetter(camelCase(slug(part)));
@@ -91,7 +91,7 @@ function getEndpointUriStr(operation) {
       const pathParamMatch = part.match(/^:([\w-]+)(\.[\w.]*)?/);
       if (pathParamMatch !== null) {
         const subParts = [`/${START_LITERAL}${camelCase(pathParamMatch[1])}${END_LITERAL}`];
-        if (pathParamMatch.length > 2) {  // match has possible suffix (i.e. .json, .csv etc..)
+        if (pathParamMatch.length > 2) { // match has possible suffix (i.e. .json, .csv etc..)
           subParts.push(pathParamMatch[2]);
         }
         return subParts.join('');
@@ -103,7 +103,7 @@ function getEndpointUriStr(operation) {
 }
 
 function getQueryParameterNames(operation) {
-  return map(getQueryParameters(operation), param => ({
+  return map(getQueryParameters(operation), (param) => ({
     name: param.name,
     nameCamelCase: camelCase(param.name),
   }));
@@ -111,7 +111,7 @@ function getQueryParameterNames(operation) {
 
 function getDeclaredResponses(operation) {
   return map(
-    filter(operation.responses, response => response.code && response.code.integer),
+    filter(operation.responses, (response) => response.code && response.code.integer),
     (response) => {
       const status = response.code.integer.value;
       return {
@@ -120,7 +120,8 @@ function getDeclaredResponses(operation) {
         isUnitType: response.type === 'unit',
         isResolve: status >= 200 && status < 300,
       };
-    });
+    },
+  );
 }
 
 function isApplicationJson(operation) {
@@ -146,7 +147,7 @@ function getDiscriminatorForBody(operation, service) {
   }
 
   const bodyType = getBodyType(operation);
-  const unionType = service.unions.find(u => u.name === bodyType);
+  const unionType = service.unions.find((u) => u.name === bodyType);
 
   if (unionType) {
     return unionType.discriminator;
@@ -168,7 +169,7 @@ function getOperationSettings(operation, service) {
 }
 
 function getOperations(operations, resourcePath, service) {
-  return operations.map(operation => ({
+  return operations.map((operation) => ({
     functionName: getFunctionName(operation, resourcePath),
     functionParams: getFunctionParamsStr(operation),
     endpointUriStr: getEndpointUriStr(operation),
@@ -215,7 +216,7 @@ function generate({ service }) {
   const clientModel = {
     enumsJson: JSON.stringify(service.enums),
     unionsJson: JSON.stringify(service.unions),
-    resources: service.resources.map(r => ({
+    resources: service.resources.map((r) => ({
       className: capitalizeFirstLetter(camelCase(r.plural)),
       fileName: r.plural,
     })),

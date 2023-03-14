@@ -1,7 +1,7 @@
 import { SchemaObject } from '@loopback/openapi-v3-types';
 import { ApiBuilderArray } from 'apibuilder-js';
-import { convertApiBuilderType } from '../openapi-utils';
 import { IsImportedChecker } from './isTypeImported';
+import { convertApiBuilderType } from '.';
 
 function convertApiBuilderArray(
   array: ApiBuilderArray,

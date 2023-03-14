@@ -1,5 +1,8 @@
-import supertest from 'supertest';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import defaults from 'lodash/defaults';
+import supertest from 'supertest';
 import app from '../../../src/server/app';
 
 const request = supertest(app);
@@ -20,7 +23,7 @@ const generatorKeys = [
   'ts_sdk',
 ];
 
-function conformsToGeneratorInterface(value) {
+function conformsToGeneratorInterface(value): void {
   expect(defaults(value, {
     description: 'No description provided',
     language: 'No language provided',

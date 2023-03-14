@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { ApiBuilderFile, ApiBuilderInvocationFormConfig } from 'apibuilder-js';
 import debug from 'debug';
 import { print } from 'recast';
@@ -16,15 +17,19 @@ export function generate(form: ApiBuilderInvocationFormConfig): Promise<ApiBuild
     log('INFO: Transforming AST to code...');
     const basename = `${context.rootService.applicationKey}.ts`;
     const dirname = context.rootService.namespace.split('.').join('/');
-    const code = print(ast, {
+    const { code } = print(ast, {
       quote: 'single',
       tabWidth: 2,
       trailingComma: true,
       useTabs: false,
-    }).code;
+    });
     log('INFO: Code generation completed!');
     resolve([
       new ApiBuilderFile(basename, dirname, code),
     ]);
   });
 }
+
+export default {
+  generate,
+};

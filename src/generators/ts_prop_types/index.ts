@@ -8,11 +8,10 @@ const log = debug('apibuilder:ts_prop_types');
 
 export function generate(form: ApiBuilderInvocationFormConfig): Promise<ApiBuilderFile[]> {
   return new Promise((resolve) => {
-
     const service = new ApiBuilderService(form.service);
 
     const importedServices = form.imported_services != null
-      ? form.imported_services.map(importedService => new ApiBuilderService(importedService))
+      ? form.imported_services.map((importedService) => new ApiBuilderService(importedService))
       : [];
 
     const basename = `${service.applicationKey}.ts`;
@@ -25,12 +24,12 @@ export function generate(form: ApiBuilderInvocationFormConfig): Promise<ApiBuild
 
     log('INFO: Transforming AST to code');
 
-    const code = print(ast, {
+    const { code } = print(ast, {
       quote: 'single',
       tabWidth: 2,
       trailingComma: true,
       useTabs: false,
-    }).code;
+    });
 
     log('INFO: Code generation completed');
 
@@ -39,3 +38,7 @@ export function generate(form: ApiBuilderInvocationFormConfig): Promise<ApiBuild
     ]);
   });
 }
+
+export default {
+  generate,
+};

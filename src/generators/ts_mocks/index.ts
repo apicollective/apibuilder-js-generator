@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import {
   ApiBuilderArray,
   ApiBuilderEnum,
@@ -23,26 +24,26 @@ import { buildContext, buildTypeAnnotation, Context } from '../../builders';
 import { checkIdentifier } from '../../utilities/language';
 import shortNameCompare from '../../utilities/shortNameCompare';
 
-function buildPropertyKey(value: string) {
+function buildPropertyKey(value: string): namedTypes.Identifier | namedTypes.StringLiteral {
   const feedback = checkIdentifier(value);
   return feedback.needsQuotes ? b.stringLiteral(value) : b.identifier(value);
 }
 
-function buildObjectOfCallExpression(type: ApiBuilderMap) {
+function buildObjectOfCallExpression(type: ApiBuilderMap): namedTypes.CallExpression {
   return b.callExpression(
     b.identifier('objectOf'),
     [b.arrowFunctionExpression([], buildFactoryCallExpression(type.ofType))],
   );
 }
 
-function buildArrayOfCallExpression(type: ApiBuilderArray) {
+function buildArrayOfCallExpression(type: ApiBuilderArray): namedTypes.CallExpression {
   return b.callExpression(
     b.identifier('arrayOf'),
     [b.arrowFunctionExpression([], buildFactoryCallExpression(type.ofType))],
   );
 }
 
-function buildFakerCallExpression(object: string, property: string) {
+function buildFakerCallExpression(object: string, property: string): namedTypes.CallExpression {
   return b.callExpression(
     b.memberExpression(
       b.memberExpression(
@@ -57,7 +58,7 @@ function buildFakerCallExpression(object: string, property: string) {
 
 function buildFactoryCallMemberExpression(
   type: ApiBuilderPrimitiveType | ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-) {
+): namedTypes.MemberExpression {
   if (isPrimitiveType(type)) {
     return b.memberExpression(
       b.identifier('factories'),
@@ -73,7 +74,7 @@ function buildFactoryCallMemberExpression(
   });
 }
 
-function buildFactoryCallExpression(type: ApiBuilderType) {
+function buildFactoryCallExpression(type: ApiBuilderType): namedTypes.CallExpression {
   if (isMapType(type)) {
     return buildObjectOfCallExpression(type);
   }
@@ -88,11 +89,11 @@ function buildFactoryCallExpression(type: ApiBuilderType) {
   );
 }
 
-function buildFakerFactory(object: string, property: string) {
+function buildFakerFactory(object: string, property: string): namedTypes.ArrowFunctionExpression {
   return b.arrowFunctionExpression([], buildFakerCallExpression(object, property));
 }
 
-function buildArrayOfArrowFunction() {
+function buildArrayOfArrowFunction(): namedTypes.ArrowFunctionExpression {
   return b.arrowFunctionExpression.from({
     body: b.blockStatement([
       b.variableDeclaration('const', [
@@ -140,11 +141,11 @@ function buildArrayOfArrowFunction() {
   });
 }
 
-function buildBooleanFactory() {
+function buildBooleanFactory(): namedTypes.ArrowFunctionExpression {
   return buildFakerFactory('datatype', 'boolean');
 }
 
-function buildDateFactory() {
+function buildDateFactory(): namedTypes.ArrowFunctionExpression {
   return b.arrowFunctionExpression([], b.callExpression(
     b.memberExpression(
       b.callExpression(
@@ -160,7 +161,7 @@ function buildDateFactory() {
   ));
 }
 
-function buildDateTimeFactory() {
+function buildDateTimeFactory(): namedTypes.ArrowFunctionExpression {
   return b.arrowFunctionExpression([], b.callExpression(
     b.memberExpression(
       buildFakerCallExpression('datatype', 'datetime'),
@@ -170,19 +171,19 @@ function buildDateTimeFactory() {
   ));
 }
 
-function buildFloatFactory() {
+function buildFloatFactory(): namedTypes.ArrowFunctionExpression {
   return buildFakerFactory('datatype', 'float');
 }
 
-function buildJsonObjectFactory() {
+function buildJsonObjectFactory(): namedTypes.ArrowFunctionExpression {
   return buildFakerFactory('datatype', 'json');
 }
 
-function buildNumberFactory() {
+function buildNumberFactory(): namedTypes.ArrowFunctionExpression {
   return buildFakerFactory('datatype', 'number');
 }
 
-function buildObjectOfArrowFunction() {
+function buildObjectOfArrowFunction(): namedTypes.ArrowFunctionExpression {
   return b.arrowFunctionExpression.from({
     body: b.blockStatement([
       b.variableDeclaration('const', [
@@ -249,19 +250,19 @@ function buildObjectOfArrowFunction() {
   });
 }
 
-function buildStringFactory() {
+function buildStringFactory(): namedTypes.ArrowFunctionExpression {
   return buildFakerFactory('datatype', 'string');
 }
 
-function buildUnitFactory() {
+function buildUnitFactory(): namedTypes.ArrowFunctionExpression {
   return b.arrowFunctionExpression([], b.identifier('undefined'));
 }
 
-function buildUuidFactory() {
+function buildUuidFactory(): namedTypes.ArrowFunctionExpression {
   return buildFakerFactory('datatype', 'uuid');
 }
 
-function buildPlaceholderFactory() {
+function buildPlaceholderFactory(): namedTypes.ArrowFunctionExpression {
   return b.arrowFunctionExpression.from({
     body: b.blockStatement([
       b.throwStatement(b.newExpression(b.identifier('Error'), [
@@ -272,8 +273,11 @@ function buildPlaceholderFactory() {
   });
 }
 
-function buildEnumFactory(type: ApiBuilderEnum, context: Context) {
-  const elements = type.values.map(value => b.stringLiteral(value.value));
+function buildEnumFactory(
+  type: ApiBuilderEnum,
+  context: Context,
+): namedTypes.ArrowFunctionExpression {
+  const elements = type.values.map((value) => b.stringLiteral(value.value));
   return b.arrowFunctionExpression.from({
     body: b.callExpression(
       b.memberExpression(
@@ -287,13 +291,14 @@ function buildEnumFactory(type: ApiBuilderEnum, context: Context) {
   });
 }
 
-function buildModelFactory(model: ApiBuilderModel, context: Context) {
-  const properties = model.fields.map((field) => {
-    return b.objectProperty(
-      buildPropertyKey(field.name),
-      buildFactoryCallExpression(field.type),
-    );
-  });
+function buildModelFactory(
+  model: ApiBuilderModel,
+  context: Context,
+): namedTypes.ArrowFunctionExpression {
+  const properties = model.fields.map((field) => b.objectProperty(
+    buildPropertyKey(field.name),
+    buildFactoryCallExpression(field.type),
+  ));
 
   if (model.discriminator != null && model.discriminatorValue != null) {
     properties.unshift(b.objectProperty(
@@ -312,7 +317,7 @@ function buildModelFactory(model: ApiBuilderModel, context: Context) {
 function buildUnionFactory(
   union: ApiBuilderUnion,
   context: Context,
-) {
+): namedTypes.ArrowFunctionExpression {
   const factories = union.types.map((_) => {
     if (isPrimitiveType(_.type) || isEnumType(_.type)) {
       return b.arrowFunctionExpression([], b.objectExpression([
@@ -355,26 +360,26 @@ function buildUnionFactory(
 function buildFactory(
   type: ApiBuilderType,
   context: Context,
-) {
+): namedTypes.ArrowFunctionExpression {
   if (isEnumType(type)) return buildEnumFactory(type, context);
   if (isModelType(type)) return buildModelFactory(type, context);
   if (isUnionType(type)) return buildUnionFactory(type, context);
   return buildPlaceholderFactory();
 }
 
-function buildArrayOfVariableDeclaration() {
+function buildArrayOfVariableDeclaration(): namedTypes.VariableDeclaration {
   return b.variableDeclaration('const', [
     b.variableDeclarator(b.identifier('arrayOf'), buildArrayOfArrowFunction()),
   ]);
 }
 
-function buildObjectOfVariableDeclaration() {
+function buildObjectOfVariableDeclaration(): namedTypes.VariableDeclaration {
   return b.variableDeclaration('const', [
     b.variableDeclarator(b.identifier('objectOf'), buildObjectOfArrowFunction()),
   ]);
 }
 
-function buildFactoriesObject(context: Context) {
+function buildFactoriesObject(context: Context): namedTypes.VariableDeclaration {
   // TODO: Only generate the primitive factories needed to support the service.
   const primitives = [
     b.objectProperty(b.identifier('boolean'), buildBooleanFactory()),
@@ -391,12 +396,10 @@ function buildFactoriesObject(context: Context) {
     b.objectProperty(b.identifier('uuid'), buildUuidFactory()),
   ];
 
-  const types = context.sortedTypes.sort().map((typeName) => {
-    return b.objectProperty(
-      b.stringLiteral(typeName),
-      buildFactory(context.typesByName[typeName], context),
-    );
-  });
+  const types = context.sortedTypes.sort().map((typeName) => b.objectProperty(
+    b.stringLiteral(typeName),
+    buildFactory(context.typesByName[typeName], context),
+  ));
 
   return b.variableDeclaration('const', [
     b.variableDeclarator(
@@ -411,7 +414,7 @@ function buildFactoriesObject(context: Context) {
 
 function buildExternalFactory(
   type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-) {
+): namedTypes.ExportNamedDeclaration {
   const factoryName = camelCase(`make_${type.shortName}`);
   return b.exportNamedDeclaration(
     b.variableDeclaration('const', [
@@ -449,7 +452,7 @@ function buildFile(context: Context): namedTypes.File {
 export function generate(
   invocationForm: ApiBuilderInvocationFormConfig,
 ): Promise<ApiBuilderFile[]> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const files: ApiBuilderFile[] = [];
     const context = buildContext(invocationForm);
     const ast = buildFile(context);
@@ -470,3 +473,7 @@ export function generate(
     resolve(files);
   });
 }
+
+export default {
+  generate,
+};

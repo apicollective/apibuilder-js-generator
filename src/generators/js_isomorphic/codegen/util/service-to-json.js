@@ -2,8 +2,8 @@ const { toCamelCase, slug } = require('./strings');
 const { getFunctionName, getFunctionParamsStr } = require('./service');
 
 function getOperation(operation, path) {
-  const parametersPath = operation.parameters.filter(p => p.location === 'Path');
-  const parametersQuery = operation.parameters.filter(p => p.location === 'Query');
+  const parametersPath = operation.parameters.filter((p) => p.location === 'Path');
+  const parametersQuery = operation.parameters.filter((p) => p.location === 'Query');
 
   const op = {
     name: getFunctionName(operation, path),
@@ -23,9 +23,9 @@ function getOperation(operation, path) {
 }
 
 function serviceToJson(service) {
-  const resources = service.resources.map(resource => ({
+  const resources = service.resources.map((resource) => ({
     name: toCamelCase(slug(resource.plural)),
-    operations: resource.operations.map(operation => getOperation(operation, resource.path)),
+    operations: resource.operations.map((operation) => getOperation(operation, resource.path)),
     description: resource.description,
   }));
 

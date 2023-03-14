@@ -1,8 +1,9 @@
+import { SchemaObject } from '@loopback/openapi-v3-types';
 import { ApiBuilderEnum } from 'apibuilder-js';
 import { map } from 'lodash';
 
-function generateSchemaFromEnum(enm: ApiBuilderEnum) {
-  const enumValues = map(enm.values, value => value.value);
+function generateSchemaFromEnum(enm: ApiBuilderEnum): SchemaObject {
+  const enumValues = map(enm.values, (value) => value.name);
 
   let description: string;
   if (enm.description && enm.description.endsWith('.')) {
@@ -15,7 +16,7 @@ function generateSchemaFromEnum(enm: ApiBuilderEnum) {
 
   return {
     [enm.name]: {
-      description: `${description}Possible values: ${enumValues}.`,
+      description: `${description}Possible values: ${String(enumValues)}.`,
       ...enm.isDeprecated && { deprecated: enm.isDeprecated },
       enum: enumValues,
       type: 'string',

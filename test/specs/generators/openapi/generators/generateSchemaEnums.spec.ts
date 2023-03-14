@@ -1,6 +1,7 @@
 import {
   ApiBuilderEnum,
   ApiBuilderService,
+  type ApiBuilderServiceConfig,
 } from 'apibuilder-js';
 import {
   generateSchemaEnums,
@@ -11,7 +12,7 @@ import enumJson = require('../../../../fixtures/schemas/enum.json');
 import serviceJson = require('../../../../fixtures/schemas/service.json');
 
 describe('generate schema enums', () => {
-  const service = new ApiBuilderService(apidocApiJson);
+  const service = new ApiBuilderService(apidocApiJson as ApiBuilderServiceConfig);
   const schemaEnums = generateSchemaEnums(service);
 
   test('should return an array of enums given a service', () => {
@@ -37,11 +38,16 @@ describe('generate schema enum', () => {
 
   test('should add a deprecated prop if present', () => {
     const service = new ApiBuilderService(serviceJson);
-    const deprecatedDayOfWeekJson = Object.assign({}, { deprecation: true }, enumJson);
+    const deprecatedDayOfWeekJson = {
+      deprecation: {
+        description: 'it\'s deprecated',
+      },
+      ...enumJson,
+    };
     const deprecatedDayOfWeek = ApiBuilderEnum.fromConfig(deprecatedDayOfWeekJson, service, 'test');
     const schemaEnum = generateSchemaFromEnum(deprecatedDayOfWeek);
     const expected = {
-      day_of_week: Object.assign({}, { deprecated: true }, dayOfWeekEnum.day_of_week),
+      day_of_week: { deprecated: true, ...dayOfWeekEnum.day_of_week },
     };
 
     expect(schemaEnum).toEqual(expected);
@@ -52,7 +58,7 @@ describe('generate schema enum', () => {
     const description = 'An enum for days of the week.';
     const descriptiveDayOfWeekJson = {
       ...enumJson,
-      description
+      description,
     };
     const descriptiveDayOfWeek = ApiBuilderEnum.fromConfig(
       descriptiveDayOfWeekJson,

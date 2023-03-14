@@ -1,4 +1,6 @@
-import { ApiBuilderEnum, ApiBuilderModel, ApiBuilderService, ApiBuilderUnion } from 'apibuilder-js';
+import {
+  ApiBuilderEnum, ApiBuilderModel, ApiBuilderService, ApiBuilderUnion,
+} from 'apibuilder-js';
 
 export type IsImportedChecker =
   (type: ApiBuilderModel | ApiBuilderUnion | ApiBuilderEnum) => boolean;

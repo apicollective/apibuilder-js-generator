@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 // tslint:disable:object-shorthand-properties-first
 
 import {
@@ -32,12 +33,7 @@ type PropTypeExpression =
   | namedTypes.MemberExpression
   | namedTypes.Identifier;
 
-type PropTypeExpressionBuilder = (
-  type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-  context: Context,
-) => PropTypeExpression;
-
-function stringCompare(s1: string, s2: string) {
+function stringCompare(s1: string, s2: string): number {
   if (s1 > s2) return 1;
   if (s1 < s2) return -1;
   return 0;
@@ -46,18 +42,18 @@ function stringCompare(s1: string, s2: string) {
 function shortNameCompare(
   t1: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
   t2: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
-) {
+): number {
   return stringCompare(t1.shortName, t2.shortName);
 }
 
-export function safeIdentifier(value: string) {
+export function safeIdentifier(value: string): string {
   const feedback = checkIdentifier(value);
   return feedback.es3Warning
     ? `UNSAFE_${value}`
     : value;
 }
 
-function buildSafePropertyKey(value: string) {
+function buildSafePropertyKey(value: string): namedTypes.Literal | namedTypes.Identifier {
   const feedback = checkIdentifier(value);
   return feedback.needsQuotes
     ? b.literal(value)
@@ -71,7 +67,7 @@ export function buildTypeIdentifier(
   return b.identifier(identifier);
 }
 
-function buildAnyPropTypeExpression() {
+function buildAnyPropTypeExpression(): PropTypeExpression {
   return b.memberExpression(
     b.identifier(PROP_TYPES_IDENTIFIER),
     b.identifier('any'),
@@ -149,7 +145,7 @@ function buildEnumPropTypeExpression(
       b.identifier('oneOf'),
     ),
     [b.arrayExpression(
-      enumeration.values.map(value => b.literal(value.value)),
+      enumeration.values.map((value) => b.literal(value.value)),
     )],
   );
 }
@@ -264,8 +260,8 @@ function buildUnionPropTypeExpression(
         }
 
         throw TypeError(
-          `The provided union type (${unionType.toString()}) refers to an ` +
-          'invalid type. An union type may only refer to an enum, model, or '
+          `The provided union type (${unionType.toString()}) refers to an `
+          + 'invalid type. An union type may only refer to an enum, model, or '
           + 'primitive type.',
         );
       }),
@@ -276,7 +272,7 @@ function buildUnionPropTypeExpression(
 function buildFieldPropTypeExpression(
   field: ApiBuilderField,
   context: Context,
-) {
+): PropTypeExpression {
   const expression = buildPropTypeReference(field.type, context);
   return field.isRequired
     ? b.memberExpression(expression, b.identifier('isRequired'))
@@ -378,7 +374,7 @@ function buildPropTypeStatement(
 function buildTypeExportNamedDeclaration(
   type: ApiBuilderEnum | ApiBuilderModel | ApiBuilderUnion,
   context: Context,
-) {
+): namedTypes.ExportNamedDeclaration {
   const variable = b.variableDeclaration('const', [
     b.variableDeclarator(
       buildTypeIdentifier(type),
@@ -389,7 +385,7 @@ function buildTypeExportNamedDeclaration(
   return b.exportNamedDeclaration(variable);
 }
 
-export function buildFile(context: Context) {
+export function buildFile(context: Context): namedTypes.File {
   const {
     cyclicTypes,
     sortedTypes,
@@ -412,9 +408,9 @@ export function buildFile(context: Context) {
   }
 
   const statements = sortedTypes
-    .filter(name => !unresolvedTypes.includes(name))
-    .map(name => typesByName[name])
-    .map(type => buildPropTypeStatement(type, context));
+    .filter((name) => !unresolvedTypes.includes(name))
+    .map((name) => typesByName[name])
+    .map((type) => buildPropTypeStatement(type, context));
 
   const declarations = [
     ...context.rootService.enums,
@@ -422,7 +418,7 @@ export function buildFile(context: Context) {
     ...context.rootService.unions,
   ]
     .sort(shortNameCompare)
-    .map(type => buildTypeExportNamedDeclaration(type, context));
+    .map((type) => buildTypeExportNamedDeclaration(type, context));
 
   const ast = b.file(b.program([
     b.importDeclaration(

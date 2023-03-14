@@ -5,7 +5,7 @@ function capitalizeFirstLetter(str) {
 function toCamelCase(str) {
   const parts = str
     .split(/(-|_)/)
-    .filter(p => p !== '-' && p !== '_');
+    .filter((p) => p !== '-' && p !== '_');
   const capitalized = parts.map((part, idx) => {
     if (idx > 0) {
       return capitalizeFirstLetter(part);

@@ -1,7 +1,8 @@
-import { OperationObject, RequestBodyObject } from '@loopback/openapi-v3-types';
+import { OperationObject, ParameterObject, RequestBodyObject } from '@loopback/openapi-v3-types';
 import {
   ApiBuilderBody,
   ApiBuilderOperation,
+  ApiBuilderParameter,
   ApiBuilderService,
 } from 'apibuilder-js';
 import {
@@ -17,9 +18,7 @@ function generateOperationObject(
   service: ApiBuilderService,
   typeValidator,
 ): OperationObject {
-  const mangleOperationPath = (path: string): string => {
-    return path.replace(/[^a-zA-Z\/_]/g, '').split('/').filter(Boolean).join('-');
-  };
+  const mangleOperationPath = (path: string): string => path.replace(/[^a-zA-Z/_]/g, '').split('/').filter(Boolean).join('-');
 
   const generateOperationId = (path: string, method: string): string => {
     const pathKey = mangleOperationPath(path);
@@ -27,14 +26,11 @@ function generateOperationObject(
     return operationId;
   };
 
-  const generateParameterObjectWithValidation = (parameter) => {
-    return generateParameterObject(parameter, typeValidator, isTypeImported(service));
-  };
+  // eslint-disable-next-line max-len
+  const generateParameterObjectWithValidation = (parameter: ApiBuilderParameter): ParameterObject => generateParameterObject(parameter, typeValidator, isTypeImported(service));
 
   const generateRequestBodyObjectWithValidation = (body: ApiBuilderBody)
-  : RequestBodyObject => {
-    return generateRequestBodyObject(body, typeValidator, isTypeImported(service));
-  };
+  : RequestBodyObject => generateRequestBodyObject(body, typeValidator, isTypeImported(service));
 
   return {
     ...apibuilderOperation.description && { description: apibuilderOperation.description },
@@ -43,9 +39,11 @@ function generateOperationObject(
     ...apibuilderOperation.body && {
       requestBody: generateRequestBodyObjectWithValidation(apibuilderOperation.body),
     },
-    responses: generateResponsesObject(apibuilderOperation.responses,
-                                       typeValidator,
-                                       isTypeImported(service)),
+    responses: generateResponsesObject(
+      apibuilderOperation.responses,
+      typeValidator,
+      isTypeImported(service),
+    ),
     tags: [apibuilderOperation.resource.typeName],
   };
 }
