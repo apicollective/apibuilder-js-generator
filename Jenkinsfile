@@ -39,7 +39,7 @@ pipeline {
     }
 
     stage('Build and push docker image release') {
-      when { branch 'main' }
+      //when { branch 'main' }
       steps {
         container('kaniko') {
           script {

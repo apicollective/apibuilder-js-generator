@@ -1,16 +1,16 @@
-FROM node:12 AS builder
+FROM node:12.22.12 AS builder
 
 # Define working directory and copy source
 WORKDIR /opt/apibuilder
 COPY . .
 # Install dependencies and build application
-RUN apt-get update && apt-get install -y rsync
+RUN apt-get update -y && apt-get install -y rsync
 RUN npm install -q
 RUN npm run build
 
 ##########################
 
-FROM node:12
+FROM node:12.22.12
 ENV NODE_ENV=production
 WORKDIR /opt/apibuilder
 
