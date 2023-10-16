@@ -1,4 +1,4 @@
-FROM node:12.22.12 AS builder
+FROM node:12.22.12-bullseye AS builder
 
 # Define working directory and copy source
 WORKDIR /opt/apibuilder
@@ -10,7 +10,7 @@ RUN npm run build
 
 ##########################
 
-FROM node:12.22.12
+FROM node:12.22.12-bullseye
 ENV NODE_ENV=production
 WORKDIR /opt/apibuilder
 
