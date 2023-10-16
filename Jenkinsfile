@@ -39,7 +39,7 @@ pipeline {
     }
 
     stage('Build and push docker image release') {
-      //when { branch 'main' }
+      when { branch 'main' }
       steps {
         container('kaniko') {
           script {
@@ -48,7 +48,7 @@ pipeline {
             sh """
               /kaniko/executor -f `pwd`/Dockerfile -c `pwd` \
               --snapshot-mode=redo --use-new-run  \
-              --destination ${env.ORG}/apibuilder-js-generator:test-16102023
+              --destination ${env.ORG}/apibuilder-js-generator:$semver
             """ 
             
           }
