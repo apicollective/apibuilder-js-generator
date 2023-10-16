@@ -48,7 +48,7 @@ pipeline {
             sh """
               /kaniko/executor -f `pwd`/Dockerfile -c `pwd` \
               --snapshot-mode=redo --use-new-run  \
-              --destination ${env.ORG}/apibuilder-js-generator:$semver
+              --destination ${env.ORG}/apibuilder-js-generator:test-16102023
             """ 
             
           }
