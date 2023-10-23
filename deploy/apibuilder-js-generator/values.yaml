@@ -18,6 +18,10 @@ resources:
     memory: "4Gi"
     cpu: .05
 
+istio:
+  alb: true
+  albFlowioTarget: "alb-prod.flow.io"
+
 istioIngress:
   enabled: true
   gateways:
