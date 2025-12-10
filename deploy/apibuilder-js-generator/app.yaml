@@ -46,7 +46,7 @@ spec:
     helm:
       parameters:
       - name: deployments.live.version
-        value: "0.1.48"
+        value: "Jenkins_will_update_the_version"
       valueFiles:
       - $values/deploy/apibuilder-js-generator/values.yaml
   project: production
